@@ -34,9 +34,6 @@ public partial class User
 
     public bool IsActive { get; set; }
 
-    [InverseProperty("AssignedStaff")]
-    public virtual ICollection<MaintenanceRequest> MaintenanceRequests { get; set; } = new List<MaintenanceRequest>();
-
     [InverseProperty("User")]
     public virtual ICollection<MaintenanceStaff> MaintenanceStaffs { get; set; } = new List<MaintenanceStaff>();
 

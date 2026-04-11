@@ -34,7 +34,7 @@ public partial class MaintenanceRequest
 
     [ForeignKey("AssignedStaffId")]
     [InverseProperty("MaintenanceRequests")]
-    public virtual User? AssignedStaff { get; set; }
+    public virtual MaintenanceStaff? AssignedStaff { get; set; }
 
     [ForeignKey("SkillId")]
     [InverseProperty("MaintenanceRequests")]

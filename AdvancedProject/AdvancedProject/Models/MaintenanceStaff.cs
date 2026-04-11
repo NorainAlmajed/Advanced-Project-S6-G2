@@ -19,6 +19,9 @@ public partial class MaintenanceStaff
 
     public int UserId { get; set; }
 
+    [InverseProperty("AssignedStaff")]
+    public virtual ICollection<MaintenanceRequest> MaintenanceRequests { get; set; } = new List<MaintenanceRequest>();
+
     [ForeignKey("UserId")]
     [InverseProperty("MaintenanceStaffs")]
     public virtual User User { get; set; } = null!;
