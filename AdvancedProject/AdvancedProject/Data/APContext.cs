@@ -48,7 +48,6 @@ public partial class APContext : DbContext
     {
         modelBuilder.Entity<Lease>(entity =>
         {
-            entity.Property(e => e.LeaseId).ValueGeneratedNever();
             entity.Property(e => e.CreatedAt).HasDefaultValueSql("(getdate())");
 
             entity.HasOne(d => d.Tenant).WithMany(p => p.Leases).OnDelete(DeleteBehavior.ClientSetNull);
@@ -58,7 +57,6 @@ public partial class APContext : DbContext
 
         modelBuilder.Entity<LeaseApplication>(entity =>
         {
-            entity.Property(e => e.ApplicationId).ValueGeneratedNever();
             entity.Property(e => e.ApplicationDate).HasDefaultValueSql("(getdate())");
 
             entity.HasOne(d => d.Tenant).WithMany(p => p.LeaseApplications).OnDelete(DeleteBehavior.ClientSetNull);
@@ -68,7 +66,6 @@ public partial class APContext : DbContext
 
         modelBuilder.Entity<MaintenanceRequest>(entity =>
         {
-            entity.Property(e => e.RequestId).ValueGeneratedNever();
             entity.Property(e => e.RequestDate).HasDefaultValueSql("(getdate())");
 
             entity.HasOne(d => d.Skill).WithMany(p => p.MaintenanceRequests).OnDelete(DeleteBehavior.ClientSetNull);
@@ -80,7 +77,6 @@ public partial class APContext : DbContext
 
         modelBuilder.Entity<MaintenanceStaff>(entity =>
         {
-            entity.Property(e => e.StaffId).ValueGeneratedNever();
             entity.Property(e => e.CreatedAt).HasDefaultValueSql("(getdate())");
 
             entity.HasOne(d => d.User).WithMany(p => p.MaintenanceStaffs).OnDelete(DeleteBehavior.ClientSetNull);
@@ -98,12 +94,12 @@ public partial class APContext : DbContext
                     {
                         j.HasKey("StaffId", "SkillId");
                         j.ToTable("MaintenanceStaffSkills");
+                        j.IndexerProperty<int>("StaffId").ValueGeneratedOnAdd();
                     });
         });
 
         modelBuilder.Entity<Notification>(entity =>
         {
-            entity.Property(e => e.NotificationId).ValueGeneratedNever();
             entity.Property(e => e.CreatedAt).HasDefaultValueSql("(getdate())");
 
             entity.HasOne(d => d.User).WithMany(p => p.Notifications).OnDelete(DeleteBehavior.ClientSetNull);
@@ -111,7 +107,6 @@ public partial class APContext : DbContext
 
         modelBuilder.Entity<Payment>(entity =>
         {
-            entity.Property(e => e.PaymentId).ValueGeneratedNever();
             entity.Property(e => e.PaymentDate).HasDefaultValueSql("(getdate())");
 
             entity.HasOne(d => d.Lease).WithMany(p => p.Payments).OnDelete(DeleteBehavior.ClientSetNull);
@@ -119,25 +114,16 @@ public partial class APContext : DbContext
 
         modelBuilder.Entity<Property>(entity =>
         {
-            entity.Property(e => e.PropertyId).ValueGeneratedNever();
             entity.Property(e => e.CreatedAt).HasDefaultValueSql("(getdate())");
         });
 
         modelBuilder.Entity<PropertyManager>(entity =>
         {
-            entity.Property(e => e.ManagerId).ValueGeneratedNever();
-
             entity.HasOne(d => d.User).WithMany(p => p.PropertyManagers).OnDelete(DeleteBehavior.ClientSetNull);
-        });
-
-        modelBuilder.Entity<Skill>(entity =>
-        {
-            entity.Property(e => e.SkillId).ValueGeneratedNever();
         });
 
         modelBuilder.Entity<Tenant>(entity =>
         {
-            entity.Property(e => e.TenantId).ValueGeneratedNever();
             entity.Property(e => e.CreatedAt).HasDefaultValueSql("(getdate())");
 
             entity.HasOne(d => d.User).WithMany(p => p.Tenants).OnDelete(DeleteBehavior.ClientSetNull);
@@ -145,7 +131,6 @@ public partial class APContext : DbContext
 
         modelBuilder.Entity<Unit>(entity =>
         {
-            entity.Property(e => e.UnitId).ValueGeneratedNever();
             entity.Property(e => e.CreatedAt).HasDefaultValueSql("(getdate())");
 
             entity.HasOne(d => d.Property).WithMany(p => p.Units).OnDelete(DeleteBehavior.ClientSetNull);
@@ -153,7 +138,6 @@ public partial class APContext : DbContext
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.Property(e => e.UserId).ValueGeneratedNever();
             entity.Property(e => e.CreatedAt).HasDefaultValueSql("(getdate())");
         });
 
