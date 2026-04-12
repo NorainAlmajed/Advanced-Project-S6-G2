@@ -17,7 +17,7 @@ namespace AdvancedProject.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.0")
+                .HasAnnotation("ProductVersion", "9.0.12")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -643,28 +643,28 @@ namespace AdvancedProject.Migrations
                         new
                         {
                             PropertyId = 1,
-                            Address = "Manama",
+                            Address = "Building: 611, Road: 271, Block: 220",
                             City = "Manama",
                             CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Nice",
+                            Description = "A modern residential complex offering comfort and essential amenities.",
                             Name = "Abraj Al Lulu"
                         },
                         new
                         {
                             PropertyId = 2,
-                            Address = "Muharraq",
+                            Address = "Building: 246, Road: 811, Block: 708",
                             City = "Muharraq",
                             CreatedAt = new DateTime(2026, 1, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Modern building",
+                            Description = "A contemporary tower with modern facilities in a prime location.",
                             Name = "Almoayyed Tower"
                         },
                         new
                         {
                             PropertyId = 3,
-                            Address = "Riffa",
+                            Address = "Building: 911, Road: 3062, Block: 461",
                             City = "Riffa",
                             CreatedAt = new DateTime(2026, 1, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Family apartments",
+                            Description = "A residential property with spacious apartments for families.",
                             Name = "United Tower"
                         });
                 });
