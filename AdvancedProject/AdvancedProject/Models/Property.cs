@@ -20,12 +20,6 @@ public partial class Property
     [StringLength(50)]
     public string City { get; set; } = null!;
 
-    [StringLength(50)]
-    public string State { get; set; } = null!;
-
-    [StringLength(20)]
-    public string PostalCode { get; set; } = null!;
-
     [StringLength(500)]
     public string? Description { get; set; }
 
