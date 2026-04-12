@@ -142,20 +142,20 @@ public partial class APContext : DbContext
         });
 
         modelBuilder.Entity<User>().HasData(
-new User { UserId = 1, Username = "admin", Password = "Admin123", FullName = "System Admin", Email = "admin@mail.com", Phone = "33338876", Role = "Manager", IsActive = true, CreatedAt = new DateTime(2026, 1, 1) },
+        new User { UserId = 1, Username = "admin", Password = "Admin123", FullName = "System Admin", Email = "admin@mail.com", Phone = "33338876", Role = "Manager", IsActive = true, CreatedAt = new DateTime(2026, 1, 1) },
 
-new User { UserId = 2, Username = "zahraa.hubail", Password = "Zahraa.123", FullName = "Zahraa Hubail", Email = "zahraa.hubail8@gmail.com", Phone = "33735771", Role = "Tenant", IsActive = true, CreatedAt = new DateTime(2026, 2, 12) },
-new User { UserId = 3, Username = "raghad.aleskafi", Password = "Raghad.123", FullName = "Raghad Aleskafi", Email = "raghad@gmail.com", Phone = "39004266", Role = "Tenant", IsActive = true, CreatedAt = new DateTime(2026, 3, 15) },
-new User { UserId = 4, Username = "fatima.alaiwi", Password = "Fatima.123", FullName = "Fatima Alaiwi", Email = "fatima@gmail.com", Phone = "36635578", Role = "Tenant", IsActive = true, CreatedAt = new DateTime(2026, 3, 20) },
-new User { UserId = 5, Username = "norain.hassan", Password = "Norain.123", FullName = "Norain Hassan", Email = "norain@mail.com", Phone = "33744063", Role = "Tenant", IsActive = true, CreatedAt = new DateTime(2026, 3, 25) },
-new User { UserId = 6, Username = "ahmed.ali", Password = "Ahmed.999", FullName = "Ahmed Ali", Email = "ahmed.ali@gmail.com", Phone = "33871125", Role = "Tenant", IsActive = true, CreatedAt = new DateTime(2026, 3, 28) },
+        new User { UserId = 2, Username = "zahraa.hubail", Password = "Zahraa.123", FullName = "Zahraa Hubail", Email = "zahraa.hubail8@gmail.com", Phone = "33735771", Role = "Tenant", IsActive = true, CreatedAt = new DateTime(2026, 2, 12) },
+        new User { UserId = 3, Username = "raghad.aleskafi", Password = "Raghad.123", FullName = "Raghad Aleskafi", Email = "raghad@gmail.com", Phone = "39004266", Role = "Tenant", IsActive = true, CreatedAt = new DateTime(2026, 3, 15) },
+        new User { UserId = 4, Username = "fatima.alaiwi", Password = "Fatima.123", FullName = "Fatima Alaiwi", Email = "fatima@gmail.com", Phone = "36635578", Role = "Tenant", IsActive = true, CreatedAt = new DateTime(2026, 3, 20) },
+        new User { UserId = 5, Username = "norain.hassan", Password = "Norain.123", FullName = "Norain Hassan", Email = "norain@mail.com", Phone = "33744063", Role = "Tenant", IsActive = true, CreatedAt = new DateTime(2026, 3, 25) },
+        new User { UserId = 6, Username = "ahmed.ali", Password = "Ahmed.999", FullName = "Ahmed Ali", Email = "ahmed.ali@gmail.com", Phone = "33871125", Role = "Tenant", IsActive = true, CreatedAt = new DateTime(2026, 3, 28) },
 
-new User { UserId = 7, Username = "ali.hassan", Password = "Ali.123", FullName = "Ali Hassan", Email = "alihassan@mail.com", Phone = "39207552", Role = "Staff", IsActive = true, CreatedAt = new DateTime(2026, 3, 10) },
-new User { UserId = 8, Username = "sara.mohamed", Password = "Sara.888", FullName = "Sara Mohamed", Email = "sara.mohamed@gmail.com", Phone = "33699152", Role = "Staff", IsActive = true, CreatedAt = new DateTime(2026, 3, 11) },
-new User { UserId = 9, Username = "abbas.hadi", Password = "Abbas.123", FullName = "Abbas Hadi", Email = "abbas@gmail.com", Phone = "33546672", Role = "Staff", IsActive = true, CreatedAt = new DateTime(2026, 3, 12) },
-new User { UserId = 10, Username = "laila.yaser", Password = "Laila.999", FullName = "Laila Yaser", Email = "laila@gmail.com", Phone = "39126632", Role = "Staff", IsActive = true, CreatedAt = new DateTime(2026, 3, 13) },
-new User { UserId = 11, Username = "mohammed.karim", Password = "mohammed.123", FullName = "Mohammed Karim", Email = "mohammed@gmail.com", Phone = "33921092", Role = "Staff", IsActive = true, CreatedAt = new DateTime(2026, 3, 14) }
-);
+        new User { UserId = 7, Username = "ali.hassan", Password = "Ali.123", FullName = "Ali Hassan", Email = "alihassan@mail.com", Phone = "39207552", Role = "Staff", IsActive = true, CreatedAt = new DateTime(2026, 3, 10) },
+        new User { UserId = 8, Username = "sara.mohamed", Password = "Sara.888", FullName = "Sara Mohamed", Email = "sara.mohamed@gmail.com", Phone = "33699152", Role = "Staff", IsActive = true, CreatedAt = new DateTime(2026, 3, 11) },
+        new User { UserId = 9, Username = "abbas.hadi", Password = "Abbas.123", FullName = "Abbas Hadi", Email = "abbas@gmail.com", Phone = "33546672", Role = "Staff", IsActive = true, CreatedAt = new DateTime(2026, 3, 12) },
+        new User { UserId = 10, Username = "laila.yaser", Password = "Laila.999", FullName = "Laila Yaser", Email = "laila@gmail.com", Phone = "39126632", Role = "Staff", IsActive = true, CreatedAt = new DateTime(2026, 3, 13) },
+        new User { UserId = 11, Username = "mohammed.karim", Password = "mohammed.123", FullName = "Mohammed Karim", Email = "mohammed@gmail.com", Phone = "33921092", Role = "Staff", IsActive = true, CreatedAt = new DateTime(2026, 3, 14) }
+        );
 
 
         modelBuilder.Entity<PropertyManager>().HasData(
@@ -206,9 +206,9 @@ new User { UserId = 11, Username = "mohammed.karim", Password = "mohammed.123", 
     ));
 
         modelBuilder.Entity<Property>().HasData(
-        new Property { PropertyId = 1, Name = "Abraj Al Lulu", Address = "Manama", City = "Manama", Description = "Nice", CreatedAt = new DateTime(2026, 1, 1) },
-        new Property { PropertyId = 2, Name = "Almoayyed Tower", Address = "Muharraq", City = "Muharraq", Description = "Modern building", CreatedAt = new DateTime(2026, 1, 5) },
-        new Property { PropertyId = 3, Name = "United Tower", Address = "Riffa", City = "Riffa", Description = "Family apartments", CreatedAt = new DateTime(2026, 1, 10) }
+        new Property { PropertyId = 1, Name = "Abraj Al Lulu", Address = "Building: 611, Road: 271, Block: 220", City = "Manama", Description = "A modern residential complex offering comfort and essential amenities.", CreatedAt = new DateTime(2026, 1, 1) },
+        new Property { PropertyId = 2, Name = "Almoayyed Tower", Address = "Building: 246, Road: 811, Block: 708", City = "Muharraq", Description = "A contemporary tower with modern facilities in a prime location.", CreatedAt = new DateTime(2026, 1, 5) },
+        new Property { PropertyId = 3, Name = "United Tower", Address = "Building: 911, Road: 3062, Block: 461", City = "Riffa", Description = "A residential property with spacious apartments for families.", CreatedAt = new DateTime(2026, 1, 10) }
     );
 
         modelBuilder.Entity<Unit>().HasData(
