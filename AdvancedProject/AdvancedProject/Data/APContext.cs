@@ -188,9 +188,9 @@ public partial class APContext : DbContext
     );
 
         modelBuilder.Entity<MaintenanceStaff>()
-    .HasMany(s => s.Skills)
-    .WithMany(s => s.Staff)
-    .UsingEntity(j => j.HasData(
+        .HasMany(s => s.Skills)
+        .WithMany(s => s.Staff)
+        .UsingEntity(j => j.HasData(
         new { StaffId = 1, SkillId = 1 },
         new { StaffId = 1, SkillId = 2 },
 
@@ -206,9 +206,9 @@ public partial class APContext : DbContext
     ));
 
         modelBuilder.Entity<Property>().HasData(
-        new Property { PropertyId = 1, Name = "Abraj Al Lulu", Address = "Building: 611, Road: 271, Block: 220", City = "Manama", Description = "A modern residential complex offering comfort and essential amenities.", CreatedAt = new DateTime(2026, 1, 1) },
-        new Property { PropertyId = 2, Name = "Almoayyed Tower", Address = "Building: 246, Road: 811, Block: 708", City = "Muharraq", Description = "A contemporary tower with modern facilities in a prime location.", CreatedAt = new DateTime(2026, 1, 5) },
-        new Property { PropertyId = 3, Name = "United Tower", Address = "Building: 911, Road: 3062, Block: 461", City = "Riffa", Description = "A residential property with spacious apartments for families.", CreatedAt = new DateTime(2026, 1, 10) }
+        new Property { PropertyId = 1, Name = "Abraj Al Lulu", Building = "611", Road = "271", Block = "220", City = "Manama", Description = "A modern residential complex offering comfort and essential amenities.", CreatedAt = new DateTime(2026, 1, 1) },
+        new Property { PropertyId = 2, Name = "Almoayyed Tower", Building = "246", Road = "811", Block = "708", City = "Muharraq", Description = "A contemporary tower with modern facilities in a prime location.", CreatedAt = new DateTime(2026, 1, 5) },
+        new Property { PropertyId = 3, Name = "United Tower", Building = "922", Road = "3062", Block = "461", Floor = "1", City = "Riffa", Description = "A residential property with spacious apartments for families.", CreatedAt = new DateTime(2026, 1, 10) }
     );
 
         modelBuilder.Entity<Unit>().HasData(
