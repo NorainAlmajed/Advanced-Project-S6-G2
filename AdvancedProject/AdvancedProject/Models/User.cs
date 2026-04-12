@@ -22,10 +22,10 @@ public partial class User
     public string FullName { get; set; } = null!;
 
     [StringLength(100)]
-    public string? Email { get; set; }
+    public string Email { get; set; } = null!;
 
     [StringLength(20)]
-    public string? Phone { get; set; }
+    public string Phone { get; set; } = null!;
 
     [StringLength(20)]
     public string Role { get; set; } = null!;
