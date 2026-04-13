@@ -22,7 +22,7 @@ namespace AdvancedProject.Controllers
         // GET: LeaseApplications
         public async Task<IActionResult> Index()
         {
-            var aPContext = _context.LeaseApplications.Include(l => l.Tenant).Include(l => l.Unit);
+            var aPContext = _context.LeaseApplications.Include(l => l.Unit).Include(l => l.Tenant).ThenInclude(e => e.User);
             return View(await aPContext.ToListAsync());
         }
 
