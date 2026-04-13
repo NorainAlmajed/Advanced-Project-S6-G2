@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AdvancedProject.Migrations
 {
     [DbContext(typeof(APContext))]
-    [Migration("20260412164848_InitialCreate")]
+    [Migration("20260413144417_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -20,10 +20,28 @@ namespace AdvancedProject.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.0")
+                .HasAnnotation("ProductVersion", "9.0.12")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("AdvancedProject.Models.Amenity", b =>
+                {
+                    b.Property<int>("AmenityId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AmenityId"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("AmenityId");
+
+                    b.ToTable("Amenities");
+                });
 
             modelBuilder.Entity("AdvancedProject.Models.Lease", b =>
                 {
@@ -38,14 +56,14 @@ namespace AdvancedProject.Migrations
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("(getdate())");
 
-                    b.Property<DateOnly>("EndDate")
-                        .HasColumnType("date");
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<decimal>("MonthlyRent")
                         .HasColumnType("decimal(10, 2)");
 
-                    b.Property<DateOnly>("StartDate")
-                        .HasColumnType("date");
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Status")
                         .IsRequired()
@@ -55,14 +73,17 @@ namespace AdvancedProject.Migrations
                     b.Property<int>("TenantId")
                         .HasColumnType("int");
 
+                    b.Property<DateTime?>("TerminationDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<int>("UnitId")
                         .HasColumnType("int");
 
                     b.HasKey("LeaseId");
 
-                    b.HasIndex("TenantId");
+                    b.HasIndex(new[] { "TenantId" }, "IX_Leases_TenantId");
 
-                    b.HasIndex("UnitId");
+                    b.HasIndex(new[] { "UnitId" }, "IX_Leases_UnitId");
 
                     b.ToTable("Leases");
                 });
@@ -80,9 +101,11 @@ namespace AdvancedProject.Migrations
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("(getdate())");
 
-                    b.Property<string>("Notes")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                    b.Property<DateTime?>("ApproveTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("RejectTime")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Status")
                         .IsRequired()
@@ -97,9 +120,9 @@ namespace AdvancedProject.Migrations
 
                     b.HasKey("ApplicationId");
 
-                    b.HasIndex("TenantId");
+                    b.HasIndex(new[] { "TenantId" }, "IX_LeaseApplications_TenantId");
 
-                    b.HasIndex("UnitId");
+                    b.HasIndex(new[] { "UnitId" }, "IX_LeaseApplications_UnitId");
 
                     b.ToTable("LeaseApplications");
                 });
@@ -115,7 +138,16 @@ namespace AdvancedProject.Migrations
                     b.Property<int?>("AssignedStaffId")
                         .HasColumnType("int");
 
+                    b.Property<DateTime?>("AssignedTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("ClosedTime")
+                        .HasColumnType("datetime2");
+
                     b.Property<DateTime?>("CompletedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("InProgressTime")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Notes")
@@ -131,6 +163,9 @@ namespace AdvancedProject.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("(getdate())");
+
+                    b.Property<DateTime?>("ResolvedTime")
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("SkillId")
                         .HasColumnType("int");
@@ -148,13 +183,13 @@ namespace AdvancedProject.Migrations
 
                     b.HasKey("RequestId");
 
-                    b.HasIndex("AssignedStaffId");
+                    b.HasIndex(new[] { "AssignedStaffId" }, "IX_MaintenanceRequests_AssignedStaffId");
 
-                    b.HasIndex("SkillId");
+                    b.HasIndex(new[] { "SkillId" }, "IX_MaintenanceRequests_SkillId");
 
-                    b.HasIndex("TenantId");
+                    b.HasIndex(new[] { "TenantId" }, "IX_MaintenanceRequests_TenantId");
 
-                    b.HasIndex("UnitId");
+                    b.HasIndex(new[] { "UnitId" }, "IX_MaintenanceRequests_UnitId");
 
                     b.ToTable("MaintenanceRequests");
                 });
@@ -172,17 +207,12 @@ namespace AdvancedProject.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
-                    b.Property<DateTime>("CreatedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("(getdate())");
-
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("StaffId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex(new[] { "UserId" }, "IX_MaintenanceStaff_UserId");
 
                     b.ToTable("MaintenanceStaff");
                 });
@@ -200,18 +230,13 @@ namespace AdvancedProject.Migrations
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("(getdate())");
 
-                    b.Property<bool>("IsRead")
-                        .HasColumnType("bit");
-
                     b.Property<string>("Message")
                         .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.Property<int?>("RelatedEntityId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("RelatedEntityType")
+                    b.Property<string>("Type")
+                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
@@ -220,7 +245,7 @@ namespace AdvancedProject.Migrations
 
                     b.HasKey("NotificationId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex(new[] { "UserId" }, "IX_Notifications_UserId");
 
                     b.ToTable("Notifications");
                 });
@@ -239,10 +264,6 @@ namespace AdvancedProject.Migrations
                     b.Property<int>("LeaseId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Notes")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
                     b.Property<DateTime>("PaymentDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
@@ -255,7 +276,7 @@ namespace AdvancedProject.Migrations
 
                     b.HasKey("PaymentId");
 
-                    b.HasIndex("LeaseId");
+                    b.HasIndex(new[] { "LeaseId" }, "IX_Payments_LeaseId");
 
                     b.ToTable("Payments");
                 });
@@ -268,10 +289,19 @@ namespace AdvancedProject.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PropertyId"));
 
-                    b.Property<string>("Address")
+                    b.Property<string>("Block")
                         .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasDefaultValue("");
+
+                    b.Property<string>("Building")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasDefaultValue("");
 
                     b.Property<string>("City")
                         .IsRequired()
@@ -292,6 +322,13 @@ namespace AdvancedProject.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<string>("Road")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasDefaultValue("");
+
                     b.HasKey("PropertyId");
 
                     b.ToTable("Properties");
@@ -305,15 +342,15 @@ namespace AdvancedProject.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ManagerId"));
 
-                    b.Property<DateOnly>("HireDate")
-                        .HasColumnType("date");
+                    b.Property<DateTime>("HireDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("ManagerId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex(new[] { "UserId" }, "IX_PropertyManagers_UserId");
 
                     b.ToTable("PropertyManagers");
                 });
@@ -344,18 +381,9 @@ namespace AdvancedProject.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TenantId"));
 
-                    b.Property<DateTime>("CreatedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("(getdate())");
-
                     b.Property<DateOnly?>("Dob")
                         .HasColumnType("date")
                         .HasColumnName("DOB");
-
-                    b.Property<string>("EmergencyContact")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("NationalId")
                         .HasMaxLength(20)
@@ -366,7 +394,7 @@ namespace AdvancedProject.Migrations
 
                     b.HasKey("TenantId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex(new[] { "UserId" }, "IX_Tenants_UserId");
 
                     b.ToTable("Tenants");
                 });
@@ -378,10 +406,6 @@ namespace AdvancedProject.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UnitId"));
-
-                    b.Property<string>("Amenities")
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("AvailabilityStatus")
                         .IsRequired()
@@ -399,7 +423,7 @@ namespace AdvancedProject.Migrations
                     b.Property<decimal>("RentAmount")
                         .HasColumnType("decimal(10, 0)");
 
-                    b.Property<decimal?>("SizeSqFt")
+                    b.Property<decimal>("SizeSqFt")
                         .HasColumnType("decimal(10, 0)");
 
                     b.Property<string>("Type")
@@ -414,7 +438,7 @@ namespace AdvancedProject.Migrations
 
                     b.HasKey("UnitId");
 
-                    b.HasIndex("PropertyId");
+                    b.HasIndex(new[] { "PropertyId" }, "IX_Units_PropertyId");
 
                     b.ToTable("Units");
                 });
@@ -476,7 +500,6 @@ namespace AdvancedProject.Migrations
             modelBuilder.Entity("MaintenanceStaffSkill", b =>
                 {
                     b.Property<int>("StaffId")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
                     b.Property<int>("SkillId")
@@ -484,9 +507,24 @@ namespace AdvancedProject.Migrations
 
                     b.HasKey("StaffId", "SkillId");
 
-                    b.HasIndex("SkillId");
+                    b.HasIndex(new[] { "SkillId" }, "IX_MaintenanceStaffSkills_SkillId");
 
                     b.ToTable("MaintenanceStaffSkills", (string)null);
+                });
+
+            modelBuilder.Entity("UnitAmenity", b =>
+                {
+                    b.Property<int>("UnitId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("AmenityId")
+                        .HasColumnType("int");
+
+                    b.HasKey("UnitId", "AmenityId");
+
+                    b.HasIndex("AmenityId");
+
+                    b.ToTable("UnitAmenities", (string)null);
                 });
 
             modelBuilder.Entity("AdvancedProject.Models.Lease", b =>
@@ -623,6 +661,19 @@ namespace AdvancedProject.Migrations
                     b.HasOne("AdvancedProject.Models.MaintenanceStaff", null)
                         .WithMany()
                         .HasForeignKey("StaffId")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("UnitAmenity", b =>
+                {
+                    b.HasOne("AdvancedProject.Models.Amenity", null)
+                        .WithMany()
+                        .HasForeignKey("AmenityId")
+                        .IsRequired();
+
+                    b.HasOne("AdvancedProject.Models.Unit", null)
+                        .WithMany()
+                        .HasForeignKey("UnitId")
                         .IsRequired();
                 });
 

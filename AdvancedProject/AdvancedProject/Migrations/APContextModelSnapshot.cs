@@ -22,6 +22,61 @@ namespace AdvancedProject.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("AdvancedProject.Models.Amenity", b =>
+                {
+                    b.Property<int>("AmenityId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AmenityId"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("AmenityId");
+
+                    b.ToTable("Amenities");
+
+                    b.HasData(
+                        new
+                        {
+                            AmenityId = 1,
+                            Name = "Parking"
+                        },
+                        new
+                        {
+                            AmenityId = 2,
+                            Name = "Swimming Pool"
+                        },
+                        new
+                        {
+                            AmenityId = 3,
+                            Name = "Gym"
+                        },
+                        new
+                        {
+                            AmenityId = 4,
+                            Name = "Security"
+                        },
+                        new
+                        {
+                            AmenityId = 5,
+                            Name = "Elevator"
+                        },
+                        new
+                        {
+                            AmenityId = 6,
+                            Name = "Central AC"
+                        },
+                        new
+                        {
+                            AmenityId = 7,
+                            Name = "WiFi"
+                        });
+                });
+
             modelBuilder.Entity("AdvancedProject.Models.Lease", b =>
                 {
                     b.Property<int>("LeaseId")
@@ -35,14 +90,14 @@ namespace AdvancedProject.Migrations
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("(getdate())");
 
-                    b.Property<DateOnly>("EndDate")
-                        .HasColumnType("date");
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<decimal>("MonthlyRent")
                         .HasColumnType("decimal(10, 2)");
 
-                    b.Property<DateOnly>("StartDate")
-                        .HasColumnType("date");
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Status")
                         .IsRequired()
@@ -52,14 +107,17 @@ namespace AdvancedProject.Migrations
                     b.Property<int>("TenantId")
                         .HasColumnType("int");
 
+                    b.Property<DateTime?>("TerminationDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<int>("UnitId")
                         .HasColumnType("int");
 
                     b.HasKey("LeaseId");
 
-                    b.HasIndex("TenantId");
+                    b.HasIndex(new[] { "TenantId" }, "IX_Leases_TenantId");
 
-                    b.HasIndex("UnitId");
+                    b.HasIndex(new[] { "UnitId" }, "IX_Leases_UnitId");
 
                     b.ToTable("Leases");
 
@@ -68,9 +126,9 @@ namespace AdvancedProject.Migrations
                         {
                             LeaseId = 1,
                             CreatedAt = new DateTime(2026, 3, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EndDate = new DateOnly(2027, 3, 1),
+                            EndDate = new DateTime(2027, 3, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             MonthlyRent = 300m,
-                            StartDate = new DateOnly(2026, 3, 1),
+                            StartDate = new DateTime(2026, 3, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = "Active",
                             TenantId = 1,
                             UnitId = 2
@@ -79,9 +137,9 @@ namespace AdvancedProject.Migrations
                         {
                             LeaseId = 2,
                             CreatedAt = new DateTime(2026, 3, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EndDate = new DateOnly(2027, 3, 5),
+                            EndDate = new DateTime(2027, 3, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             MonthlyRent = 500m,
-                            StartDate = new DateOnly(2026, 3, 5),
+                            StartDate = new DateTime(2026, 3, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = "Active",
                             TenantId = 2,
                             UnitId = 3
@@ -90,9 +148,9 @@ namespace AdvancedProject.Migrations
                         {
                             LeaseId = 3,
                             CreatedAt = new DateTime(2026, 3, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EndDate = new DateOnly(2027, 3, 10),
+                            EndDate = new DateTime(2027, 3, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             MonthlyRent = 350m,
-                            StartDate = new DateOnly(2026, 3, 10),
+                            StartDate = new DateTime(2026, 3, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = "Terminated",
                             TenantId = 3,
                             UnitId = 1
@@ -101,9 +159,9 @@ namespace AdvancedProject.Migrations
                         {
                             LeaseId = 4,
                             CreatedAt = new DateTime(2026, 3, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EndDate = new DateOnly(2027, 3, 12),
+                            EndDate = new DateTime(2027, 3, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             MonthlyRent = 550m,
-                            StartDate = new DateOnly(2026, 3, 12),
+                            StartDate = new DateTime(2026, 3, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = "Active",
                             TenantId = 4,
                             UnitId = 4
@@ -112,9 +170,9 @@ namespace AdvancedProject.Migrations
                         {
                             LeaseId = 5,
                             CreatedAt = new DateTime(2026, 3, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EndDate = new DateOnly(2027, 3, 15),
+                            EndDate = new DateTime(2027, 3, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             MonthlyRent = 250m,
-                            StartDate = new DateOnly(2026, 3, 15),
+                            StartDate = new DateTime(2026, 3, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = "Active",
                             TenantId = 5,
                             UnitId = 5
@@ -134,9 +192,11 @@ namespace AdvancedProject.Migrations
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("(getdate())");
 
-                    b.Property<string>("Notes")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                    b.Property<DateTime?>("ApproveTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("RejectTime")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Status")
                         .IsRequired()
@@ -151,9 +211,9 @@ namespace AdvancedProject.Migrations
 
                     b.HasKey("ApplicationId");
 
-                    b.HasIndex("TenantId");
+                    b.HasIndex(new[] { "TenantId" }, "IX_LeaseApplications_TenantId");
 
-                    b.HasIndex("UnitId");
+                    b.HasIndex(new[] { "UnitId" }, "IX_LeaseApplications_UnitId");
 
                     b.ToTable("LeaseApplications");
 
@@ -162,7 +222,6 @@ namespace AdvancedProject.Migrations
                         {
                             ApplicationId = 1,
                             ApplicationDate = new DateTime(2026, 2, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Notes = "Interested in unit A1",
                             Status = "Approved",
                             TenantId = 1,
                             UnitId = 1
@@ -187,7 +246,6 @@ namespace AdvancedProject.Migrations
                         {
                             ApplicationId = 4,
                             ApplicationDate = new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Notes = "Ready to move in soon",
                             Status = "Approved",
                             TenantId = 4,
                             UnitId = 4
@@ -213,7 +271,16 @@ namespace AdvancedProject.Migrations
                     b.Property<int?>("AssignedStaffId")
                         .HasColumnType("int");
 
+                    b.Property<DateTime?>("AssignedTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("ClosedTime")
+                        .HasColumnType("datetime2");
+
                     b.Property<DateTime?>("CompletedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("InProgressTime")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Notes")
@@ -229,6 +296,9 @@ namespace AdvancedProject.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("(getdate())");
+
+                    b.Property<DateTime?>("ResolvedTime")
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("SkillId")
                         .HasColumnType("int");
@@ -246,13 +316,13 @@ namespace AdvancedProject.Migrations
 
                     b.HasKey("RequestId");
 
-                    b.HasIndex("AssignedStaffId");
+                    b.HasIndex(new[] { "AssignedStaffId" }, "IX_MaintenanceRequests_AssignedStaffId");
 
-                    b.HasIndex("SkillId");
+                    b.HasIndex(new[] { "SkillId" }, "IX_MaintenanceRequests_SkillId");
 
-                    b.HasIndex("TenantId");
+                    b.HasIndex(new[] { "TenantId" }, "IX_MaintenanceRequests_TenantId");
 
-                    b.HasIndex("UnitId");
+                    b.HasIndex(new[] { "UnitId" }, "IX_MaintenanceRequests_UnitId");
 
                     b.ToTable("MaintenanceRequests");
 
@@ -332,17 +402,12 @@ namespace AdvancedProject.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
-                    b.Property<DateTime>("CreatedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("(getdate())");
-
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("StaffId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex(new[] { "UserId" }, "IX_MaintenanceStaff_UserId");
 
                     b.ToTable("MaintenanceStaff");
 
@@ -351,35 +416,30 @@ namespace AdvancedProject.Migrations
                         {
                             StaffId = 1,
                             AvailabilityStatus = "Available",
-                            CreatedAt = new DateTime(2026, 3, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             UserId = 7
                         },
                         new
                         {
                             StaffId = 2,
                             AvailabilityStatus = "Busy",
-                            CreatedAt = new DateTime(2026, 3, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             UserId = 8
                         },
                         new
                         {
                             StaffId = 3,
                             AvailabilityStatus = "Available",
-                            CreatedAt = new DateTime(2026, 3, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             UserId = 9
                         },
                         new
                         {
                             StaffId = 4,
                             AvailabilityStatus = "Available",
-                            CreatedAt = new DateTime(2026, 3, 13, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             UserId = 10
                         },
                         new
                         {
                             StaffId = 5,
                             AvailabilityStatus = "Busy",
-                            CreatedAt = new DateTime(2026, 3, 14, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             UserId = 11
                         });
                 });
@@ -397,18 +457,13 @@ namespace AdvancedProject.Migrations
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("(getdate())");
 
-                    b.Property<bool>("IsRead")
-                        .HasColumnType("bit");
-
                     b.Property<string>("Message")
                         .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.Property<int?>("RelatedEntityId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("RelatedEntityType")
+                    b.Property<string>("Type")
+                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
@@ -417,7 +472,7 @@ namespace AdvancedProject.Migrations
 
                     b.HasKey("NotificationId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex(new[] { "UserId" }, "IX_Notifications_UserId");
 
                     b.ToTable("Notifications");
 
@@ -426,100 +481,80 @@ namespace AdvancedProject.Migrations
                         {
                             NotificationId = 1,
                             CreatedAt = new DateTime(2026, 2, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsRead = false,
                             Message = "New lease application received",
-                            RelatedEntityId = 1,
-                            RelatedEntityType = "LeaseApplication",
+                            Type = "LeaseApplication",
                             UserId = 1
                         },
                         new
                         {
                             NotificationId = 2,
                             CreatedAt = new DateTime(2026, 2, 3, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsRead = true,
                             Message = "Your application has been approved",
-                            RelatedEntityId = 2,
-                            RelatedEntityType = "LeaseApplication",
+                            Type = "LeaseApplication",
                             UserId = 2
                         },
                         new
                         {
                             NotificationId = 3,
                             CreatedAt = new DateTime(2026, 3, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsRead = false,
                             Message = "Maintenance request updated",
-                            RelatedEntityId = 2,
-                            RelatedEntityType = "MaintenanceRequest",
+                            Type = "MaintenanceRequest",
                             UserId = 3
                         },
                         new
                         {
                             NotificationId = 4,
                             CreatedAt = new DateTime(2026, 3, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsRead = true,
                             Message = "Payment received successfully",
-                            RelatedEntityId = 4,
-                            RelatedEntityType = "Payment",
+                            Type = "Payment",
                             UserId = 4
                         },
                         new
                         {
                             NotificationId = 5,
                             CreatedAt = new DateTime(2026, 3, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsRead = false,
                             Message = "Lease activated for your unit",
-                            RelatedEntityId = 5,
-                            RelatedEntityType = "Lease",
+                            Type = "Lease",
                             UserId = 5
                         },
                         new
                         {
                             NotificationId = 6,
                             CreatedAt = new DateTime(2026, 3, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsRead = false,
                             Message = "New maintenance request assigned",
-                            RelatedEntityId = 1,
-                            RelatedEntityType = "MaintenanceRequest",
+                            Type = "MaintenanceRequest",
                             UserId = 7
                         },
                         new
                         {
                             NotificationId = 7,
                             CreatedAt = new DateTime(2026, 3, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsRead = true,
                             Message = "Electrical repair marked as in progress",
-                            RelatedEntityId = 2,
-                            RelatedEntityType = "MaintenanceRequest",
+                            Type = "MaintenanceRequest",
                             UserId = 8
                         },
                         new
                         {
                             NotificationId = 8,
                             CreatedAt = new DateTime(2026, 3, 3, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsRead = false,
                             Message = "HVAC issue reported in Unit A2",
-                            RelatedEntityId = 3,
-                            RelatedEntityType = "MaintenanceRequest",
+                            Type = "MaintenanceRequest",
                             UserId = 9
                         },
                         new
                         {
                             NotificationId = 9,
                             CreatedAt = new DateTime(2026, 3, 4, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsRead = false,
                             Message = "Carpentry issue reported in Unit B2",
-                            RelatedEntityId = 4,
-                            RelatedEntityType = "MaintenanceRequest",
+                            Type = "MaintenanceRequest",
                             UserId = 10
                         },
                         new
                         {
                             NotificationId = 10,
                             CreatedAt = new DateTime(2026, 3, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsRead = true,
                             Message = "Painting issue reported in Unit A3",
-                            RelatedEntityId = 5,
-                            RelatedEntityType = "MaintenanceRequest",
+                            Type = "MaintenanceRequest",
                             UserId = 11
                         });
                 });
@@ -538,10 +573,6 @@ namespace AdvancedProject.Migrations
                     b.Property<int>("LeaseId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Notes")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
                     b.Property<DateTime>("PaymentDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
@@ -554,7 +585,7 @@ namespace AdvancedProject.Migrations
 
                     b.HasKey("PaymentId");
 
-                    b.HasIndex("LeaseId");
+                    b.HasIndex(new[] { "LeaseId" }, "IX_Payments_LeaseId");
 
                     b.ToTable("Payments");
 
@@ -572,7 +603,6 @@ namespace AdvancedProject.Migrations
                             PaymentId = 2,
                             Amount = 500m,
                             LeaseId = 2,
-                            Notes = "On time payment",
                             PaymentDate = new DateTime(2026, 3, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = "Paid"
                         },
@@ -589,7 +619,6 @@ namespace AdvancedProject.Migrations
                             PaymentId = 4,
                             Amount = 550m,
                             LeaseId = 4,
-                            Notes = "Full payment received",
                             PaymentDate = new DateTime(2026, 3, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = "Paid"
                         },
@@ -613,13 +642,17 @@ namespace AdvancedProject.Migrations
 
                     b.Property<string>("Block")
                         .IsRequired()
+                        .ValueGeneratedOnAdd()
                         .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(50)")
+                        .HasDefaultValue("");
 
                     b.Property<string>("Building")
                         .IsRequired()
+                        .ValueGeneratedOnAdd()
                         .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(50)")
+                        .HasDefaultValue("");
 
                     b.Property<string>("City")
                         .IsRequired()
@@ -635,10 +668,6 @@ namespace AdvancedProject.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.Property<string>("Floor")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -646,8 +675,10 @@ namespace AdvancedProject.Migrations
 
                     b.Property<string>("Road")
                         .IsRequired()
+                        .ValueGeneratedOnAdd()
                         .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(50)")
+                        .HasDefaultValue("");
 
                     b.HasKey("PropertyId");
 
@@ -684,7 +715,6 @@ namespace AdvancedProject.Migrations
                             City = "Riffa",
                             CreatedAt = new DateTime(2026, 1, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "A residential property with spacious apartments for families.",
-                            Floor = "1",
                             Name = "United Tower",
                             Road = "3062"
                         });
@@ -698,15 +728,15 @@ namespace AdvancedProject.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ManagerId"));
 
-                    b.Property<DateOnly>("HireDate")
-                        .HasColumnType("date");
+                    b.Property<DateTime>("HireDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("ManagerId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex(new[] { "UserId" }, "IX_PropertyManagers_UserId");
 
                     b.ToTable("PropertyManagers");
 
@@ -714,7 +744,7 @@ namespace AdvancedProject.Migrations
                         new
                         {
                             ManagerId = 1,
-                            HireDate = new DateOnly(2025, 1, 1),
+                            HireDate = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             UserId = 1
                         });
                 });
@@ -772,18 +802,9 @@ namespace AdvancedProject.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TenantId"));
 
-                    b.Property<DateTime>("CreatedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("(getdate())");
-
                     b.Property<DateOnly?>("Dob")
                         .HasColumnType("date")
                         .HasColumnName("DOB");
-
-                    b.Property<string>("EmergencyContact")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("NationalId")
                         .HasMaxLength(20)
@@ -794,7 +815,7 @@ namespace AdvancedProject.Migrations
 
                     b.HasKey("TenantId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex(new[] { "UserId" }, "IX_Tenants_UserId");
 
                     b.ToTable("Tenants");
 
@@ -802,45 +823,35 @@ namespace AdvancedProject.Migrations
                         new
                         {
                             TenantId = 1,
-                            CreatedAt = new DateTime(2026, 2, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Dob = new DateOnly(2004, 10, 18),
-                            EmergencyContact = "33111111",
                             NationalId = "041081254",
                             UserId = 2
                         },
                         new
                         {
                             TenantId = 2,
-                            CreatedAt = new DateTime(2026, 3, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Dob = new DateOnly(1995, 3, 26),
-                            EmergencyContact = "33222222",
                             NationalId = "950306321",
                             UserId = 3
                         },
                         new
                         {
                             TenantId = 3,
-                            CreatedAt = new DateTime(2026, 3, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Dob = new DateOnly(1977, 9, 9),
-                            EmergencyContact = "33333333",
                             NationalId = "770907721",
                             UserId = 4
                         },
                         new
                         {
                             TenantId = 4,
-                            CreatedAt = new DateTime(2026, 3, 25, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Dob = new DateOnly(1989, 11, 25),
-                            EmergencyContact = "33444444",
                             NationalId = "891106213",
                             UserId = 5
                         },
                         new
                         {
                             TenantId = 5,
-                            CreatedAt = new DateTime(2026, 3, 28, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Dob = new DateOnly(1982, 7, 18),
-                            EmergencyContact = "33555555",
                             NationalId = "820752231",
                             UserId = 6
                         });
@@ -853,10 +864,6 @@ namespace AdvancedProject.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UnitId"));
-
-                    b.Property<string>("Amenities")
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("AvailabilityStatus")
                         .IsRequired()
@@ -874,7 +881,7 @@ namespace AdvancedProject.Migrations
                     b.Property<decimal>("RentAmount")
                         .HasColumnType("decimal(10, 0)");
 
-                    b.Property<decimal?>("SizeSqFt")
+                    b.Property<decimal>("SizeSqFt")
                         .HasColumnType("decimal(10, 0)");
 
                     b.Property<string>("Type")
@@ -889,7 +896,7 @@ namespace AdvancedProject.Migrations
 
                     b.HasKey("UnitId");
 
-                    b.HasIndex("PropertyId");
+                    b.HasIndex(new[] { "PropertyId" }, "IX_Units_PropertyId");
 
                     b.ToTable("Units");
 
@@ -897,7 +904,6 @@ namespace AdvancedProject.Migrations
                         new
                         {
                             UnitId = 1,
-                            Amenities = "AC",
                             AvailabilityStatus = "Available",
                             CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             PropertyId = 1,
@@ -909,7 +915,6 @@ namespace AdvancedProject.Migrations
                         new
                         {
                             UnitId = 2,
-                            Amenities = "AC",
                             AvailabilityStatus = "Occupied",
                             CreatedAt = new DateTime(2026, 1, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             PropertyId = 1,
@@ -921,7 +926,6 @@ namespace AdvancedProject.Migrations
                         new
                         {
                             UnitId = 3,
-                            Amenities = "Parking",
                             AvailabilityStatus = "Available",
                             CreatedAt = new DateTime(2026, 1, 3, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             PropertyId = 2,
@@ -933,7 +937,6 @@ namespace AdvancedProject.Migrations
                         new
                         {
                             UnitId = 4,
-                            Amenities = "Parking",
                             AvailabilityStatus = "Occupied",
                             CreatedAt = new DateTime(2026, 1, 4, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             PropertyId = 2,
@@ -945,7 +948,6 @@ namespace AdvancedProject.Migrations
                         new
                         {
                             UnitId = 5,
-                            Amenities = "WiFi",
                             AvailabilityStatus = "Available",
                             CreatedAt = new DateTime(2026, 1, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             PropertyId = 1,
@@ -957,7 +959,6 @@ namespace AdvancedProject.Migrations
                         new
                         {
                             UnitId = 6,
-                            Amenities = "AC, Parking",
                             AvailabilityStatus = "Available",
                             CreatedAt = new DateTime(2026, 1, 6, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             PropertyId = 3,
@@ -1026,13 +1027,13 @@ namespace AdvancedProject.Migrations
                         {
                             UserId = 1,
                             CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "admin@mail.com",
-                            FullName = "System Admin",
+                            Email = "manager@mail.com",
+                            FullName = "System Manager",
                             IsActive = true,
-                            Password = "Admin123",
+                            Password = "Manager123",
                             Phone = "33338876",
                             Role = "Manager",
-                            Username = "admin"
+                            Username = "manager"
                         },
                         new
                         {
@@ -1159,7 +1160,6 @@ namespace AdvancedProject.Migrations
             modelBuilder.Entity("MaintenanceStaffSkill", b =>
                 {
                     b.Property<int>("StaffId")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
                     b.Property<int>("SkillId")
@@ -1167,7 +1167,7 @@ namespace AdvancedProject.Migrations
 
                     b.HasKey("StaffId", "SkillId");
 
-                    b.HasIndex("SkillId");
+                    b.HasIndex(new[] { "SkillId" }, "IX_MaintenanceStaffSkills_SkillId");
 
                     b.ToTable("MaintenanceStaffSkills", (string)null);
 
@@ -1211,6 +1211,98 @@ namespace AdvancedProject.Migrations
                         {
                             StaffId = 5,
                             SkillId = 3
+                        });
+                });
+
+            modelBuilder.Entity("UnitAmenity", b =>
+                {
+                    b.Property<int>("UnitId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("AmenityId")
+                        .HasColumnType("int");
+
+                    b.HasKey("UnitId", "AmenityId");
+
+                    b.HasIndex("AmenityId");
+
+                    b.ToTable("UnitAmenities", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            UnitId = 1,
+                            AmenityId = 1
+                        },
+                        new
+                        {
+                            UnitId = 1,
+                            AmenityId = 2
+                        },
+                        new
+                        {
+                            UnitId = 1,
+                            AmenityId = 4
+                        },
+                        new
+                        {
+                            UnitId = 2,
+                            AmenityId = 1
+                        },
+                        new
+                        {
+                            UnitId = 2,
+                            AmenityId = 5
+                        },
+                        new
+                        {
+                            UnitId = 3,
+                            AmenityId = 3
+                        },
+                        new
+                        {
+                            UnitId = 3,
+                            AmenityId = 4
+                        },
+                        new
+                        {
+                            UnitId = 3,
+                            AmenityId = 6
+                        },
+                        new
+                        {
+                            UnitId = 4,
+                            AmenityId = 4
+                        },
+                        new
+                        {
+                            UnitId = 4,
+                            AmenityId = 5
+                        },
+                        new
+                        {
+                            UnitId = 5,
+                            AmenityId = 1
+                        },
+                        new
+                        {
+                            UnitId = 5,
+                            AmenityId = 7
+                        },
+                        new
+                        {
+                            UnitId = 6,
+                            AmenityId = 2
+                        },
+                        new
+                        {
+                            UnitId = 6,
+                            AmenityId = 3
+                        },
+                        new
+                        {
+                            UnitId = 6,
+                            AmenityId = 4
                         });
                 });
 
@@ -1348,6 +1440,19 @@ namespace AdvancedProject.Migrations
                     b.HasOne("AdvancedProject.Models.MaintenanceStaff", null)
                         .WithMany()
                         .HasForeignKey("StaffId")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("UnitAmenity", b =>
+                {
+                    b.HasOne("AdvancedProject.Models.Amenity", null)
+                        .WithMany()
+                        .HasForeignKey("AmenityId")
+                        .IsRequired();
+
+                    b.HasOne("AdvancedProject.Models.Unit", null)
+                        .WithMany()
+                        .HasForeignKey("UnitId")
                         .IsRequired();
                 });
 

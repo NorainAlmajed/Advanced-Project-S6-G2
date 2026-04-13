@@ -15,24 +15,21 @@ public partial class Property
     public string Name { get; set; } = null!;
 
     [StringLength(50)]
-    public string Building { get; set; } = null!;
-
-    [StringLength(50)]
-    public string Road { get; set; } = null!;
-
-    [StringLength(50)]
-    public string Block { get; set; } = null!;
-
-    [StringLength(50)]
-    public string? Floor { get; set; }
-
-    [StringLength(50)]
     public string City { get; set; } = null!;
 
     [StringLength(500)]
     public string? Description { get; set; }
 
     public DateTime CreatedAt { get; set; }
+
+    [StringLength(50)]
+    public string Block { get; set; } = null!;
+
+    [StringLength(50)]
+    public string Building { get; set; } = null!;
+
+    [StringLength(50)]
+    public string Road { get; set; } = null!;
 
     [InverseProperty("Property")]
     public virtual ICollection<Unit> Units { get; set; } = new List<Unit>();

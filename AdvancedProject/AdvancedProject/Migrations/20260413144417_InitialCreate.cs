@@ -12,16 +12,31 @@ namespace AdvancedProject.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "Amenities",
+                columns: table => new
+                {
+                    AmenityId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Amenities", x => x.AmenityId);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Properties",
                 columns: table => new
                 {
                     PropertyId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Address = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     City = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "(getdate())")
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "(getdate())"),
+                    Block = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false, defaultValue: ""),
+                    Building = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false, defaultValue: ""),
+                    Road = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false, defaultValue: "")
                 },
                 constraints: table =>
                 {
@@ -70,8 +85,7 @@ namespace AdvancedProject.Migrations
                     PropertyId = table.Column<int>(type: "int", nullable: false),
                     UnitNumber = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     Type = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    SizeSqFt = table.Column<decimal>(type: "decimal(10,0)", nullable: true),
-                    Amenities = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
+                    SizeSqFt = table.Column<decimal>(type: "decimal(10,0)", nullable: false),
                     RentAmount = table.Column<decimal>(type: "decimal(10,0)", nullable: false),
                     AvailabilityStatus = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "(getdate())")
@@ -93,7 +107,6 @@ namespace AdvancedProject.Migrations
                     StaffId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     AvailabilityStatus = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "(getdate())"),
                     UserId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -115,9 +128,7 @@ namespace AdvancedProject.Migrations
                     UserId = table.Column<int>(type: "int", nullable: false),
                     Message = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "(getdate())"),
-                    IsRead = table.Column<bool>(type: "bit", nullable: false),
-                    RelatedEntityType = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    RelatedEntityId = table.Column<int>(type: "int", nullable: true)
+                    Type = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -136,7 +147,7 @@ namespace AdvancedProject.Migrations
                     ManagerId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     UserId = table.Column<int>(type: "int", nullable: false),
-                    HireDate = table.Column<DateOnly>(type: "date", nullable: false)
+                    HireDate = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -156,8 +167,6 @@ namespace AdvancedProject.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     DOB = table.Column<DateOnly>(type: "date", nullable: true),
                     NationalId = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
-                    EmergencyContact = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "(getdate())"),
                     UserId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -168,6 +177,28 @@ namespace AdvancedProject.Migrations
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "UserId");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UnitAmenities",
+                columns: table => new
+                {
+                    UnitId = table.Column<int>(type: "int", nullable: false),
+                    AmenityId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UnitAmenities", x => new { x.UnitId, x.AmenityId });
+                    table.ForeignKey(
+                        name: "FK_UnitAmenities_Amenities_AmenityId",
+                        column: x => x.AmenityId,
+                        principalTable: "Amenities",
+                        principalColumn: "AmenityId");
+                    table.ForeignKey(
+                        name: "FK_UnitAmenities_Units_UnitId",
+                        column: x => x.UnitId,
+                        principalTable: "Units",
+                        principalColumn: "UnitId");
                 });
 
             migrationBuilder.CreateTable(
@@ -202,7 +233,8 @@ namespace AdvancedProject.Migrations
                     UnitId = table.Column<int>(type: "int", nullable: false),
                     ApplicationDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "(getdate())"),
                     Status = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
-                    Notes = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true)
+                    ApproveTime = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    RejectTime = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -227,11 +259,12 @@ namespace AdvancedProject.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     TenantId = table.Column<int>(type: "int", nullable: false),
                     UnitId = table.Column<int>(type: "int", nullable: false),
-                    StartDate = table.Column<DateOnly>(type: "date", nullable: false),
-                    EndDate = table.Column<DateOnly>(type: "date", nullable: false),
+                    StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    EndDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     MonthlyRent = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
                     Status = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "(getdate())")
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "(getdate())"),
+                    TerminationDate = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -262,7 +295,11 @@ namespace AdvancedProject.Migrations
                     Status = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     AssignedStaffId = table.Column<int>(type: "int", nullable: true),
                     Notes = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
-                    CompletedDate = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    CompletedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    AssignedTime = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ResolvedTime = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ClosedTime = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    InProgressTime = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -298,8 +335,7 @@ namespace AdvancedProject.Migrations
                     LeaseId = table.Column<int>(type: "int", nullable: false),
                     Amount = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
                     PaymentDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "(getdate())"),
-                    Status = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
-                    Notes = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true)
+                    Status = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -382,6 +418,11 @@ namespace AdvancedProject.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_UnitAmenities_AmenityId",
+                table: "UnitAmenities",
+                column: "AmenityId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Units_PropertyId",
                 table: "Units",
                 column: "PropertyId");
@@ -415,6 +456,9 @@ namespace AdvancedProject.Migrations
                 name: "PropertyManagers");
 
             migrationBuilder.DropTable(
+                name: "UnitAmenities");
+
+            migrationBuilder.DropTable(
                 name: "MaintenanceStaff");
 
             migrationBuilder.DropTable(
@@ -422,6 +466,9 @@ namespace AdvancedProject.Migrations
 
             migrationBuilder.DropTable(
                 name: "Leases");
+
+            migrationBuilder.DropTable(
+                name: "Amenities");
 
             migrationBuilder.DropTable(
                 name: "Tenants");

@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AdvancedProject.Models;
 
+[Index("UserId", Name = "IX_Notifications_UserId")]
 public partial class Notification
 {
     [Key]
@@ -18,12 +19,8 @@ public partial class Notification
 
     public DateTime CreatedAt { get; set; }
 
-    public bool IsRead { get; set; }
-
     [StringLength(50)]
-    public string? RelatedEntityType { get; set; }
-
-    public int? RelatedEntityId { get; set; }
+    public string Type { get; set; } = null!;
 
     [ForeignKey("UserId")]
     [InverseProperty("Notifications")]

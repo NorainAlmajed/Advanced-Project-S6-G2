@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AdvancedProject.Models;
 
+[Index("UserId", Name = "IX_Tenants_UserId")]
 public partial class Tenant
 {
     [Key]
@@ -16,11 +17,6 @@ public partial class Tenant
 
     [StringLength(20)]
     public string? NationalId { get; set; }
-
-    [StringLength(100)]
-    public string? EmergencyContact { get; set; }
-
-    public DateTime CreatedAt { get; set; }
 
     public int UserId { get; set; }
 
