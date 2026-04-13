@@ -20,10 +20,17 @@ namespace AdvancedProject.Controllers
         }
 
         // GET: Units
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? id)
         {
-            var aPContext = _context.Units.Include(u => u.Property);
+            var aPContext = _context.Units.Include(u => u.Property).AsQueryable();
+
+            if (id != null)
+            {
+                aPContext = aPContext.Where(e => e.PropertyId == id);
+            }
+
             return View(await aPContext.ToListAsync());
+
         }
 
         // GET: Units/Details/5

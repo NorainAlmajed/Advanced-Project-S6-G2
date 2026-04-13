@@ -61,9 +61,10 @@
                 @Html.DisplayFor(modelItem => item.Road)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.PropertyId">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.PropertyId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.PropertyId">Delete</a>
+                    <a asp-controller="Units" asp-action="Index" asp-route-id="@item.PropertyId">
+                        View Units
+                    </a>
             </td>
         </tr>
 }

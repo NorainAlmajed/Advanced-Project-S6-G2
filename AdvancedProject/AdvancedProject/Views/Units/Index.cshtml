@@ -49,10 +49,9 @@
                 @Html.DisplayFor(modelItem => item.AvailabilityStatus)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.UnitId">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.UnitId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.UnitId">Delete</a>
-            </td>
+                <a asp-controller="LeaseApplications" asp-action="Create" asp-route-unitId="@item.UnitId">Apply</a>
+                </td>
         </tr>
 }
     </tbody>

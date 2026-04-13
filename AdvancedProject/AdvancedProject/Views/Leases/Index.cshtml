@@ -13,31 +13,28 @@
     <thead>
         <tr>
             <th>
+                @Html.DisplayNameFor(model => model.LeaseId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Tenant.User.FullName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Unit.UnitNumber)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.StartDate)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.EndDate)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.Duration)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.MonthlyRent)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Status)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CreatedAt)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TerminationDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Duration)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Tenant)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Unit)
             </th>
             <th></th>
         </tr>
@@ -46,31 +43,28 @@
 @foreach (var item in Model) {
         <tr>
             <td>
+                @Html.DisplayFor(modelItem => item.LeaseId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Tenant.User.FullName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Unit.UnitNumber)
+            </td>
+            <td>
                 @Html.DisplayFor(modelItem => item.StartDate)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.EndDate)
             </td>
             <td>
+                @Html.DisplayFor(modelItem => item.Duration)
+            </td>
+            <td>
                 @Html.DisplayFor(modelItem => item.MonthlyRent)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Status)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreatedAt)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TerminationDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Duration)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Tenant.TenantId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Unit.UnitId)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.LeaseId">Edit</a> |
