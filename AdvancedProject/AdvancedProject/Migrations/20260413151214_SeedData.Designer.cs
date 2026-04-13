@@ -4,6 +4,7 @@ using AdvancedProject.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AdvancedProject.Migrations
 {
     [DbContext(typeof(APContext))]
-    partial class APContextModelSnapshot : ModelSnapshot
+    [Migration("20260413151214_SeedData")]
+    partial class SeedData
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1027,13 +1030,13 @@ namespace AdvancedProject.Migrations
                         {
                             UserId = 1,
                             CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "manager@mail.com",
-                            FullName = "System Manager",
+                            Email = "admin@mail.com",
+                            FullName = "System Admin",
                             IsActive = true,
-                            Password = "Manager123",
+                            Password = "Admin123",
                             Phone = "33338876",
                             Role = "Manager",
-                            Username = "manager"
+                            Username = "admin"
                         },
                         new
                         {
