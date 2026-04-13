@@ -26,6 +26,10 @@ public partial class LeaseApplication
 
     public DateTime? RejectTime { get; set; }
 
+    public DateTime StartDate { get; set; }
+
+    public int Duration { get; set; }
+
     [ForeignKey("TenantId")]
     [InverseProperty("LeaseApplications")]
     public virtual Tenant Tenant { get; set; } = null!;
