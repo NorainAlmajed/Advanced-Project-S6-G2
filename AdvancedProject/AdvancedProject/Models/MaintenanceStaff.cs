@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 namespace AdvancedProject.Models;
 
 [Table("MaintenanceStaff")]
+[Index("UserId", Name = "IX_MaintenanceStaff_UserId")]
 public partial class MaintenanceStaff
 {
     [Key]
@@ -14,8 +15,6 @@ public partial class MaintenanceStaff
 
     [StringLength(20)]
     public string AvailabilityStatus { get; set; } = null!;
-
-    public DateTime CreatedAt { get; set; }
 
     public int UserId { get; set; }
 

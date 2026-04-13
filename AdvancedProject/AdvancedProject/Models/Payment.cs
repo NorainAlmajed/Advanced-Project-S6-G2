@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AdvancedProject.Models;
 
+[Index("LeaseId", Name = "IX_Payments_LeaseId")]
 public partial class Payment
 {
     [Key]
@@ -20,9 +21,6 @@ public partial class Payment
 
     [StringLength(20)]
     public string Status { get; set; } = null!;
-
-    [StringLength(500)]
-    public string? Notes { get; set; }
 
     [ForeignKey("LeaseId")]
     [InverseProperty("Payments")]

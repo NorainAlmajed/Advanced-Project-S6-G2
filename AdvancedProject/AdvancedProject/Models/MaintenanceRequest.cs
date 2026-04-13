@@ -6,6 +6,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AdvancedProject.Models;
 
+[Index("AssignedStaffId", Name = "IX_MaintenanceRequests_AssignedStaffId")]
+[Index("SkillId", Name = "IX_MaintenanceRequests_SkillId")]
+[Index("TenantId", Name = "IX_MaintenanceRequests_TenantId")]
+[Index("UnitId", Name = "IX_MaintenanceRequests_UnitId")]
 public partial class MaintenanceRequest
 {
     [Key]
@@ -31,6 +35,14 @@ public partial class MaintenanceRequest
     public string? Notes { get; set; }
 
     public DateTime? CompletedDate { get; set; }
+
+    public DateTime? AssignedTime { get; set; }
+
+    public DateTime? ResolvedTime { get; set; }
+
+    public DateTime? ClosedTime { get; set; }
+
+    public DateTime? InProgressTime { get; set; }
 
     [ForeignKey("AssignedStaffId")]
     [InverseProperty("MaintenanceRequests")]

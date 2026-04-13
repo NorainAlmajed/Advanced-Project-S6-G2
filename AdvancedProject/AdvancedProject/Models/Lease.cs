@@ -6,6 +6,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AdvancedProject.Models;
 
+[Index("TenantId", Name = "IX_Leases_TenantId")]
+[Index("UnitId", Name = "IX_Leases_UnitId")]
 public partial class Lease
 {
     [Key]
@@ -15,9 +17,9 @@ public partial class Lease
 
     public int UnitId { get; set; }
 
-    public DateOnly StartDate { get; set; }
+    public DateTime StartDate { get; set; }
 
-    public DateOnly EndDate { get; set; }
+    public DateTime EndDate { get; set; }
 
     [Column(TypeName = "decimal(10, 2)")]
     public decimal MonthlyRent { get; set; }
@@ -26,6 +28,8 @@ public partial class Lease
     public string Status { get; set; } = null!;
 
     public DateTime CreatedAt { get; set; }
+
+    public DateTime? TerminationDate { get; set; }
 
     [InverseProperty("Lease")]
     public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();

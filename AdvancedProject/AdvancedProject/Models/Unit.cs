@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AdvancedProject.Models;
 
+[Index("PropertyId", Name = "IX_Units_PropertyId")]
 public partial class Unit
 {
     [Key]
@@ -20,10 +21,7 @@ public partial class Unit
     public string Type { get; set; } = null!;
 
     [Column(TypeName = "decimal(10, 0)")]
-    public decimal? SizeSqFt { get; set; }
-
-    [StringLength(255)]
-    public string? Amenities { get; set; }
+    public decimal SizeSqFt { get; set; }
 
     [Column(TypeName = "decimal(10, 0)")]
     public decimal RentAmount { get; set; }
@@ -45,4 +43,8 @@ public partial class Unit
     [ForeignKey("PropertyId")]
     [InverseProperty("Units")]
     public virtual Property Property { get; set; } = null!;
+
+    [ForeignKey("UnitId")]
+    [InverseProperty("Units")]
+    public virtual ICollection<Amenity> Amenities { get; set; } = new List<Amenity>();
 }

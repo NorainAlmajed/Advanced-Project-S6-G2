@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AdvancedProject.Models;
 
+[Index("UserId", Name = "IX_PropertyManagers_UserId")]
 public partial class PropertyManager
 {
     [Key]
@@ -13,7 +14,7 @@ public partial class PropertyManager
 
     public int UserId { get; set; }
 
-    public DateOnly HireDate { get; set; }
+    public DateTime HireDate { get; set; }
 
     [ForeignKey("UserId")]
     [InverseProperty("PropertyManagers")]
