@@ -1,22 +1,21 @@
 ﻿@model IEnumerable<AdvancedProject.Models.User>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Users";
 }
 
-<h1>Index</h1>
+<h1>Users</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
+    <a asp-controller="Tenants" asp-action="Index">View Tenanats</a>
+    <a asp-controller="MaintenanceStaffs" asp-action="Index">View Maintenance Staff</a>
 </p>
 <table class="table">
     <thead>
         <tr>
             <th>
                 @Html.DisplayNameFor(model => model.Username)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Password)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.FullName)
@@ -30,9 +29,6 @@
             <th>
                 @Html.DisplayNameFor(model => model.Role)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CreatedAt)
-            </th>
            
             <th></th>
         </tr>
@@ -42,9 +38,6 @@
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.Username)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Password)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.FullName)
@@ -57,9 +50,6 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Role)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreatedAt)
             </td>
           
             <td>
