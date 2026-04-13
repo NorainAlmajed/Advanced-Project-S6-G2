@@ -47,7 +47,7 @@ namespace AdvancedProject.Controllers
         }
 
         // GET: LeaseApplications/Create
-        public IActionResult Create()
+        public IActionResult Create(int? unitId)
         {
             ViewData["TenantId"] = new SelectList(_context.Tenants, "TenantId", "TenantId");
             ViewData["UnitId"] = new SelectList(_context.Units, "UnitId", "UnitId");
