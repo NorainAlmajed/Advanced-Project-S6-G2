@@ -158,6 +158,8 @@ public partial class APContext : DbContext
             entity.Property(e => e.CreatedAt).HasDefaultValueSql("(getdate())");
         });
 
+
+
         OnModelCreatingPartial(modelBuilder);
     }
 
