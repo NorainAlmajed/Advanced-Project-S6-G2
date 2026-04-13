@@ -54,7 +54,7 @@ namespace AdvancedProject.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("UserId,Username,Password,FullName,Email,Phone,Role,CreatedAt,IsActive")] User user)
+        public async Task<IActionResult> Create([Bind("UserId,Username,Password,FullName,Email,Phone,Role,CreatedAt")] User user)
         {
             if (ModelState.IsValid)
             {
