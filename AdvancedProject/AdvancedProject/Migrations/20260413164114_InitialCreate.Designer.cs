@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AdvancedProject.Migrations
 {
     [DbContext(typeof(APContext))]
-    [Migration("20260413144417_InitialCreate")]
+    [Migration("20260413164114_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -55,6 +55,9 @@ namespace AdvancedProject.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("(getdate())");
+
+                    b.Property<int>("Duration")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
@@ -104,7 +107,13 @@ namespace AdvancedProject.Migrations
                     b.Property<DateTime?>("ApproveTime")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("Duration")
+                        .HasColumnType("int");
+
                     b.Property<DateTime?>("RejectTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Status")
@@ -522,7 +531,7 @@ namespace AdvancedProject.Migrations
 
                     b.HasKey("UnitId", "AmenityId");
 
-                    b.HasIndex("AmenityId");
+                    b.HasIndex(new[] { "AmenityId" }, "IX_UnitAmenities_AmenityId");
 
                     b.ToTable("UnitAmenities", (string)null);
                 });

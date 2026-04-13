@@ -234,7 +234,9 @@ namespace AdvancedProject.Migrations
                     ApplicationDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "(getdate())"),
                     Status = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     ApproveTime = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    RejectTime = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    RejectTime = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Duration = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -264,7 +266,8 @@ namespace AdvancedProject.Migrations
                     MonthlyRent = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
                     Status = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "(getdate())"),
-                    TerminationDate = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    TerminationDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Duration = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {

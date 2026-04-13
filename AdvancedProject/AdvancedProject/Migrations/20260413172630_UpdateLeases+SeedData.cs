@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace AdvancedProject.Migrations
 {
     /// <inheritdoc />
-    public partial class SeedData : Migration
+    public partial class UpdateLeasesSeedData : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -32,9 +32,9 @@ namespace AdvancedProject.Migrations
                 columns: new[] { "PropertyId", "Block", "Building", "City", "CreatedAt", "Description", "Name", "Road" },
                 values: new object[,]
                 {
-                    { 1, "220", "611", "Manama", new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "A modern residential complex offering comfort and essential amenities.", "Abraj Al Lulu", "271" },
-                    { 2, "708", "246", "Muharraq", new DateTime(2026, 1, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), "A contemporary tower with modern facilities in a prime location.", "Almoayyed Tower", "811" },
-                    { 3, "461", "922", "Riffa", new DateTime(2026, 1, 10, 0, 0, 0, 0, DateTimeKind.Unspecified), "A residential property with spacious apartments for families.", "United Tower", "3062" }
+                    { 1, "220", "611", "Manama", new DateTime(2026, 1, 1, 12, 55, 21, 0, DateTimeKind.Unspecified), "A modern residential complex offering comfort and essential amenities.", "Abraj Al Lulu", "271" },
+                    { 2, "708", "246", "Muharraq", new DateTime(2026, 1, 5, 15, 22, 29, 0, DateTimeKind.Unspecified), "A contemporary tower with modern facilities in a prime location.", "Almoayyed Tower", "811" },
+                    { 3, "461", "922", "Riffa", new DateTime(2026, 1, 10, 3, 31, 43, 0, DateTimeKind.Unspecified), "A residential property with spacious apartments for families.", "United Tower", "3062" }
                 });
 
             migrationBuilder.InsertData(
@@ -54,17 +54,17 @@ namespace AdvancedProject.Migrations
                 columns: new[] { "UserId", "CreatedAt", "Email", "FullName", "IsActive", "Password", "Phone", "Role", "Username" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "admin@mail.com", "System Admin", true, "Admin123", "33338876", "Manager", "admin" },
-                    { 2, new DateTime(2026, 2, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), "zahraa.hubail8@gmail.com", "Zahraa Hubail", true, "Zahraa.123", "33735771", "Tenant", "zahraa.hubail" },
-                    { 3, new DateTime(2026, 3, 15, 0, 0, 0, 0, DateTimeKind.Unspecified), "raghad@gmail.com", "Raghad Aleskafi", true, "Raghad.123", "39004266", "Tenant", "raghad.aleskafi" },
-                    { 4, new DateTime(2026, 3, 20, 0, 0, 0, 0, DateTimeKind.Unspecified), "fatima@gmail.com", "Fatima Alaiwi", true, "Fatima.123", "36635578", "Tenant", "fatima.alaiwi" },
-                    { 5, new DateTime(2026, 3, 25, 0, 0, 0, 0, DateTimeKind.Unspecified), "norain@mail.com", "Norain Hassan", true, "Norain.123", "33744063", "Tenant", "norain.hassan" },
-                    { 6, new DateTime(2026, 3, 28, 0, 0, 0, 0, DateTimeKind.Unspecified), "ahmed.ali@gmail.com", "Ahmed Ali", true, "Ahmed.999", "33871125", "Tenant", "ahmed.ali" },
-                    { 7, new DateTime(2026, 3, 10, 0, 0, 0, 0, DateTimeKind.Unspecified), "alihassan@mail.com", "Ali Hassan", true, "Ali.123", "39207552", "Staff", "ali.hassan" },
-                    { 8, new DateTime(2026, 3, 11, 0, 0, 0, 0, DateTimeKind.Unspecified), "sara.mohamed@gmail.com", "Sara Mohamed", true, "Sara.888", "33699152", "Staff", "sara.mohamed" },
-                    { 9, new DateTime(2026, 3, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), "abbas@gmail.com", "Abbas Hadi", true, "Abbas.123", "33546672", "Staff", "abbas.hadi" },
-                    { 10, new DateTime(2026, 3, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), "laila@gmail.com", "Laila Yaser", true, "Laila.999", "39126632", "Staff", "laila.yaser" },
-                    { 11, new DateTime(2026, 3, 14, 0, 0, 0, 0, DateTimeKind.Unspecified), "mohammed@gmail.com", "Mohammed Karim", true, "mohammed.123", "33921092", "Staff", "mohammed.karim" }
+                    { 1, new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "manager@mail.com", "System Manager", true, "Manager123", "33338876", "Manager", "manager" },
+                    { 2, new DateTime(2026, 2, 12, 2, 3, 4, 0, DateTimeKind.Unspecified), "zahraa.hubail8@gmail.com", "Zahraa Hubail", true, "Zahraa.123", "33735771", "Tenant", "zahraa.hubail" },
+                    { 3, new DateTime(2026, 3, 15, 15, 12, 55, 0, DateTimeKind.Unspecified), "raghad@gmail.com", "Raghad Aleskafi", true, "Raghad.123", "39004266", "Tenant", "raghad.aleskafi" },
+                    { 4, new DateTime(2026, 3, 20, 6, 11, 2, 0, DateTimeKind.Unspecified), "fatima@gmail.com", "Fatima Alaiwi", true, "Fatima.123", "36635578", "Tenant", "fatima.alaiwi" },
+                    { 5, new DateTime(2026, 3, 25, 5, 15, 27, 0, DateTimeKind.Unspecified), "norain@mail.com", "Norain Hassan", true, "Norain.123", "33744063", "Tenant", "norain.hassan" },
+                    { 6, new DateTime(2026, 3, 28, 7, 17, 22, 0, DateTimeKind.Unspecified), "ahmed.ali@gmail.com", "Ahmed Ali", true, "Ahmed.999", "33871125", "Tenant", "ahmed.ali" },
+                    { 7, new DateTime(2026, 3, 10, 9, 16, 34, 0, DateTimeKind.Unspecified), "alihassan@mail.com", "Ali Hassan", true, "Ali.123", "39207552", "Staff", "ali.hassan" },
+                    { 8, new DateTime(2026, 3, 11, 9, 10, 10, 0, DateTimeKind.Unspecified), "sara.mohamed@gmail.com", "Sara Mohamed", true, "Sara.888", "33699152", "Staff", "sara.mohamed" },
+                    { 9, new DateTime(2026, 3, 12, 10, 2, 15, 0, DateTimeKind.Unspecified), "abbas@gmail.com", "Abbas Hadi", true, "Abbas.123", "33546672", "Staff", "abbas.hadi" },
+                    { 10, new DateTime(2026, 3, 13, 6, 21, 41, 0, DateTimeKind.Unspecified), "laila@gmail.com", "Laila Yaser", true, "Laila.999", "39126632", "Staff", "laila.yaser" },
+                    { 11, new DateTime(2026, 3, 14, 8, 13, 44, 0, DateTimeKind.Unspecified), "mohammed@gmail.com", "Mohammed Karim", true, "mohammed.123", "33921092", "Staff", "mohammed.karim" }
                 });
 
             migrationBuilder.InsertData(
@@ -84,16 +84,16 @@ namespace AdvancedProject.Migrations
                 columns: new[] { "NotificationId", "CreatedAt", "Message", "Type", "UserId" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2026, 2, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "New lease application received", "LeaseApplication", 1 },
-                    { 2, new DateTime(2026, 2, 3, 0, 0, 0, 0, DateTimeKind.Unspecified), "Your application has been approved", "LeaseApplication", 2 },
-                    { 3, new DateTime(2026, 3, 2, 0, 0, 0, 0, DateTimeKind.Unspecified), "Maintenance request updated", "MaintenanceRequest", 3 },
-                    { 4, new DateTime(2026, 3, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), "Payment received successfully", "Payment", 4 },
-                    { 5, new DateTime(2026, 3, 15, 0, 0, 0, 0, DateTimeKind.Unspecified), "Lease activated for your unit", "Lease", 5 },
-                    { 6, new DateTime(2026, 3, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "New maintenance request assigned", "MaintenanceRequest", 7 },
-                    { 7, new DateTime(2026, 3, 2, 0, 0, 0, 0, DateTimeKind.Unspecified), "Electrical repair marked as in progress", "MaintenanceRequest", 8 },
-                    { 8, new DateTime(2026, 3, 3, 0, 0, 0, 0, DateTimeKind.Unspecified), "HVAC issue reported in Unit A2", "MaintenanceRequest", 9 },
-                    { 9, new DateTime(2026, 3, 4, 0, 0, 0, 0, DateTimeKind.Unspecified), "Carpentry issue reported in Unit B2", "MaintenanceRequest", 10 },
-                    { 10, new DateTime(2026, 3, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), "Painting issue reported in Unit A3", "MaintenanceRequest", 11 }
+                    { 1, new DateTime(2026, 2, 1, 10, 33, 21, 0, DateTimeKind.Unspecified), "New lease application received", "LeaseApplication", 1 },
+                    { 2, new DateTime(2026, 2, 3, 9, 18, 55, 0, DateTimeKind.Unspecified), "Your application has been approved", "LeaseApplication", 2 },
+                    { 3, new DateTime(2026, 3, 2, 14, 25, 14, 0, DateTimeKind.Unspecified), "Maintenance request updated", "MaintenanceRequest", 3 },
+                    { 4, new DateTime(2026, 3, 12, 13, 44, 21, 0, DateTimeKind.Unspecified), "Payment received successfully", "Payment", 4 },
+                    { 5, new DateTime(2026, 3, 15, 21, 4, 17, 0, DateTimeKind.Unspecified), "Lease activated for your unit", "Lease", 5 },
+                    { 6, new DateTime(2026, 3, 1, 12, 6, 33, 0, DateTimeKind.Unspecified), "New maintenance request assigned", "MaintenanceRequest", 7 },
+                    { 7, new DateTime(2026, 3, 2, 8, 15, 32, 0, DateTimeKind.Unspecified), "Electrical repair marked as in progress", "MaintenanceRequest", 8 },
+                    { 8, new DateTime(2026, 3, 3, 21, 17, 28, 0, DateTimeKind.Unspecified), "HVAC issue reported in Unit A2", "MaintenanceRequest", 9 },
+                    { 9, new DateTime(2026, 3, 4, 17, 5, 43, 0, DateTimeKind.Unspecified), "Carpentry issue reported in Unit B2", "MaintenanceRequest", 10 },
+                    { 10, new DateTime(2026, 3, 5, 23, 14, 10, 0, DateTimeKind.Unspecified), "Painting issue reported in Unit A3", "MaintenanceRequest", 11 }
                 });
 
             migrationBuilder.InsertData(
@@ -118,36 +118,39 @@ namespace AdvancedProject.Migrations
                 columns: new[] { "UnitId", "AvailabilityStatus", "CreatedAt", "PropertyId", "RentAmount", "SizeSqFt", "Type", "UnitNumber" },
                 values: new object[,]
                 {
-                    { 1, "Available", new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 1, 300m, 100m, "Apartment", "A1" },
-                    { 2, "Occupied", new DateTime(2026, 1, 2, 0, 0, 0, 0, DateTimeKind.Unspecified), 1, 350m, 120m, "Apartment", "A2" },
-                    { 3, "Available", new DateTime(2026, 1, 3, 0, 0, 0, 0, DateTimeKind.Unspecified), 2, 500m, 200m, "Office", "B1" },
-                    { 4, "Occupied", new DateTime(2026, 1, 4, 0, 0, 0, 0, DateTimeKind.Unspecified), 2, 550m, 250m, "Office", "B2" },
-                    { 5, "Available", new DateTime(2026, 1, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), 1, 250m, 80m, "Studio", "A3" },
-                    { 6, "Available", new DateTime(2026, 1, 6, 0, 0, 0, 0, DateTimeKind.Unspecified), 3, 320m, 110m, "Apartment", "C1" }
+                    { 1, "Available", new DateTime(2026, 1, 1, 4, 12, 55, 0, DateTimeKind.Unspecified), 1, 300m, 100m, "Apartment", "A1" },
+                    { 2, "Occupied", new DateTime(2026, 1, 2, 23, 16, 33, 0, DateTimeKind.Unspecified), 1, 350m, 120m, "Apartment", "A2" },
+                    { 3, "Available", new DateTime(2026, 1, 3, 9, 11, 7, 0, DateTimeKind.Unspecified), 2, 500m, 200m, "Office", "B1" },
+                    { 4, "Occupied", new DateTime(2026, 1, 4, 7, 16, 22, 0, DateTimeKind.Unspecified), 2, 550m, 250m, "Office", "B2" },
+                    { 5, "Available", new DateTime(2026, 1, 5, 10, 10, 12, 0, DateTimeKind.Unspecified), 1, 250m, 80m, "Studio", "A3" },
+                    { 6, "Available", new DateTime(2026, 1, 6, 4, 15, 45, 0, DateTimeKind.Unspecified), 3, 320m, 110m, "Apartment", "C1" }
                 });
 
             migrationBuilder.InsertData(
                 table: "LeaseApplications",
-                columns: new[] { "ApplicationId", "ApplicationDate", "ApproveTime", "RejectTime", "Status", "TenantId", "UnitId" },
+                columns: new[] { "ApplicationId", "ApplicationDate", "ApproveTime", "Duration", "RejectTime", "StartDate", "Status", "TenantId", "UnitId" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2026, 2, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, null, "Approved", 1, 1 },
-                    { 2, new DateTime(2026, 2, 3, 0, 0, 0, 0, DateTimeKind.Unspecified), null, null, "Pending", 2, 2 },
-                    { 3, new DateTime(2026, 2, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), null, null, "Rejected", 3, 3 },
-                    { 4, new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), null, null, "Approved", 4, 4 },
-                    { 5, new DateTime(2026, 2, 9, 0, 0, 0, 0, DateTimeKind.Unspecified), null, null, "Pending", 5, 5 }
+                    { 1, new DateTime(2026, 2, 1, 20, 30, 33, 0, DateTimeKind.Unspecified), new DateTime(2026, 2, 2, 13, 22, 17, 0, DateTimeKind.Unspecified), 6, null, new DateTime(2026, 6, 1, 8, 0, 0, 0, DateTimeKind.Unspecified), "Approved", 1, 1 },
+                    { 2, new DateTime(2026, 2, 3, 3, 7, 12, 0, DateTimeKind.Unspecified), null, 24, null, new DateTime(2026, 5, 5, 18, 9, 24, 0, DateTimeKind.Unspecified), "Pending", 2, 2 },
+                    { 3, new DateTime(2026, 2, 5, 5, 24, 13, 0, DateTimeKind.Unspecified), null, 6, new DateTime(2026, 2, 22, 3, 17, 29, 0, DateTimeKind.Unspecified), new DateTime(2027, 1, 1, 9, 10, 22, 0, DateTimeKind.Unspecified), "Rejected", 3, 3 },
+                    { 4, new DateTime(2026, 2, 2, 22, 55, 2, 0, DateTimeKind.Unspecified), new DateTime(2026, 2, 5, 14, 30, 0, 0, DateTimeKind.Unspecified), 12, null, new DateTime(2026, 3, 15, 8, 0, 0, 0, DateTimeKind.Unspecified), "Approved", 4, 4 },
+                    { 5, new DateTime(2026, 2, 9, 9, 33, 11, 0, DateTimeKind.Unspecified), null, 12, null, new DateTime(2026, 4, 20, 14, 22, 5, 0, DateTimeKind.Unspecified), "Pending", 5, 5 },
+                    { 6, new DateTime(2026, 3, 3, 10, 21, 10, 0, DateTimeKind.Unspecified), new DateTime(2026, 3, 5, 6, 44, 3, 0, DateTimeKind.Unspecified), 6, null, new DateTime(2026, 7, 1, 12, 6, 12, 0, DateTimeKind.Unspecified), "Approved", 2, 3 },
+                    { 7, new DateTime(2026, 1, 12, 6, 10, 9, 0, DateTimeKind.Unspecified), new DateTime(2026, 3, 11, 7, 52, 33, 0, DateTimeKind.Unspecified), 24, null, new DateTime(2026, 3, 10, 11, 1, 22, 0, DateTimeKind.Unspecified), "Approved", 3, 1 },
+                    { 8, new DateTime(2026, 1, 12, 14, 32, 17, 0, DateTimeKind.Unspecified), new DateTime(2026, 1, 15, 4, 32, 29, 0, DateTimeKind.Unspecified), 24, null, new DateTime(2026, 2, 1, 8, 0, 0, 0, DateTimeKind.Unspecified), "Approved", 5, 5 }
                 });
 
             migrationBuilder.InsertData(
                 table: "Leases",
-                columns: new[] { "LeaseId", "CreatedAt", "EndDate", "MonthlyRent", "StartDate", "Status", "TenantId", "TerminationDate", "UnitId" },
+                columns: new[] { "LeaseId", "CreatedAt", "Duration", "EndDate", "MonthlyRent", "StartDate", "Status", "TenantId", "TerminationDate", "UnitId" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2026, 3, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2027, 3, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 300m, new DateTime(2026, 3, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Active", 1, null, 2 },
-                    { 2, new DateTime(2026, 3, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2027, 3, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), 500m, new DateTime(2026, 3, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), "Active", 2, null, 3 },
-                    { 3, new DateTime(2026, 3, 10, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2027, 3, 10, 0, 0, 0, 0, DateTimeKind.Unspecified), 350m, new DateTime(2026, 3, 10, 0, 0, 0, 0, DateTimeKind.Unspecified), "Terminated", 3, null, 1 },
-                    { 4, new DateTime(2026, 3, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2027, 3, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), 550m, new DateTime(2026, 3, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), "Active", 4, null, 4 },
-                    { 5, new DateTime(2026, 3, 15, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2027, 3, 15, 0, 0, 0, 0, DateTimeKind.Unspecified), 250m, new DateTime(2026, 3, 15, 0, 0, 0, 0, DateTimeKind.Unspecified), "Active", 5, null, 5 }
+                    { 1, new DateTime(2026, 2, 2, 13, 22, 17, 0, DateTimeKind.Unspecified), 6, new DateTime(2026, 12, 1, 8, 0, 0, 0, DateTimeKind.Unspecified), 300m, new DateTime(2026, 6, 1, 8, 0, 0, 0, DateTimeKind.Unspecified), "Active", 1, null, 1 },
+                    { 2, new DateTime(2026, 3, 5, 6, 44, 3, 0, DateTimeKind.Unspecified), 6, new DateTime(2026, 6, 30, 8, 0, 0, 0, DateTimeKind.Unspecified), 500m, new DateTime(2026, 7, 1, 12, 6, 12, 0, DateTimeKind.Unspecified), "Active", 2, null, 3 },
+                    { 3, new DateTime(2026, 3, 10, 7, 52, 33, 0, DateTimeKind.Unspecified), 24, new DateTime(2027, 3, 10, 8, 0, 0, 0, DateTimeKind.Unspecified), 350m, new DateTime(2026, 3, 10, 11, 1, 22, 0, DateTimeKind.Unspecified), "Terminated", 3, null, 1 },
+                    { 4, new DateTime(2026, 2, 5, 14, 30, 0, 0, DateTimeKind.Unspecified), 12, new DateTime(2027, 3, 14, 8, 0, 0, 0, DateTimeKind.Unspecified), 550m, new DateTime(2026, 3, 15, 8, 0, 0, 0, DateTimeKind.Unspecified), "Active", 4, null, 4 },
+                    { 5, new DateTime(2026, 1, 15, 4, 32, 29, 0, DateTimeKind.Unspecified), 24, new DateTime(2028, 1, 31, 8, 0, 0, 0, DateTimeKind.Unspecified), 250m, new DateTime(2026, 2, 1, 8, 0, 0, 0, DateTimeKind.Unspecified), "Active", 5, null, 5 }
                 });
 
             migrationBuilder.InsertData(
@@ -155,11 +158,11 @@ namespace AdvancedProject.Migrations
                 columns: new[] { "RequestId", "AssignedStaffId", "AssignedTime", "ClosedTime", "CompletedDate", "InProgressTime", "Notes", "Priority", "RequestDate", "ResolvedTime", "SkillId", "Status", "TenantId", "UnitId" },
                 values: new object[,]
                 {
-                    { 1, 1, null, null, null, null, "Water leaking from bathroom pipe", "High", new DateTime(2026, 3, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, 1, "Submitted", 1, 2 },
-                    { 2, 2, null, null, null, null, "Living room light not working", "Medium", new DateTime(2026, 3, 2, 0, 0, 0, 0, DateTimeKind.Unspecified), null, 2, "In Progress", 2, 3 },
-                    { 3, 3, null, null, null, null, "AC cooling is weak", "Low", new DateTime(2026, 3, 3, 0, 0, 0, 0, DateTimeKind.Unspecified), null, 3, "Resolved", 3, 1 },
-                    { 4, 4, null, null, null, null, "Front door lock is broken", "High", new DateTime(2026, 3, 4, 0, 0, 0, 0, DateTimeKind.Unspecified), null, 4, "Submitted", 4, 4 },
-                    { 5, 5, null, null, null, null, "Wall paint is fading and peeling", "Low", new DateTime(2026, 3, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), null, 5, "Closed", 5, 5 }
+                    { 1, 1, null, null, null, null, "Water leaking from bathroom pipe", "High", new DateTime(2026, 3, 1, 13, 12, 3, 0, DateTimeKind.Unspecified), null, 1, "Submitted", 1, 2 },
+                    { 2, 2, null, null, null, null, "Living room light not working", "Medium", new DateTime(2026, 3, 2, 23, 12, 42, 0, DateTimeKind.Unspecified), null, 2, "In Progress", 2, 3 },
+                    { 3, 3, null, null, null, null, "AC cooling is weak", "Low", new DateTime(2026, 3, 3, 20, 20, 4, 0, DateTimeKind.Unspecified), null, 3, "Resolved", 3, 1 },
+                    { 4, 4, null, null, null, null, "Front door lock is broken", "High", new DateTime(2026, 3, 4, 2, 44, 11, 0, DateTimeKind.Unspecified), null, 4, "Submitted", 4, 4 },
+                    { 5, 5, null, null, null, null, "Wall paint is fading and peeling", "Low", new DateTime(2026, 3, 5, 11, 32, 0, 0, DateTimeKind.Unspecified), null, 5, "Closed", 5, 5 }
                 });
 
             migrationBuilder.InsertData(
@@ -204,11 +207,11 @@ namespace AdvancedProject.Migrations
                 columns: new[] { "PaymentId", "Amount", "LeaseId", "PaymentDate", "Status" },
                 values: new object[,]
                 {
-                    { 1, 300m, 1, new DateTime(2026, 3, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Paid" },
-                    { 2, 500m, 2, new DateTime(2026, 3, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), "Paid" },
-                    { 3, 350m, 3, new DateTime(2026, 3, 10, 0, 0, 0, 0, DateTimeKind.Unspecified), "Late" },
-                    { 4, 550m, 4, new DateTime(2026, 3, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), "Paid" },
-                    { 5, 250m, 5, new DateTime(2026, 3, 15, 0, 0, 0, 0, DateTimeKind.Unspecified), "Pending" }
+                    { 1, 300m, 1, new DateTime(2026, 3, 1, 12, 11, 5, 0, DateTimeKind.Unspecified), "Paid" },
+                    { 2, 500m, 2, new DateTime(2026, 3, 5, 9, 33, 12, 0, DateTimeKind.Unspecified), "Paid" },
+                    { 3, 350m, 3, new DateTime(2026, 3, 10, 22, 11, 9, 0, DateTimeKind.Unspecified), "Late" },
+                    { 4, 550m, 4, new DateTime(2026, 3, 12, 7, 15, 22, 0, DateTimeKind.Unspecified), "Paid" },
+                    { 5, 250m, 5, new DateTime(2026, 3, 15, 8, 19, 27, 0, DateTimeKind.Unspecified), "Pending" }
                 });
         }
 
@@ -239,6 +242,21 @@ namespace AdvancedProject.Migrations
                 table: "LeaseApplications",
                 keyColumn: "ApplicationId",
                 keyValue: 5);
+
+            migrationBuilder.DeleteData(
+                table: "LeaseApplications",
+                keyColumn: "ApplicationId",
+                keyValue: 6);
+
+            migrationBuilder.DeleteData(
+                table: "LeaseApplications",
+                keyColumn: "ApplicationId",
+                keyValue: 7);
+
+            migrationBuilder.DeleteData(
+                table: "LeaseApplications",
+                keyColumn: "ApplicationId",
+                keyValue: 8);
 
             migrationBuilder.DeleteData(
                 table: "MaintenanceRequests",
@@ -573,6 +591,11 @@ namespace AdvancedProject.Migrations
             migrationBuilder.DeleteData(
                 table: "Units",
                 keyColumn: "UnitId",
+                keyValue: 2);
+
+            migrationBuilder.DeleteData(
+                table: "Units",
+                keyColumn: "UnitId",
                 keyValue: 6);
 
             migrationBuilder.DeleteData(
@@ -614,11 +637,6 @@ namespace AdvancedProject.Migrations
                 table: "Units",
                 keyColumn: "UnitId",
                 keyValue: 1);
-
-            migrationBuilder.DeleteData(
-                table: "Units",
-                keyColumn: "UnitId",
-                keyValue: 2);
 
             migrationBuilder.DeleteData(
                 table: "Units",

@@ -90,6 +90,9 @@ namespace AdvancedProject.Migrations
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("(getdate())");
 
+                    b.Property<int>("Duration")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
 
@@ -125,21 +128,23 @@ namespace AdvancedProject.Migrations
                         new
                         {
                             LeaseId = 1,
-                            CreatedAt = new DateTime(2026, 3, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EndDate = new DateTime(2027, 3, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2026, 2, 2, 13, 22, 17, 0, DateTimeKind.Unspecified),
+                            Duration = 6,
+                            EndDate = new DateTime(2026, 12, 1, 8, 0, 0, 0, DateTimeKind.Unspecified),
                             MonthlyRent = 300m,
-                            StartDate = new DateTime(2026, 3, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            StartDate = new DateTime(2026, 6, 1, 8, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = "Active",
                             TenantId = 1,
-                            UnitId = 2
+                            UnitId = 1
                         },
                         new
                         {
                             LeaseId = 2,
-                            CreatedAt = new DateTime(2026, 3, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EndDate = new DateTime(2027, 3, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2026, 3, 5, 6, 44, 3, 0, DateTimeKind.Unspecified),
+                            Duration = 6,
+                            EndDate = new DateTime(2026, 6, 30, 8, 0, 0, 0, DateTimeKind.Unspecified),
                             MonthlyRent = 500m,
-                            StartDate = new DateTime(2026, 3, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            StartDate = new DateTime(2026, 7, 1, 12, 6, 12, 0, DateTimeKind.Unspecified),
                             Status = "Active",
                             TenantId = 2,
                             UnitId = 3
@@ -147,10 +152,11 @@ namespace AdvancedProject.Migrations
                         new
                         {
                             LeaseId = 3,
-                            CreatedAt = new DateTime(2026, 3, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EndDate = new DateTime(2027, 3, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2026, 3, 10, 7, 52, 33, 0, DateTimeKind.Unspecified),
+                            Duration = 24,
+                            EndDate = new DateTime(2027, 3, 10, 8, 0, 0, 0, DateTimeKind.Unspecified),
                             MonthlyRent = 350m,
-                            StartDate = new DateTime(2026, 3, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            StartDate = new DateTime(2026, 3, 10, 11, 1, 22, 0, DateTimeKind.Unspecified),
                             Status = "Terminated",
                             TenantId = 3,
                             UnitId = 1
@@ -158,10 +164,11 @@ namespace AdvancedProject.Migrations
                         new
                         {
                             LeaseId = 4,
-                            CreatedAt = new DateTime(2026, 3, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EndDate = new DateTime(2027, 3, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2026, 2, 5, 14, 30, 0, 0, DateTimeKind.Unspecified),
+                            Duration = 12,
+                            EndDate = new DateTime(2027, 3, 14, 8, 0, 0, 0, DateTimeKind.Unspecified),
                             MonthlyRent = 550m,
-                            StartDate = new DateTime(2026, 3, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            StartDate = new DateTime(2026, 3, 15, 8, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = "Active",
                             TenantId = 4,
                             UnitId = 4
@@ -169,10 +176,11 @@ namespace AdvancedProject.Migrations
                         new
                         {
                             LeaseId = 5,
-                            CreatedAt = new DateTime(2026, 3, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EndDate = new DateTime(2027, 3, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2026, 1, 15, 4, 32, 29, 0, DateTimeKind.Unspecified),
+                            Duration = 24,
+                            EndDate = new DateTime(2028, 1, 31, 8, 0, 0, 0, DateTimeKind.Unspecified),
                             MonthlyRent = 250m,
-                            StartDate = new DateTime(2026, 3, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            StartDate = new DateTime(2026, 2, 1, 8, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = "Active",
                             TenantId = 5,
                             UnitId = 5
@@ -195,7 +203,13 @@ namespace AdvancedProject.Migrations
                     b.Property<DateTime?>("ApproveTime")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("Duration")
+                        .HasColumnType("int");
+
                     b.Property<DateTime?>("RejectTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Status")
@@ -221,7 +235,10 @@ namespace AdvancedProject.Migrations
                         new
                         {
                             ApplicationId = 1,
-                            ApplicationDate = new DateTime(2026, 2, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ApplicationDate = new DateTime(2026, 2, 1, 20, 30, 33, 0, DateTimeKind.Unspecified),
+                            ApproveTime = new DateTime(2026, 2, 2, 13, 22, 17, 0, DateTimeKind.Unspecified),
+                            Duration = 6,
+                            StartDate = new DateTime(2026, 6, 1, 8, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = "Approved",
                             TenantId = 1,
                             UnitId = 1
@@ -229,7 +246,9 @@ namespace AdvancedProject.Migrations
                         new
                         {
                             ApplicationId = 2,
-                            ApplicationDate = new DateTime(2026, 2, 3, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ApplicationDate = new DateTime(2026, 2, 3, 3, 7, 12, 0, DateTimeKind.Unspecified),
+                            Duration = 24,
+                            StartDate = new DateTime(2026, 5, 5, 18, 9, 24, 0, DateTimeKind.Unspecified),
                             Status = "Pending",
                             TenantId = 2,
                             UnitId = 2
@@ -237,7 +256,10 @@ namespace AdvancedProject.Migrations
                         new
                         {
                             ApplicationId = 3,
-                            ApplicationDate = new DateTime(2026, 2, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ApplicationDate = new DateTime(2026, 2, 5, 5, 24, 13, 0, DateTimeKind.Unspecified),
+                            Duration = 6,
+                            RejectTime = new DateTime(2026, 2, 22, 3, 17, 29, 0, DateTimeKind.Unspecified),
+                            StartDate = new DateTime(2027, 1, 1, 9, 10, 22, 0, DateTimeKind.Unspecified),
                             Status = "Rejected",
                             TenantId = 3,
                             UnitId = 3
@@ -245,7 +267,10 @@ namespace AdvancedProject.Migrations
                         new
                         {
                             ApplicationId = 4,
-                            ApplicationDate = new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ApplicationDate = new DateTime(2026, 2, 2, 22, 55, 2, 0, DateTimeKind.Unspecified),
+                            ApproveTime = new DateTime(2026, 2, 5, 14, 30, 0, 0, DateTimeKind.Unspecified),
+                            Duration = 12,
+                            StartDate = new DateTime(2026, 3, 15, 8, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = "Approved",
                             TenantId = 4,
                             UnitId = 4
@@ -253,8 +278,43 @@ namespace AdvancedProject.Migrations
                         new
                         {
                             ApplicationId = 5,
-                            ApplicationDate = new DateTime(2026, 2, 9, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ApplicationDate = new DateTime(2026, 2, 9, 9, 33, 11, 0, DateTimeKind.Unspecified),
+                            Duration = 12,
+                            StartDate = new DateTime(2026, 4, 20, 14, 22, 5, 0, DateTimeKind.Unspecified),
                             Status = "Pending",
+                            TenantId = 5,
+                            UnitId = 5
+                        },
+                        new
+                        {
+                            ApplicationId = 6,
+                            ApplicationDate = new DateTime(2026, 3, 3, 10, 21, 10, 0, DateTimeKind.Unspecified),
+                            ApproveTime = new DateTime(2026, 3, 5, 6, 44, 3, 0, DateTimeKind.Unspecified),
+                            Duration = 6,
+                            StartDate = new DateTime(2026, 7, 1, 12, 6, 12, 0, DateTimeKind.Unspecified),
+                            Status = "Approved",
+                            TenantId = 2,
+                            UnitId = 3
+                        },
+                        new
+                        {
+                            ApplicationId = 7,
+                            ApplicationDate = new DateTime(2026, 1, 12, 6, 10, 9, 0, DateTimeKind.Unspecified),
+                            ApproveTime = new DateTime(2026, 3, 11, 7, 52, 33, 0, DateTimeKind.Unspecified),
+                            Duration = 24,
+                            StartDate = new DateTime(2026, 3, 10, 11, 1, 22, 0, DateTimeKind.Unspecified),
+                            Status = "Approved",
+                            TenantId = 3,
+                            UnitId = 1
+                        },
+                        new
+                        {
+                            ApplicationId = 8,
+                            ApplicationDate = new DateTime(2026, 1, 12, 14, 32, 17, 0, DateTimeKind.Unspecified),
+                            ApproveTime = new DateTime(2026, 1, 15, 4, 32, 29, 0, DateTimeKind.Unspecified),
+                            Duration = 24,
+                            StartDate = new DateTime(2026, 2, 1, 8, 0, 0, 0, DateTimeKind.Unspecified),
+                            Status = "Approved",
                             TenantId = 5,
                             UnitId = 5
                         });
@@ -333,7 +393,7 @@ namespace AdvancedProject.Migrations
                             AssignedStaffId = 1,
                             Notes = "Water leaking from bathroom pipe",
                             Priority = "High",
-                            RequestDate = new DateTime(2026, 3, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            RequestDate = new DateTime(2026, 3, 1, 13, 12, 3, 0, DateTimeKind.Unspecified),
                             SkillId = 1,
                             Status = "Submitted",
                             TenantId = 1,
@@ -345,7 +405,7 @@ namespace AdvancedProject.Migrations
                             AssignedStaffId = 2,
                             Notes = "Living room light not working",
                             Priority = "Medium",
-                            RequestDate = new DateTime(2026, 3, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            RequestDate = new DateTime(2026, 3, 2, 23, 12, 42, 0, DateTimeKind.Unspecified),
                             SkillId = 2,
                             Status = "In Progress",
                             TenantId = 2,
@@ -357,7 +417,7 @@ namespace AdvancedProject.Migrations
                             AssignedStaffId = 3,
                             Notes = "AC cooling is weak",
                             Priority = "Low",
-                            RequestDate = new DateTime(2026, 3, 3, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            RequestDate = new DateTime(2026, 3, 3, 20, 20, 4, 0, DateTimeKind.Unspecified),
                             SkillId = 3,
                             Status = "Resolved",
                             TenantId = 3,
@@ -369,7 +429,7 @@ namespace AdvancedProject.Migrations
                             AssignedStaffId = 4,
                             Notes = "Front door lock is broken",
                             Priority = "High",
-                            RequestDate = new DateTime(2026, 3, 4, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            RequestDate = new DateTime(2026, 3, 4, 2, 44, 11, 0, DateTimeKind.Unspecified),
                             SkillId = 4,
                             Status = "Submitted",
                             TenantId = 4,
@@ -381,7 +441,7 @@ namespace AdvancedProject.Migrations
                             AssignedStaffId = 5,
                             Notes = "Wall paint is fading and peeling",
                             Priority = "Low",
-                            RequestDate = new DateTime(2026, 3, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            RequestDate = new DateTime(2026, 3, 5, 11, 32, 0, 0, DateTimeKind.Unspecified),
                             SkillId = 5,
                             Status = "Closed",
                             TenantId = 5,
@@ -480,7 +540,7 @@ namespace AdvancedProject.Migrations
                         new
                         {
                             NotificationId = 1,
-                            CreatedAt = new DateTime(2026, 2, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2026, 2, 1, 10, 33, 21, 0, DateTimeKind.Unspecified),
                             Message = "New lease application received",
                             Type = "LeaseApplication",
                             UserId = 1
@@ -488,7 +548,7 @@ namespace AdvancedProject.Migrations
                         new
                         {
                             NotificationId = 2,
-                            CreatedAt = new DateTime(2026, 2, 3, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2026, 2, 3, 9, 18, 55, 0, DateTimeKind.Unspecified),
                             Message = "Your application has been approved",
                             Type = "LeaseApplication",
                             UserId = 2
@@ -496,7 +556,7 @@ namespace AdvancedProject.Migrations
                         new
                         {
                             NotificationId = 3,
-                            CreatedAt = new DateTime(2026, 3, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2026, 3, 2, 14, 25, 14, 0, DateTimeKind.Unspecified),
                             Message = "Maintenance request updated",
                             Type = "MaintenanceRequest",
                             UserId = 3
@@ -504,7 +564,7 @@ namespace AdvancedProject.Migrations
                         new
                         {
                             NotificationId = 4,
-                            CreatedAt = new DateTime(2026, 3, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2026, 3, 12, 13, 44, 21, 0, DateTimeKind.Unspecified),
                             Message = "Payment received successfully",
                             Type = "Payment",
                             UserId = 4
@@ -512,7 +572,7 @@ namespace AdvancedProject.Migrations
                         new
                         {
                             NotificationId = 5,
-                            CreatedAt = new DateTime(2026, 3, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2026, 3, 15, 21, 4, 17, 0, DateTimeKind.Unspecified),
                             Message = "Lease activated for your unit",
                             Type = "Lease",
                             UserId = 5
@@ -520,7 +580,7 @@ namespace AdvancedProject.Migrations
                         new
                         {
                             NotificationId = 6,
-                            CreatedAt = new DateTime(2026, 3, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2026, 3, 1, 12, 6, 33, 0, DateTimeKind.Unspecified),
                             Message = "New maintenance request assigned",
                             Type = "MaintenanceRequest",
                             UserId = 7
@@ -528,7 +588,7 @@ namespace AdvancedProject.Migrations
                         new
                         {
                             NotificationId = 7,
-                            CreatedAt = new DateTime(2026, 3, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2026, 3, 2, 8, 15, 32, 0, DateTimeKind.Unspecified),
                             Message = "Electrical repair marked as in progress",
                             Type = "MaintenanceRequest",
                             UserId = 8
@@ -536,7 +596,7 @@ namespace AdvancedProject.Migrations
                         new
                         {
                             NotificationId = 8,
-                            CreatedAt = new DateTime(2026, 3, 3, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2026, 3, 3, 21, 17, 28, 0, DateTimeKind.Unspecified),
                             Message = "HVAC issue reported in Unit A2",
                             Type = "MaintenanceRequest",
                             UserId = 9
@@ -544,7 +604,7 @@ namespace AdvancedProject.Migrations
                         new
                         {
                             NotificationId = 9,
-                            CreatedAt = new DateTime(2026, 3, 4, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2026, 3, 4, 17, 5, 43, 0, DateTimeKind.Unspecified),
                             Message = "Carpentry issue reported in Unit B2",
                             Type = "MaintenanceRequest",
                             UserId = 10
@@ -552,7 +612,7 @@ namespace AdvancedProject.Migrations
                         new
                         {
                             NotificationId = 10,
-                            CreatedAt = new DateTime(2026, 3, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2026, 3, 5, 23, 14, 10, 0, DateTimeKind.Unspecified),
                             Message = "Painting issue reported in Unit A3",
                             Type = "MaintenanceRequest",
                             UserId = 11
@@ -595,7 +655,7 @@ namespace AdvancedProject.Migrations
                             PaymentId = 1,
                             Amount = 300m,
                             LeaseId = 1,
-                            PaymentDate = new DateTime(2026, 3, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            PaymentDate = new DateTime(2026, 3, 1, 12, 11, 5, 0, DateTimeKind.Unspecified),
                             Status = "Paid"
                         },
                         new
@@ -603,7 +663,7 @@ namespace AdvancedProject.Migrations
                             PaymentId = 2,
                             Amount = 500m,
                             LeaseId = 2,
-                            PaymentDate = new DateTime(2026, 3, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            PaymentDate = new DateTime(2026, 3, 5, 9, 33, 12, 0, DateTimeKind.Unspecified),
                             Status = "Paid"
                         },
                         new
@@ -611,7 +671,7 @@ namespace AdvancedProject.Migrations
                             PaymentId = 3,
                             Amount = 350m,
                             LeaseId = 3,
-                            PaymentDate = new DateTime(2026, 3, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            PaymentDate = new DateTime(2026, 3, 10, 22, 11, 9, 0, DateTimeKind.Unspecified),
                             Status = "Late"
                         },
                         new
@@ -619,7 +679,7 @@ namespace AdvancedProject.Migrations
                             PaymentId = 4,
                             Amount = 550m,
                             LeaseId = 4,
-                            PaymentDate = new DateTime(2026, 3, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            PaymentDate = new DateTime(2026, 3, 12, 7, 15, 22, 0, DateTimeKind.Unspecified),
                             Status = "Paid"
                         },
                         new
@@ -627,7 +687,7 @@ namespace AdvancedProject.Migrations
                             PaymentId = 5,
                             Amount = 250m,
                             LeaseId = 5,
-                            PaymentDate = new DateTime(2026, 3, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            PaymentDate = new DateTime(2026, 3, 15, 8, 19, 27, 0, DateTimeKind.Unspecified),
                             Status = "Pending"
                         });
                 });
@@ -691,7 +751,7 @@ namespace AdvancedProject.Migrations
                             Block = "220",
                             Building = "611",
                             City = "Manama",
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2026, 1, 1, 12, 55, 21, 0, DateTimeKind.Unspecified),
                             Description = "A modern residential complex offering comfort and essential amenities.",
                             Name = "Abraj Al Lulu",
                             Road = "271"
@@ -702,7 +762,7 @@ namespace AdvancedProject.Migrations
                             Block = "708",
                             Building = "246",
                             City = "Muharraq",
-                            CreatedAt = new DateTime(2026, 1, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2026, 1, 5, 15, 22, 29, 0, DateTimeKind.Unspecified),
                             Description = "A contemporary tower with modern facilities in a prime location.",
                             Name = "Almoayyed Tower",
                             Road = "811"
@@ -713,7 +773,7 @@ namespace AdvancedProject.Migrations
                             Block = "461",
                             Building = "922",
                             City = "Riffa",
-                            CreatedAt = new DateTime(2026, 1, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2026, 1, 10, 3, 31, 43, 0, DateTimeKind.Unspecified),
                             Description = "A residential property with spacious apartments for families.",
                             Name = "United Tower",
                             Road = "3062"
@@ -905,7 +965,7 @@ namespace AdvancedProject.Migrations
                         {
                             UnitId = 1,
                             AvailabilityStatus = "Available",
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2026, 1, 1, 4, 12, 55, 0, DateTimeKind.Unspecified),
                             PropertyId = 1,
                             RentAmount = 300m,
                             SizeSqFt = 100m,
@@ -916,7 +976,7 @@ namespace AdvancedProject.Migrations
                         {
                             UnitId = 2,
                             AvailabilityStatus = "Occupied",
-                            CreatedAt = new DateTime(2026, 1, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2026, 1, 2, 23, 16, 33, 0, DateTimeKind.Unspecified),
                             PropertyId = 1,
                             RentAmount = 350m,
                             SizeSqFt = 120m,
@@ -927,7 +987,7 @@ namespace AdvancedProject.Migrations
                         {
                             UnitId = 3,
                             AvailabilityStatus = "Available",
-                            CreatedAt = new DateTime(2026, 1, 3, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2026, 1, 3, 9, 11, 7, 0, DateTimeKind.Unspecified),
                             PropertyId = 2,
                             RentAmount = 500m,
                             SizeSqFt = 200m,
@@ -938,7 +998,7 @@ namespace AdvancedProject.Migrations
                         {
                             UnitId = 4,
                             AvailabilityStatus = "Occupied",
-                            CreatedAt = new DateTime(2026, 1, 4, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2026, 1, 4, 7, 16, 22, 0, DateTimeKind.Unspecified),
                             PropertyId = 2,
                             RentAmount = 550m,
                             SizeSqFt = 250m,
@@ -949,7 +1009,7 @@ namespace AdvancedProject.Migrations
                         {
                             UnitId = 5,
                             AvailabilityStatus = "Available",
-                            CreatedAt = new DateTime(2026, 1, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2026, 1, 5, 10, 10, 12, 0, DateTimeKind.Unspecified),
                             PropertyId = 1,
                             RentAmount = 250m,
                             SizeSqFt = 80m,
@@ -960,7 +1020,7 @@ namespace AdvancedProject.Migrations
                         {
                             UnitId = 6,
                             AvailabilityStatus = "Available",
-                            CreatedAt = new DateTime(2026, 1, 6, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2026, 1, 6, 4, 15, 45, 0, DateTimeKind.Unspecified),
                             PropertyId = 3,
                             RentAmount = 320m,
                             SizeSqFt = 110m,
@@ -1038,7 +1098,7 @@ namespace AdvancedProject.Migrations
                         new
                         {
                             UserId = 2,
-                            CreatedAt = new DateTime(2026, 2, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2026, 2, 12, 2, 3, 4, 0, DateTimeKind.Unspecified),
                             Email = "zahraa.hubail8@gmail.com",
                             FullName = "Zahraa Hubail",
                             IsActive = true,
@@ -1050,7 +1110,7 @@ namespace AdvancedProject.Migrations
                         new
                         {
                             UserId = 3,
-                            CreatedAt = new DateTime(2026, 3, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2026, 3, 15, 15, 12, 55, 0, DateTimeKind.Unspecified),
                             Email = "raghad@gmail.com",
                             FullName = "Raghad Aleskafi",
                             IsActive = true,
@@ -1062,7 +1122,7 @@ namespace AdvancedProject.Migrations
                         new
                         {
                             UserId = 4,
-                            CreatedAt = new DateTime(2026, 3, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2026, 3, 20, 6, 11, 2, 0, DateTimeKind.Unspecified),
                             Email = "fatima@gmail.com",
                             FullName = "Fatima Alaiwi",
                             IsActive = true,
@@ -1074,7 +1134,7 @@ namespace AdvancedProject.Migrations
                         new
                         {
                             UserId = 5,
-                            CreatedAt = new DateTime(2026, 3, 25, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2026, 3, 25, 5, 15, 27, 0, DateTimeKind.Unspecified),
                             Email = "norain@mail.com",
                             FullName = "Norain Hassan",
                             IsActive = true,
@@ -1086,7 +1146,7 @@ namespace AdvancedProject.Migrations
                         new
                         {
                             UserId = 6,
-                            CreatedAt = new DateTime(2026, 3, 28, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2026, 3, 28, 7, 17, 22, 0, DateTimeKind.Unspecified),
                             Email = "ahmed.ali@gmail.com",
                             FullName = "Ahmed Ali",
                             IsActive = true,
@@ -1098,7 +1158,7 @@ namespace AdvancedProject.Migrations
                         new
                         {
                             UserId = 7,
-                            CreatedAt = new DateTime(2026, 3, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2026, 3, 10, 9, 16, 34, 0, DateTimeKind.Unspecified),
                             Email = "alihassan@mail.com",
                             FullName = "Ali Hassan",
                             IsActive = true,
@@ -1110,7 +1170,7 @@ namespace AdvancedProject.Migrations
                         new
                         {
                             UserId = 8,
-                            CreatedAt = new DateTime(2026, 3, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2026, 3, 11, 9, 10, 10, 0, DateTimeKind.Unspecified),
                             Email = "sara.mohamed@gmail.com",
                             FullName = "Sara Mohamed",
                             IsActive = true,
@@ -1122,7 +1182,7 @@ namespace AdvancedProject.Migrations
                         new
                         {
                             UserId = 9,
-                            CreatedAt = new DateTime(2026, 3, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2026, 3, 12, 10, 2, 15, 0, DateTimeKind.Unspecified),
                             Email = "abbas@gmail.com",
                             FullName = "Abbas Hadi",
                             IsActive = true,
@@ -1134,7 +1194,7 @@ namespace AdvancedProject.Migrations
                         new
                         {
                             UserId = 10,
-                            CreatedAt = new DateTime(2026, 3, 13, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2026, 3, 13, 6, 21, 41, 0, DateTimeKind.Unspecified),
                             Email = "laila@gmail.com",
                             FullName = "Laila Yaser",
                             IsActive = true,
@@ -1146,7 +1206,7 @@ namespace AdvancedProject.Migrations
                         new
                         {
                             UserId = 11,
-                            CreatedAt = new DateTime(2026, 3, 14, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2026, 3, 14, 8, 13, 44, 0, DateTimeKind.Unspecified),
                             Email = "mohammed@gmail.com",
                             FullName = "Mohammed Karim",
                             IsActive = true,
@@ -1224,7 +1284,7 @@ namespace AdvancedProject.Migrations
 
                     b.HasKey("UnitId", "AmenityId");
 
-                    b.HasIndex("AmenityId");
+                    b.HasIndex(new[] { "AmenityId" }, "IX_UnitAmenities_AmenityId");
 
                     b.ToTable("UnitAmenities", (string)null);
 
