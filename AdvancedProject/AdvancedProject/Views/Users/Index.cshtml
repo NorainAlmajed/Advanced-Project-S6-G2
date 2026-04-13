@@ -33,9 +33,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.CreatedAt)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IsActive)
-            </th>
+           
             <th></th>
         </tr>
     </thead>
@@ -63,9 +61,7 @@
             <td>
                 @Html.DisplayFor(modelItem => item.CreatedAt)
             </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IsActive)
-            </td>
+          
             <td>
                 <a asp-action="Edit" asp-route-id="@item.UserId">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.UserId">Details</a> |

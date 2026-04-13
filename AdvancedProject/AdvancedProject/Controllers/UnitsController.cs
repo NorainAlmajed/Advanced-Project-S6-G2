@@ -75,6 +75,12 @@ namespace AdvancedProject.Controllers
         {
             unit.CreatedAt = DateTime.Now;
 
+            ModelState.Remove("Property");
+            ModelState.Remove("Amenities");
+            ModelState.Remove("LeaseApplications");
+            ModelState.Remove("Leases");
+            ModelState.Remove("MaintenanceRequests");
+
             if (ModelState.IsValid)
             {
                 _context.Add(unit);
@@ -85,6 +91,8 @@ namespace AdvancedProject.Controllers
             ViewData["PropertyId"] = new SelectList(_context.Properties, "PropertyId", "PropertyId", unit.PropertyId);
             return View(unit);
         }
+
+
 
         // GET: Units/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -110,14 +118,55 @@ namespace AdvancedProject.Controllers
         //[ValidateAntiForgeryToken]
         //public async Task<IActionResult> Edit(int id, [Bind("UnitId,PropertyId,UnitNumber,Type,SizeSqFt,RentAmount,AvailabilityStatus,CreatedAt")] Unit unit)
         //{
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Edit(int id, [Bind("UnitId,PropertyId,UnitNumber,Type,SizeSqFt,RentAmount,AvailabilityStatus,CreatedAt")] Unit unit) 
+        //{
+        //    if (id != unit.UnitId)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    if (ModelState.IsValid)
+        //    {
+        //        try
+        //        {
+        //            _context.Update(unit);
+        //            await _context.SaveChangesAsync();
+        //        }
+        //        catch (DbUpdateConcurrencyException)
+        //        {
+        //            if (!UnitExists(unit.UnitId))
+        //            {
+        //                return NotFound();
+        //            }
+        //            else
+        //            {
+        //                throw;
+        //            }
+        //        }
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    ViewData["PropertyId"] = new SelectList(_context.Properties, "PropertyId", "PropertyId", unit.PropertyId);
+        //    return View(unit);
+        //}
+
+
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("UnitId,PropertyId,UnitNumber,Type,SizeSqFt,RentAmount,AvailabilityStatus,CreatedAt")] Unit unit) 
+        public async Task<IActionResult> Edit(int id, [Bind("UnitId,PropertyId,UnitNumber,Type,SizeSqFt,RentAmount,AvailabilityStatus,CreatedAt")] Unit unit)
         {
             if (id != unit.UnitId)
             {
                 return NotFound();
             }
+
+            ModelState.Remove("Property");
+            ModelState.Remove("Amenities");
+            ModelState.Remove("LeaseApplications");
+            ModelState.Remove("Leases");
+            ModelState.Remove("MaintenanceRequests");
 
             if (ModelState.IsValid)
             {
@@ -139,10 +188,10 @@ namespace AdvancedProject.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+
             ViewData["PropertyId"] = new SelectList(_context.Properties, "PropertyId", "PropertyId", unit.PropertyId);
             return View(unit);
         }
-
         // GET: Units/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
