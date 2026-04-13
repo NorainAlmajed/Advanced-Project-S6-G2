@@ -55,16 +55,33 @@ namespace AdvancedProject.Controllers
         // POST: Units/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Create([Bind("UnitId,PropertyId,UnitNumber,Type,SizeSqFt,RentAmount,AvailabilityStatus,CreatedAt")] Unit unit)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        _context.Add(unit);
+        //        await _context.SaveChangesAsync();
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    ViewData["PropertyId"] = new SelectList(_context.Properties, "PropertyId", "PropertyId", unit.PropertyId);
+        //    return View(unit);
+        //}
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("UnitId,PropertyId,UnitNumber,Type,SizeSqFt,RentAmount,AvailabilityStatus,CreatedAt")] Unit unit)
+        public async Task<IActionResult> Create([Bind("UnitId,PropertyId,UnitNumber,Type,SizeSqFt,RentAmount,AvailabilityStatus")] Unit unit)
         {
+            unit.CreatedAt = DateTime.Now;
+
             if (ModelState.IsValid)
             {
                 _context.Add(unit);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+
             ViewData["PropertyId"] = new SelectList(_context.Properties, "PropertyId", "PropertyId", unit.PropertyId);
             return View(unit);
         }
@@ -89,9 +106,13 @@ namespace AdvancedProject.Controllers
         // POST: Units/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Edit(int id, [Bind("UnitId,PropertyId,UnitNumber,Type,SizeSqFt,RentAmount,AvailabilityStatus,CreatedAt")] Unit unit)
+        //{
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("UnitId,PropertyId,UnitNumber,Type,SizeSqFt,RentAmount,AvailabilityStatus,CreatedAt")] Unit unit)
+        public async Task<IActionResult> Edit(int id, [Bind("UnitId,PropertyId,UnitNumber,Type,SizeSqFt,RentAmount,AvailabilityStatus,CreatedAt")] Unit unit) 
         {
             if (id != unit.UnitId)
             {

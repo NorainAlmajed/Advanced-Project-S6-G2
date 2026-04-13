@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
 namespace AdvancedProject.Models;
 
@@ -31,19 +32,24 @@ public partial class Unit
 
     public DateTime CreatedAt { get; set; }
 
+    [ValidateNever]
     [InverseProperty("Unit")]
     public virtual ICollection<LeaseApplication> LeaseApplications { get; set; } = new List<LeaseApplication>();
 
+    [ValidateNever]
     [InverseProperty("Unit")]
     public virtual ICollection<Lease> Leases { get; set; } = new List<Lease>();
 
+    [ValidateNever]
     [InverseProperty("Unit")]
     public virtual ICollection<MaintenanceRequest> MaintenanceRequests { get; set; } = new List<MaintenanceRequest>();
 
+    [ValidateNever]
     [ForeignKey("PropertyId")]
     [InverseProperty("Units")]
     public virtual Property Property { get; set; } = null!;
 
+    [ValidateNever]
     [ForeignKey("UnitId")]
     [InverseProperty("Units")]
     public virtual ICollection<Amenity> Amenities { get; set; } = new List<Amenity>();
