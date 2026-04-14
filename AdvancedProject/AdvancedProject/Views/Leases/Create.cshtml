@@ -9,11 +9,16 @@
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create" asp-controller="Leases" method="post">
-            <div asp-validation-summary="All" class="text-danger"></div>            <input type="hidden" name="UnitId" value="@Model.UnitId" />            <div class="form-group">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" name="UnitId" value="@Model.UnitId" />
+            <div class="form-group">
                 <label asp-for="TenantId" class="control-label"></label>
+
                 <select asp-for="TenantId" class="form-control" asp-items="ViewBag.TenantName">
                     <option value="">-- Select Username --</option>
                 </select>
+
+                <span asp-validation-for="TenantId" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="StartDate" class="control-label"></label>
@@ -22,7 +27,9 @@
             </div>
             <div class="form-group">
                 <label asp-for="DurationId" class="control-label"></label>
-                <select asp-for="DurationId" class="form-control" asp-items="ViewBag.DurationId"></select>
+                <select asp-for="DurationId" class="form-control" asp-items="ViewBag.DurationId">
+                    <option value="">-- Select Duration --</option>
+                </select>
                 <span asp-validation-for="DurationId" class="text-danger"></span>
             </div>
             <div class="form-group">
