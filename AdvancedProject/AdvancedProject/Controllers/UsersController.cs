@@ -20,9 +20,31 @@ namespace AdvancedProject.Controllers
         }
 
         // GET: Users
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string roleFilter, string searchTerm)
         {
-            return View(await _context.Users.ToListAsync());
+            var users = _context.Users.AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(roleFilter))
+            {
+                users = users.Where(u => u.Role == roleFilter);
+            }
+
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                searchTerm = searchTerm.Trim();
+
+                users = users.Where(u =>
+                    u.Username.Contains(searchTerm) ||
+                    u.FullName.Contains(searchTerm) ||
+                    u.Email.Contains(searchTerm) ||
+                    u.Phone.Contains(searchTerm) ||
+                    u.Role.Contains(searchTerm));
+            }
+
+            ViewData["CurrentRoleFilter"] = roleFilter;
+            ViewData["CurrentSearchTerm"] = searchTerm;
+
+            return View(await users.ToListAsync());
         }
 
         // GET: Users/Details/5

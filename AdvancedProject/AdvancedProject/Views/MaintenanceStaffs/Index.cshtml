@@ -1,41 +1,167 @@
 ﻿@model IEnumerable<AdvancedProject.Models.MaintenanceStaff>
+@using Microsoft.AspNetCore.Mvc.Rendering
 
 @{
     ViewData["Title"] = "Maintenance Staff";
+
+    string currentSearch = ViewData["CurrentSearchTerm"]?.ToString() ?? "";
+    string currentAvailability = ViewData["CurrentAvailabilityFilter"]?.ToString() ?? "";
+    int? currentSkillId = ViewData["CurrentSkillId"] as int?;
+    var skillsList = ViewData["Skills"] as SelectList;
 }
 
-<h1>Maintenance Staff</h1>
+<div class="container py-4 users-page">
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.AvailabilityStatus)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.User)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.AvailabilityStatus)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.User.UserId)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.StaffId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.StaffId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.StaffId">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-start gap-3 mb-4">
+        <div>
+            <p class="details-eyebrow mb-1">Maintenance Team</p>
+            <h1 class="details-title mb-2">Maintenance Staff</h1>
+            <p class="users-subtitle mb-0">Browse and manage maintenance staff by availability and skill.</p>
+        </div>
+
+        <a asp-action="Create" class="btn btn-light-custom users-create-btn">
+            + Add New Staff
+        </a>
+    </div>
+
+    <div class="d-flex flex-wrap gap-2 mb-4">
+        <a asp-controller="Users"
+           asp-action="Index"
+           class="btn btn-light-custom users-filter-btn">
+            All Users
+        </a>
+
+        <a asp-controller="Users"
+           asp-action="Index"
+           asp-route-roleFilter="Tenant"
+           class="btn btn-light-custom users-filter-btn">
+            Tenants
+        </a>
+
+        <a asp-action="Index"
+           class="btn btn-primary users-filter-btn">
+            Maintenance Staff
+        </a>
+    </div>
+
+    <div class="card search-card shadow-soft border-0 mb-4 users-search-card">
+        <div class="card-body p-4">
+            <form asp-action="Index" method="get" class="row g-3 align-items-end">
+                <div class="col-lg-5">
+                    <label for="searchTerm" class="form-label fw-semibold">Search Staff</label>
+                    <input type="text"
+                           id="searchTerm"
+                           name="searchTerm"
+                           value="@currentSearch"
+                           class="form-control form-control-lg users-search-input"
+                           placeholder="Search by username, full name, email, phone, or role..." />
+                </div>
+
+                <div class="col-lg-3">
+                    <label for="availabilityFilter" class="form-label fw-semibold">Availability</label>
+                    <select id="availabilityFilter" name="availabilityFilter" class="form-select form-select-lg users-search-input">
+                        <option value="">All Statuses</option>
+                        <option value="Available" selected="@(currentAvailability == "Available")">Available</option>
+                        <option value="Busy" selected="@(currentAvailability == "Busy")">Busy</option>
+                    </select>
+                </div>
+
+                <div class="col-lg-2">
+                    <label for="skillId" class="form-label fw-semibold">Skill</label>
+                    <select id="skillId" name="skillId" asp-items="skillsList" class="form-select form-select-lg users-search-input">
+                        <option value="">All Skills</option>
+                    </select>
+                </div>
+
+                <div class="col-lg-2 d-flex gap-2">
+                    <button type="submit" class="btn btn-primary users-search-btn flex-fill">
+                        Search
+                    </button>
+
+                    <a asp-action="Index" class="btn btn-outline-light users-reset-btn flex-fill">
+                        Reset
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card shadow-soft border-0 users-table-card">
+        <div class="table-responsive">
+            <table class="table mb-0 users-table align-middle">
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Full Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Role</th>
+                        <th>Availability</th>
+                        <th>Skills</th>
+                        <th class="text-end">Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @if (Model.Any())
+                    {
+                        @foreach (var item in Model)
+                        {
+                            string availabilityClass = item.AvailabilityStatus?.ToLower() == "available"
+                            ? "badge-soft-active"
+                            : item.AvailabilityStatus?.ToLower() == "busy"
+                            ? "badge-soft-inactive"
+                            : "badge-soft-default";
+
+                            <tr class="users-row">
+                                <td class="fw-semibold">@item.User.Username</td>
+                                <td>@item.User.FullName</td>
+                                <td>@item.User.Email</td>
+                                <td>@item.User.Phone</td>
+                                <td>
+                                    <span class="custom-pill badge-soft-staff">
+                                        @item.User.Role
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="custom-pill @availabilityClass">
+                                        @item.AvailabilityStatus
+                                    </span>
+                                </td>
+                                <td>
+                                    @if (item.Skills != null && item.Skills.Any())
+                                    {
+                                        <div class="d-flex flex-wrap gap-1">
+                                            @foreach (var skill in item.Skills)
+                                            {
+                                                <span class="custom-pill badge-soft-manager">@skill.Name</span>
+                                            }
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">No skills</span>
+                                    }
+                                </td>
+                                <td class="text-end">
+                                    <a asp-action="Details" asp-route-id="@item.StaffId" class="btn btn-primary btn-sm users-details-btn">
+                                        View Details
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="8" class="text-center py-4 text-muted">
+                                No maintenance staff found.
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>

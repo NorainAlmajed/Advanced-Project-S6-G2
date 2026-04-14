@@ -20,10 +20,42 @@ namespace AdvancedProject.Controllers
         }
 
         // GET: MaintenanceStaffs
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchTerm, string availabilityFilter, int? skillId)
         {
-            var aPContext = _context.MaintenanceStaffs.Include(m => m.User);
-            return View(await aPContext.ToListAsync());
+            var staffQuery = _context.MaintenanceStaffs
+                .Include(m => m.User)
+                .Include(m => m.Skills)
+                .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                searchTerm = searchTerm.Trim();
+
+                staffQuery = staffQuery.Where(m =>
+                    m.User.Username.Contains(searchTerm) ||
+                    m.User.FullName.Contains(searchTerm) ||
+                    m.User.Email.Contains(searchTerm) ||
+                    m.User.Phone.Contains(searchTerm) ||
+                    m.User.Role.Contains(searchTerm));
+            }
+
+            if (!string.IsNullOrWhiteSpace(availabilityFilter))
+            {
+                staffQuery = staffQuery.Where(m => m.AvailabilityStatus == availabilityFilter);
+            }
+
+            if (skillId.HasValue)
+            {
+                staffQuery = staffQuery.Where(m => m.Skills.Any(s => s.SkillId == skillId.Value));
+            }
+
+            ViewData["CurrentSearchTerm"] = searchTerm;
+            ViewData["CurrentAvailabilityFilter"] = availabilityFilter;
+            ViewData["CurrentSkillId"] = skillId;
+
+            ViewData["Skills"] = new SelectList(await _context.Skills.ToListAsync(), "SkillId", "Name", skillId);
+
+            return View(await staffQuery.ToListAsync());
         }
 
         // GET: MaintenanceStaffs/Details/5
