@@ -2,6 +2,8 @@
 
 @{
     ViewData["Title"] = "Index";
+    var currentStatus = ViewBag.CurrentStatus as string ?? "All";
+    var propertyId = ViewBag.PropertyId;
 }
 
 <h1 class="mb-4">
@@ -14,85 +16,181 @@
         <span>Units</span>
     }
 </h1>
+
+<div class="card shadow-sm border-0 mb-4">
+    <div class="card-body">
+        <form asp-action="Index" method="get">
+            <input type="hidden" name="id" value="@propertyId" />
+
+            <div class="row g-3 align-items-end">
+                <div class="col-md-5">
+                    <label class="form-label fw-semibold">Search</label>
+                    <input type="text"
+                           name="searchString"
+                           class="form-control"
+                           placeholder="Search by unit number, type, or property..."
+                           value="@ViewBag.CurrentSearch" />
+                </div>
+
+                <div class="col-md-3">
+                    <label class="form-label fw-semibold">Property Type</label>
+                    <select name="typeFilter" class="form-select" asp-items="ViewBag.TypeList">
+                        <option value="">All Types</option>
+                    </select>
+                </div>
+
+                <div class="col-md-2">
+                    <label class="form-label fw-semibold">Price Range</label>
+                    <select name="priceFilter" class="form-select">
+                        <option value="">All Prices</option>
+                        <option value="Under300" selected="@(ViewBag.CurrentPrice == "Under300")">Under 300</option>
+                        <option value="300to400" selected="@(ViewBag.CurrentPrice == "300to400")">300 to 400</option>
+                        <option value="401to500" selected="@(ViewBag.CurrentPrice == "401to500")">401 to 500</option>
+                        <option value="Above500" selected="@(ViewBag.CurrentPrice == "Above500")">Above 500</option>
+                    </select>
+                </div>
+
+                <div class="col-md-2 d-grid">
+                    <button type="submit" class="btn btn-primary">
+                        Apply Filters
+                    </button>
+                </div>
+            </div>
+
+            <div class="mt-3 d-flex flex-wrap gap-2">
+                <span class="fw-semibold me-2 align-self-center">Status:</span>
+
+                <a asp-action="Index"
+                   asp-route-id="@propertyId"
+                   asp-route-searchString="@ViewBag.CurrentSearch"
+                   asp-route-typeFilter="@ViewBag.CurrentType"
+                   asp-route-priceFilter="@ViewBag.CurrentPrice"
+                   asp-route-statusFilter="All"
+                   class="btn btn-sm @(currentStatus == "All" ? "btn-dark" : "btn-outline-dark")">
+                    All Units
+                </a>
+
+                <a asp-action="Index"
+                   asp-route-id="@propertyId"
+                   asp-route-searchString="@ViewBag.CurrentSearch"
+                   asp-route-typeFilter="@ViewBag.CurrentType"
+                   asp-route-priceFilter="@ViewBag.CurrentPrice"
+                   asp-route-statusFilter="Available"
+                   class="btn btn-sm @(currentStatus == "Available" ? "btn-success" : "btn-outline-success")">
+                    Available
+                </a>
+
+                <a asp-action="Index"
+                   asp-route-id="@propertyId"
+                   asp-route-searchString="@ViewBag.CurrentSearch"
+                   asp-route-typeFilter="@ViewBag.CurrentType"
+                   asp-route-priceFilter="@ViewBag.CurrentPrice"
+                   asp-route-statusFilter="Occupied"
+                   class="btn btn-sm @(currentStatus == "Occupied" ? "btn-danger" : "btn-outline-danger")">
+                    Occupied
+                </a>
+
+                <a asp-action="Index"
+                   asp-route-id="@propertyId"
+                   class="btn btn-sm btn-outline-secondary ms-auto">
+                    Reset
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
 <p>
     <a asp-action="Create" class="btn btn-primary">Create New</a>
 </p>
 
-<div class="row">
-    @foreach (var item in Model)
-    {
-        <div class="col-md-6 col-lg-3 mb-4">
-            <div class="card h-100 shadow-sm">
+@if (!Model.Any())
+{
+    <div class="alert alert-light border">
+        No units found matching the selected filters.
+    </div>
+}
+else
+{
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            <div class="col-md-6 col-lg-3 mb-4">
+                <div class="card h-100 shadow-sm">
 
-                <div class="card-body">
-                    <h5 class="card-title">
-                        Unit @Html.DisplayFor(modelItem => item.UnitNumber)
-                    </h5>
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            Unit @Html.DisplayFor(modelItem => item.UnitNumber)
+                        </h5>
 
-                    <h6 class="card-subtitle mb-2 text-muted">
-                        @Html.DisplayFor(modelItem => item.Type)
-                    </h6>
+                        <h6 class="card-subtitle mb-2 text-muted">
+                            @Html.DisplayFor(modelItem => item.Type)
+                        </h6>
 
-                    <p class="card-text">
-                        <strong>Size:</strong> @Html.DisplayFor(modelItem => item.SizeSqFt) SqFt
-                    </p>
+                        <p class="card-text">
+                            <strong>Size:</strong> @Html.DisplayFor(modelItem => item.SizeSqFt) SqFt
+                        </p>
 
-                    <p class="card-text">
-                        <strong>Rent:</strong> @Html.DisplayFor(modelItem => item.RentAmount)
-                    </p>
+                        <p class="card-text">
+                            <strong>Rent:</strong> @Html.DisplayFor(modelItem => item.RentAmount)
+                        </p>
 
-                    <p class="card-text">
-                        <strong>Status:</strong>
+                        <p class="card-text">
+                            <strong>Status:</strong>
 
-                        @if (item.AvailabilityStatus == "Available")
+                            @if (item.AvailabilityStatus == "Available")
+                            {
+                                <span class="badge bg-success">Available</span>
+                            }
+                            else if (item.AvailabilityStatus == "Occupied")
+                            {
+                                <span class="badge bg-danger">Occupied</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">
+                                    @item.AvailabilityStatus
+                                </span>
+                            }
+                        </p>
+
+                        <p class="card-text mb-2">
+                            <strong>Amenities:</strong>
+                        </p>
+
+                        @if (item.Amenities != null && item.Amenities.Any())
                         {
-                            <span class="badge bg-success">Available</span>
-                        }
-                        else if (item.AvailabilityStatus == "Occupied")
-                        {
-                            <span class="badge bg-danger">Occupied</span>
+                            <div class="mb-2">
+                                @foreach (var amenity in item.Amenities)
+                                {
+                                    <span class="badge bg-secondary me-1 mb-1">@amenity.Name</span>
+                                }
+                            </div>
                         }
                         else
                         {
-                            <span class="badge bg-secondary">
-                                @item.AvailabilityStatus
-                            </span>
+                            <p class="text-muted">No amenities available</p>
                         }
-                    </p>
+                    </div>
 
-                    <p class="card-text mb-2">
-                        <strong>Amenities:</strong>
-                    </p>
+                    <div class="card-footer bg-white border-top-0">
+                        <a asp-action="Details"
+                           asp-route-id="@item.UnitId"
+                           asp-route-propertyId="@item.PropertyId"
+                           class="btn btn-outline-primary btn-sm">
+                            Details
+                        </a>
 
-                    @if (item.Amenities != null && item.Amenities.Any())
-                    {
-                        <div class="mb-2">
-                            @foreach (var amenity in item.Amenities)
-                            {
-                                <span class="badge bg-secondary me-1 mb-1">@amenity.Name</span>
-                            }
-                        </div>
-                    }
-                    else
-                    {
-                        <p class="text-muted">No amenities available</p>
-                    }
+                        <a asp-controller="LeaseApplications"
+                           asp-action="Create"
+                           asp-route-unitId="@item.UnitId"
+                           class="btn btn-outline-success btn-sm ms-2">
+                            Apply
+                        </a>
+                    </div>
+
                 </div>
-
-                <div class="card-footer bg-white border-top-0">
-                    <a asp-action="Details" asp-route-id="@item.UnitId" asp-route-propertyId="@item.PropertyId" class="btn btn-outline-primary btn-sm">
-                        Details
-                    </a>
-
-                    <a asp-controller="LeaseApplications"
-                       asp-action="Create"
-                       asp-route-unitId="@item.UnitId"
-                       class="btn btn-outline-success btn-sm ms-2">
-                        Apply
-                    </a>
-                </div>
-
             </div>
-        </div>
-    }
-</div>
+        }
+    </div>
+}

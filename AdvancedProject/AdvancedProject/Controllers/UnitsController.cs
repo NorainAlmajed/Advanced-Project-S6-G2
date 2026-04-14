@@ -20,27 +20,95 @@ namespace AdvancedProject.Controllers
         }
 
         // GET: Units
-        public async Task<IActionResult> Index(int? id)
+        public async Task<IActionResult> Index(
+     int? id,
+     string searchString,
+     string statusFilter,
+     string typeFilter,
+     string priceFilter)
         {
-            var aPContext = _context.Units
+            var query = _context.Units
                 .Include(u => u.Property)
                 .Include(u => u.Amenities)
                 .AsQueryable();
 
             if (id != null)
             {
-                aPContext = aPContext.Where(e => e.PropertyId == id);
+                query = query.Where(u => u.PropertyId == id);
+
+                var property = await _context.Properties.FindAsync(id);
+                if (property != null)
+                {
+                    ViewBag.PropertyName = property.Name;
+                }
             }
 
-            var units = await aPContext.ToListAsync();
-
-            if (units.Any())
+            if (!string.IsNullOrWhiteSpace(searchString))
             {
-                ViewBag.PropertyName = units.First().Property.Name;
+                query = query.Where(u =>
+                    u.UnitNumber.Contains(searchString) ||
+                    u.Type.Contains(searchString) ||
+                    u.Property.Name.Contains(searchString));
             }
+
+            if (!string.IsNullOrWhiteSpace(statusFilter) && statusFilter != "All")
+            {
+                query = query.Where(u => u.AvailabilityStatus == statusFilter);
+            }
+
+            if (!string.IsNullOrWhiteSpace(typeFilter))
+            {
+                query = query.Where(u => u.Type == typeFilter);
+            }
+
+            if (!string.IsNullOrWhiteSpace(priceFilter))
+            {
+                switch (priceFilter)
+                {
+                    case "Under300":
+                        query = query.Where(u => u.RentAmount < 300);
+                        break;
+
+                    case "300to400":
+                        query = query.Where(u => u.RentAmount >= 300 && u.RentAmount <= 400);
+                        break;
+
+                    case "401to500":
+                        query = query.Where(u => u.RentAmount > 400 && u.RentAmount <= 500);
+                        break;
+
+                    case "Above500":
+                        query = query.Where(u => u.RentAmount > 500);
+                        break;
+                }
+            }
+
+            var typeQuery = _context.Units.AsQueryable();
+
+            if (id != null)
+            {
+                typeQuery = typeQuery.Where(u => u.PropertyId == id);
+            }
+
+            var unitTypes = await typeQuery
+                .Select(u => u.Type)
+                .Distinct()
+                .OrderBy(t => t)
+                .ToListAsync();
+
+            ViewBag.TypeList = new SelectList(unitTypes, typeFilter);
+            ViewBag.CurrentSearch = searchString;
+            ViewBag.CurrentStatus = string.IsNullOrWhiteSpace(statusFilter) ? "All" : statusFilter;
+            ViewBag.CurrentType = typeFilter;
+            ViewBag.CurrentPrice = priceFilter;
+            ViewBag.PropertyId = id;
+
+            var units = await query.ToListAsync();
 
             return View(units);
         }
+
+
 
         // GET: Units/Details/5
         public async Task<IActionResult> Details(int? id, int? propertyId)
