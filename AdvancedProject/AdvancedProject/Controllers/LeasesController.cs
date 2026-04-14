@@ -19,10 +19,30 @@ namespace AdvancedProject.Controllers
             _context = context;
         }
 
+        private void LoadDropdowns()
+        {
+            var tenants = _context.Tenants
+                .Include(t => t.User)
+                .Select(t => new
+                {
+                    t.TenantId,
+                    FullName = t.User.FullName
+                })
+                .ToList();
+
+            ViewData["TenantName"] = new SelectList(tenants, "TenantId", "FullName");
+
+            ViewData["UnitNumber"] = new SelectList(
+                _context.Units,
+                "UnitId",
+                "UnitNumber"
+            );
+        }
+
         // GET: Leases
         public async Task<IActionResult> Index()
         {
-            var aPContext = _context.Leases.Include(l => l.Tenant).Include(l => l.Unit);
+            var aPContext = _context.Leases.Include(l => l.Unit).Include(l => l.Tenant).ThenInclude(e => e.User);
             return View(await aPContext.ToListAsync());
         }
 
@@ -49,28 +69,53 @@ namespace AdvancedProject.Controllers
         // GET: Leases/Create
         public IActionResult Create()
         {
-            ViewData["TenantId"] = new SelectList(_context.Tenants, "TenantId", "TenantId");
-            ViewData["UnitId"] = new SelectList(_context.Units, "UnitId", "UnitId");
+            var tenants = _context.Tenants
+                .Include(t => t.User)
+                .Select(t => new
+                {
+                    t.TenantId,
+                    FullName = t.User.FullName
+                })
+                .ToList();
+
+            ViewData["TenantName"] = new SelectList(tenants, "TenantId", "FullName");
+
+            ViewData["UnitNumber"] = new SelectList(
+                _context.Units,
+                "UnitId",
+                "UnitNumber"
+            );
+
             return View();
         }
 
-        // POST: Leases/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("LeaseId,TenantId,UnitId,StartDate,EndDate,MonthlyRent,Status,CreatedAt,TerminationDate,Duration")] Lease lease)
+        public async Task<IActionResult> Create(Lease lease)
         {
-            if (ModelState.IsValid)
+            try
             {
+                var unit = await _context.Units.FindAsync(lease.UnitId);
+
+                if (unit == null)
+                    return Content("Unit NOT FOUND");
+
+                lease.Status = "Pending";
+                lease.CreatedAt = DateTime.Now;
+                lease.EndDate = lease.StartDate.AddMonths(lease.Duration).AddDays(-1);
+                lease.MonthlyRent = unit.RentAmount;
+
                 _context.Add(lease);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+
+                return RedirectToAction("Index", "Leases");
             }
-            ViewData["TenantId"] = new SelectList(_context.Tenants, "TenantId", "TenantId", lease.TenantId);
-            ViewData["UnitId"] = new SelectList(_context.Units, "UnitId", "UnitId", lease.UnitId);
-            return View(lease);
+            catch (Exception ex)
+            {
+                return Content("ERROR:\n" + ex.Message + "\n\n" + ex.InnerException);
+            }
         }
+
 
         // GET: Leases/Edit/5
         public async Task<IActionResult> Edit(int? id)

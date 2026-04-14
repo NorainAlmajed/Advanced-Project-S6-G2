@@ -1,28 +1,25 @@
 ﻿@model IEnumerable<AdvancedProject.Models.LeaseApplication>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Lease Applications";
 }
 
-<h1>Index</h1>
+<h1>Lease Applications</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
 <table class="table">
     <thead>
         <tr>
             <th>
+                @Html.DisplayNameFor(model => model.ApplicationId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Tenant)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Unit)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.ApplicationDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Status)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ApproveTime)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.RejectTime)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.StartDate)
@@ -31,10 +28,7 @@
                 @Html.DisplayNameFor(model => model.Duration)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Tenant)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Unit)
+                @Html.DisplayNameFor(model => model.Status)
             </th>
             <th></th>
         </tr>
@@ -43,16 +37,16 @@
 @foreach (var item in Model) {
         <tr>
             <td>
+                @Html.DisplayFor(modelItem => item.ApplicationId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Tenant.User.FullName)
+            </td>
+            <td>
+                 @Html.DisplayFor(modelItem => item.Unit.UnitNumber)
+            </td>
+            <td>
                 @Html.DisplayFor(modelItem => item.ApplicationDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Status)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ApproveTime)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.RejectTime)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.StartDate)
@@ -61,10 +55,7 @@
                 @Html.DisplayFor(modelItem => item.Duration)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Tenant.TenantId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Unit.UnitId)
+                 @Html.DisplayFor(modelItem => item.Status)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.ApplicationId">Edit</a> |

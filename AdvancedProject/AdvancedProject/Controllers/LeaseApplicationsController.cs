@@ -22,7 +22,7 @@ namespace AdvancedProject.Controllers
         // GET: LeaseApplications
         public async Task<IActionResult> Index()
         {
-            var aPContext = _context.LeaseApplications.Include(l => l.Tenant).Include(l => l.Unit);
+            var aPContext = _context.LeaseApplications.Include(l => l.Unit).Include(l => l.Tenant).ThenInclude(e => e.User);
             return View(await aPContext.ToListAsync());
         }
 
@@ -47,7 +47,7 @@ namespace AdvancedProject.Controllers
         }
 
         // GET: LeaseApplications/Create
-        public IActionResult Create()
+        public IActionResult Create(int? unitId)
         {
             ViewData["TenantId"] = new SelectList(_context.Tenants, "TenantId", "TenantId");
             ViewData["UnitId"] = new SelectList(_context.Units, "UnitId", "UnitId");
