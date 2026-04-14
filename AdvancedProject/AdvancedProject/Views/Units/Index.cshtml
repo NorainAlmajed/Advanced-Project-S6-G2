@@ -35,8 +35,40 @@
 
                     <p class="card-text">
                         <strong>Status:</strong>
-                        @Html.DisplayFor(modelItem => item.AvailabilityStatus)
+
+                        @if (item.AvailabilityStatus == "Available")
+                        {
+                            <span class="badge bg-success">Available</span>
+                        }
+                        else if (item.AvailabilityStatus == "Occupied")
+                        {
+                            <span class="badge bg-danger">Occupied</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-secondary">
+                                @item.AvailabilityStatus
+                            </span>
+                        }
                     </p>
+
+                    <p class="card-text mb-2">
+                        <strong>Amenities:</strong>
+                    </p>
+
+                    @if (item.Amenities != null && item.Amenities.Any())
+                    {
+                        <div class="mb-2">
+                            @foreach (var amenity in item.Amenities)
+                            {
+                                <span class="badge bg-secondary me-1 mb-1">@amenity.Name</span>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <p class="text-muted">No amenities available</p>
+                    }
                 </div>
 
                 <div class="card-footer bg-white border-top-0">

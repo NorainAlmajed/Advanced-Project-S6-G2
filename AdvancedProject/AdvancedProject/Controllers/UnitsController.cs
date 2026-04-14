@@ -22,7 +22,10 @@ namespace AdvancedProject.Controllers
         // GET: Units
         public async Task<IActionResult> Index(int? id)
         {
-            var aPContext = _context.Units.Include(u => u.Property).AsQueryable();
+            var aPContext = _context.Units
+                .Include(u => u.Property)
+                .Include(u => u.Amenities)
+                .AsQueryable();
 
             if (id != null)
             {
