@@ -35,9 +35,21 @@ namespace AdvancedProject.Controllers
 
             var user = await _context.Users
                 .FirstOrDefaultAsync(m => m.UserId == id);
+
             if (user == null)
             {
                 return NotFound();
+            }
+
+            if (user.Role == "Tenant")
+            {
+                var tenant = await _context.Tenants
+                    .FirstOrDefaultAsync(t => t.UserId == user.UserId);
+
+                if (tenant != null)
+                {
+                    return RedirectToAction("Details", "Tenants", new { id = tenant.TenantId });
+                }
             }
 
             return View(user);
