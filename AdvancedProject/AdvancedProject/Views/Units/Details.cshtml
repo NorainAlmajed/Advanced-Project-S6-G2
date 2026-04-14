@@ -10,51 +10,85 @@
     <h4>Unit</h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.UnitNumber)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.UnitNumber)
         </dd>
-        <dt class = "col-sm-2">
+
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Type)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Type)
         </dd>
-        <dt class = "col-sm-2">
+
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.SizeSqFt)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.SizeSqFt)
         </dd>
-        <dt class = "col-sm-2">
+
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.RentAmount)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.RentAmount)
         </dd>
-        <dt class = "col-sm-2">
+
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.AvailabilityStatus)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.AvailabilityStatus)
+        <dd class="col-sm-10">
+            @if (Model.AvailabilityStatus == "Available")
+            {
+                <span class="badge bg-success">Available</span>
+            }
+            else if (Model.AvailabilityStatus == "Occupied")
+            {
+                <span class="badge bg-danger">Occupied</span>
+            }
+            else
+            {
+                <span class="badge bg-secondary">@Model.AvailabilityStatus</span>
+            }
         </dd>
-        <dt class = "col-sm-2">
+
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.CreatedAt)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.CreatedAt)
         </dd>
-        <dt class = "col-sm-2">
+
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Property)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Property.PropertyId)
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Property.Name)
+        </dd>
+
+        <dt class="col-sm-2">
+            Amenities
+        </dt>
+        <dd class="col-sm-10">
+            @if (Model.Amenities != null && Model.Amenities.Any())
+            {
+                @foreach (var amenity in Model.Amenities)
+                {
+                    <span class="badge bg-secondary me-1 mb-1">@amenity.Name</span>
+                }
+            }
+            else
+            {
+                <span class="text-muted">No amenities available</span>
+            }
         </dd>
     </dl>
 </div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model?.UnitId">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index" asp-route-id="@ViewBag.PropertyId">Back to List</a>
 </div>

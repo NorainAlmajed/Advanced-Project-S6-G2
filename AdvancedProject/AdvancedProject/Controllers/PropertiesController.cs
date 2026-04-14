@@ -20,9 +20,20 @@ namespace AdvancedProject.Controllers
         }
 
         // GET: Properties
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchString)
         {
-            return View(await _context.Properties.ToListAsync());
+            var properties = from p in _context.Properties
+                             select p;
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                properties = properties.Where(p =>
+                    p.Name.Contains(searchString) ||
+                    p.City.Contains(searchString)
+                );
+            }
+
+            return View(await properties.ToListAsync());
         }
 
         // GET: Properties/Details/5
