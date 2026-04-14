@@ -41,7 +41,7 @@ namespace AdvancedProject.Controllers
         // GET: Leases
         public async Task<IActionResult> Index()
         {
-            var aPContext = _context.Leases.Include(l => l.Unit).Include(e => e.Duration).Include(l => l.Tenant).ThenInclude(e => e.User);
+            var aPContext = _context.Leases.Include(l => l.Unit).Include(e => e.Duration).Include(l => l.Tenant).ThenInclude(e => e.User).Include(e => e.Unit);
             return View(await aPContext.ToListAsync());
         }
 
@@ -66,81 +66,91 @@ namespace AdvancedProject.Controllers
         }
 
         // GET: Leases/Create
-        public async Task<IActionResult> Create(int? unitId)
+        public async Task<IActionResult> Create(int unitId)
         {
-            if (unitId == null)
-            {
-                return BadRequest("Unit is required");
-            }
-
-            var model = new Lease
-            {
-                UnitId = unitId.Value,
-                StartDate = DateTime.Today.AddDays(1)
-            };
-
-            var tenants = _context.Tenants
-                .Include(t => t.User)
-                .Select(t => new
-                {
-                    t.TenantId,
-                    Username = t.User.Username
-                })
-                .ToList();
-
-            ViewData["TenantName"] = new SelectList(tenants, "TenantId", "Username");
-            ViewData["DurationId"] = new SelectList(_context.Durations, "DurationId", "Months");
-
             var unit = await _context.Units.FindAsync(unitId);
+
             if (unit == null)
                 return NotFound();
 
+            var model = new Lease
+            {
+                UnitId = unit.UnitId,
+                StartDate = DateTime.Today.AddDays(1)
+            };
+
             ViewBag.UnitNumber = unit.UnitNumber;
+
+            ViewData["TenantName"] = new SelectList(_context.Tenants.Include(t => t.User)
+                .Select(t => new { t.TenantId, Username = t.User.Username }),
+                "TenantId", "Username");
+
+            ViewData["DurationId"] = new SelectList(_context.Durations, "DurationId", "Months");
 
             return View(model);
         }
-
 
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Lease lease)
         {
-            var unit = await _context.Units.FindAsync(lease.UnitId);
-            if (unit == null)
-                return Content("Unit NOT FOUND");
+            ModelState.Remove("MonthlyRent");
+            ModelState.Remove("EndDate");
+            ModelState.Remove("Status");
+            ModelState.Remove("CreatedAt");
 
-            var duration = await _context.Durations.FindAsync(lease.DurationId);
-            if (duration == null)
-                return Content("Duration not found");
-
-            if (lease.StartDate.Date < DateTime.Today.AddDays(1))
-            {
-                ModelState.AddModelError("StartDate", "Start date must be after today.");
-            }
+            ModelState.Remove("Tenant");
+            ModelState.Remove("Unit");
+            ModelState.Remove("Duration");
 
             if (!ModelState.IsValid)
             {
-                var tenants = _context.Tenants.Include(t => t.User)
-                    .Select(t => new { t.TenantId, Username = t.User.Username })
-                    .ToList();
+                ViewData["TenantName"] = new SelectList(
+                    _context.Tenants.Include(t => t.User)
+                        .Select(t => new { t.TenantId, Username = t.User.Username }),
+                    "TenantId",
+                    "Username",
+                    lease.TenantId
+                );
 
-                ViewData["TenantName"] = new SelectList(tenants, "TenantId", "Username");
-                ViewData["DurationId"] = new SelectList(_context.Durations, "DurationId", "Months");
-                ViewBag.UnitNumber = unit.UnitNumber;
+                ViewData["DurationId"] = new SelectList(
+                    _context.Durations,
+                    "DurationId",
+                    "Months",
+                    lease.DurationId
+                );
 
                 return View(lease);
             }
 
-            lease.Status = "Pending";
             lease.CreatedAt = DateTime.Now;
-            lease.EndDate = lease.StartDate.AddMonths(duration.Months).AddDays(-1);
+            lease.Status = "Active";
+
+            var unit = await _context.Units.FindAsync(lease.UnitId);
+
+            if (unit == null)
+            {
+                ModelState.AddModelError("", "Invalid unit.");
+                return View(lease);
+            }
+
             lease.MonthlyRent = unit.RentAmount;
 
-            _context.Add(lease);
+            var duration = await _context.Durations.FindAsync(lease.DurationId);
+
+            if (duration == null)
+            {
+                ModelState.AddModelError("", "Invalid duration selected.");
+                return View(lease);
+            }
+
+            lease.EndDate = lease.StartDate.AddMonths(duration.Months).AddDays(-1);
+
+            _context.Leases.Add(lease);
             await _context.SaveChangesAsync();
 
-            return RedirectToAction("Index", "Leases");
+            return RedirectToAction(nameof(Index));
         }
 
 
