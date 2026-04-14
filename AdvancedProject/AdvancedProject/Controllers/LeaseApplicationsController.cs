@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AdvancedProject.Data;
 using AdvancedProject.Models;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace AdvancedProject.Controllers
 {
@@ -73,6 +74,12 @@ namespace AdvancedProject.Controllers
             ModelState.Remove("Unit");
             ModelState.Remove("Status");
             ModelState.Remove("ApplicationDate");
+
+            if (leaseApplication.StartDate.Date <= DateTime.Today)
+            {
+                ModelState.AddModelError("StartDate", "Start date must be in the future.");
+            }
+
 
             if (ModelState.IsValid)
             {
