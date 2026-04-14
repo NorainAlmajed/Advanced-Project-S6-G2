@@ -72,17 +72,26 @@ namespace AdvancedProject.Controllers
             leaseApplication.Status = "Pending";
             leaseApplication.ApplicationDate = DateTime.Now;
 
-            try
-            {
-                _context.Add(leaseApplication);
-                var result = await _context.SaveChangesAsync();
+            ModelState.Remove("Tenant");
+            ModelState.Remove("Unit");
+            ModelState.Remove("Duration");
+            ModelState.Remove("Status");
 
-                return RedirectToAction(nameof(Index));
-            }
-            catch (Exception ex)
+            if (leaseApplication.StartDate.Date <= DateTime.Today)
             {
-                return Content("ERROR: " + (ex.InnerException?.Message ?? ex.Message));
+                ModelState.AddModelError("StartDate", "Start date must be in the future.");
             }
+
+            if (!ModelState.IsValid)
+            {
+                ViewData["DurationId"] = new SelectList(_context.Durations, "DurationId", "Months");
+                return View(leaseApplication);
+            }
+
+            _context.Add(leaseApplication);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: LeaseApplications/Edit/5

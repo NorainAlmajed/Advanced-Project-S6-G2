@@ -17,11 +17,11 @@
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.UnitNumber)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Type)
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.UnitType)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Type)
+        <dd class="col-sm-10">
+            @Model.UnitType?.Name
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.SizeSqFt)
