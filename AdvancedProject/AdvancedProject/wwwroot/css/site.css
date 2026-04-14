@@ -552,3 +552,120 @@ body {
         width: 100%;
     }
 }
+
+
+
+.app-header {
+    padding-top: 0.9rem;
+}
+
+.app-navbar {
+    background: #ffffff;
+    border: 1px solid rgba(0, 91, 113, 0.08);
+    border-radius: 24px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+    padding: 1rem 1.25rem;
+}
+
+.app-brand {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-main) !important;
+    text-decoration: none;
+    letter-spacing: -0.01em;
+    margin-right: 1.5rem;
+    opacity: 0.85;
+    transition: all 0.2s ease;
+}
+
+    .app-brand:hover {
+        color: var(--primary) !important;
+        opacity: 1;
+    }
+
+    .app-brand:hover {
+        color: var(--primary) !important;
+    }
+
+.nav-pill-group {
+    gap: 0.4rem;
+}
+
+.app-nav-link {
+    color: var(--text-main) !important;
+    font-weight: 600;
+    font-size: 1.05rem;
+    padding: 0.65rem 1rem !important;
+    border-radius: 14px;
+    transition: all 0.2s ease;
+}
+
+    .app-nav-link:hover {
+        background-color: #eef6f7;
+        color: var(--primary) !important;
+    }
+
+.app-navbar-toggler {
+    border: none;
+    border-radius: 12px;
+    padding: 0.45rem 0.7rem;
+    background-color: #eef6f7;
+}
+
+    .app-navbar-toggler:focus {
+        box-shadow: 0 0 0 0.2rem rgba(0, 91, 113, 0.12);
+    }
+
+.app-main-container {
+    margin-top: 1.5rem;
+}
+
+.app-footer {
+    margin-top: 2rem;
+    padding: 1rem 0 1.25rem;
+    color: var(--text-muted);
+    font-size: 0.95rem;
+}
+
+    .app-footer .container {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        flex-wrap: wrap;
+    }
+
+    .app-footer a {
+        color: var(--primary);
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+        .app-footer a:hover {
+            color: var(--accent);
+        }
+
+.footer-divider {
+    color: #c7d2d9;
+}
+
+@media (max-width: 991.98px) {
+    .app-navbar {
+        padding: 0.9rem 1rem;
+    }
+
+    .navbar-collapse {
+        margin-top: 1rem;
+    }
+
+    .nav-pill-group {
+        gap: 0.35rem;
+    }
+
+    .app-nav-link {
+        width: 100%;
+    }
+
+    .app-brand {
+        font-size: 1.6rem;
+    }
+}
