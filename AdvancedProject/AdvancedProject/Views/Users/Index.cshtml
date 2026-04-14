@@ -34,10 +34,9 @@
             Tenants
         </a>
 
-        <a asp-action="Index"
-           asp-route-roleFilter="Staff"
-           asp-route-searchTerm="@currentSearch"
-           class="btn @(currentFilter == "Staff" ? "btn-primary" : "btn-light-custom") users-filter-btn">
+        <a asp-controller="MaintenanceStaffs"
+           asp-action="Index"
+           class="btn btn-light-custom users-filter-btn">
             Maintenance Staff
         </a>
     </div>
@@ -62,7 +61,9 @@
                         Search
                     </button>
 
-                    <a asp-action="Index" asp-route-roleFilter="@currentFilter" class="btn btn-outline-light users-reset-btn flex-fill">
+                    <a asp-action="Index"
+                       asp-route-roleFilter="@currentFilter"
+                       class="btn btn-outline-light users-reset-btn flex-fill">
                         Reset
                     </a>
                 </div>
