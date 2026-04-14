@@ -2,62 +2,126 @@
 
 @{
     ViewData["Title"] = "Users";
+    string currentFilter = ViewData["CurrentRoleFilter"]?.ToString() ?? "";
+    string currentSearch = ViewData["CurrentSearchTerm"]?.ToString() ?? "";
 }
 
-<h1>Users</h1>
+<div class="container py-4 users-page">
 
-<p>
-    <a asp-action="Create">Create New</a>
-    <a asp-controller="Tenants" asp-action="Index">View Tenanats</a>
-    <a asp-controller="MaintenanceStaffs" asp-action="Index">View Maintenance Staff</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Username)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FullName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Email)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Phone)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Role)
-            </th>
-           
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Username)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FullName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Email)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Phone)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Role)
-            </td>
-          
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.UserId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.UserId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.UserId">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-start gap-3 mb-4">
+        <div>
+            <p class="details-eyebrow mb-1">User Management</p>
+            <h1 class="details-title mb-2">Users</h1>
+            <p class="users-subtitle mb-0">Browse and manage system users by role.</p>
+        </div>
+
+        <a asp-action="Create" class="btn btn-light-custom users-create-btn">
+            + Add New User
+        </a>
+    </div>
+
+    <div class="d-flex flex-wrap gap-2 mb-4">
+        <a asp-action="Index"
+           asp-route-searchTerm="@currentSearch"
+           class="btn @(string.IsNullOrEmpty(currentFilter) ? "btn-primary" : "btn-light-custom") users-filter-btn">
+            All Users
+        </a>
+
+        <a asp-action="Index"
+           asp-route-roleFilter="Tenant"
+           asp-route-searchTerm="@currentSearch"
+           class="btn @(currentFilter == "Tenant" ? "btn-primary" : "btn-light-custom") users-filter-btn">
+            Tenants
+        </a>
+
+        <a asp-controller="MaintenanceStaffs"
+           asp-action="Index"
+           class="btn btn-light-custom users-filter-btn">
+            Maintenance Staff
+        </a>
+    </div>
+
+    <div class="card search-card shadow-soft border-0 mb-4 users-search-card">
+        <div class="card-body p-4">
+            <form asp-action="Index" method="get" class="row g-3 align-items-end">
+                <input type="hidden" name="roleFilter" value="@currentFilter" />
+
+                <div class="col-lg-8">
+                    <label for="searchTerm" class="form-label fw-semibold">Search Users</label>
+                    <input type="text"
+                           id="searchTerm"
+                           name="searchTerm"
+                           value="@currentSearch"
+                           class="form-control form-control-lg users-search-input"
+                           placeholder="Search by username, full name, email, phone, or role..." />
+                </div>
+
+                <div class="col-lg-4 d-flex gap-2">
+                    <button type="submit" class="btn btn-primary users-search-btn flex-fill">
+                        Search
+                    </button>
+
+                    <a asp-action="Index"
+                       asp-route-roleFilter="@currentFilter"
+                       class="btn btn-outline-light users-reset-btn flex-fill">
+                        Reset
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card shadow-soft border-0 users-table-card">
+        <div class="table-responsive">
+            <table class="table mb-0 users-table align-middle">
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Full Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Role</th>
+                        <th class="text-end">Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @if (Model.Any())
+                    {
+                        @foreach (var item in Model)
+                        {
+                            <tr class="users-row">
+                                <td class="fw-semibold">@item.Username</td>
+                                <td>@item.FullName</td>
+                                <td>@item.Email</td>
+                                <td>@item.Phone</td>
+                                <td>
+                                    <span class="custom-pill
+                                                @(item.Role == "Tenant" ? "badge-soft-tenant" :
+                                                                                    item.Role == "Staff" ? "badge-soft-staff" :
+                                                                                    "badge-soft-manager")">
+                                @item.Role
+                            </span>
+                        </td>
+                        <td class="text-end">
+                            <a asp-action="Details" asp-route-id="@item.UserId" class="btn btn-primary btn-sm users-details-btn">
+                                View Details
+                            </a>
+                        </td>
+                    </tr>
+                                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="6" class="text-center py-4 text-muted">
+                                No users found.
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
