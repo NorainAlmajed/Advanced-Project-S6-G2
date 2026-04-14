@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AdvancedProject.Data;
 using AdvancedProject.Models;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace AdvancedProject.Controllers
 {
@@ -22,7 +23,7 @@ namespace AdvancedProject.Controllers
         // GET: LeaseApplications
         public async Task<IActionResult> Index()
         {
-            var aPContext = _context.LeaseApplications.Include(l => l.Unit).Include(l => l.Tenant).ThenInclude(e => e.User);
+            var aPContext = _context.LeaseApplications.Include(l => l.Unit).Include(l => l.Tenant).ThenInclude(e => e.User).Include(l => l.Duration);
             return View(await aPContext.ToListAsync());
         }
 
@@ -35,8 +36,8 @@ namespace AdvancedProject.Controllers
             }
 
             var leaseApplication = await _context.LeaseApplications
-                .Include(l => l.Tenant)
-                .Include(l => l.Unit)
+                .Include(l => l.Tenant).ThenInclude(e => e.User)
+                .Include(l => l.Unit).Include(l => l.Duration)
                 .FirstOrDefaultAsync(m => m.ApplicationId == id);
             if (leaseApplication == null)
             {
@@ -49,9 +50,15 @@ namespace AdvancedProject.Controllers
         // GET: LeaseApplications/Create
         public IActionResult Create(int? unitId)
         {
-            ViewData["TenantId"] = new SelectList(_context.Tenants, "TenantId", "TenantId");
-            ViewData["UnitId"] = new SelectList(_context.Units, "UnitId", "UnitId");
-            return View();
+            var model = new LeaseApplication
+            {
+                UnitId = unitId ?? 0,
+                StartDate = DateTime.Today.AddDays(1) // 👈 tomorrow
+            };
+
+            ViewData["DurationId"] = new SelectList(_context.Durations, "DurationId", "Months");
+
+            return View(model);
         }
 
         // POST: LeaseApplications/Create
@@ -59,17 +66,23 @@ namespace AdvancedProject.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ApplicationId,TenantId,UnitId,ApplicationDate,Status,ApproveTime,RejectTime,StartDate,Duration")] LeaseApplication leaseApplication)
+        public async Task<IActionResult> Create(LeaseApplication leaseApplication)
         {
-            if (ModelState.IsValid)
+            leaseApplication.TenantId = 1;
+            leaseApplication.Status = "Pending";
+            leaseApplication.ApplicationDate = DateTime.Now;
+
+            try
             {
                 _context.Add(leaseApplication);
-                await _context.SaveChangesAsync();
+                var result = await _context.SaveChangesAsync();
+
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["TenantId"] = new SelectList(_context.Tenants, "TenantId", "TenantId", leaseApplication.TenantId);
-            ViewData["UnitId"] = new SelectList(_context.Units, "UnitId", "UnitId", leaseApplication.UnitId);
-            return View(leaseApplication);
+            catch (Exception ex)
+            {
+                return Content("ERROR: " + (ex.InnerException?.Message ?? ex.Message));
+            }
         }
 
         // GET: LeaseApplications/Edit/5
@@ -87,6 +100,7 @@ namespace AdvancedProject.Controllers
             }
             ViewData["TenantId"] = new SelectList(_context.Tenants, "TenantId", "TenantId", leaseApplication.TenantId);
             ViewData["UnitId"] = new SelectList(_context.Units, "UnitId", "UnitId", leaseApplication.UnitId);
+            ViewData["DurationId"] = new SelectList(_context.Durations, "DurationId", "Months", leaseApplication.DurationId);
             return View(leaseApplication);
         }
 
@@ -95,7 +109,7 @@ namespace AdvancedProject.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ApplicationId,TenantId,UnitId,ApplicationDate,Status,ApproveTime,RejectTime,StartDate,Duration")] LeaseApplication leaseApplication)
+        public async Task<IActionResult> Edit(int id, [Bind("ApplicationId,TenantId,UnitId,ApplicationDate,Status,ApproveTime,RejectTime,StartDate,DurationId")] LeaseApplication leaseApplication)
         {
             if (id != leaseApplication.ApplicationId)
             {
