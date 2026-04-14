@@ -4,8 +4,16 @@
     ViewData["Title"] = "Index";
 }
 
-<h1 class="mb-4">Units</h1>
-
+<h1 class="mb-4">
+    @if (ViewBag.PropertyName != null)
+    {
+        <span>@ViewBag.PropertyName Units</span>
+    }
+    else
+    {
+        <span>Units</span>
+    }
+</h1>
 <p>
     <a asp-action="Create" class="btn btn-primary">Create New</a>
 </p>

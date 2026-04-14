@@ -32,8 +32,14 @@ namespace AdvancedProject.Controllers
                 aPContext = aPContext.Where(e => e.PropertyId == id);
             }
 
-            return View(await aPContext.ToListAsync());
+            var units = await aPContext.ToListAsync();
 
+            if (units.Any())
+            {
+                ViewBag.PropertyName = units.First().Property.Name;
+            }
+
+            return View(units);
         }
 
         // GET: Units/Details/5
@@ -46,7 +52,9 @@ namespace AdvancedProject.Controllers
 
             var unit = await _context.Units
                 .Include(u => u.Property)
+                .Include(u => u.Amenities)
                 .FirstOrDefaultAsync(m => m.UnitId == id);
+
             if (unit == null)
             {
                 return NotFound();
