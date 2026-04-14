@@ -26,12 +26,11 @@ namespace AdvancedProject.Controllers
                 .Select(t => new
                 {
                     t.TenantId,
-                    FullName = t.User.FullName
+                    Username = t.User.Username
                 })
                 .ToList();
 
-            ViewData["TenantName"] = new SelectList(tenants, "TenantId", "FullName");
-
+            ViewData["TenantName"] = new SelectList(tenants, "TenantId", "Username");
             ViewData["UnitNumber"] = new SelectList(
                 _context.Units,
                 "UnitId",
@@ -67,58 +66,81 @@ namespace AdvancedProject.Controllers
         }
 
         // GET: Leases/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create(int? unitId)
         {
+            if (unitId == null)
+            {
+                return BadRequest("Unit is required");
+            }
+
+            var model = new Lease
+            {
+                UnitId = unitId.Value,
+                StartDate = DateTime.Today.AddDays(1)
+            };
+
             var tenants = _context.Tenants
                 .Include(t => t.User)
                 .Select(t => new
                 {
                     t.TenantId,
-                    FullName = t.User.FullName
+                    Username = t.User.Username
                 })
                 .ToList();
 
-            ViewData["TenantName"] = new SelectList(tenants, "TenantId", "FullName");
+            ViewData["TenantName"] = new SelectList(tenants, "TenantId", "Username");
             ViewData["DurationId"] = new SelectList(_context.Durations, "DurationId", "Months");
 
-            ViewData["UnitNumber"] = new SelectList(
-                _context.Units,
-                "UnitId",
-                "UnitNumber"
-            );
+            var unit = await _context.Units.FindAsync(unitId);
+            if (unit == null)
+                return NotFound();
 
-            return View();
+            ViewBag.UnitNumber = unit.UnitNumber;
+
+            return View(model);
         }
+
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Lease lease)
         {
-            try
+            var unit = await _context.Units.FindAsync(lease.UnitId);
+            if (unit == null)
+                return Content("Unit NOT FOUND");
+
+            var duration = await _context.Durations.FindAsync(lease.DurationId);
+            if (duration == null)
+                return Content("Duration not found");
+
+            if (lease.StartDate.Date < DateTime.Today.AddDays(1))
             {
-                var unit = await _context.Units.FindAsync(lease.UnitId);
-
-                if (unit == null)
-                    return Content("Unit NOT FOUND");
-
-                lease.Status = "Pending";
-                lease.CreatedAt = DateTime.Now;
-                var duration = await _context.Durations.FindAsync(lease.DurationId);
-
-                if (duration == null)
-                    return Content("Duration not found");
-
-                lease.EndDate = lease.StartDate.AddMonths(duration.Months).AddDays(-1); lease.MonthlyRent = unit.RentAmount;
-
-                _context.Add(lease);
-                await _context.SaveChangesAsync();
-
-                return RedirectToAction("Index", "Leases");
+                ModelState.AddModelError("StartDate", "Start date must be after today.");
             }
-            catch (Exception ex)
+
+            if (!ModelState.IsValid)
             {
-                return Content("ERROR:\n" + ex.Message + "\n\n" + ex.InnerException);
+                var tenants = _context.Tenants.Include(t => t.User)
+                    .Select(t => new { t.TenantId, Username = t.User.Username })
+                    .ToList();
+
+                ViewData["TenantName"] = new SelectList(tenants, "TenantId", "Username");
+                ViewData["DurationId"] = new SelectList(_context.Durations, "DurationId", "Months");
+                ViewBag.UnitNumber = unit.UnitNumber;
+
+                return View(lease);
             }
+
+            lease.Status = "Pending";
+            lease.CreatedAt = DateTime.Now;
+            lease.EndDate = lease.StartDate.AddMonths(duration.Months).AddDays(-1);
+            lease.MonthlyRent = unit.RentAmount;
+
+            _context.Add(lease);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Index", "Leases");
         }
 
 
@@ -135,8 +157,17 @@ namespace AdvancedProject.Controllers
             {
                 return NotFound();
             }
-            ViewData["TenantId"] = new SelectList(_context.Tenants, "TenantId", "TenantId", lease.TenantId);
-            ViewData["UnitId"] = new SelectList(_context.Units, "UnitId", "UnitId", lease.UnitId);
+            var tenants = _context.Tenants
+            .Include(t => t.User)
+            .Select(t => new
+            {
+                t.TenantId,
+                Username = t.User.Username
+            })
+            .ToList();
+
+            ViewData["TenantId"] = new SelectList(tenants, "TenantId", "Username", lease.TenantId);
+            ViewData["UnitId"] = new SelectList(_context.Units, "UnitId", "UnitNumber", lease.UnitId);
             ViewData["DurationId"] = new SelectList(_context.Durations, "DurationId", "Months", lease.DurationId);
             return View(lease);
         }
@@ -181,7 +212,9 @@ namespace AdvancedProject.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["TenantId"] = new SelectList(_context.Tenants, "TenantId", "TenantId", lease.TenantId);
+            ViewData["TenantId"] = new SelectList(_context.Tenants.Include(t => t.User)
+            .Select(t => new { t.TenantId, Username = t.User.Username }),
+            "TenantId", "Username", lease.TenantId);
             ViewData["UnitId"] = new SelectList(_context.Units, "UnitId", "UnitId", lease.UnitId);
             return View(lease);
         }
