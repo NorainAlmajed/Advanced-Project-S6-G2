@@ -431,3 +431,124 @@ body {
         text-align: center;
     }
 }
+
+
+.users-page .users-subtitle {
+    color: var(--text-muted);
+    font-size: 1.05rem;
+}
+
+.users-create-btn {
+    border-radius: 12px;
+    padding: 0.8rem 1.4rem;
+    font-weight: 600;
+    font-size: 1rem;
+    min-width: 170px;
+    text-align: center;
+}
+
+.users-filter-btn {
+    border-radius: 12px;
+    padding: 0.7rem 1.2rem;
+    font-weight: 600;
+}
+
+.users-table-card {
+    border-radius: 22px;
+    overflow: hidden;
+    background-color: var(--bg-card);
+}
+
+.users-table {
+    background-color: #fff;
+}
+
+    .users-table thead th {
+        background-color: #ffffff;
+        color: var(--text-main);
+        font-size: 1rem;
+        font-weight: 800;
+        padding: 1.25rem 1.1rem;
+        border-bottom: 1px solid rgba(0, 91, 113, 0.10);
+        white-space: nowrap;
+    }
+
+    .users-table tbody td {
+        padding: 1rem 1.1rem;
+        vertical-align: middle;
+        border-top: 1px solid rgba(0, 91, 113, 0.06);
+        transition: background-color 0.2s ease, transform 0.2s ease;
+    }
+
+    .users-table tbody tr {
+        transition: background-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+        .users-table tbody tr:hover td {
+            background-color: #f1f5f7;
+        }
+
+.users-details-btn {
+    border-radius: 10px;
+    padding: 0.5rem 0.95rem;
+    font-weight: 600;
+}
+
+@media (max-width: 768px) {
+    .users-create-btn {
+        width: 100%;
+    }
+
+    .users-filter-btn {
+        width: 100%;
+    }
+}
+
+
+
+.users-search-card {
+    border-radius: 22px;
+    overflow: hidden;
+}
+
+.users-search-input {
+    border-radius: 14px;
+    border: none;
+    min-height: 56px;
+    font-size: 1rem;
+}
+
+    .users-search-input:focus {
+        box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.25);
+    }
+
+.users-search-btn,
+.users-reset-btn {
+    min-height: 56px;
+    border-radius: 14px;
+    font-weight: 600;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 0 1.25rem;
+    line-height: 1;
+}
+
+.users-search-card .btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.users-reset-btn {
+    border-width: 1px;
+}
+
+@media (max-width: 992px) {
+    .users-search-btn,
+    .users-reset-btn {
+        width: 100%;
+    }
+}
