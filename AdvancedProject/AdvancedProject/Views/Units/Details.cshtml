@@ -4,91 +4,175 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
+<div class="card border-0 shadow-sm overflow-hidden">
+    <div class="card-body p-0">
 
-<div>
-    <h4>Unit</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.UnitNumber)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.UnitNumber)
-        </dd>
+        <div class="p-4 text-white" style="background: linear-gradient(135deg, #1f3c88, #0f766e);">
+            <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
+                <div>
+                    <div class="mb-2">
+                        @if (Model.AvailabilityStatus == "Available")
+                        {
+                            <span class="badge rounded-pill px-3 py-2 bg-light text-success fw-semibold">
+                                ● Available
+                            </span>
+                        }
+                        else if (Model.AvailabilityStatus == "Occupied")
+                        {
+                            <span class="badge rounded-pill px-3 py-2 bg-light text-danger fw-semibold">
+                                ● Occupied
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="badge rounded-pill px-3 py-2 bg-light text-secondary fw-semibold">
+                                ● @Model.AvailabilityStatus
+                            </span>
+                        }
 
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Type)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Type)
-        </dd>
+                        <span class="ms-2 small">@Model.Property.Name</span>
+                    </div>
 
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.SizeSqFt)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.SizeSqFt)
-        </dd>
+                    <h1 class="mb-1">Unit @Model.UnitNumber</h1>
+                    <p class="mb-1">@Model.Type</p>
+                    <p class="small opacity-75 mb-0">
+                        Managed property unit with modern features.
+                    </p>
+                </div>
 
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.RentAmount)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.RentAmount)
-        </dd>
+                <div class="d-flex gap-2">
+                    <a asp-action="Edit" asp-route-id="@Model?.UnitId" class="btn btn-light fw-semibold px-3">
+                        ✏️ Edit
+                    </a>
+                    <a asp-action="Index" asp-route-id="@ViewBag.PropertyId" class="btn btn-outline-light px-3">
+                        ← Back
+                    </a>
+                </div>
+            </div>
+        </div>
 
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.AvailabilityStatus)
-        </dt>
-        <dd class="col-sm-10">
-            @if (Model.AvailabilityStatus == "Available")
-            {
-                <span class="badge bg-success">Available</span>
-            }
-            else if (Model.AvailabilityStatus == "Occupied")
-            {
-                <span class="badge bg-danger">Occupied</span>
-            }
-            else
-            {
-                <span class="badge bg-secondary">@Model.AvailabilityStatus</span>
-            }
-        </dd>
+        <div class="p-4">
+            <div class="row g-3 mb-4">
+                <div class="col-md-4">
+                    <div class="border rounded-3 p-3 h-100 bg-light summary-card">
+                        <div class="text-muted small mb-1">💰 MONTHLY RENT</div>
+                        <h4 class="mb-0">BD @Model.RentAmount.ToString("0")</h4>
+                    </div>
+                </div>
 
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.CreatedAt)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.CreatedAt)
-        </dd>
+                <div class="col-md-4">
+                    <div class="border rounded-3 p-3 h-100 bg-light summary-card">
+                        <div class="text-muted small mb-1">📐 TOTAL SIZE</div>
+                        <h4 class="mb-0">@Model.SizeSqFt.ToString("0") <small class="text-muted">SqFt</small></h4>
+                    </div>
+                </div>
 
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Property)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Property.Name)
-        </dd>
+                <div class="col-md-4">
+                    <div class="border rounded-3 p-3 h-100 bg-light summary-card">
+                        <div class="text-muted small mb-1">🏠 UNIT TYPE</div>
+                        <h4 class="mb-0">@Model.Type</h4>
+                    </div>
+                </div>
+            </div>
 
-        <dt class="col-sm-2">
-            Amenities
-        </dt>
-        <dd class="col-sm-10">
-            @if (Model.Amenities != null && Model.Amenities.Any())
-            {
-                @foreach (var amenity in Model.Amenities)
-                {
-                    <span class="badge bg-secondary me-1 mb-1">@amenity.Name</span>
-                }
-            }
-            else
-            {
-                <span class="text-muted">No amenities available</span>
-            }
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.UnitId">Edit</a> |
-    <a asp-action="Index" asp-route-id="@ViewBag.PropertyId">Back to List</a>
+            <div class="row g-4">
+                <div class="col-lg-8">
+                    <div class="border rounded-3 p-4 h-100">
+                        <h5 class="mb-3">🏢 Unit Overview</h5>
+
+                        <div class="row mb-2">
+                            <div class="col-sm-4 fw-semibold">Unit Number</div>
+                            <div class="col-sm-8">@Model.UnitNumber</div>
+                        </div>
+
+                        <div class="row mb-2">
+                            <div class="col-sm-4 fw-semibold">Property</div>
+                            <div class="col-sm-8">@Model.Property.Name</div>
+                        </div>
+
+                        <div class="row mb-2">
+                            <div class="col-sm-4 fw-semibold">Type</div>
+                            <div class="col-sm-8">@Model.Type</div>
+                        </div>
+
+                        <div class="row mb-2">
+                            <div class="col-sm-4 fw-semibold">Size</div>
+                            <div class="col-sm-8">@Model.SizeSqFt.ToString("0") SqFt</div>
+                        </div>
+
+                        <div class="row mb-2">
+                            <div class="col-sm-4 fw-semibold">Rent Amount</div>
+                            <div class="col-sm-8">BD @Model.RentAmount.ToString("0")</div>
+                        </div>
+
+                        <div class="row mb-2">
+                            <div class="col-sm-4 fw-semibold">Status</div>
+                            <div class="col-sm-8">
+                                @if (Model.AvailabilityStatus == "Available")
+                                {
+                                    <span class="badge rounded-pill px-3 py-2 bg-success">Available</span>
+                                }
+                                else if (Model.AvailabilityStatus == "Occupied")
+                                {
+                                    <span class="badge rounded-pill px-3 py-2 bg-danger">Occupied</span>
+                                }
+                                else
+                                {
+                                    <span class="badge rounded-pill px-3 py-2 bg-secondary">@Model.AvailabilityStatus</span>
+                                }
+                            </div>
+                        </div>
+
+                        @* <div class="row mb-2">
+                            <div class="col-sm-4 fw-semibold">Created At</div>
+                            <div class="col-sm-8">@Model.CreatedAt.ToString("dd MMM yyyy")</div>
+                        </div> *@
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="border rounded-3 p-4 h-100">
+                        <h5 class="mb-3">⚙️ Management Actions</h5>
+
+                        <div class="d-grid gap-2">
+                            <a asp-action="Edit" asp-route-id="@Model?.UnitId" class="btn btn-primary">
+                                Edit Unit
+                            </a>
+
+                            <a asp-action="Index" asp-route-id="@ViewBag.PropertyId" class="btn btn-outline-secondary">
+                                Back to Units
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12">
+                    <div class="border rounded-3 p-4">
+                        <h5 class="mb-3">⭐ Premium Amenities</h5>
+
+                        @if (Model.Amenities != null && Model.Amenities.Any())
+                        {
+                            <div class="row g-3">
+                                @foreach (var amenity in Model.Amenities)
+                                {
+                                    <div class="col-sm-6 col-md-4 col-lg-3">
+                                        <div class="border rounded-3 p-3 text-center bg-light h-100 summary-card">
+                                            <div class="d-flex align-items-center justify-content-center gap-2">
+                                                <span>✔️</span>
+                                                <span class="fw-semibold">@amenity.Name</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        }
+                        else
+                        {
+                            <span class="text-muted">No amenities available</span>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

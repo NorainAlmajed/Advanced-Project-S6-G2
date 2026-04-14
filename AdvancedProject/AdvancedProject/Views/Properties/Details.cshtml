@@ -4,57 +4,140 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
+<div class="card border-0 shadow-sm overflow-hidden">
+    <div class="card-body p-0">
 
-<div>
-    <h4>Property</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.City)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.City)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Description)
-        </dd>
-        @* <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CreatedAt)
-        </dt> *@
-        @* <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CreatedAt)
-        </dd> *@
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Block)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Block)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Building)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Building)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Road)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Road)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.PropertyId">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+        <!-- Top Header Section -->
+        <div class="p-4 text-white" style="background: linear-gradient(135deg, #1f3c88, #0f766e);">
+            <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
+                <div>
+                    <div class="mb-2">
+                        <span class="badge rounded-pill px-3 py-2 bg-light text-dark fw-semibold">
+                            📍 @Model.City
+                        </span>
+                    </div>
+
+                    <h1 class="mb-1">@Model.Name</h1>
+                    <p class="mb-0">Property Details Overview</p>
+                </div>
+
+                <div class="d-flex gap-2">
+                    <a asp-action="Edit" asp-route-id="@Model?.PropertyId" class="btn btn-light fw-semibold px-3">
+                        ✏️ Edit
+                    </a>
+                    <a asp-action="Index" class="btn btn-outline-light px-3">
+                        ← Back
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="p-4">
+
+            <!-- Summary Cards -->
+            <div class="row g-3 mb-4">
+                <div class="col-md-4">
+                    <div class="border rounded-3 p-3 h-100 bg-light summary-card">
+                        <div class="text-muted small mb-1">🏙 CITY</div>
+                        <h4 class="mb-0">@Model.City</h4>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="border rounded-3 p-3 h-100 bg-light summary-card">
+                        <div class="text-muted small mb-1">🏢 BUILDING</div>
+                        <h4 class="mb-0">@Model.Building</h4>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="border rounded-3 p-3 h-100 bg-light summary-card">
+                        <div class="text-muted small mb-1">🛣 ROAD</div>
+                        <h4 class="mb-0">@Model.Road</h4>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row g-4">
+                <!-- Left Section -->
+                <div class="col-lg-8">
+                    <div class="border rounded-3 p-4 h-100">
+                        <h5 class="mb-3">🏢 Property Overview</h5>
+
+                        <div class="row mb-2">
+                            <div class="col-sm-4 fw-semibold">Name</div>
+                            <div class="col-sm-8">@Model.Name</div>
+                        </div>
+
+                        <div class="row mb-2">
+                            <div class="col-sm-4 fw-semibold">City</div>
+                            <div class="col-sm-8">@Model.City</div>
+                        </div>
+
+                        <div class="row mb-2">
+                            <div class="col-sm-4 fw-semibold">Description</div>
+                            <div class="col-sm-8">@Model.Description</div>
+                        </div>
+
+                        @* <div class="row mb-2">
+                            <div class="col-sm-4 fw-semibold">Created At</div>
+                            <div class="col-sm-8">@Model.CreatedAt.ToString("dd MMM yyyy")</div>
+                        </div> *@
+                    </div>
+                </div>
+
+                <!-- Right Section -->
+                <div class="col-lg-4">
+                    <div class="border rounded-3 p-4 h-100">
+                        <h5 class="mb-3">⚙️ Management Actions</h5>
+
+                        <div class="d-grid gap-2">
+                            <a asp-action="Edit" asp-route-id="@Model?.PropertyId" class="btn btn-primary">
+                                Edit Property
+                            </a>
+
+                            <a asp-controller="Units" asp-action="Index" asp-route-id="@Model.PropertyId" class="btn btn-accent">
+                                View Units
+                            </a>
+
+                            <a asp-action="Index" class="btn btn-outline-secondary">
+                                Back to Properties
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Location Details -->
+                <div class="col-12">
+                    <div class="border rounded-3 p-4">
+                        <h5 class="mb-3">📍 Location Details</h5>
+
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <div class="border rounded-3 p-3 text-center bg-light summary-card h-100">
+                                    <div class="text-muted small mb-1">BLOCK</div>
+                                    <div class="fw-semibold">@Model.Block</div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="border rounded-3 p-3 text-center bg-light summary-card h-100">
+                                    <div class="text-muted small mb-1">BUILDING</div>
+                                    <div class="fw-semibold">@Model.Building</div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="border rounded-3 p-3 text-center bg-light summary-card h-100">
+                                    <div class="text-muted small mb-1">ROAD</div>
+                                    <div class="fw-semibold">@Model.Road</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
 </div>
