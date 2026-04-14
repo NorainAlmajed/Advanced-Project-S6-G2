@@ -4,55 +4,55 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1 class="mb-4">Units</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" class="btn btn-primary">Create New</a>
 </p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.UnitNumber)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Type)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.SizeSqFt)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.RentAmount)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.AvailabilityStatus)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.UnitNumber)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Type)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SizeSqFt)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.RentAmount)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AvailabilityStatus)
-            </td>
-            <td>
-                <a asp-action="Details" asp-route-id="@item.UnitId">Details</a> |
-                <a asp-controller="LeaseApplications" asp-action="Create" asp-route-unitId="@item.UnitId">Apply</a>
-                </td>
-        </tr>
-}
-    </tbody>
-</table>
+
+<div class="row">
+    @foreach (var item in Model)
+    {
+        <div class="col-md-6 col-lg-3 mb-4">
+            <div class="card h-100 shadow-sm">
+
+                <div class="card-body">
+                    <h5 class="card-title">
+                        Unit @Html.DisplayFor(modelItem => item.UnitNumber)
+                    </h5>
+
+                    <h6 class="card-subtitle mb-2 text-muted">
+                        @Html.DisplayFor(modelItem => item.Type)
+                    </h6>
+
+                    <p class="card-text">
+                        <strong>Size:</strong> @Html.DisplayFor(modelItem => item.SizeSqFt) SqFt
+                    </p>
+
+                    <p class="card-text">
+                        <strong>Rent:</strong> @Html.DisplayFor(modelItem => item.RentAmount)
+                    </p>
+
+                    <p class="card-text">
+                        <strong>Status:</strong>
+                        @Html.DisplayFor(modelItem => item.AvailabilityStatus)
+                    </p>
+                </div>
+
+                <div class="card-footer bg-white border-top-0">
+                    <a asp-action="Details" asp-route-id="@item.UnitId" class="btn btn-outline-primary btn-sm">
+                        Details
+                    </a>
+
+                    <a asp-controller="LeaseApplications"
+                       asp-action="Create"
+                       asp-route-unitId="@item.UnitId"
+                       class="btn btn-outline-success btn-sm ms-2">
+                        Apply
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    }
+</div>
