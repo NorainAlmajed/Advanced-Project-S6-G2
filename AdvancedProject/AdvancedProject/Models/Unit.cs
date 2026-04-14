@@ -18,8 +18,10 @@ public partial class Unit
     [StringLength(20)]
     public string UnitNumber { get; set; } = null!;
 
-    [StringLength(50)]
-    public string Type { get; set; } = null!;
+    public int UnitTypeId { get; set; }
+
+    [ForeignKey("UnitTypeId")]
+    public virtual UnitType UnitType { get; set; } = null!;
 
     [Column(TypeName = "decimal(10, 0)")]
     public decimal SizeSqFt { get; set; }
@@ -50,7 +52,5 @@ public partial class Unit
     public virtual Property Property { get; set; } = null!;
 
     [ValidateNever]
-    [ForeignKey("UnitId")]
-    [InverseProperty("Units")]
     public virtual ICollection<Amenity> Amenities { get; set; } = new List<Amenity>();
 }
