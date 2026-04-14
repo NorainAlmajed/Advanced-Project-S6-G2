@@ -43,7 +43,7 @@ namespace AdvancedProject.Controllers
         }
 
         // GET: Units/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int? id, int? propertyId)
         {
             if (id == null)
             {
@@ -59,7 +59,7 @@ namespace AdvancedProject.Controllers
             {
                 return NotFound();
             }
-
+            ViewBag.PropertyId = propertyId;
             return View(unit);
         }
 
