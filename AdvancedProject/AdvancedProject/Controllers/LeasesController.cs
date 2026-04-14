@@ -106,6 +106,7 @@ namespace AdvancedProject.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Lease lease)
         {
+            return Content("POST HIT");
             var unit = await _context.Units.FindAsync(lease.UnitId);
             if (unit == null)
                 return Content("Unit NOT FOUND");
