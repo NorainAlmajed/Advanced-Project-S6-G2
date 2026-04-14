@@ -42,7 +42,7 @@ namespace AdvancedProject.Controllers
         // GET: Leases
         public async Task<IActionResult> Index()
         {
-            var aPContext = _context.Leases.Include(l => l.Unit).Include(l => l.Tenant).ThenInclude(e => e.User);
+            var aPContext = _context.Leases.Include(l => l.Unit).Include(e => e.Duration).Include(l => l.Tenant).ThenInclude(e => e.User);
             return View(await aPContext.ToListAsync());
         }
 
@@ -55,8 +55,8 @@ namespace AdvancedProject.Controllers
             }
 
             var lease = await _context.Leases
-                .Include(l => l.Tenant)
-                .Include(l => l.Unit)
+                .Include(l => l.Tenant).ThenInclude(e => e.User)
+                .Include(l => l.Unit).Include(e => e.Duration)
                 .FirstOrDefaultAsync(m => m.LeaseId == id);
             if (lease == null)
             {
@@ -79,6 +79,7 @@ namespace AdvancedProject.Controllers
                 .ToList();
 
             ViewData["TenantName"] = new SelectList(tenants, "TenantId", "FullName");
+            ViewData["DurationId"] = new SelectList(_context.Durations, "DurationId", "Months");
 
             ViewData["UnitNumber"] = new SelectList(
                 _context.Units,
@@ -102,8 +103,12 @@ namespace AdvancedProject.Controllers
 
                 lease.Status = "Pending";
                 lease.CreatedAt = DateTime.Now;
-                lease.EndDate = lease.StartDate.AddMonths(lease.Duration).AddDays(-1);
-                lease.MonthlyRent = unit.RentAmount;
+                var duration = await _context.Durations.FindAsync(lease.DurationId);
+
+                if (duration == null)
+                    return Content("Duration not found");
+
+                lease.EndDate = lease.StartDate.AddMonths(duration.Months).AddDays(-1); lease.MonthlyRent = unit.RentAmount;
 
                 _context.Add(lease);
                 await _context.SaveChangesAsync();
@@ -132,6 +137,7 @@ namespace AdvancedProject.Controllers
             }
             ViewData["TenantId"] = new SelectList(_context.Tenants, "TenantId", "TenantId", lease.TenantId);
             ViewData["UnitId"] = new SelectList(_context.Units, "UnitId", "UnitId", lease.UnitId);
+            ViewData["DurationId"] = new SelectList(_context.Durations, "DurationId", "Months", lease.DurationId);
             return View(lease);
         }
 
@@ -140,7 +146,7 @@ namespace AdvancedProject.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("LeaseId,TenantId,UnitId,StartDate,EndDate,MonthlyRent,Status,CreatedAt,TerminationDate,Duration")] Lease lease)
+        public async Task<IActionResult> Edit(int id, [Bind("LeaseId,TenantId,UnitId,StartDate,EndDate,MonthlyRent,Status,CreatedAt,TerminationDate,DurationId")] Lease lease)
         {
             if (id != lease.LeaseId)
             {
@@ -151,6 +157,14 @@ namespace AdvancedProject.Controllers
             {
                 try
                 {
+
+                    var duration = await _context.Durations.FindAsync(lease.DurationId);
+
+                    if (duration == null)
+                        return Content("Duration not found");
+
+                    lease.EndDate = lease.StartDate.AddMonths(duration.Months).AddDays(-1);
+
                     _context.Update(lease);
                     await _context.SaveChangesAsync();
                 }
