@@ -80,8 +80,7 @@
               "RelativeToolTip": "AdvancedProject\\Models\\Unit.cs",
               "ViewState": "AgIAACAAAAAAAAAAAAAAADgAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-14T20:59:24.224Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-14T20:59:24.224Z"
             },
             {
               "$type": "Document",
@@ -153,8 +152,7 @@
               "RelativeToolTip": "AdvancedProject\\Models\\Lease.cs",
               "ViewState": "AgIAAB4AAAAAAAAAAAAAADYAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-14T18:43:12.67Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-14T18:43:12.67Z"
             },
             {
               "$type": "Document",
@@ -164,7 +162,7 @@
               "RelativeDocumentMoniker": "AdvancedProject\\Controllers\\LeasesController.cs",
               "ToolTip": "C:\\Users\\HP\\Desktop\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Controllers\\LeasesController.cs",
               "RelativeToolTip": "AdvancedProject\\Controllers\\LeasesController.cs",
-              "ViewState": "AgIAAG8AAAAAAAAAAAAYwIkAAAAwAAAAAAAAAA==",
+              "ViewState": "AgIAAGYAAAAAAAAAAAAYwIkAAAAwAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-04-14T18:42:40.129Z",
               "EditorCaption": ""
@@ -179,8 +177,7 @@
               "RelativeToolTip": "AdvancedProject\\Views\\Leases\\Create.cshtml",
               "ViewState": "AgIAAAoAAAAAAAAAAAAswCkAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-04-14T18:42:02.535Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-14T18:42:02.535Z"
             }
           ]
         }
