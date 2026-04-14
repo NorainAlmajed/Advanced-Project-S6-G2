@@ -174,8 +174,7 @@
               "RelativeToolTip": "AdvancedProject\\Views\\Properties\\Index.cshtml",
               "ViewState": "AgIAAAcAAAAAAAAAAAAAACAAAAAWAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-04-14T12:43:31.549Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-14T12:43:31.549Z"
             },
             {
               "$type": "Document",
@@ -195,9 +194,9 @@
               "Title": "UnitsController.cs",
               "DocumentMoniker": "D:\\year3 sem2\\advanced programming project\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Controllers\\UnitsController.cs",
               "RelativeDocumentMoniker": "AdvancedProject\\Controllers\\UnitsController.cs",
-              "ToolTip": "D:\\year3 sem2\\advanced programming project\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Controllers\\UnitsController.cs*",
-              "RelativeToolTip": "AdvancedProject\\Controllers\\UnitsController.cs*",
-              "ViewState": "AgIAAFIAAAAAAAAAAAAAAG4AAAAAAAAAAAAAAA==",
+              "ToolTip": "D:\\year3 sem2\\advanced programming project\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Controllers\\UnitsController.cs",
+              "RelativeToolTip": "AdvancedProject\\Controllers\\UnitsController.cs",
+              "ViewState": "AgIAAA4AAAAAAAAAAAAUwIUAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-04-13T17:53:12.758Z",
               "EditorCaption": ""
@@ -210,7 +209,7 @@
               "RelativeDocumentMoniker": "AdvancedProject\\Views\\Units\\Index.cshtml",
               "ToolTip": "D:\\year3 sem2\\advanced programming project\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Views\\Units\\Index.cshtml*",
               "RelativeToolTip": "AdvancedProject\\Views\\Units\\Index.cshtml*",
-              "ViewState": "AgIAAKMAAAAAAAAAAAAAAMMAAAABAAAAAAAAAA==",
+              "ViewState": "AgIAABAAAAAAAAAAAAAlwCAAAABBAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2026-04-13T19:08:08.053Z",
               "EditorCaption": ""
@@ -223,7 +222,7 @@
               "RelativeDocumentMoniker": "AdvancedProject\\Data\\APContext.cs",
               "ToolTip": "D:\\year3 sem2\\advanced programming project\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Data\\APContext.cs",
               "RelativeToolTip": "AdvancedProject\\Data\\APContext.cs",
-              "ViewState": "AgIAAC0BAAAAAAAAAAAuwE0BAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAALwAAAAAAAAAAAAAwEQBAAA2AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-04-13T17:51:02.658Z",
               "EditorCaption": ""

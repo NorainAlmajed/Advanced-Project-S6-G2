@@ -21,11 +21,12 @@ namespace AdvancedProject.Controllers
 
         // GET: Units
         public async Task<IActionResult> Index(
-     int? id,
-     string searchString,
-     string statusFilter,
-     string typeFilter,
-     string priceFilter)
+      int? id,
+      string searchString,
+      string statusFilter,
+      string typeFilter,
+      string priceFilter,
+      int[] selectedAmenities)
         {
             var query = _context.Units
                 .Include(u => u.Property)
@@ -83,6 +84,14 @@ namespace AdvancedProject.Controllers
                 }
             }
 
+            if (selectedAmenities != null && selectedAmenities.Any())
+            {
+                foreach (var amenityId in selectedAmenities)
+                {
+                    query = query.Where(u => u.Amenities.Any(a => a.AmenityId == amenityId));
+                }
+            }
+
             var typeQuery = _context.Units.AsQueryable();
 
             if (id != null)
@@ -96,7 +105,23 @@ namespace AdvancedProject.Controllers
                 .OrderBy(t => t)
                 .ToListAsync();
 
+            var amenityQuery = _context.Amenities.AsQueryable();
+
+            if (id != null)
+            {
+                amenityQuery = _context.Units
+                    .Where(u => u.PropertyId == id)
+                    .SelectMany(u => u.Amenities)
+                    .Distinct();
+            }
+
+            var amenities = await amenityQuery
+                .OrderBy(a => a.Name)
+                .ToListAsync();
+
             ViewBag.TypeList = new SelectList(unitTypes, typeFilter);
+            ViewBag.AmenityList = amenities;
+            ViewBag.SelectedAmenities = selectedAmenities ?? Array.Empty<int>();
             ViewBag.CurrentSearch = searchString;
             ViewBag.CurrentStatus = string.IsNullOrWhiteSpace(statusFilter) ? "All" : statusFilter;
             ViewBag.CurrentType = typeFilter;
@@ -107,7 +132,6 @@ namespace AdvancedProject.Controllers
 
             return View(units);
         }
-
 
 
         // GET: Units/Details/5
