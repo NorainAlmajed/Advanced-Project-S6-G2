@@ -29,9 +29,10 @@ namespace AdvancedProject.Controllers
       int[] selectedAmenities)
         {
             var query = _context.Units
-                .Include(u => u.Property)
-                .Include(u => u.Amenities)
-                .AsQueryable();
+            .Include(u => u.Property)
+            .Include(u => u.UnitType)
+            .Include(u => u.Amenities)
+            .AsQueryable();
 
             if (id != null)
             {
@@ -48,8 +49,8 @@ namespace AdvancedProject.Controllers
             {
                 query = query.Where(u =>
                     u.UnitNumber.Contains(searchString) ||
-                    u.Type.Contains(searchString) ||
-                    u.Property.Name.Contains(searchString));
+                    u.UnitType != null && u.UnitType.Name.Contains(searchString) ||
+                    u.Property != null && u.Property.Name != null && u.Property.Name.Contains(searchString));
             }
 
             if (!string.IsNullOrWhiteSpace(statusFilter) && statusFilter != "All")
@@ -59,7 +60,7 @@ namespace AdvancedProject.Controllers
 
             if (!string.IsNullOrWhiteSpace(typeFilter))
             {
-                query = query.Where(u => u.Type == typeFilter);
+                query = query.Where(u => u.UnitType != null && u.UnitType.Name == typeFilter);
             }
 
             if (!string.IsNullOrWhiteSpace(priceFilter))
@@ -86,10 +87,11 @@ namespace AdvancedProject.Controllers
 
             if (selectedAmenities != null && selectedAmenities.Any())
             {
-                foreach (var amenityId in selectedAmenities)
-                {
-                    query = query.Where(u => u.Amenities.Any(a => a.AmenityId == amenityId));
-                }
+                query = query.Where(u =>
+                    selectedAmenities.All(id =>
+                        u.Amenities.Any(a => a.AmenityId == id)
+                    )
+                );
             }
 
             var typeQuery = _context.Units.AsQueryable();
@@ -100,10 +102,11 @@ namespace AdvancedProject.Controllers
             }
 
             var unitTypes = await typeQuery
-                .Select(u => u.Type)
-                .Distinct()
-                .OrderBy(t => t)
-                .ToListAsync();
+            .Where(u => u.UnitType != null)
+            .Select(u => u.UnitType!.Name)
+            .Distinct()
+            .OrderBy(t => t)
+            .ToListAsync();
 
             var amenityQuery = _context.Amenities.AsQueryable();
 
@@ -159,6 +162,7 @@ namespace AdvancedProject.Controllers
         public IActionResult Create()
         {
             ViewData["PropertyId"] = new SelectList(_context.Properties, "PropertyId", "PropertyId");
+            ViewData["UnitTypeId"] = new SelectList(_context.UnitTypes, "UnitTypeId", "Name");
             return View();
         }
 
@@ -181,7 +185,7 @@ namespace AdvancedProject.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("UnitId,PropertyId,UnitNumber,Type,SizeSqFt,RentAmount,AvailabilityStatus")] Unit unit)
+        public async Task<IActionResult> Create([Bind("UnitId,PropertyId,UnitNumber,UnitTypeId,SizeSqFt,RentAmount,AvailabilityStatus")] Unit unit)
         {
             unit.CreatedAt = DateTime.Now;
 
@@ -218,6 +222,7 @@ namespace AdvancedProject.Controllers
                 return NotFound();
             }
             ViewData["PropertyId"] = new SelectList(_context.Properties, "PropertyId", "PropertyId", unit.PropertyId);
+            ViewData["UnitTypeId"] = new SelectList(_context.UnitTypes, "UnitTypeId", "Name", unit.UnitTypeId);
             return View(unit);
         }
 
@@ -265,7 +270,7 @@ namespace AdvancedProject.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("UnitId,PropertyId,UnitNumber,Type,SizeSqFt,RentAmount,AvailabilityStatus,CreatedAt")] Unit unit)
+        public async Task<IActionResult> Edit(int id, [Bind("UnitId,PropertyId,UnitNumber,UnitTypeId,SizeSqFt,RentAmount,AvailabilityStatus,CreatedAt")] Unit unit)
         {
             if (id != unit.UnitId)
             {
@@ -300,6 +305,7 @@ namespace AdvancedProject.Controllers
             }
 
             ViewData["PropertyId"] = new SelectList(_context.Properties, "PropertyId", "PropertyId", unit.PropertyId);
+            ViewData["UnitTypeId"] = new SelectList(_context.UnitTypes, "UnitTypeId", "Name", unit.UnitTypeId);
             return View(unit);
         }
         // GET: Units/Delete/5

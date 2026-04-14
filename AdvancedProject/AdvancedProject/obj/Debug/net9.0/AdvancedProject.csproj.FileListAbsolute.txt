@@ -22,7 +22,6 @@ C:\Users\HP\Desktop\Advanced-Project-S6-G2\AdvancedProject\AdvancedProject\obj\D
 C:\Users\HP\Desktop\Advanced-Project-S6-G2\AdvancedProject\AdvancedProject\obj\Debug\net9.0\scopedcss\Views\Shared\_Layout.cshtml.rz.scp.css
 C:\Users\HP\Desktop\Advanced-Project-S6-G2\AdvancedProject\AdvancedProject\obj\Debug\net9.0\scopedcss\bundle\AdvancedProject.styles.css
 C:\Users\HP\Desktop\Advanced-Project-S6-G2\AdvancedProject\AdvancedProject\obj\Debug\net9.0\scopedcss\projectbundle\AdvancedProject.bundle.scp.css
-C:\Users\HP\Desktop\Advanced-Project-S6-G2\AdvancedProject\AdvancedProject\obj\Debug\net9.0\compressed\7rd25bjkpt-b9sayid5wm.gz
 C:\Users\HP\Desktop\Advanced-Project-S6-G2\AdvancedProject\AdvancedProject\obj\Debug\net9.0\compressed\400jq1gwfp-61n19gt1b8.gz
 C:\Users\HP\Desktop\Advanced-Project-S6-G2\AdvancedProject\AdvancedProject\obj\Debug\net9.0\compressed\ks2ohlj1ca-xtxxf3hu2r.gz
 C:\Users\HP\Desktop\Advanced-Project-S6-G2\AdvancedProject\AdvancedProject\obj\Debug\net9.0\compressed\r5k9l8mpay-bqjiyaj88i.gz
@@ -692,3 +691,4 @@ D:\year3 sem2\advanced programming project\Advanced-Project-S6-G2\AdvancedProjec
 D:\year3 sem2\advanced programming project\Advanced-Project-S6-G2\AdvancedProject\AdvancedProject\obj\Debug\net9.0\AdvancedProject.genruntimeconfig.cache
 D:\year3 sem2\advanced programming project\Advanced-Project-S6-G2\AdvancedProject\AdvancedProject\obj\Debug\net9.0\ref\AdvancedProject.dll
 D:\year3 sem2\advanced programming project\Advanced-Project-S6-G2\AdvancedProject\AdvancedProject\obj\Debug\net9.0\compressed\7rd25bjkpt-zjaiii30yh.gz
+C:\Users\HP\Desktop\Advanced-Project-S6-G2\AdvancedProject\AdvancedProject\obj\Debug\net9.0\compressed\7rd25bjkpt-zjaiii30yh.gz

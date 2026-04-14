@@ -44,6 +44,8 @@ public partial class APContext : DbContext
 
     public DbSet<Duration> Durations { get; set; }
 
+    public DbSet<UnitType> UnitTypes { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
         => optionsBuilder.UseSqlServer("Server=(localdb)\\MSSQLLocalDB;Database=AdvancedDB;Trusted_Connection=True;TrustServerCertificate=True;");
@@ -153,6 +155,9 @@ public partial class APContext : DbContext
                         j.ToTable("UnitAmenities");
                         j.HasIndex(new[] { "AmenityId" }, "IX_UnitAmenities_AmenityId");
                     });
+            entity.HasOne(u => u.UnitType)
+            .WithMany(t => t.Units)
+            .HasForeignKey(u => u.UnitTypeId);
         });
 
         modelBuilder.Entity<User>(entity =>
@@ -232,12 +237,12 @@ public partial class APContext : DbContext
 
 
         modelBuilder.Entity<Unit>().HasData(
-       new Unit { UnitId = 1, PropertyId = 1, UnitNumber = "A1", Type = "Apartment", SizeSqFt = 100, RentAmount = 300, AvailabilityStatus = "Available", CreatedAt = new DateTime(2026, 1, 1, 4, 12, 55) },
-       new Unit { UnitId = 2, PropertyId = 1, UnitNumber = "A2", Type = "Apartment", SizeSqFt = 120, RentAmount = 350, AvailabilityStatus = "Occupied", CreatedAt = new DateTime(2026, 1, 2, 23, 16, 33) },
-       new Unit { UnitId = 3, PropertyId = 2, UnitNumber = "B1", Type = "Office", SizeSqFt = 200, RentAmount = 500, AvailabilityStatus = "Available", CreatedAt = new DateTime(2026, 1, 3, 9, 11, 7) },
-       new Unit { UnitId = 4, PropertyId = 2, UnitNumber = "B2", Type = "Office", SizeSqFt = 250, RentAmount = 550, AvailabilityStatus = "Occupied", CreatedAt = new DateTime(2026, 1, 4, 7, 16, 22) },
-       new Unit { UnitId = 5, PropertyId = 1, UnitNumber = "A3", Type = "Studio", SizeSqFt = 80, RentAmount = 250, AvailabilityStatus = "Available", CreatedAt = new DateTime(2026, 1, 5, 10, 10, 12) },
-       new Unit { UnitId = 6, PropertyId = 3, UnitNumber = "C1", Type = "Apartment", SizeSqFt = 110, RentAmount = 320, AvailabilityStatus = "Available", CreatedAt = new DateTime(2026, 1, 6, 4, 15, 45) }
+       new Unit { UnitId = 1, PropertyId = 1, UnitNumber = "A1", UnitTypeId = 1, SizeSqFt = 100, RentAmount = 300, AvailabilityStatus = "Available", CreatedAt = new DateTime(2026, 1, 1, 4, 12, 55) },
+       new Unit { UnitId = 2, PropertyId = 1, UnitNumber = "A2", UnitTypeId = 1, SizeSqFt = 120, RentAmount = 350, AvailabilityStatus = "Occupied", CreatedAt = new DateTime(2026, 1, 2, 23, 16, 33) },
+       new Unit { UnitId = 3, PropertyId = 2, UnitNumber = "B1", UnitTypeId = 2, SizeSqFt = 200, RentAmount = 500, AvailabilityStatus = "Available", CreatedAt = new DateTime(2026, 1, 3, 9, 11, 7) },
+       new Unit { UnitId = 4, PropertyId = 2, UnitNumber = "B2", UnitTypeId = 2, SizeSqFt = 250, RentAmount = 550, AvailabilityStatus = "Occupied", CreatedAt = new DateTime(2026, 1, 4, 7, 16, 22) },
+       new Unit { UnitId = 5, PropertyId = 1, UnitNumber = "A3", UnitTypeId = 3, SizeSqFt = 80, RentAmount = 250, AvailabilityStatus = "Available", CreatedAt = new DateTime(2026, 1, 5, 10, 10, 12) },
+       new Unit { UnitId = 6, PropertyId = 3, UnitNumber = "C1", UnitTypeId = 1, SizeSqFt = 110, RentAmount = 320, AvailabilityStatus = "Available", CreatedAt = new DateTime(2026, 1, 6, 4, 15, 45) }
    );
 
 
@@ -332,7 +337,13 @@ public partial class APContext : DbContext
         new Duration { DurationId = 1, Months = 6 },
         new Duration { DurationId = 2, Months = 12 },
         new Duration { DurationId = 3, Months = 24 }
-);
+    );
+
+        modelBuilder.Entity<UnitType>().HasData(
+        new UnitType { UnitTypeId = 1, Name = "Apartment" },
+        new UnitType { UnitTypeId = 2, Name = "Office" },
+        new UnitType { UnitTypeId = 3, Name = "Studio" }
+    );
 
         OnModelCreatingPartial(modelBuilder);
     }
