@@ -41,7 +41,7 @@ namespace AdvancedProject.Controllers
         // GET: Leases
         public async Task<IActionResult> Index()
         {
-            var aPContext = _context.Leases.Include(l => l.Unit).Include(e => e.Duration).Include(l => l.Tenant).ThenInclude(e => e.User);
+            var aPContext = _context.Leases.Include(l => l.Unit).Include(e => e.Duration).Include(l => l.Tenant).ThenInclude(e => e.User).Include(e => e.Unit);
             return View(await aPContext.ToListAsync());
         }
 
@@ -126,6 +126,16 @@ namespace AdvancedProject.Controllers
 
             lease.CreatedAt = DateTime.Now;
             lease.Status = "Active";
+
+            var unit = await _context.Units.FindAsync(lease.UnitId);
+
+            if (unit == null)
+            {
+                ModelState.AddModelError("", "Invalid unit.");
+                return View(lease);
+            }
+
+            lease.MonthlyRent = unit.RentAmount;
 
             var duration = await _context.Durations.FindAsync(lease.DurationId);
 
