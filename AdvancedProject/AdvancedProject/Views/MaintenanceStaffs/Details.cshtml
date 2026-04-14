@@ -1,30 +1,161 @@
 ﻿@model AdvancedProject.Models.MaintenanceStaff
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Staff Details";
+
+    string fullName = Model.User?.FullName ?? "Staff Member";
+    string username = Model.User?.Username ?? "-";
+    string email = Model.User?.Email ?? "-";
+    string phone = Model.User?.Phone ?? "-";
+    string role = Model.User?.Role ?? "Staff";
+    string availability = string.IsNullOrWhiteSpace(Model.AvailabilityStatus) ? "Unknown" : Model.AvailabilityStatus;
+    string createdAtText = Model.User != null ? Model.User.CreatedAt.ToString("dd MMM yyyy") : "Not available";
+
+    string initials = "";
+    if (!string.IsNullOrWhiteSpace(fullName))
+    {
+        var parts = fullName.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+        initials = string.Concat(parts.Take(2).Select(p => char.ToUpper(p[0])));
+    }
+
+    string availabilityClass = availability.ToLower() switch
+    {
+        "available" => "badge-soft-active",
+        "busy" => "badge-soft-inactive",
+        _ => "badge-soft-default"
+    };
 }
 
-<h1>Details</h1>
+<div class="details-page container py-4">
+    <div class="details-topbar d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+        <div>
+            <p class="details-eyebrow mb-1">Maintenance Team</p>
+            <h1 class="details-title mb-0">Staff Details</h1>
+        </div>
 
-<div>
-    <h4>MaintenanceStaff</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.AvailabilityStatus)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.AvailabilityStatus)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.User)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.User.UserId)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.StaffId">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+        <div class="d-flex flex-wrap gap-2">
+            <a asp-controller="Users" asp-action="Edit" asp-route-id="@Model.UserId" class="btn btn-primary details-btn">
+                Edit User Account
+            </a>
+            <a asp-action="Edit" asp-route-id="@Model.StaffId" class="btn btn-accent details-btn">
+                Edit Staff Info
+            </a>
+            <a asp-controller="Users" asp-action="Index" class="btn btn-light-custom details-btn">
+                Back to Users
+            </a>
+        </div>
+    </div>
+
+    <div class="card details-main-card shadow-soft border-0">
+        <div class="card-body p-4 p-lg-5">
+            <div class="row g-4">
+                <div class="col-12">
+                    <div class="tenant-hero-card">
+                        <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center gap-4">
+                            <div class="profile-avatar tenant-avatar">
+                                @initials
+                            </div>
+
+                            <div class="flex-grow-1">
+                                <h2 class="profile-name mb-2">@fullName</h2>
+
+                                <div class="d-flex flex-wrap gap-2 mb-3">
+                                    <span class="custom-pill badge-soft-staff">@role</span>
+                                    <span class="custom-pill @availabilityClass">@availability</span>
+                                </div>
+
+                                <div class="hero-contact-grid">
+                                    <div class="hero-contact-item">
+                                        <span class="info-label">Username</span>
+                                        <span class="info-value">@username</span>
+                                    </div>
+
+                                    <div class="hero-contact-item">
+                                        <span class="info-label">Email Address</span>
+                                        <span class="info-value">@email</span>
+                                    </div>
+
+                                    <div class="hero-contact-item">
+                                        <span class="info-label">Phone Number</span>
+                                        <span class="info-value">@phone</span>
+                                    </div>
+
+                                    <div class="hero-contact-item">
+                                        <span class="info-label">Account Created</span>
+                                        <span class="info-value">@createdAtText</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="details-section-card mt-4">
+                        <div class="section-header">
+                            <h3>Staff Information</h3>
+                            <p>Maintenance staff profile and work details.</p>
+                        </div>
+
+                        <div class="info-grid">
+                            <div class="info-box">
+                                <span class="info-label">Role</span>
+                                <span class="info-value">@role</span>
+                            </div>
+
+                            <div class="info-box">
+                                <span class="info-label">Availability Status</span>
+                                <span class="info-value">@availability</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="details-section-card mt-4">
+                        <div class="section-header">
+                            <h3>Skills</h3>
+                            <p>Technical skills assigned to this staff member.</p>
+                        </div>
+
+                        @if (Model.Skills != null && Model.Skills.Any())
+                        {
+                            <div class="d-flex flex-wrap gap-2">
+                                @foreach (var skill in Model.Skills)
+                                {
+                                    <span class="custom-pill badge-soft-manager">@skill.Name</span>
+                                }
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="info-box">
+                                <span class="info-value">No skills assigned.</span>
+                            </div>
+                        }
+                    </div>
+
+                    <div class="details-section-card mt-4">
+                        <div class="section-header">
+                            <h3>Contact Details</h3>
+                            <p>Quick reference for communication details.</p>
+                        </div>
+
+                        <div class="contact-mini-grid">
+                            <div class="contact-mini-card">
+                                <span class="info-label">Email</span>
+                                <span class="info-value">@email</span>
+                            </div>
+
+                            <div class="contact-mini-card">
+                                <span class="info-label">Phone</span>
+                                <span class="info-value">@phone</span>
+                            </div>
+
+                            <div class="contact-mini-card">
+                                <span class="info-label">Username</span>
+                                <span class="info-value">@username</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
