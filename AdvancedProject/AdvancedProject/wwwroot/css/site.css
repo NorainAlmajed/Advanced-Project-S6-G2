@@ -29,3 +29,106 @@ body {
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
   text-align: start;
 }
+
+.summary-card {
+    transition: all 0.2s ease;
+}
+
+    .summary-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    }
+
+.property-card {
+    transition: all 0.2s ease;
+    border-radius: 1rem;
+}
+
+    .property-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
+    }
+:root {
+    --primary: #005B71;
+    --primary-light: #4D6268;
+    --accent: #1E8E6E;
+    --bg-main: #F5F7F8;
+    --bg-card: #FFFFFF;
+    --text-main: #1F2937;
+    --text-muted: #6B7280;
+}
+
+body {
+    margin-bottom: 60px;
+    background-color: var(--bg-main);
+    color: var(--text-main);
+}
+
+.card {
+    background-color: var(--bg-card);
+    border-radius: 16px;
+}
+
+.shadow-soft {
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+}
+
+.btn-primary {
+    background-color: var(--primary);
+    border-color: var(--primary);
+}
+
+    .btn-primary:hover {
+        background-color: var(--primary-light);
+        border-color: var(--primary-light);
+    }
+
+.btn-accent {
+    background-color: var(--accent);
+    color: white;
+    border: none;
+}
+
+    .btn-accent:hover {
+        background-color: #16795e;
+        color: white;
+    }
+
+.btn-light-custom {
+    background-color: #E8F1F3;
+    color: var(--primary);
+    border: none;
+}
+
+    .btn-light-custom:hover {
+        background-color: #d6e6ea;
+        color: var(--primary);
+    }
+
+.search-card {
+    background: linear-gradient(135deg, #005B71, #1E8E6E);
+    color: white;
+}
+
+    .search-card .card-title,
+    .search-card h5,
+    .search-card p,
+    .search-card label {
+        color: white;
+    }
+
+    .search-card input,
+    .search-card select {
+        border-radius: 10px;
+        border: none;
+    }
+
+        .search-card input::placeholder {
+            color: #d1e5ea;
+        }
+
+.small-label {
+    font-size: 12px;
+    color: var(--text-muted);
+    letter-spacing: 0.5px;
+}
