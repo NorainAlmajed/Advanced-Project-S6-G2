@@ -3,16 +3,36 @@
   "WorkspaceRootPath": "D:\\year3 sem2\\advanced programming project\\Advanced-Project-S6-G2\\AdvancedProject\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{B4100081-BB0A-41BA-A933-BD3CCDB833B9}|AdvancedProject\\AdvancedProject.csproj|d:\\year3 sem2\\advanced programming project\\advanced-project-s6-g2\\advancedproject\\advancedproject\\views\\maintenancestaffs\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{B4100081-BB0A-41BA-A933-BD3CCDB833B9}|AdvancedProject\\AdvancedProject.csproj|solutionrelative:advancedproject\\views\\maintenancestaffs\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{B4100081-BB0A-41BA-A933-BD3CCDB833B9}|AdvancedProject\\AdvancedProject.csproj|d:\\year3 sem2\\advanced programming project\\advanced-project-s6-g2\\advancedproject\\advancedproject\\views\\users\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{B4100081-BB0A-41BA-A933-BD3CCDB833B9}|AdvancedProject\\AdvancedProject.csproj|solutionrelative:advancedproject\\views\\users\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{B4100081-BB0A-41BA-A933-BD3CCDB833B9}|AdvancedProject\\AdvancedProject.csproj|d:\\year3 sem2\\advanced programming project\\advanced-project-s6-g2\\advancedproject\\advancedproject\\views\\tenants\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{B4100081-BB0A-41BA-A933-BD3CCDB833B9}|AdvancedProject\\AdvancedProject.csproj|solutionrelative:advancedproject\\views\\tenants\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{B4100081-BB0A-41BA-A933-BD3CCDB833B9}|AdvancedProject\\AdvancedProject.csproj|d:\\year3 sem2\\advanced programming project\\advanced-project-s6-g2\\advancedproject\\advancedproject\\controllers\\maintenancestaffscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B4100081-BB0A-41BA-A933-BD3CCDB833B9}|AdvancedProject\\AdvancedProject.csproj|solutionrelative:advancedproject\\controllers\\maintenancestaffscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B4100081-BB0A-41BA-A933-BD3CCDB833B9}|AdvancedProject\\AdvancedProject.csproj|d:\\year3 sem2\\advanced programming project\\advanced-project-s6-g2\\advancedproject\\advancedproject\\models\\maintenancestaff.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B4100081-BB0A-41BA-A933-BD3CCDB833B9}|AdvancedProject\\AdvancedProject.csproj|solutionrelative:advancedproject\\models\\maintenancestaff.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B4100081-BB0A-41BA-A933-BD3CCDB833B9}|AdvancedProject\\AdvancedProject.csproj|d:\\year3 sem2\\advanced programming project\\advanced-project-s6-g2\\advancedproject\\advancedproject\\models\\skill.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B4100081-BB0A-41BA-A933-BD3CCDB833B9}|AdvancedProject\\AdvancedProject.csproj|solutionrelative:advancedproject\\models\\skill.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B4100081-BB0A-41BA-A933-BD3CCDB833B9}|AdvancedProject\\AdvancedProject.csproj|d:\\year3 sem2\\advanced programming project\\advanced-project-s6-g2\\advancedproject\\advancedproject\\data\\apcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B4100081-BB0A-41BA-A933-BD3CCDB833B9}|AdvancedProject\\AdvancedProject.csproj|solutionrelative:advancedproject\\data\\apcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{B4100081-BB0A-41BA-A933-BD3CCDB833B9}|AdvancedProject\\AdvancedProject.csproj|d:\\year3 sem2\\advanced programming project\\advanced-project-s6-g2\\advancedproject\\advancedproject\\controllers\\userscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{B4100081-BB0A-41BA-A933-BD3CCDB833B9}|AdvancedProject\\AdvancedProject.csproj|solutionrelative:advancedproject\\controllers\\userscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B4100081-BB0A-41BA-A933-BD3CCDB833B9}|AdvancedProject\\AdvancedProject.csproj|d:\\year3 sem2\\advanced programming project\\advanced-project-s6-g2\\advancedproject\\advancedproject\\views\\tenants\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{B4100081-BB0A-41BA-A933-BD3CCDB833B9}|AdvancedProject\\AdvancedProject.csproj|solutionrelative:advancedproject\\views\\tenants\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{B4100081-BB0A-41BA-A933-BD3CCDB833B9}|AdvancedProject\\AdvancedProject.csproj|d:\\year3 sem2\\advanced programming project\\advanced-project-s6-g2\\advancedproject\\advancedproject\\wwwroot\\css\\site.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
@@ -33,10 +53,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{B4100081-BB0A-41BA-A933-BD3CCDB833B9}|AdvancedProject\\AdvancedProject.csproj|d:\\year3 sem2\\advanced programming project\\advanced-project-s6-g2\\advancedproject\\advancedproject\\views\\users\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{B4100081-BB0A-41BA-A933-BD3CCDB833B9}|AdvancedProject\\AdvancedProject.csproj|solutionrelative:advancedproject\\views\\users\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{B4100081-BB0A-41BA-A933-BD3CCDB833B9}|AdvancedProject\\AdvancedProject.csproj|d:\\year3 sem2\\advanced programming project\\advanced-project-s6-g2\\advancedproject\\advancedproject\\data\\apcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{B4100081-BB0A-41BA-A933-BD3CCDB833B9}|AdvancedProject\\AdvancedProject.csproj|solutionrelative:advancedproject\\data\\apcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{B4100081-BB0A-41BA-A933-BD3CCDB833B9}|AdvancedProject\\AdvancedProject.csproj|d:\\year3 sem2\\advanced programming project\\advanced-project-s6-g2\\advancedproject\\advancedproject\\controllers\\unitscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -104,24 +120,37 @@
         },
         {
           "DockedWidth": 12,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 3,
           "Children": [
             {
               "$type": "Document",
               "DocumentIndex": 3,
-              "Title": "site.css",
-              "DocumentMoniker": "D:\\year3 sem2\\advanced programming project\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\wwwroot\\css\\site.css",
-              "RelativeDocumentMoniker": "AdvancedProject\\wwwroot\\css\\site.css",
-              "ToolTip": "D:\\year3 sem2\\advanced programming project\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\wwwroot\\css\\site.css",
-              "RelativeToolTip": "AdvancedProject\\wwwroot\\css\\site.css",
-              "ViewState": "AgIAAI4BAAAAAAAAAAAAwLABAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
-              "WhenOpened": "2026-04-14T17:56:59.706Z",
+              "Title": "MaintenanceStaff.cs",
+              "DocumentMoniker": "D:\\year3 sem2\\advanced programming project\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Models\\MaintenanceStaff.cs",
+              "RelativeDocumentMoniker": "AdvancedProject\\Models\\MaintenanceStaff.cs",
+              "ToolTip": "D:\\year3 sem2\\advanced programming project\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Models\\MaintenanceStaff.cs",
+              "RelativeToolTip": "AdvancedProject\\Models\\MaintenanceStaff.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAB8AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-14T18:50:20.717Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 2,
+              "Title": "MaintenanceStaffsController.cs",
+              "DocumentMoniker": "D:\\year3 sem2\\advanced programming project\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Controllers\\MaintenanceStaffsController.cs",
+              "RelativeDocumentMoniker": "AdvancedProject\\Controllers\\MaintenanceStaffsController.cs",
+              "ToolTip": "D:\\year3 sem2\\advanced programming project\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Controllers\\MaintenanceStaffsController.cs",
+              "RelativeToolTip": "AdvancedProject\\Controllers\\MaintenanceStaffsController.cs",
+              "ViewState": "AgIAABEAAAAAAAAAAAAIwC8AAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-14T18:37:18.886Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
               "Title": "Details.cshtml",
               "DocumentMoniker": "D:\\year3 sem2\\advanced programming project\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Views\\Users\\Details.cshtml",
               "RelativeDocumentMoniker": "AdvancedProject\\Views\\Users\\Details.cshtml",
@@ -134,7 +163,59 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
+              "Title": "Details.cshtml",
+              "DocumentMoniker": "D:\\year3 sem2\\advanced programming project\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Views\\MaintenanceStaffs\\Details.cshtml",
+              "RelativeDocumentMoniker": "AdvancedProject\\Views\\MaintenanceStaffs\\Details.cshtml",
+              "ToolTip": "D:\\year3 sem2\\advanced programming project\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Views\\MaintenanceStaffs\\Details.cshtml",
+              "RelativeToolTip": "AdvancedProject\\Views\\MaintenanceStaffs\\Details.cshtml",
+              "ViewState": "AgIAAHkAAAAAAAAAAAAiwKAAAAAGAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-04-14T18:37:39.974Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Skill.cs",
+              "DocumentMoniker": "D:\\year3 sem2\\advanced programming project\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Models\\Skill.cs",
+              "RelativeDocumentMoniker": "AdvancedProject\\Models\\Skill.cs",
+              "ToolTip": "D:\\year3 sem2\\advanced programming project\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Models\\Skill.cs",
+              "RelativeToolTip": "AdvancedProject\\Models\\Skill.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABcAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-14T18:47:42.652Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "UsersController.cs",
+              "DocumentMoniker": "D:\\year3 sem2\\advanced programming project\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Controllers\\UsersController.cs",
+              "RelativeDocumentMoniker": "AdvancedProject\\Controllers\\UsersController.cs",
+              "ToolTip": "D:\\year3 sem2\\advanced programming project\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Controllers\\UsersController.cs",
+              "RelativeToolTip": "AdvancedProject\\Controllers\\UsersController.cs",
+              "ViewState": "AgIAABcAAAAAAAAAAAAgwEIAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-14T17:24:18.041Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "APContext.cs",
+              "DocumentMoniker": "D:\\year3 sem2\\advanced programming project\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Data\\APContext.cs",
+              "RelativeDocumentMoniker": "AdvancedProject\\Data\\APContext.cs",
+              "ToolTip": "D:\\year3 sem2\\advanced programming project\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Data\\APContext.cs",
+              "RelativeToolTip": "AdvancedProject\\Data\\APContext.cs",
+              "ViewState": "AgIAADABAAAAAAAAAAAgwFUBAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-14T15:33:28.999Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
               "Title": "Details.cshtml",
               "DocumentMoniker": "D:\\year3 sem2\\advanced programming project\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Views\\Tenants\\Details.cshtml",
               "RelativeDocumentMoniker": "AdvancedProject\\Views\\Tenants\\Details.cshtml",
@@ -142,12 +223,23 @@
               "RelativeToolTip": "AdvancedProject\\Views\\Tenants\\Details.cshtml",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAtAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-04-14T17:25:25.581Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-14T17:25:25.581Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 8,
+              "Title": "site.css",
+              "DocumentMoniker": "D:\\year3 sem2\\advanced programming project\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\wwwroot\\css\\site.css",
+              "RelativeDocumentMoniker": "AdvancedProject\\wwwroot\\css\\site.css",
+              "ToolTip": "D:\\year3 sem2\\advanced programming project\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\wwwroot\\css\\site.css",
+              "RelativeToolTip": "AdvancedProject\\wwwroot\\css\\site.css",
+              "ViewState": "AgIAAI4BAAAAAAAAAAAAwLABAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
+              "WhenOpened": "2026-04-14T17:56:59.706Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
               "Title": "User.cs",
               "DocumentMoniker": "D:\\year3 sem2\\advanced programming project\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Models\\User.cs",
               "RelativeDocumentMoniker": "AdvancedProject\\Models\\User.cs",
@@ -159,7 +251,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 9,
               "Title": "Tenant.cs",
               "DocumentMoniker": "D:\\year3 sem2\\advanced programming project\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Models\\Tenant.cs",
               "RelativeDocumentMoniker": "AdvancedProject\\Models\\Tenant.cs",
@@ -171,20 +263,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "UsersController.cs",
-              "DocumentMoniker": "D:\\year3 sem2\\advanced programming project\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Controllers\\UsersController.cs",
-              "RelativeDocumentMoniker": "AdvancedProject\\Controllers\\UsersController.cs",
-              "ToolTip": "D:\\year3 sem2\\advanced programming project\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Controllers\\UsersController.cs",
-              "RelativeToolTip": "AdvancedProject\\Controllers\\UsersController.cs",
-              "ViewState": "AgIAADQAAAAAAAAAAAAuwEgAAAAlAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-14T17:24:18.041Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 11,
               "Title": "TenantsController.cs",
               "DocumentMoniker": "D:\\year3 sem2\\advanced programming project\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Controllers\\TenantsController.cs",
               "RelativeDocumentMoniker": "AdvancedProject\\Controllers\\TenantsController.cs",
@@ -196,7 +275,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 12,
               "Title": "Index.cshtml",
               "DocumentMoniker": "D:\\year3 sem2\\advanced programming project\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Views\\Users\\Index.cshtml",
               "RelativeDocumentMoniker": "AdvancedProject\\Views\\Users\\Index.cshtml",
@@ -208,19 +287,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
-              "Title": "APContext.cs",
-              "DocumentMoniker": "D:\\year3 sem2\\advanced programming project\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Data\\APContext.cs",
-              "RelativeDocumentMoniker": "AdvancedProject\\Data\\APContext.cs",
-              "ToolTip": "D:\\year3 sem2\\advanced programming project\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Data\\APContext.cs",
-              "RelativeToolTip": "AdvancedProject\\Data\\APContext.cs",
-              "ViewState": "AgIAADUBAAAAAAAAAAAuwFUBAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-14T15:33:28.999Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 13,
               "Title": "UnitsController.cs",
               "DocumentMoniker": "D:\\year3 sem2\\advanced programming project\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Controllers\\UnitsController.cs",
               "RelativeDocumentMoniker": "AdvancedProject\\Controllers\\UnitsController.cs",
@@ -232,7 +299,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 14,
               "Title": "LeaseApplicationsController.cs",
               "DocumentMoniker": "D:\\year3 sem2\\advanced programming project\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Controllers\\LeaseApplicationsController.cs",
               "RelativeDocumentMoniker": "AdvancedProject\\Controllers\\LeaseApplicationsController.cs",
@@ -244,7 +311,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 15,
               "Title": "Create.cshtml",
               "DocumentMoniker": "D:\\year3 sem2\\advanced programming project\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Views\\LeaseApplications\\Create.cshtml",
               "RelativeDocumentMoniker": "AdvancedProject\\Views\\LeaseApplications\\Create.cshtml",
@@ -256,7 +323,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 16,
               "Title": "20260414160545_AddedDurationTable.cs",
               "DocumentMoniker": "D:\\year3 sem2\\advanced programming project\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Migrations\\20260414160545_AddedDurationTable.cs",
               "RelativeDocumentMoniker": "AdvancedProject\\Migrations\\20260414160545_AddedDurationTable.cs",
@@ -268,7 +335,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 16,
+              "DocumentIndex": 20,
               "Title": "Delete.cshtml",
               "DocumentMoniker": "D:\\year3 sem2\\advanced programming project\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Views\\Leases\\Delete.cshtml",
               "RelativeDocumentMoniker": "AdvancedProject\\Views\\Leases\\Delete.cshtml",
@@ -280,7 +347,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 14,
+              "DocumentIndex": 18,
               "Title": "Edit.cshtml",
               "DocumentMoniker": "D:\\year3 sem2\\advanced programming project\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Views\\Leases\\Edit.cshtml",
               "RelativeDocumentMoniker": "AdvancedProject\\Views\\Leases\\Edit.cshtml",
@@ -292,7 +359,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 15,
+              "DocumentIndex": 19,
               "Title": "Details.cshtml",
               "DocumentMoniker": "D:\\year3 sem2\\advanced programming project\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Views\\Leases\\Details.cshtml",
               "RelativeDocumentMoniker": "AdvancedProject\\Views\\Leases\\Details.cshtml",
@@ -304,7 +371,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 17,
+              "DocumentIndex": 21,
               "Title": "Create.cshtml",
               "DocumentMoniker": "D:\\year3 sem2\\advanced programming project\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Views\\Leases\\Create.cshtml",
               "RelativeDocumentMoniker": "AdvancedProject\\Views\\Leases\\Create.cshtml",
@@ -316,7 +383,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 17,
               "Title": "Index.cshtml",
               "DocumentMoniker": "D:\\year3 sem2\\advanced programming project\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Views\\Leases\\Index.cshtml",
               "RelativeDocumentMoniker": "AdvancedProject\\Views\\Leases\\Index.cshtml",
@@ -328,7 +395,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 18,
+              "DocumentIndex": 22,
               "Title": "LeasesController.cs",
               "DocumentMoniker": "D:\\year3 sem2\\advanced programming project\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Controllers\\LeasesController.cs",
               "RelativeDocumentMoniker": "AdvancedProject\\Controllers\\LeasesController.cs",
@@ -340,7 +407,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 19,
+              "DocumentIndex": 23,
               "Title": "Lease.cs",
               "DocumentMoniker": "D:\\year3 sem2\\advanced programming project\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Models\\Lease.cs",
               "RelativeDocumentMoniker": "AdvancedProject\\Models\\Lease.cs",
@@ -352,7 +419,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 20,
+              "DocumentIndex": 24,
               "Title": "Duration.cs",
               "DocumentMoniker": "D:\\year3 sem2\\advanced programming project\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Models\\Duration.cs",
               "RelativeDocumentMoniker": "AdvancedProject\\Models\\Duration.cs",

@@ -52,6 +52,17 @@ namespace AdvancedProject.Controllers
                 }
             }
 
+            if (user.Role == "Staff")
+            {
+                var staff = await _context.MaintenanceStaffs
+                    .FirstOrDefaultAsync(s => s.UserId == user.UserId);
+
+                if (staff != null)
+                {
+                    return RedirectToAction("Details", "MaintenanceStaffs", new { id = staff.StaffId });
+                }
+            }
+
             return View(user);
         }
 
