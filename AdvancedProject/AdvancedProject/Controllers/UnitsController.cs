@@ -148,6 +148,7 @@ namespace AdvancedProject.Controllers
             var unit = await _context.Units
                 .Include(u => u.Property)
                 .Include(u => u.Amenities)
+                .Include(u => u.UnitType)
                 .FirstOrDefaultAsync(m => m.UnitId == id);
 
             if (unit == null)
