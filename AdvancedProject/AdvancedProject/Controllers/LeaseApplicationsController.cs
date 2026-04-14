@@ -49,8 +49,10 @@ namespace AdvancedProject.Controllers
         // GET: LeaseApplications/Create
         public IActionResult Create(int? unitId)
         {
-            ViewData["TenantId"] = new SelectList(_context.Tenants, "TenantId", "TenantId");
-            ViewData["UnitId"] = new SelectList(_context.Units, "UnitId", "UnitId");
+            if (unitId == null)
+                return NotFound(); // or redirect
+
+            ViewBag.UnitId = unitId;
             return View();
         }
 
@@ -59,16 +61,26 @@ namespace AdvancedProject.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ApplicationId,TenantId,UnitId,ApplicationDate,Status,ApproveTime,RejectTime,StartDate,Duration")] LeaseApplication leaseApplication)
+        public async Task<IActionResult> Create([Bind("UnitId, StartDate, Duration")] LeaseApplication leaseApplication)
         {
+            leaseApplication.TenantId = 1;
+            leaseApplication.Status = "Pending";
+            leaseApplication.ApplicationDate = DateTime.Now;
+
+            ModelState.Remove("TenantId");
+            ModelState.Remove("UnitId");
+            ModelState.Remove("Tenant");
+            ModelState.Remove("Unit");
+            ModelState.Remove("Status");
+            ModelState.Remove("ApplicationDate");
+
             if (ModelState.IsValid)
             {
                 _context.Add(leaseApplication);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["TenantId"] = new SelectList(_context.Tenants, "TenantId", "TenantId", leaseApplication.TenantId);
-            ViewData["UnitId"] = new SelectList(_context.Units, "UnitId", "UnitId", leaseApplication.UnitId);
+
             return View(leaseApplication);
         }
 
