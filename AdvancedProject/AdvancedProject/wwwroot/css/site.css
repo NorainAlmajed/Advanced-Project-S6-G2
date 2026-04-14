@@ -132,3 +132,302 @@ body {
     color: var(--text-muted);
     letter-spacing: 0.5px;
 }
+
+.details-page {
+    max-width: 1280px;
+}
+
+.details-eyebrow {
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0;
+}
+
+.details-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--text-main);
+}
+
+.details-btn {
+    border-radius: 12px;
+    padding: 0.7rem 1.2rem;
+    font-weight: 600;
+}
+
+.details-main-card {
+    border-radius: 24px;
+    overflow: hidden;
+    background: var(--bg-card);
+}
+
+.profile-summary-card,
+.side-highlight-card,
+.details-section-card,
+.tenant-hero-card {
+    background: #fff;
+    border: 1px solid rgba(0, 91, 113, 0.08);
+    border-radius: 20px;
+}
+
+.profile-summary-card {
+    padding: 2rem 1.5rem;
+    text-align: center;
+    height: 100%;
+    background: linear-gradient(180deg, #f9fcfc 0%, #ffffff 100%);
+}
+
+.profile-avatar {
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    font-weight: 800;
+    margin: 0 auto 1rem auto;
+    box-shadow: 0 12px 30px rgba(0, 91, 113, 0.18);
+}
+
+.tenant-avatar {
+    margin: 0;
+    width: 96px;
+    height: 96px;
+    font-size: 1.75rem;
+}
+
+.profile-name {
+    font-size: 1.7rem;
+    font-weight: 800;
+    color: var(--text-main);
+    margin-bottom: 0.25rem;
+}
+
+.profile-username {
+    color: var(--text-muted);
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.profile-side-info {
+    margin-top: 1.5rem;
+    text-align: left;
+}
+
+.profile-side-item {
+    padding: 0.9rem 1rem;
+    border-radius: 14px;
+    background: #f8fbfb;
+    margin-bottom: 0.75rem;
+}
+
+.custom-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.5rem 0.85rem;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: 700;
+}
+
+.badge-soft-tenant {
+    background: rgba(0, 91, 113, 0.12);
+    color: var(--primary);
+}
+
+.badge-soft-manager {
+    background: rgba(77, 98, 104, 0.15);
+    color: var(--primary-light);
+}
+
+.badge-soft-staff {
+    background: rgba(30, 142, 110, 0.15);
+    color: var(--accent);
+}
+
+.badge-soft-default {
+    background: rgba(107, 114, 128, 0.12);
+    color: #4b5563;
+}
+
+.badge-soft-active {
+    background: rgba(30, 142, 110, 0.14);
+    color: var(--accent);
+}
+
+.badge-soft-inactive {
+    background: rgba(220, 53, 69, 0.12);
+    color: #b42318;
+}
+
+.section-header {
+    margin-bottom: 1.25rem;
+}
+
+    .section-header h3,
+    .side-card-title {
+        font-size: 1.25rem;
+        font-weight: 800;
+        color: var(--text-main);
+        margin-bottom: 0.35rem;
+    }
+
+    .section-header p {
+        margin: 0;
+        color: var(--text-muted);
+        font-size: 0.95rem;
+    }
+
+.details-section-card {
+    padding: 1.5rem;
+}
+
+.tenant-hero-card {
+    padding: 1.75rem;
+    background: linear-gradient(135deg, #ffffff 0%, #f4faf9 100%);
+}
+
+.hero-contact-grid,
+.info-grid,
+.contact-mini-grid {
+    display: grid;
+    gap: 1rem;
+}
+
+.hero-contact-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin-top: 0.5rem;
+}
+
+.info-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.contact-mini-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.info-box,
+.hero-contact-item,
+.contact-mini-card {
+    background: #f8fbfb;
+    border: 1px solid rgba(0, 91, 113, 0.06);
+    border-radius: 16px;
+    padding: 1rem 1.1rem;
+}
+
+.info-label {
+    display: block;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 0.4rem;
+}
+
+.info-value {
+    display: block;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-main);
+    word-break: break-word;
+}
+
+.side-highlight-card {
+    padding: 1.5rem;
+    background: #ffffff;
+    border-radius: 20px;
+    border: 1px solid rgba(0, 91, 113, 0.08);
+}
+
+.status-overview-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1rem 1.1rem;
+    border-radius: 16px;
+    background: #f8fbfb;
+    border: 1px solid rgba(0, 91, 113, 0.06);
+}
+
+.compact-status-card {
+    margin-top: 0.75rem;
+}
+
+.status-indicator {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    margin-top: 0.35rem;
+    flex-shrink: 0;
+}
+
+.status-on {
+    background: var(--accent);
+    box-shadow: 0 0 0 6px rgba(30, 142, 110, 0.12);
+}
+
+.status-off {
+    background: #dc3545;
+    box-shadow: 0 0 0 6px rgba(220, 53, 69, 0.12);
+}
+
+.status-title {
+    font-size: 1rem;
+    font-weight: 800;
+    color: var(--text-main);
+    margin-bottom: 0.2rem;
+}
+
+.status-subtitle {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+}
+
+.summary-line {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.9rem 0;
+    border-bottom: 1px solid rgba(0, 91, 113, 0.08);
+}
+
+.summary-key {
+    color: var(--text-muted);
+    font-weight: 600;
+}
+
+.summary-value {
+    color: var(--text-main);
+    font-weight: 700;
+    text-align: right;
+}
+
+@media (max-width: 991.98px) {
+    .details-title {
+        font-size: 2rem;
+    }
+
+    .hero-contact-grid,
+    .info-grid,
+    .contact-mini-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .tenant-avatar {
+        margin: 0 auto;
+    }
+
+    .tenant-hero-card .profile-name,
+    .tenant-hero-card .custom-pill {
+        text-align: center;
+    }
+}

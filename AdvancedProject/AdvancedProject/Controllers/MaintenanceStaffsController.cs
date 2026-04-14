@@ -36,7 +36,9 @@ namespace AdvancedProject.Controllers
 
             var maintenanceStaff = await _context.MaintenanceStaffs
                 .Include(m => m.User)
+                .Include(m => m.Skills)
                 .FirstOrDefaultAsync(m => m.StaffId == id);
+
             if (maintenanceStaff == null)
             {
                 return NotFound();

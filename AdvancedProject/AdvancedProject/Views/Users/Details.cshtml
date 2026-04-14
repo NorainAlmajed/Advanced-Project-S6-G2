@@ -1,66 +1,128 @@
 ﻿@model AdvancedProject.Models.User
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "User Details";
+
+    string initials = "";
+    if (!string.IsNullOrWhiteSpace(Model.FullName))
+    {
+        var parts = Model.FullName.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+        initials = string.Concat(parts.Take(2).Select(p => char.ToUpper(p[0])));
+    }
+
+    string roleClass = Model.Role?.ToLower() switch
+    {
+        "tenant" => "badge-soft-tenant",
+        "manager" => "badge-soft-manager",
+        "staff" => "badge-soft-staff",
+        _ => "badge-soft-default"
+    };
 }
 
-<h1>Details</h1>
+<div class="details-page container py-4">
+    <div class="details-topbar d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <p class="details-eyebrow mb-1">User Management</p>
+            <h1 class="details-title mb-0">User Details</h1>
+        </div>
 
-<div>
-    <h4>User</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Username)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Username)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Password)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Password)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.FullName)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.FullName)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Email)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Email)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Phone)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Phone)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Role)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Role)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CreatedAt)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CreatedAt)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.IsActive)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IsActive)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.UserId">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+        <div class="d-flex gap-2">
+            <a asp-action="Edit" asp-route-id="@Model.UserId" class="btn btn-primary details-btn">
+                Edit User
+            </a>
+            <a asp-action="Index" class="btn btn-light-custom details-btn">
+                Back to List
+            </a>
+        </div>
+    </div>
+
+    <div class="card details-main-card shadow-soft border-0">
+        <div class="card-body p-4 p-lg-5">
+            <div class="row g-4">
+
+                <!-- LEFT CARD -->
+                <div class="col-lg-4">
+                    <div class="profile-summary-card h-100 text-center">
+
+                        <div class="profile-avatar">
+                            @initials
+                        </div>
+
+                        <h2 class="profile-name">@Model.FullName</h2>
+                        <p class="profile-username mb-3">@@@Model.Username</p>
+
+                        <!-- ONLY ROLE (no active anymore) -->
+                        <div class="mb-3">
+                            <span class="custom-pill @roleClass">@Model.Role</span>
+                        </div>
+
+                        <!-- Contact -->
+                        <div class="profile-side-info text-start">
+                            <div class="profile-side-item">
+                                <span class="info-label">Email</span>
+                                <span class="info-value">@Model.Email</span>
+                            </div>
+
+                            <div class="profile-side-item">
+                                <span class="info-label">Phone</span>
+                                <span class="info-value">@Model.Phone</span>
+                            </div>
+
+                            <div class="profile-side-item">
+                                <span class="info-label">Created At</span>
+                                <span class="info-value">@Model.CreatedAt.ToString("dd MMM yyyy")</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- RIGHT CARD -->
+                <div class="col-lg-8">
+                    <div class="details-section-card">
+
+                        <div class="section-header">
+                            <h3>Account Information</h3>
+                            <p>Main account details for this user.</p>
+                        </div>
+
+                        <div class="info-grid">
+
+                            <div class="info-box">
+                                <span class="info-label">Username</span>
+                                <span class="info-value">@Model.Username</span>
+                            </div>
+
+                            <div class="info-box">
+                                <span class="info-label">Full Name</span>
+                                <span class="info-value">@Model.FullName</span>
+                            </div>
+
+                            <div class="info-box">
+                                <span class="info-label">Email</span>
+                                <span class="info-value">@Model.Email</span>
+                            </div>
+
+                            <div class="info-box">
+                                <span class="info-label">Phone</span>
+                                <span class="info-value">@Model.Phone</span>
+                            </div>
+
+                            <div class="info-box">
+                                <span class="info-label">Role</span>
+                                <span class="info-value">@Model.Role</span>
+                            </div>
+
+                            <div class="info-box">
+                                <span class="info-label">Created At</span>
+                                <span class="info-value">@Model.CreatedAt.ToString("dd MMM yyyy hh:mm tt")</span>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
 </div>

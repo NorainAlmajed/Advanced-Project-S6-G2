@@ -35,9 +35,32 @@ namespace AdvancedProject.Controllers
 
             var user = await _context.Users
                 .FirstOrDefaultAsync(m => m.UserId == id);
+
             if (user == null)
             {
                 return NotFound();
+            }
+
+            if (user.Role == "Tenant")
+            {
+                var tenant = await _context.Tenants
+                    .FirstOrDefaultAsync(t => t.UserId == user.UserId);
+
+                if (tenant != null)
+                {
+                    return RedirectToAction("Details", "Tenants", new { id = tenant.TenantId });
+                }
+            }
+
+            if (user.Role == "Staff")
+            {
+                var staff = await _context.MaintenanceStaffs
+                    .FirstOrDefaultAsync(s => s.UserId == user.UserId);
+
+                if (staff != null)
+                {
+                    return RedirectToAction("Details", "MaintenanceStaffs", new { id = staff.StaffId });
+                }
             }
 
             return View(user);
@@ -58,6 +81,7 @@ namespace AdvancedProject.Controllers
         {
             if (ModelState.IsValid)
             {
+                user.IsActive = true;
                 _context.Add(user);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
