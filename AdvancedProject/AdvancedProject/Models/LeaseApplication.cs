@@ -28,7 +28,10 @@ public partial class LeaseApplication
 
     public DateTime StartDate { get; set; }
 
-    public int Duration { get; set; }
+    public int DurationId { get; set; }
+
+    [ForeignKey("DurationId")]
+    public Duration Duration { get; set; }
 
     [ForeignKey("TenantId")]
     [InverseProperty("LeaseApplications")]

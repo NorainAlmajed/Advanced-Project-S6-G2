@@ -42,6 +42,8 @@ public partial class APContext : DbContext
 
     public virtual DbSet<User> Users { get; set; }
 
+    public DbSet<Duration> Durations { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
         => optionsBuilder.UseSqlServer("Server=(localdb)\\MSSQLLocalDB;Database=AdvancedDB;Trusted_Connection=True;TrustServerCertificate=True;");
@@ -248,25 +250,25 @@ public partial class APContext : DbContext
    );
 
         modelBuilder.Entity<LeaseApplication>().HasData(
-      new LeaseApplication { ApplicationId = 1, TenantId = 1, UnitId = 1, ApplicationDate = new DateTime(2026, 2, 1, 20, 30, 33), Status = "Approved" , StartDate = new DateTime(2026, 6, 1, 8, 0, 0), Duration = 6, ApproveTime = new DateTime(2026, 2, 2, 13, 22, 17) },
-      new LeaseApplication { ApplicationId = 2, TenantId = 2, UnitId = 2, ApplicationDate = new DateTime(2026, 2, 3, 3, 7, 12), Status = "Pending", StartDate = new DateTime(2026, 5, 5, 18, 9, 24), Duration = 24 },
-      new LeaseApplication { ApplicationId = 3, TenantId = 3, UnitId = 3, ApplicationDate = new DateTime(2026, 2, 5, 5, 24, 13), Status = "Rejected", StartDate = new DateTime(2027, 1, 1, 9, 10, 22), Duration = 6, RejectTime = new DateTime(2026, 2, 22, 3, 17, 29) },
-      new LeaseApplication { ApplicationId = 4, TenantId = 4, UnitId = 4, ApplicationDate = new DateTime(2026, 2, 2, 22, 55, 2), Status = "Approved", StartDate = new DateTime(2026, 3, 15, 8, 0, 0), Duration = 12, ApproveTime = new DateTime(2026, 2, 5, 14, 30, 0) },
-      new LeaseApplication { ApplicationId = 5, TenantId = 5, UnitId = 5, ApplicationDate = new DateTime(2026, 2, 9, 9, 33, 11), Status = "Pending", StartDate = new DateTime(2026, 4, 20, 14, 22, 5), Duration = 12 },
-      new LeaseApplication { ApplicationId = 6, TenantId = 2, UnitId = 3, ApplicationDate = new DateTime(2026, 3, 3, 10, 21, 10), Status = "Approved", StartDate = new DateTime(2026, 7, 1, 12, 6, 12), Duration = 6, ApproveTime = new DateTime(2026, 3, 5, 6, 44, 3) },
-      new LeaseApplication { ApplicationId = 7, TenantId = 3, UnitId = 1, ApplicationDate = new DateTime(2026, 1, 12, 6, 10, 9), Status = "Approved", StartDate = new DateTime(2026, 3, 10, 11, 1, 22), Duration = 24, ApproveTime = new DateTime(2026, 3, 11, 7, 52, 33) },
-      new LeaseApplication { ApplicationId = 8, TenantId = 5, UnitId = 5, ApplicationDate = new DateTime(2026, 1, 12, 14, 32, 17), Status = "Approved", StartDate = new DateTime(2026, 2, 1, 8, 0, 0), Duration = 24, ApproveTime = new DateTime(2026, 1, 15, 4, 32, 29) }
+      new LeaseApplication { ApplicationId = 1, TenantId = 1, UnitId = 1, ApplicationDate = new DateTime(2026, 2, 1, 20, 30, 33), Status = "Approved" , StartDate = new DateTime(2026, 6, 1, 8, 0, 0), DurationId = 1, ApproveTime = new DateTime(2026, 2, 2, 13, 22, 17) },
+      new LeaseApplication { ApplicationId = 2, TenantId = 2, UnitId = 2, ApplicationDate = new DateTime(2026, 2, 3, 3, 7, 12), Status = "Pending", StartDate = new DateTime(2026, 5, 5, 18, 9, 24), DurationId = 3 },
+      new LeaseApplication { ApplicationId = 3, TenantId = 3, UnitId = 3, ApplicationDate = new DateTime(2026, 2, 5, 5, 24, 13), Status = "Rejected", StartDate = new DateTime(2027, 1, 1, 9, 10, 22), DurationId = 1, RejectTime = new DateTime(2026, 2, 22, 3, 17, 29) },
+      new LeaseApplication { ApplicationId = 4, TenantId = 4, UnitId = 4, ApplicationDate = new DateTime(2026, 2, 2, 22, 55, 2), Status = "Approved", StartDate = new DateTime(2026, 3, 15, 8, 0, 0), DurationId = 2, ApproveTime = new DateTime(2026, 2, 5, 14, 30, 0) },
+      new LeaseApplication { ApplicationId = 5, TenantId = 5, UnitId = 5, ApplicationDate = new DateTime(2026, 2, 9, 9, 33, 11), Status = "Pending", StartDate = new DateTime(2026, 4, 20, 14, 22, 5), DurationId = 2 },
+      new LeaseApplication { ApplicationId = 6, TenantId = 2, UnitId = 3, ApplicationDate = new DateTime(2026, 3, 3, 10, 21, 10), Status = "Approved", StartDate = new DateTime(2026, 7, 1, 12, 6, 12), DurationId = 1, ApproveTime = new DateTime(2026, 3, 5, 6, 44, 3) },
+      new LeaseApplication { ApplicationId = 7, TenantId = 3, UnitId = 1, ApplicationDate = new DateTime(2026, 1, 12, 6, 10, 9), Status = "Approved", StartDate = new DateTime(2026, 3, 10, 11, 1, 22), DurationId = 3, ApproveTime = new DateTime(2026, 3, 11, 7, 52, 33) },
+      new LeaseApplication { ApplicationId = 8, TenantId = 5, UnitId = 5, ApplicationDate = new DateTime(2026, 1, 12, 14, 32, 17), Status = "Approved", StartDate = new DateTime(2026, 2, 1, 8, 0, 0), DurationId = 3, ApproveTime = new DateTime(2026, 1, 15, 4, 32, 29) }
 
 
 
   );
 
         modelBuilder.Entity<Lease>().HasData(
-      new Lease { LeaseId = 1, TenantId = 1, UnitId = 1, StartDate = new DateTime(2026, 6, 1, 8, 0, 0), EndDate = new DateTime(2026, 12, 1, 8, 0, 0), MonthlyRent = 300, Status = "Active", CreatedAt = new DateTime(2026, 2, 2, 13, 22, 17), Duration = 6 },
-      new Lease { LeaseId = 2, TenantId = 2, UnitId = 3, StartDate = new DateTime(2026, 7, 1, 12, 6, 12), EndDate = new DateTime(2026, 6, 30, 8, 0 ,0), MonthlyRent = 500, Status = "Active", CreatedAt = new DateTime(2026, 3, 5, 6, 44, 3) , Duration = 6}, 
-      new Lease { LeaseId = 3, TenantId = 3, UnitId = 1, StartDate = new DateTime(2026, 3, 10, 11, 1, 22), EndDate = new DateTime(2027, 3, 10, 8, 0, 0), MonthlyRent = 350, Status = "Terminated", CreatedAt = new DateTime(2026, 3, 10, 7, 52, 33) , Duration = 24}, 
-      new Lease { LeaseId = 4, TenantId = 4, UnitId = 4, StartDate = new DateTime(2026, 3, 15, 8, 0, 0), EndDate = new DateTime(2027, 3, 14, 8, 0, 0), MonthlyRent = 550, Status = "Active", CreatedAt = new DateTime(2026, 2, 5, 14, 30, 0), Duration = 12 },
-      new Lease { LeaseId = 5, TenantId = 5, UnitId = 5, StartDate = new DateTime(2026, 2, 1, 8, 0, 0), EndDate = new DateTime(2028, 1, 31, 8, 0, 0), MonthlyRent = 250, Status = "Active", CreatedAt = new DateTime(2026, 1, 15, 4, 32, 29) , Duration = 24} 
+      new Lease { LeaseId = 1, TenantId = 1, UnitId = 1, StartDate = new DateTime(2026, 6, 1, 8, 0, 0), EndDate = new DateTime(2026, 12, 1, 8, 0, 0), MonthlyRent = 300, Status = "Active", CreatedAt = new DateTime(2026, 2, 2, 13, 22, 17), DurationId = 1 },
+      new Lease { LeaseId = 2, TenantId = 2, UnitId = 3, StartDate = new DateTime(2026, 7, 1, 12, 6, 12), EndDate = new DateTime(2026, 6, 30, 8, 0 ,0), MonthlyRent = 500, Status = "Active", CreatedAt = new DateTime(2026, 3, 5, 6, 44, 3) , DurationId = 1}, 
+      new Lease { LeaseId = 3, TenantId = 3, UnitId = 1, StartDate = new DateTime(2026, 3, 10, 11, 1, 22), EndDate = new DateTime(2027, 3, 10, 8, 0, 0), MonthlyRent = 350, Status = "Terminated", CreatedAt = new DateTime(2026, 3, 10, 7, 52, 33) , DurationId = 3}, 
+      new Lease { LeaseId = 4, TenantId = 4, UnitId = 4, StartDate = new DateTime(2026, 3, 15, 8, 0, 0), EndDate = new DateTime(2027, 3, 14, 8, 0, 0), MonthlyRent = 550, Status = "Active", CreatedAt = new DateTime(2026, 2, 5, 14, 30, 0), DurationId = 2 },
+      new Lease { LeaseId = 5, TenantId = 5, UnitId = 5, StartDate = new DateTime(2026, 2, 1, 8, 0, 0), EndDate = new DateTime(2028, 1, 31, 8, 0, 0), MonthlyRent = 250, Status = "Active", CreatedAt = new DateTime(2026, 1, 15, 4, 32, 29) , DurationId = 3} 
   );
 
         modelBuilder.Entity<Payment>().HasData(
@@ -325,6 +327,12 @@ public partial class APContext : DbContext
              new { UnitId = 6, AmenityId = 3 }, // Gym
              new { UnitId = 6, AmenityId = 4 }  // Security
          ));
+
+        modelBuilder.Entity<Duration>().HasData(
+        new Duration { DurationId = 1, Months = 6 },
+        new Duration { DurationId = 2, Months = 12 },
+        new Duration { DurationId = 3, Months = 24 }
+);
 
         OnModelCreatingPartial(modelBuilder);
     }
