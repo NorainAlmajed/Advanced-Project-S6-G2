@@ -18,7 +18,10 @@
 
     string dobText = Model.Dob.HasValue ? Model.Dob.Value.ToString("dd MMM yyyy") : "Not available";
     string createdAtText = Model.User != null ? Model.User.CreatedAt.ToString("dd MMM yyyy") : "Not available";
+    string genderClass = Model.User?.Gender == "F" ? "badge-gender-female" : "badge-gender-male";
+    string genderText = Model.User?.Gender == "F" ? "Female" : "Male";
 }
+
 
 <div class="details-page container py-4">
     <div class="details-topbar d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
@@ -55,6 +58,7 @@
 
                                 <div class="d-flex flex-wrap gap-2 mb-3">
                                     <span class="custom-pill badge-soft-tenant">@role</span>
+                                    <span class="custom-pill @genderClass">@genderText</span>
                                 </div>
 
                                 <div class="hero-contact-grid">

@@ -14,8 +14,8 @@
             <p class="users-subtitle mb-0">Browse and manage tenants.</p>
         </div>
 
-        <a asp-controller="Users" asp-action="Create" class="btn btn-light-custom users-create-btn">
-            + Add New User
+        <a asp-controller="Tenants" asp-action="Create" class="btn btn-light-custom users-create-btn">
+            + Add New Tenant
         </a>
     </div>
 
@@ -95,6 +95,10 @@
                                         @item.Role
                                     </span>
                                 </td>
+
+                                
+
+
                                 <td class="text-end">
                                     <a asp-controller="Users" asp-action="Details" asp-route-id="@item.UserId" class="btn btn-primary btn-sm users-details-btn">
                                         View Details

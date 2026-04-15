@@ -798,3 +798,17 @@ body {
 #skillsDropdownButton::after {
     display: none !important;
 }
+
+
+
+
+/* Gender badges */
+.badge-gender-male {
+    background: rgba(59, 130, 246, 0.15); /* light blue */
+    color: #2563eb;
+}
+
+.badge-gender-female {
+    background: rgba(244, 114, 182, 0.15); /* light pink */
+    color: #db2777;
+}
