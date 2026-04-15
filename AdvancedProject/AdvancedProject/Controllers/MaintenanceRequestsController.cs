@@ -51,8 +51,19 @@ namespace AdvancedProject.Controllers
         // GET: MaintenanceRequests/Create
         public IActionResult Create()
         {
-            ViewData["UnitId"] = new SelectList(_context.Units, "UnitId", "UnitNumber");
+            int tenantId = 1; // temporary (later replace with logged-in user)
+
+            var units = _context.Leases
+                .Include(l => l.Unit)
+                .Where(l => l.TenantId == tenantId && l.Status == "Active")
+                .Select(l => l.Unit)
+                .Distinct()
+                .ToList();
+
+            ViewData["UnitId"] = new SelectList(units, "UnitId", "UnitNumber");
+
             ViewData["SkillId"] = new SelectList(_context.Skills, "SkillId", "Name");
+
             return View();
         }
 
@@ -83,7 +94,17 @@ namespace AdvancedProject.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            ViewData["UnitId"] = new SelectList(_context.Units, "UnitId", "UnitNumber", maintenanceRequest.UnitId);
+            int tenantId = 1;
+
+            var units = _context.Leases
+                .Include(l => l.Unit)
+                .Where(l => l.TenantId == tenantId && l.Status == "Active")
+                .Select(l => l.Unit)
+                .Distinct()
+                .ToList();
+
+            ViewData["UnitId"] = new SelectList(units, "UnitId", "UnitNumber", maintenanceRequest.UnitId);
+
             ViewData["SkillId"] = new SelectList(_context.Skills, "SkillId", "Name", maintenanceRequest.SkillId);
 
             return View(maintenanceRequest);

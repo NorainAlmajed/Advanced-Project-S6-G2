@@ -16,12 +16,14 @@ public partial class MaintenanceRequest
     [Key]
     public int RequestId { get; set; }
 
+    [Display(Name = "Unit Number")]
     public int UnitId { get; set; }
 
     public int TenantId { get; set; }
 
     public DateTime RequestDate { get; set; }
 
+    [Display(Name = " Maintenance Type")]
     public int SkillId { get; set; }
 
     [StringLength(20)]
@@ -33,6 +35,7 @@ public partial class MaintenanceRequest
     public int? AssignedStaffId { get; set; }
 
     [StringLength(500)]
+    [Display(Name = "Description")]
     public string? Notes { get; set; }
 
     public DateTime? CompletedDate { get; set; }
