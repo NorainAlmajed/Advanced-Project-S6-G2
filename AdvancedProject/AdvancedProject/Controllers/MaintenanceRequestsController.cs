@@ -51,10 +51,19 @@ namespace AdvancedProject.Controllers
         // GET: MaintenanceRequests/Create
         public IActionResult Create()
         {
-            ViewData["AssignedStaffId"] = new SelectList(_context.MaintenanceStaffs, "StaffId", "StaffId");
-            ViewData["SkillId"] = new SelectList(_context.Skills, "SkillId", "SkillId");
-            ViewData["TenantId"] = new SelectList(_context.Tenants, "TenantId", "TenantId");
-            ViewData["UnitId"] = new SelectList(_context.Units, "UnitId", "UnitId");
+            int tenantId = 1; // temporary (later replace with logged-in user)
+
+            var units = _context.Leases
+                .Include(l => l.Unit)
+                .Where(l => l.TenantId == tenantId && l.Status == "Active")
+                .Select(l => l.Unit)
+                .Distinct()
+                .ToList();
+
+            ViewData["UnitId"] = new SelectList(units, "UnitId", "UnitNumber");
+
+            ViewData["SkillId"] = new SelectList(_context.Skills, "SkillId", "Name");
+
             return View();
         }
 
@@ -63,18 +72,41 @@ namespace AdvancedProject.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("RequestId,UnitId,TenantId,RequestDate,SkillId,Priority,Status,AssignedStaffId,Notes,CompletedDate,AssignedTime,ResolvedTime,ClosedTime,InProgressTime")] MaintenanceRequest maintenanceRequest)
+        public async Task<IActionResult> Create([Bind("UnitId,SkillId,Priority,Notes")] MaintenanceRequest maintenanceRequest)
         {
+            if (!ModelState.IsValid)
+            {
+                foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
+                {
+                    Console.WriteLine(error.ErrorMessage);
+                }
+            }
+
             if (ModelState.IsValid)
             {
+                maintenanceRequest.TenantId = 1;
+                maintenanceRequest.RequestDate = DateTime.Now;
+                maintenanceRequest.Status = "Pending";
+                maintenanceRequest.AssignedStaffId = null;
+
                 _context.Add(maintenanceRequest);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AssignedStaffId"] = new SelectList(_context.MaintenanceStaffs, "StaffId", "StaffId", maintenanceRequest.AssignedStaffId);
-            ViewData["SkillId"] = new SelectList(_context.Skills, "SkillId", "SkillId", maintenanceRequest.SkillId);
-            ViewData["TenantId"] = new SelectList(_context.Tenants, "TenantId", "TenantId", maintenanceRequest.TenantId);
-            ViewData["UnitId"] = new SelectList(_context.Units, "UnitId", "UnitId", maintenanceRequest.UnitId);
+
+            int tenantId = 1;
+
+            var units = _context.Leases
+                .Include(l => l.Unit)
+                .Where(l => l.TenantId == tenantId && l.Status == "Active")
+                .Select(l => l.Unit)
+                .Distinct()
+                .ToList();
+
+            ViewData["UnitId"] = new SelectList(units, "UnitId", "UnitNumber", maintenanceRequest.UnitId);
+
+            ViewData["SkillId"] = new SelectList(_context.Skills, "SkillId", "Name", maintenanceRequest.SkillId);
+
             return View(maintenanceRequest);
         }
 

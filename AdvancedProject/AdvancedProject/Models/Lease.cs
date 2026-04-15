@@ -14,8 +14,11 @@ public partial class Lease
     [Key]
     public int LeaseId { get; set; }
 
+    [Display(Name = "Tenant Username")]
+
     public int TenantId { get; set; }
 
+    [Display(Name = "Unit Number")]
     public int UnitId { get; set; }
 
     public DateTime StartDate { get; set; }
@@ -32,10 +35,13 @@ public partial class Lease
 
     public DateTime? TerminationDate { get; set; }
 
+    [Display(Name = "Duration")]
+
     public int DurationId { get; set; }
 
     [ValidateNever]
     [ForeignKey("DurationId")]
+
     public Duration Duration { get; set; }
 
 
