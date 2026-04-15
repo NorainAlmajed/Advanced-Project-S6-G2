@@ -4,6 +4,7 @@ using AdvancedProject.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AdvancedProject.Migrations
 {
     [DbContext(typeof(APContext))]
-    partial class APContextModelSnapshot : ModelSnapshot
+    [Migration("20260415112410_AddedIsActiveAttribute")]
+    partial class AddedIsActiveAttribute
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1143,10 +1146,6 @@ namespace AdvancedProject.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<string>("Gender")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
@@ -1184,7 +1183,6 @@ namespace AdvancedProject.Migrations
                             CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "manager@mail.com",
                             FullName = "System Manager",
-                            Gender = "M",
                             IsActive = true,
                             Password = "Manager123",
                             Phone = "33338876",
@@ -1197,7 +1195,6 @@ namespace AdvancedProject.Migrations
                             CreatedAt = new DateTime(2026, 2, 12, 2, 3, 4, 0, DateTimeKind.Unspecified),
                             Email = "zahraa.hubail8@gmail.com",
                             FullName = "Zahraa Hubail",
-                            Gender = "F",
                             IsActive = true,
                             Password = "Zahraa.123",
                             Phone = "33735771",
@@ -1210,7 +1207,6 @@ namespace AdvancedProject.Migrations
                             CreatedAt = new DateTime(2026, 3, 15, 15, 12, 55, 0, DateTimeKind.Unspecified),
                             Email = "raghad@gmail.com",
                             FullName = "Raghad Aleskafi",
-                            Gender = "F",
                             IsActive = true,
                             Password = "Raghad.123",
                             Phone = "39004266",
@@ -1223,7 +1219,6 @@ namespace AdvancedProject.Migrations
                             CreatedAt = new DateTime(2026, 3, 20, 6, 11, 2, 0, DateTimeKind.Unspecified),
                             Email = "fatima@gmail.com",
                             FullName = "Fatima Alaiwi",
-                            Gender = "F",
                             IsActive = true,
                             Password = "Fatima.123",
                             Phone = "36635578",
@@ -1235,13 +1230,12 @@ namespace AdvancedProject.Migrations
                             UserId = 5,
                             CreatedAt = new DateTime(2026, 3, 25, 5, 15, 27, 0, DateTimeKind.Unspecified),
                             Email = "norain@mail.com",
-                            FullName = "Norain Almajed",
-                            Gender = "F",
+                            FullName = "Norain Hassan",
                             IsActive = true,
                             Password = "Norain.123",
                             Phone = "33744063",
                             Role = "Tenant",
-                            Username = "norain.almajed"
+                            Username = "norain.hassan"
                         },
                         new
                         {
@@ -1249,7 +1243,6 @@ namespace AdvancedProject.Migrations
                             CreatedAt = new DateTime(2026, 3, 28, 7, 17, 22, 0, DateTimeKind.Unspecified),
                             Email = "ahmed.ali@gmail.com",
                             FullName = "Ahmed Ali",
-                            Gender = "M",
                             IsActive = true,
                             Password = "Ahmed.999",
                             Phone = "33871125",
@@ -1262,7 +1255,6 @@ namespace AdvancedProject.Migrations
                             CreatedAt = new DateTime(2026, 3, 10, 9, 16, 34, 0, DateTimeKind.Unspecified),
                             Email = "alihassan@mail.com",
                             FullName = "Ali Hassan",
-                            Gender = "M",
                             IsActive = true,
                             Password = "Ali.123",
                             Phone = "39207552",
@@ -1275,7 +1267,6 @@ namespace AdvancedProject.Migrations
                             CreatedAt = new DateTime(2026, 3, 11, 9, 10, 10, 0, DateTimeKind.Unspecified),
                             Email = "sara.mohamed@gmail.com",
                             FullName = "Sara Mohamed",
-                            Gender = "F",
                             IsActive = true,
                             Password = "Sara.888",
                             Phone = "33699152",
@@ -1288,7 +1279,6 @@ namespace AdvancedProject.Migrations
                             CreatedAt = new DateTime(2026, 3, 12, 10, 2, 15, 0, DateTimeKind.Unspecified),
                             Email = "abbas@gmail.com",
                             FullName = "Abbas Hadi",
-                            Gender = "M",
                             IsActive = true,
                             Password = "Abbas.123",
                             Phone = "33546672",
@@ -1299,14 +1289,13 @@ namespace AdvancedProject.Migrations
                         {
                             UserId = 10,
                             CreatedAt = new DateTime(2026, 3, 13, 6, 21, 41, 0, DateTimeKind.Unspecified),
-                            Email = "layla@gmail.com",
-                            FullName = "Layla Yaser",
-                            Gender = "F",
+                            Email = "laila@gmail.com",
+                            FullName = "Laila Yaser",
                             IsActive = true,
-                            Password = "Layla.999",
+                            Password = "Laila.999",
                             Phone = "39126632",
                             Role = "Staff",
-                            Username = "layla.yaser"
+                            Username = "laila.yaser"
                         },
                         new
                         {
@@ -1314,7 +1303,6 @@ namespace AdvancedProject.Migrations
                             CreatedAt = new DateTime(2026, 3, 14, 8, 13, 44, 0, DateTimeKind.Unspecified),
                             Email = "mohammed@gmail.com",
                             FullName = "Mohammed Karim",
-                            Gender = "M",
                             IsActive = true,
                             Password = "mohammed.123",
                             Phone = "33921092",
