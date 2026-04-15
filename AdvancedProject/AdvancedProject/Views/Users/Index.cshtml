@@ -27,10 +27,17 @@
             All Users
         </a>
 
-        <a asp-action="Index"
+        @* <a asp-action="Index"
            asp-route-roleFilter="Tenant"
            asp-route-searchTerm="@currentSearch"
            class="btn @(currentFilter == "Tenant" ? "btn-primary" : "btn-light-custom") users-filter-btn">
+            Tenants
+        </a> *@
+
+
+        <a asp-controller="Tenants"
+           asp-action="Index"
+           class="btn btn-light-custom users-filter-btn">
             Tenants
         </a>
 
