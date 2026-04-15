@@ -87,10 +87,25 @@ namespace AdvancedProject.Controllers
                 maintenanceRequest.TenantId = 1;
                 maintenanceRequest.RequestDate = DateTime.Now;
                 maintenanceRequest.Status = "Pending";
-                maintenanceRequest.AssignedStaffId = null;
+
+                var staff = _context.MaintenanceStaffs
+                    .Include(s => s.Skills)
+                    .Where(s => s.AvailabilityStatus == "Available"
+                             && s.Skills.Any(sk => sk.SkillId == maintenanceRequest.SkillId))
+                    .FirstOrDefault();
+
+                if (staff == null)
+                {
+                    staff = _context.MaintenanceStaffs
+                        .Where(s => s.AvailabilityStatus == "Available")
+                        .FirstOrDefault();
+                }
+
+                maintenanceRequest.AssignedStaffId = staff?.StaffId;
 
                 _context.Add(maintenanceRequest);
                 await _context.SaveChangesAsync();
+
                 return RedirectToAction(nameof(Index));
             }
 
