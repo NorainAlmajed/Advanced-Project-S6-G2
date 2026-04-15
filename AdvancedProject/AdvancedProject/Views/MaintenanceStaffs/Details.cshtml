@@ -24,6 +24,9 @@
         "busy" => "badge-soft-inactive",
         _ => "badge-soft-default"
     };
+
+    string genderClass = Model.User?.Gender == "F" ? "badge-gender-female" : "badge-gender-male";
+    string genderText = Model.User?.Gender == "F" ? "Female" : "Male";
 }
 
 <div class="details-page container py-4">
@@ -62,6 +65,7 @@
                                 <div class="d-flex flex-wrap gap-2 mb-3">
                                     <span class="custom-pill badge-soft-staff">@role</span>
                                     <span class="custom-pill @availabilityClass">@availability</span>
+                                    <span class="custom-pill @genderClass">@genderText</span>
                                 </div>
 
                                 <div class="hero-contact-grid">

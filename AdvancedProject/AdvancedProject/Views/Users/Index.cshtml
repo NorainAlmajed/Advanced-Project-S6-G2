@@ -15,9 +15,20 @@
             <p class="users-subtitle mb-0">Browse and manage system users by role.</p>
         </div>
 
-        <a asp-action="Create" class="btn btn-light-custom users-create-btn">
-            + Add New User
-        </a>
+        <div class="d-flex gap-2">
+            <a asp-controller="Tenants"
+               asp-action="Create"
+               class="btn btn-light-custom users-create-btn">
+                + Add Tenant
+            </a>
+
+            <a asp-controller="MaintenanceStaffs"
+               asp-action="Create"
+               class="btn btn-light-custom users-create-btn">
+                + Add Staff
+            </a>
+        </div>
+
     </div>
 
     <div class="d-flex flex-wrap gap-2 mb-4">
@@ -27,10 +38,17 @@
             All Users
         </a>
 
-        <a asp-action="Index"
+        @* <a asp-action="Index"
            asp-route-roleFilter="Tenant"
            asp-route-searchTerm="@currentSearch"
            class="btn @(currentFilter == "Tenant" ? "btn-primary" : "btn-light-custom") users-filter-btn">
+            Tenants
+        </a> *@
+
+
+        <a asp-controller="Tenants"
+           asp-action="Index"
+           class="btn btn-light-custom users-filter-btn">
             Tenants
         </a>
 
@@ -74,6 +92,8 @@
     <div class="card shadow-soft border-0 users-table-card">
         <div class="table-responsive">
             <table class="table mb-0 users-table align-middle">
+
+
                 <thead>
                     <tr>
                         <th>Username</th>
