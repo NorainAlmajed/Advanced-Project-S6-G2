@@ -23,13 +23,14 @@ namespace AdvancedProject.Controllers
         public async Task<IActionResult> Index(string searchTerm, string priorityFilter, string statusFilter, int? typeFilter, string sortOrder)
         {
             var query = _context.MaintenanceRequests
-                .Include(m => m.AssignedStaff)
-                    .ThenInclude(s => s.User)
-                .Include(m => m.Skill)
-                .Include(m => m.Tenant)
-                    .ThenInclude(t => t.User)
-                .Include(m => m.Unit)
-                .AsQueryable();
+        .Include(m => m.AssignedStaff)
+            .ThenInclude(s => s.User)
+        .Include(m => m.Skill)
+        .Include(m => m.Tenant)
+            .ThenInclude(t => t.User)
+        .Include(m => m.Unit)
+            .ThenInclude(u => u.Property)
+        .AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(searchTerm))
             {

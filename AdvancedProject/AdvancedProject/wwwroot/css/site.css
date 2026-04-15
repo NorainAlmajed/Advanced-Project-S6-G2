@@ -842,6 +842,7 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-items: center; /*  THIS FIXES IT */
     border: 1px solid rgba(255, 255, 255, 0.45);
 }
 
@@ -863,14 +864,14 @@ body {
 }
 
 /* -------- CARD -------- */
-.request-card {
-    border-radius: 24px;
-    background: linear-gradient(180deg, #ffffff 0%, #f8fbfb 100%);
-    border: none; /* REMOVE full border */
+.requests-page .request-card {
+    border-radius: 20px;
+    background-color: #d4e7ec;
+    border: none;
     transition: all 0.2s ease;
 }
 
-    .request-card:hover {
+    .requests-page .request-card:hover {
         transform: translateY(-3px);
     }
 
@@ -888,16 +889,9 @@ body {
 }
 
 /* -------- HEADER -------- */
-.request-id-badge {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0.48rem 0.82rem;
-    border-radius: 999px;
-    background: rgba(0, 91, 113, 0.12);
-    color: var(--primary);
-    font-weight: 800;
-    font-size: 0.95rem;
+
+.requests-page .request-card .card-body {
+    padding: 0.9rem;
 }
 
 .request-date-small {
@@ -909,11 +903,11 @@ body {
 }
 
 /* -------- TITLE -------- */
-.request-title {
-    font-size: 1.7rem;
-    font-weight: 800;
-    color: var(--text-main);
-    line-height: 1.2;
+.requests-page .request-id {
+    font-size: 2.3rem;
+    font-weight: 900;
+    color: #000000;
+    letter-spacing: 0.02em;
 }
 
 /* -------- META (Tenant / Unit / Description) -------- */
@@ -923,10 +917,9 @@ body {
 }
 
 .request-meta-item {
-    background: #f8fbfb;
-    border: 1px solid rgba(0, 91, 113, 0.06);
-    border-radius: 16px;
-    padding: 0.9rem 1rem;
+    background: transparent;
+    border: none;
+    padding: 0;
 }
 
 .request-meta-label {
@@ -995,15 +988,41 @@ body {
 }
 
 /* -------- BUTTONS -------- */
-.request-action-btn {
-    min-height: 54px;
-    border-radius: 14px;
+.requests-page .request-title {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--text-main);
+    line-height: 1.15;
+}
+
+.requests-page .custom-pill {
+    padding: 0.3rem 0.6rem;
+    font-size: 0.78rem;
+}
+
+.requests-page .request-action-btn {
+    min-height: 42px;
+    border-radius: 12px;
     font-weight: 700;
-    font-size: 1rem;
+    font-size: 0.9rem;
     display: flex;
     align-items: center;
     justify-content: center;
     width: 100%;
+}
+
+.requests-page .request-meta-list {
+    gap: 0.45rem;
+}
+
+.requests-page .request-meta-label {
+    font-size: 0.72rem;
+    margin-bottom: 0.15rem;
+}
+
+.requests-page .request-meta-value {
+    font-size: 0.95rem;
+    line-height: 1.25;
 }
 
 /* -------- EMPTY STATE -------- */
@@ -1017,4 +1036,52 @@ body {
     .request-title {
         font-size: 1.35rem;
     }
+}
+
+
+
+
+.requests-page .users-search-card {
+    border-radius: 28px;
+}
+
+.requests-page .users-search-input {
+    min-height: 60px;
+    font-size: 0.98rem;
+    border-radius: 16px;
+}
+
+    .requests-page .users-search-input::placeholder {
+        font-size: 0.9rem;
+        color: #9fb7bf;
+    }
+
+.requests-page .search-card .form-label {
+    font-size: 0.95rem;
+    font-weight: 700;
+    margin-bottom: 0.55rem;
+}
+
+.requests-page .users-search-btn {
+    background-color: #E8F1F3;
+    color: #005B71;
+    border: none;
+    font-weight: 800;
+    min-height: 56px;
+    border-radius: 14px;
+}
+
+    .requests-page .users-search-btn:hover {
+        background-color: #d6e6ea;
+        border-color: #d6e6ea;
+        color: #005B71;
+    }
+
+.requests-page .users-reset-btn {
+    font-weight: 700;
+}
+
+.requests-page .request-total-box {
+    min-height: 60px;
+    height: 60px;
 }
