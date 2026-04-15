@@ -110,17 +110,21 @@ namespace AdvancedProject.Controllers
         // GET: MaintenanceRequests/Create
         public IActionResult Create()
         {
-            int tenantId = 1; // temporary (later replace with logged-in user)
+            int tenantId = 1;
 
             var units = _context.Leases
-                .Include(l => l.Unit)
                 .Where(l => l.TenantId == tenantId && l.Status == "Active")
-                .Select(l => l.Unit)
-                .Distinct()
+                .Select(l => new
+                {
+                    l.Unit.UnitId,
+                    DisplayName = l.Unit.UnitNumber + " (" + l.Unit.Property.Name + ")"
+                })
+                .ToList()
+                .GroupBy(x => x.UnitId)
+                .Select(g => g.First())
                 .ToList();
 
-            ViewData["UnitId"] = new SelectList(units, "UnitId", "UnitNumber");
-
+            ViewData["UnitId"] = new SelectList(units, "UnitId", "DisplayName");
             ViewData["SkillId"] = new SelectList(_context.Skills, "SkillId", "Name");
 
             return View();
@@ -169,13 +173,18 @@ namespace AdvancedProject.Controllers
             int tenantId = 1;
 
             var units = _context.Leases
-                .Include(l => l.Unit)
                 .Where(l => l.TenantId == tenantId && l.Status == "Active")
-                .Select(l => l.Unit)
-                .Distinct()
+                .Select(l => new
+                {
+                    l.Unit.UnitId,
+                    DisplayName = l.Unit.UnitNumber + " (" + l.Unit.Property.Name + ")"
+                })
+                .ToList()
+                .GroupBy(x => x.UnitId)
+                .Select(g => g.First())
                 .ToList();
 
-            ViewData["UnitId"] = new SelectList(units, "UnitId", "UnitNumber", maintenanceRequest.UnitId);
+            ViewData["UnitId"] = new SelectList(units, "UnitId", "DisplayName", maintenanceRequest.UnitId);
 
             ViewData["SkillId"] = new SelectList(_context.Skills, "SkillId", "Name", maintenanceRequest.SkillId);
 
