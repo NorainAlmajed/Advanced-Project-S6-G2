@@ -7,51 +7,64 @@
 <h1>Create</h1>
 
 <h4>MaintenanceRequest</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="UnitId" class="control-label"></label>
-                <select asp-for="UnitId" class="form-control" asp-items="ViewBag.UnitId">
-                    <option value="">-- Select Unit --</option>
-                </select>
-                <span asp-validation-for="UnitId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="SkillId" class="control-label"></label>
-                <select asp-for="SkillId" class="form-control" asp-items="ViewBag.SkillId">
-                    <option value="">-- Select Type --</option>
-                </select>
-                <span asp-validation-for="SkillId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Priority" class="control-label"></label>
-                <select asp-for="Priority" class="form-control">
-                    <option value="">-- Select Priority --</option>
-                    <option>Low</option>
-                    <option>Medium</option>
-                    <option>High</option>
-                </select>
-                <span asp-validation-for="Priority" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Notes" class="control-label"></label>
-                <input asp-for="Notes" class="form-control" placeholder="Describe issue..." />                
-                <span asp-validation-for="Notes" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+
+@if (ViewBag.HasActiveLease == false)
+{
+    <div class="alert alert-warning">
+        You cannot create a maintenance request because you do not have any active lease units.
     </div>
-</div>
+}
+else
+{
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+    <hr />
+    <div class="row">
+        <div class="col-md-4">
+            <form asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="UnitId" class="control-label"></label>
+                    <select asp-for="UnitId" class="form-control" asp-items="ViewBag.UnitId">
+                        <option value="">-- Select Unit --</option>
+                    </select>
+                    <span asp-validation-for="UnitId" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="SkillId" class="control-label"></label>
+                    <select asp-for="SkillId" class="form-control" asp-items="ViewBag.SkillId">
+                        <option value="">-- Select Type --</option>
+                    </select>
+                    <span asp-validation-for="SkillId" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Priority" class="control-label"></label>
+                    <select asp-for="Priority" class="form-control">
+                        <option value="">-- Select Priority --</option>
+                        <option>Low</option>
+                        <option>Medium</option>
+                        <option>High</option>
+                    </select>
+                    <span asp-validation-for="Priority" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Notes" class="control-label"></label>
+                    <input asp-for="Notes" class="form-control" placeholder="Describe issue..." />                
+                    <span asp-validation-for="Notes" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Create" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
+    </div>
 
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <div>
+        <a asp-action="Index">Back to List</a>
+    </div>
+
+    @section Scripts {
+    @{
+            await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        }
+}
 }

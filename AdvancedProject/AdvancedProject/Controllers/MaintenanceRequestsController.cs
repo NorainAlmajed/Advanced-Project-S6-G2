@@ -23,13 +23,14 @@ namespace AdvancedProject.Controllers
         public async Task<IActionResult> Index(string searchTerm, string priorityFilter, string statusFilter, int? typeFilter, string sortOrder)
         {
             var query = _context.MaintenanceRequests
-                .Include(m => m.AssignedStaff)
-                    .ThenInclude(s => s.User)
-                .Include(m => m.Skill)
-                .Include(m => m.Tenant)
-                    .ThenInclude(t => t.User)
-                .Include(m => m.Unit)
-                .AsQueryable();
+            .Include(m => m.AssignedStaff)
+                .ThenInclude(s => s.User)
+            .Include(m => m.Skill)
+            .Include(m => m.Tenant)
+                .ThenInclude(t => t.User)
+            .Include(m => m.Unit)
+                .ThenInclude(u => u.Property)
+            .AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(searchTerm))
             {
@@ -110,16 +111,28 @@ namespace AdvancedProject.Controllers
         // GET: MaintenanceRequests/Create
         public IActionResult Create()
         {
-            int tenantId = 1;
+            int tenantId = 3; // temporary logged-in user
 
-            var units = _context.Leases
+            var activeLeases = _context.Leases
+            .Include(l => l.Unit)
+            .ThenInclude(u => u.Property)
                 .Where(l => l.TenantId == tenantId && l.Status == "Active")
+                .ToList();
+
+            if (!activeLeases.Any())
+            {
+                ViewBag.HasActiveLease = false;
+                return View();
+            }
+
+            ViewBag.HasActiveLease = true;
+
+            var units = activeLeases
                 .Select(l => new
                 {
                     l.Unit.UnitId,
                     DisplayName = l.Unit.UnitNumber + " (" + l.Unit.Property.Name + ")"
                 })
-                .ToList()
                 .GroupBy(x => x.UnitId)
                 .Select(g => g.First())
                 .ToList();
