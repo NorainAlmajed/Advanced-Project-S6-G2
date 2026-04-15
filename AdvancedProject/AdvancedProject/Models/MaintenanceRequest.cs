@@ -1,8 +1,9 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore;
 
 namespace AdvancedProject.Models;
 
@@ -15,23 +16,26 @@ public partial class MaintenanceRequest
     [Key]
     public int RequestId { get; set; }
 
+    [Display(Name = "Unit Number")]
     public int UnitId { get; set; }
 
     public int TenantId { get; set; }
 
     public DateTime RequestDate { get; set; }
 
+    [Display(Name = " Maintenance Type")]
     public int SkillId { get; set; }
 
     [StringLength(20)]
     public string Priority { get; set; } = null!;
 
     [StringLength(20)]
-    public string Status { get; set; } = null!;
+    public string Status { get; set; } = "Pending";
 
     public int? AssignedStaffId { get; set; }
 
     [StringLength(500)]
+    [Display(Name = "Description")]
     public string? Notes { get; set; }
 
     public DateTime? CompletedDate { get; set; }
@@ -44,18 +48,22 @@ public partial class MaintenanceRequest
 
     public DateTime? InProgressTime { get; set; }
 
+    [ValidateNever]
     [ForeignKey("AssignedStaffId")]
     [InverseProperty("MaintenanceRequests")]
     public virtual MaintenanceStaff? AssignedStaff { get; set; }
 
+    [ValidateNever]
     [ForeignKey("SkillId")]
     [InverseProperty("MaintenanceRequests")]
     public virtual Skill Skill { get; set; } = null!;
 
+    [ValidateNever]
     [ForeignKey("TenantId")]
     [InverseProperty("MaintenanceRequests")]
     public virtual Tenant Tenant { get; set; } = null!;
 
+    [ValidateNever]
     [ForeignKey("UnitId")]
     [InverseProperty("MaintenanceRequests")]
     public virtual Unit Unit { get; set; } = null!;

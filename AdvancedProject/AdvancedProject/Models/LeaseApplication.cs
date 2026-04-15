@@ -28,6 +28,7 @@ public partial class LeaseApplication
 
     public DateTime StartDate { get; set; }
 
+    [Display(Name = "Duration")]
     public int DurationId { get; set; }
 
     [ForeignKey("DurationId")]
