@@ -52,6 +52,10 @@ public partial class APContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<Unit>()
+        .Property(u => u.IsActive)
+        .HasDefaultValue(true);
+
         modelBuilder.Entity<Lease>(entity =>
         {
             entity.Property(e => e.CreatedAt).HasDefaultValueSql("(getdate())");
@@ -60,6 +64,12 @@ public partial class APContext : DbContext
 
             entity.HasOne(d => d.Unit).WithMany(p => p.Leases).OnDelete(DeleteBehavior.ClientSetNull);
         });
+
+        base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<Property>()
+            .Property(p => p.IsActive)
+            .HasDefaultValue(true);
 
         modelBuilder.Entity<LeaseApplication>(entity =>
         {
@@ -160,6 +170,8 @@ public partial class APContext : DbContext
             .HasForeignKey(u => u.UnitTypeId);
         });
 
+
+
         modelBuilder.Entity<User>(entity =>
         {
             entity.Property(e => e.CreatedAt).HasDefaultValueSql("(getdate())");
@@ -230,19 +242,19 @@ public partial class APContext : DbContext
     ));
 
         modelBuilder.Entity<Property>().HasData(
-         new Property { PropertyId = 1, Name = "Abraj Al Lulu", Building = "611", Road = "271", Block = "220", City = "Manama", Description = "A modern residential complex offering comfort and essential amenities.", CreatedAt = new DateTime(2026, 1, 1, 12, 55, 21) },
-         new Property { PropertyId = 2, Name = "Almoayyed Tower", Building = "246", Road = "811", Block = "708", City = "Muharraq", Description = "A contemporary tower with modern facilities in a prime location.", CreatedAt = new DateTime(2026, 1, 5, 15, 22, 29) },
-         new Property { PropertyId = 3, Name = "United Tower", Building = "922", Road = "3062", Block = "461", City = "Riffa", Description = "A residential property with spacious apartments for families.", CreatedAt = new DateTime(2026, 1, 10, 3, 31, 43) }
+         new Property { PropertyId = 1, Name = "Abraj Al Lulu", Building = "611", Road = "271", Block = "220", City = "Manama", Description = "A modern residential complex offering comfort and essential amenities.", CreatedAt = new DateTime(2026, 1, 1, 12, 55, 21), IsActive = true },
+         new Property { PropertyId = 2, Name = "Almoayyed Tower", Building = "246", Road = "811", Block = "708", City = "Muharraq", Description = "A contemporary tower with modern facilities in a prime location.", CreatedAt = new DateTime(2026, 1, 5, 15, 22, 29), IsActive = true },
+         new Property { PropertyId = 3, Name = "United Tower", Building = "922", Road = "3062", Block = "461", City = "Riffa", Description = "A residential property with spacious apartments for families.", CreatedAt = new DateTime(2026, 1, 10, 3, 31, 43), IsActive = true }
      );
 
 
         modelBuilder.Entity<Unit>().HasData(
-       new Unit { UnitId = 1, PropertyId = 1, UnitNumber = "A1", UnitTypeId = 1, SizeSqFt = 100, RentAmount = 300, AvailabilityStatus = "Available", CreatedAt = new DateTime(2026, 1, 1, 4, 12, 55) },
-       new Unit { UnitId = 2, PropertyId = 1, UnitNumber = "A2", UnitTypeId = 1, SizeSqFt = 120, RentAmount = 350, AvailabilityStatus = "Occupied", CreatedAt = new DateTime(2026, 1, 2, 23, 16, 33) },
-       new Unit { UnitId = 3, PropertyId = 2, UnitNumber = "B1", UnitTypeId = 2, SizeSqFt = 200, RentAmount = 500, AvailabilityStatus = "Available", CreatedAt = new DateTime(2026, 1, 3, 9, 11, 7) },
-       new Unit { UnitId = 4, PropertyId = 2, UnitNumber = "B2", UnitTypeId = 2, SizeSqFt = 250, RentAmount = 550, AvailabilityStatus = "Occupied", CreatedAt = new DateTime(2026, 1, 4, 7, 16, 22) },
-       new Unit { UnitId = 5, PropertyId = 1, UnitNumber = "A3", UnitTypeId = 3, SizeSqFt = 80, RentAmount = 250, AvailabilityStatus = "Available", CreatedAt = new DateTime(2026, 1, 5, 10, 10, 12) },
-       new Unit { UnitId = 6, PropertyId = 3, UnitNumber = "C1", UnitTypeId = 1, SizeSqFt = 110, RentAmount = 320, AvailabilityStatus = "Available", CreatedAt = new DateTime(2026, 1, 6, 4, 15, 45) }
+       new Unit { UnitId = 1, PropertyId = 1, UnitNumber = "A1", UnitTypeId = 1, SizeSqFt = 100, RentAmount = 300, AvailabilityStatus = "Available", CreatedAt = new DateTime(2026, 1, 1, 4, 12, 55), IsActive = true },
+       new Unit { UnitId = 2, PropertyId = 1, UnitNumber = "A2", UnitTypeId = 1, SizeSqFt = 120, RentAmount = 350, AvailabilityStatus = "Occupied", CreatedAt = new DateTime(2026, 1, 2, 23, 16, 33), IsActive = true },
+       new Unit { UnitId = 3, PropertyId = 2, UnitNumber = "B1", UnitTypeId = 2, SizeSqFt = 200, RentAmount = 500, AvailabilityStatus = "Available", CreatedAt = new DateTime(2026, 1, 3, 9, 11, 7), IsActive = true },
+       new Unit { UnitId = 4, PropertyId = 2, UnitNumber = "B2", UnitTypeId = 2, SizeSqFt = 250, RentAmount = 550, AvailabilityStatus = "Occupied", CreatedAt = new DateTime(2026, 1, 4, 7, 16, 22), IsActive = true },
+       new Unit { UnitId = 5, PropertyId = 1, UnitNumber = "A3", UnitTypeId = 3, SizeSqFt = 80, RentAmount = 250, AvailabilityStatus = "Available", CreatedAt = new DateTime(2026, 1, 5, 10, 10, 12), IsActive = true },
+       new Unit { UnitId = 6, PropertyId = 3, UnitNumber = "C1", UnitTypeId = 1, SizeSqFt = 110, RentAmount = 320, AvailabilityStatus = "Available", CreatedAt = new DateTime(2026, 1, 6, 4, 15, 45), IsActive = true }
    );
 
 

@@ -42,6 +42,8 @@ public partial class Unit
     [InverseProperty("Unit")]
     public virtual ICollection<Lease> Leases { get; set; } = new List<Lease>();
 
+    public bool IsActive { get; set; } = true;
+
     [ValidateNever]
     [InverseProperty("Unit")]
     public virtual ICollection<MaintenanceRequest> MaintenanceRequests { get; set; } = new List<MaintenanceRequest>();

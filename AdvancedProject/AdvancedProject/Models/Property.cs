@@ -31,6 +31,8 @@ public partial class Property
     [StringLength(50)]
     public string Road { get; set; } = null!;
 
+    public bool IsActive { get; set; } = true;
+
     [InverseProperty("Property")]
     public virtual ICollection<Unit> Units { get; set; } = new List<Unit>();
 }
