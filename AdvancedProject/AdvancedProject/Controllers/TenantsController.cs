@@ -20,11 +20,30 @@ namespace AdvancedProject.Controllers
         }
 
         // GET: Tenants
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchTerm)
         {
-            var aPContext = _context.Tenants.Include(t => t.User);
-            return View(await aPContext.ToListAsync());
+            var tenantsQuery = _context.Users
+                .Where(u => u.Role == "Tenant")
+                .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                searchTerm = searchTerm.Trim();
+
+                tenantsQuery = tenantsQuery.Where(u =>
+                    u.Username.Contains(searchTerm) ||
+                    u.FullName.Contains(searchTerm) ||
+                    u.Email.Contains(searchTerm) ||
+                    u.Phone.Contains(searchTerm) ||
+                    u.Role.Contains(searchTerm));
+            }
+
+            ViewData["CurrentSearchTerm"] = searchTerm;
+
+            return View(await tenantsQuery.ToListAsync());
         }
+
+
 
         // GET: Tenants/Details/5
         public async Task<IActionResult> Details(int? id)

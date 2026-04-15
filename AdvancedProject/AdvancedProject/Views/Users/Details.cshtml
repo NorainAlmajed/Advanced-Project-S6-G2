@@ -17,6 +17,10 @@
         "staff" => "badge-soft-staff",
         _ => "badge-soft-default"
     };
+
+    string genderClass = Model.Gender == "F" ? "badge-gender-female" : "badge-gender-male";
+    string genderText = Model.Gender == "F" ? "Female" : "Male";
+   
 }
 
 <div class="details-page container py-4">
@@ -51,9 +55,12 @@
                         <h2 class="profile-name">@Model.FullName</h2>
                         <p class="profile-username mb-3">@@@Model.Username</p>
 
-                        <!-- ONLY ROLE (no active anymore) -->
-                        <div class="mb-3">
+
+                      
+
+                        <div class="mb-3 d-flex flex-wrap justify-content-center gap-2">
                             <span class="custom-pill @roleClass">@Model.Role</span>
+                            <span class="custom-pill @genderClass">@genderText</span>
                         </div>
 
                         <!-- Contact -->
