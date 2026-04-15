@@ -24,7 +24,9 @@
             <form asp-action="Index" method="get">
 
                 <div class="row g-3 align-items-end">
-                    <div class="col-lg-4">
+
+                    <!-- SEARCH -->
+                    <div class="col-lg-6">
                         <label class="form-label fw-semibold">Search Requests</label>
                         <input type="text"
                                name="searchTerm"
@@ -33,58 +35,56 @@
                                placeholder="Search by request ID, type, or tenant full name..." />
                     </div>
 
+                    <!-- FILTERS -->
                     <div class="col-lg-2">
                         <label class="form-label fw-semibold">Priority</label>
                         <select name="priorityFilter" class="form-select users-search-input">
-                            <option value="">All Priorities</option>
-                            <option value="High" selected="@(ViewBag.PriorityFilter == "High")">High</option>
-                            <option value="Medium" selected="@(ViewBag.PriorityFilter == "Medium")">Medium</option>
-                            <option value="Low" selected="@(ViewBag.PriorityFilter == "Low")">Low</option>
+                            <option value="">All</option>
+                            <option value="High">High</option>
+                            <option value="Medium">Medium</option>
+                            <option value="Low">Low</option>
                         </select>
                     </div>
 
                     <div class="col-lg-2">
                         <label class="form-label fw-semibold">Status</label>
                         <select name="statusFilter" class="form-select users-search-input">
-                            <option value="">All Statuses</option>
-                            <option value="Pending" selected="@(ViewBag.StatusFilter == "Pending")">Pending</option>
-                            <option value="In Progress" selected="@(ViewBag.StatusFilter == "In Progress")">In Progress</option>
-                            <option value="Resolved" selected="@(ViewBag.StatusFilter == "Resolved")">Resolved</option>
-                            <option value="Closed" selected="@(ViewBag.StatusFilter == "Closed")">Closed</option>
+                            <option value="">All</option>
+                            <option value="Pending">Pending</option>
+                            <option value="In Progress">In Progress</option>
+                            <option value="Resolved">Resolved</option>
+                            <option value="Closed">Closed</option>
                         </select>
                     </div>
 
                     <div class="col-lg-2">
-                        <label class="form-label fw-semibold">Type</label>
-                        <select name="typeFilter" class="form-select users-search-input" asp-items="ViewBag.TypeList">
-                            <option value="">All Types</option>
-                        </select>
-                    </div>
-
-                    <div class="col-lg-2">
-                        <label class="form-label fw-semibold">Sort By</label>
+                        <label class="form-label fw-semibold">Sort</label>
                         <select name="sortOrder" class="form-select users-search-input">
-                            <option value="" selected="@(string.IsNullOrEmpty(ViewBag.SortOrder))">Latest First</option>
-                            <option value="oldest" selected="@(ViewBag.SortOrder == "oldest")">Oldest First</option>
-                            <option value="id_asc" selected="@(ViewBag.SortOrder == "id_asc")">Request ID Asc</option>
-                            <option value="id_desc" selected="@(ViewBag.SortOrder == "id_desc")">Request ID Desc</option>
+                            <option value="">Latest</option>
+                            <option value="oldest">Oldest</option>
                         </select>
                     </div>
 
-                    <div class="col-lg-2 d-grid">
-                        <button type="submit" class="btn btn-primary users-search-btn">Search</button>
+                    <!-- SECOND ROW -->
+                    <div class="col-lg-4 d-grid">
+                        <button type="submit" class="btn users-search-btn">
+                            Search
+                        </button>
                     </div>
 
-                    <div class="col-lg-2 d-grid">
-                        <a asp-action="Index" class="btn btn-outline-light users-reset-btn">Reset</a>
+                    <div class="col-lg-4 d-grid">
+                        <a asp-action="Index" class="btn btn-outline-light users-reset-btn">
+                            Reset
+                        </a>
                     </div>
 
-                    <div class="col-lg-2">
-                        <div class="request-total-box request-total-box-inline">
+                    <div class="col-lg-4">
+                        <div class="request-total-box">
                             <div class="request-total-label">TOTAL REQUESTS</div>
                             <div class="request-total-value">@totalRequests</div>
                         </div>
                     </div>
+
                 </div>
             </form>
         </div>
@@ -125,24 +125,24 @@
                 <div class="col-12 col-md-6 col-xl-4">
                     <div class="card request-card @priorityCardClass h-100">
                         <div class="card-body p-4 d-flex flex-column">
-                            <div class="d-flex justify-content-between align-items-start gap-3 mb-3">
-                                <div class="d-flex align-items-center gap-2 flex-wrap">
-                                    <span class="request-id-badge">#@item.RequestId</span>
-                                    <span class="custom-pill @priorityClass">@item.Priority</span>
-                                    <span class="custom-pill @statusClass">@item.Status</span>
-                                </div>
-
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <span class="request-id">#@item.RequestId</span>
                                 <span class="request-date-small">
                                     @item.RequestDate.ToString("dd MMM yyyy")
                                 </span>
                             </div>
 
-                            <div class="mb-3">
+                            <div class="d-flex gap-2 mb-2">
+                                <span class="custom-pill @priorityClass">@item.Priority</span>
+                                <span class="custom-pill @statusClass">@item.Status</span>
+                            </div>
+
+                            <div class="mb-2">
                                 <p class="small-label mb-2">TYPE</p>
                                 <h3 class="request-title mb-0">@item.Skill?.Name</h3>
                             </div>
 
-                            <div class="request-meta-list mb-3">
+                            <div class="request-meta-list mb-2">
                                 <div class="request-meta-item">
                                     <span class="request-meta-label">Tenant</span>
                                     <span class="request-meta-value">@item.Tenant?.User?.FullName</span>
@@ -150,7 +150,7 @@
 
                                 <div class="request-meta-item">
                                     <span class="request-meta-label">Unit</span>
-                                    <span class="request-meta-value">@item.Unit?.UnitNumber</span>
+                                    <span class="request-meta-value">@item.Unit?.UnitNumber (@item.Unit?.Property?.Name)</span>
                                 </div>
 
                                
