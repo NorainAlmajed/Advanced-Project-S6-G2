@@ -178,19 +178,19 @@ public partial class APContext : DbContext
         });
 
         modelBuilder.Entity<User>().HasData(
-      new User { UserId = 1, Username = "manager", Password = "Manager123", FullName = "System Manager", Email = "manager@mail.com", Phone = "33338876", Role = "Manager", IsActive = true, CreatedAt = new DateTime(2026, 1, 1) },
+      new User { UserId = 1, Username = "manager", Password = "Manager123", FullName = "System Manager", Email = "manager@mail.com", Phone = "33338876", Role = "Manager", IsActive = true, CreatedAt = new DateTime(2026, 1, 1), Gender = "M" },
 
-      new User { UserId = 2, Username = "zahraa.hubail", Password = "Zahraa.123", FullName = "Zahraa Hubail", Email = "zahraa.hubail8@gmail.com", Phone = "33735771", Role = "Tenant", IsActive = true, CreatedAt = new DateTime(2026, 2, 12, 2, 3, 4) },
-      new User { UserId = 3, Username = "raghad.aleskafi", Password = "Raghad.123", FullName = "Raghad Aleskafi", Email = "raghad@gmail.com", Phone = "39004266", Role = "Tenant", IsActive = true, CreatedAt = new DateTime(2026, 3, 15, 15, 12, 55) },
-      new User { UserId = 4, Username = "fatima.alaiwi", Password = "Fatima.123", FullName = "Fatima Alaiwi", Email = "fatima@gmail.com", Phone = "36635578", Role = "Tenant", IsActive = true, CreatedAt = new DateTime(2026, 3, 20, 6, 11, 2) },
-      new User { UserId = 5, Username = "norain.hassan", Password = "Norain.123", FullName = "Norain Hassan", Email = "norain@mail.com", Phone = "33744063", Role = "Tenant", IsActive = true, CreatedAt = new DateTime(2026, 3, 25, 5, 15, 27) },
-      new User { UserId = 6, Username = "ahmed.ali", Password = "Ahmed.999", FullName = "Ahmed Ali", Email = "ahmed.ali@gmail.com", Phone = "33871125", Role = "Tenant", IsActive = true, CreatedAt = new DateTime(2026, 3, 28, 7, 17, 22) },
+      new User { UserId = 2, Username = "zahraa.hubail", Password = "Zahraa.123", FullName = "Zahraa Hubail", Email = "zahraa.hubail8@gmail.com", Phone = "33735771", Role = "Tenant", IsActive = true, CreatedAt = new DateTime(2026, 2, 12, 2, 3, 4), Gender = "F" },
+      new User { UserId = 3, Username = "raghad.aleskafi", Password = "Raghad.123", FullName = "Raghad Aleskafi", Email = "raghad@gmail.com", Phone = "39004266", Role = "Tenant", IsActive = true, CreatedAt = new DateTime(2026, 3, 15, 15, 12, 55), Gender = "F" },
+      new User { UserId = 4, Username = "fatima.alaiwi", Password = "Fatima.123", FullName = "Fatima Alaiwi", Email = "fatima@gmail.com", Phone = "36635578", Role = "Tenant", IsActive = true, CreatedAt = new DateTime(2026, 3, 20, 6, 11, 2), Gender = "F" },
+      new User { UserId = 5, Username = "norain.almajed", Password = "Norain.123", FullName = "Norain Almajed", Email = "norain@mail.com", Phone = "33744063", Role = "Tenant", IsActive = true, CreatedAt = new DateTime(2026, 3, 25, 5, 15, 27), Gender = "F" },
+      new User { UserId = 6, Username = "ahmed.ali", Password = "Ahmed.999", FullName = "Ahmed Ali", Email = "ahmed.ali@gmail.com", Phone = "33871125", Role = "Tenant", IsActive = true, CreatedAt = new DateTime(2026, 3, 28, 7, 17, 22), Gender = "M" },
 
-      new User { UserId = 7, Username = "ali.hassan", Password = "Ali.123", FullName = "Ali Hassan", Email = "alihassan@mail.com", Phone = "39207552", Role = "Staff", IsActive = true, CreatedAt = new DateTime(2026, 3, 10, 9, 16, 34) },
-      new User { UserId = 8, Username = "sara.mohamed", Password = "Sara.888", FullName = "Sara Mohamed", Email = "sara.mohamed@gmail.com", Phone = "33699152", Role = "Staff", IsActive = true, CreatedAt = new DateTime(2026, 3, 11, 9, 10, 10) },
-      new User { UserId = 9, Username = "abbas.hadi", Password = "Abbas.123", FullName = "Abbas Hadi", Email = "abbas@gmail.com", Phone = "33546672", Role = "Staff", IsActive = true, CreatedAt = new DateTime(2026, 3, 12, 10, 2, 15) },
-      new User { UserId = 10, Username = "laila.yaser", Password = "Laila.999", FullName = "Laila Yaser", Email = "laila@gmail.com", Phone = "39126632", Role = "Staff", IsActive = true, CreatedAt = new DateTime(2026, 3, 13, 6, 21, 41) },
-      new User { UserId = 11, Username = "mohammed.karim", Password = "mohammed.123", FullName = "Mohammed Karim", Email = "mohammed@gmail.com", Phone = "33921092", Role = "Staff", IsActive = true, CreatedAt = new DateTime(2026, 3, 14, 8, 13, 44) }
+      new User { UserId = 7, Username = "ali.hassan", Password = "Ali.123", FullName = "Ali Hassan", Email = "alihassan@mail.com", Phone = "39207552", Role = "Staff", IsActive = true, CreatedAt = new DateTime(2026, 3, 10, 9, 16, 34), Gender = "M" },
+      new User { UserId = 8, Username = "sara.mohamed", Password = "Sara.888", FullName = "Sara Mohamed", Email = "sara.mohamed@gmail.com", Phone = "33699152", Role = "Staff", IsActive = true, CreatedAt = new DateTime(2026, 3, 11, 9, 10, 10), Gender = "F" },
+      new User { UserId = 9, Username = "abbas.hadi", Password = "Abbas.123", FullName = "Abbas Hadi", Email = "abbas@gmail.com", Phone = "33546672", Role = "Staff", IsActive = true, CreatedAt = new DateTime(2026, 3, 12, 10, 2, 15), Gender = "M" },
+      new User { UserId = 10, Username = "layla.yaser", Password = "Layla.999", FullName = "Layla Yaser", Email = "layla@gmail.com", Phone = "39126632", Role = "Staff", IsActive = true, CreatedAt = new DateTime(2026, 3, 13, 6, 21, 41), Gender = "F" },
+      new User { UserId = 11, Username = "mohammed.karim", Password = "mohammed.123", FullName = "Mohammed Karim", Email = "mohammed@gmail.com", Phone = "33921092", Role = "Staff", IsActive = true, CreatedAt = new DateTime(2026, 3, 14, 8, 13, 44), Gender = "M" }
       );
 
 

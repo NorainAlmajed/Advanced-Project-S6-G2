@@ -33,6 +33,7 @@ public partial class User
     public DateTime CreatedAt { get; set; }
 
     public bool IsActive { get; set; }
+    public string Gender { get; set; } = "M";
 
     [InverseProperty("User")]
     public virtual ICollection<MaintenanceStaff> MaintenanceStaffs { get; set; } = new List<MaintenanceStaff>();
