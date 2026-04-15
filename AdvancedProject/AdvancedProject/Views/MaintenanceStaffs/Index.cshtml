@@ -97,7 +97,8 @@
                         <th>Phone</th>
                         <th>Role</th>
                         <th>Availability</th>
-                        <th>Skills</th>
+                        @* <th>Skills</th> *@
+
                         <th class="text-end">Action</th>
                     </tr>
                 </thead>
@@ -128,21 +129,7 @@
                                         @item.AvailabilityStatus
                                     </span>
                                 </td>
-                                <td>
-                                    @if (item.Skills != null && item.Skills.Any())
-                                    {
-                                        <div class="d-flex flex-wrap gap-1">
-                                            @foreach (var skill in item.Skills)
-                                            {
-                                                <span class="custom-pill badge-soft-manager">@skill.Name</span>
-                                            }
-                                        </div>
-                                    }
-                                    else
-                                    {
-                                        <span class="text-muted">No skills</span>
-                                    }
-                                </td>
+                               
                                 <td class="text-end">
                                     <a asp-action="Details" asp-route-id="@item.StaffId" class="btn btn-primary btn-sm users-details-btn">
                                         View Details
@@ -154,7 +141,8 @@
                     else
                     {
                         <tr>
-                            <td colspan="8" class="text-center py-4 text-muted">
+                            <td colspan="7" class="text-center py-4 text-muted">
+
                                 No maintenance staff found.
                             </td>
                         </tr>
