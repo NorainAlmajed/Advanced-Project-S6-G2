@@ -127,8 +127,6 @@ namespace AdvancedProject.Controllers
         }
 
         // POST: MaintenanceRequests/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("UnitId,SkillId,Priority,Notes")] MaintenanceRequest maintenanceRequest)
@@ -185,7 +183,6 @@ namespace AdvancedProject.Controllers
         }
 
         // GET: MaintenanceRequests/Edit/5
-        // GET: MaintenanceRequests/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -200,21 +197,27 @@ namespace AdvancedProject.Controllers
 
             int tenantId = maintenanceRequest.TenantId;
 
-            // ✅ FIXED: get ALL active lease units properly (no Distinct on entity)
-            var units = await _context.Leases
+            // STEP 1: get UNIT IDs from leases only (safe + stable)
+            var unitIds = await _context.Leases
                 .Where(l => l.TenantId == tenantId && l.Status == "Active")
-                .Select(l => new
-                {
-                    l.Unit.UnitId,
-                    l.Unit.UnitNumber
-                })
+                .Select(l => l.UnitId)
                 .Distinct()
+                .ToListAsync();
+
+            // STEP 2: rebuild display from Units table (clean join)
+            var units = await _context.Units
+                .Where(u => unitIds.Contains(u.UnitId))
+                .Select(u => new
+                {
+                    u.UnitId,
+                    DisplayName = u.UnitNumber + " (" + u.Property.Name + ")"
+                })
                 .ToListAsync();
 
             ViewData["UnitId"] = new SelectList(
                 units,
                 "UnitId",
-                "UnitNumber",
+                "DisplayName",
                 maintenanceRequest.UnitId
             );
 
@@ -242,9 +245,6 @@ namespace AdvancedProject.Controllers
         }
 
         // POST: MaintenanceRequests/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        // POST: MaintenanceRequests/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, MaintenanceRequest form)
@@ -259,7 +259,6 @@ namespace AdvancedProject.Controllers
 
             if (ModelState.IsValid)
             {
-                // ONLY editable fields
                 request.SkillId = form.SkillId;
                 request.Priority = form.Priority;
                 request.Status = form.Status;
@@ -270,7 +269,7 @@ namespace AdvancedProject.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            // Reload Skill dropdown
+            // reload dropdowns if validation fails
             ViewData["SkillId"] = new SelectList(
                 _context.Skills,
                 "SkillId",
@@ -278,19 +277,18 @@ namespace AdvancedProject.Controllers
                 form.SkillId
             );
 
-            // Reload Staff dropdown (show full name)
             ViewData["AssignedStaffId"] = new SelectList(
-             _context.MaintenanceStaffs
-                 .Include(s => s.User)
-                 .Select(s => new
-                 {
-                     s.StaffId,
-                     FullName = s.User.FullName
-                 }),
-             "StaffId",
-             "FullName",
-             form.AssignedStaffId
-         );
+                _context.MaintenanceStaffs
+                    .Include(s => s.User)
+                    .Select(s => new
+                    {
+                        s.StaffId,
+                        FullName = s.User.FullName
+                    }),
+                "StaffId",
+                "FullName",
+                form.AssignedStaffId
+            );
 
             return View(form);
         }

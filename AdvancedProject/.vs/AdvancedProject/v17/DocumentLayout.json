@@ -3,8 +3,20 @@
   "WorkspaceRootPath": "C:\\Users\\HP\\Desktop\\Advanced-Project-S6-G2\\AdvancedProject\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{B4100081-BB0A-41BA-A933-BD3CCDB833B9}|AdvancedProject\\AdvancedProject.csproj|c:\\users\\hp\\desktop\\advanced-project-s6-g2\\advancedproject\\advancedproject\\views\\maintenancerequests\\edit.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{B4100081-BB0A-41BA-A933-BD3CCDB833B9}|AdvancedProject\\AdvancedProject.csproj|solutionrelative:advancedproject\\views\\maintenancerequests\\edit.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B4100081-BB0A-41BA-A933-BD3CCDB833B9}|AdvancedProject\\AdvancedProject.csproj|c:\\users\\hp\\desktop\\advanced-project-s6-g2\\advancedproject\\advancedproject\\views\\maintenancerequests\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{B4100081-BB0A-41BA-A933-BD3CCDB833B9}|AdvancedProject\\AdvancedProject.csproj|solutionrelative:advancedproject\\views\\maintenancerequests\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{B4100081-BB0A-41BA-A933-BD3CCDB833B9}|AdvancedProject\\AdvancedProject.csproj|c:\\users\\hp\\desktop\\advanced-project-s6-g2\\advancedproject\\advancedproject\\controllers\\maintenancerequestscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{B4100081-BB0A-41BA-A933-BD3CCDB833B9}|AdvancedProject\\AdvancedProject.csproj|solutionrelative:advancedproject\\controllers\\maintenancerequestscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B4100081-BB0A-41BA-A933-BD3CCDB833B9}|AdvancedProject\\AdvancedProject.csproj|c:\\users\\hp\\desktop\\advanced-project-s6-g2\\advancedproject\\advancedproject\\views\\maintenancerequests\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{B4100081-BB0A-41BA-A933-BD3CCDB833B9}|AdvancedProject\\AdvancedProject.csproj|solutionrelative:advancedproject\\views\\maintenancerequests\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{B4100081-BB0A-41BA-A933-BD3CCDB833B9}|AdvancedProject\\AdvancedProject.csproj|c:\\users\\hp\\desktop\\advanced-project-s6-g2\\advancedproject\\advancedproject\\models\\maintenancerequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -15,16 +27,8 @@
       "RelativeMoniker": "D:0:0:{B4100081-BB0A-41BA-A933-BD3CCDB833B9}|AdvancedProject\\AdvancedProject.csproj|solutionrelative:advancedproject\\models\\tenant.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{B4100081-BB0A-41BA-A933-BD3CCDB833B9}|AdvancedProject\\AdvancedProject.csproj|c:\\users\\hp\\desktop\\advanced-project-s6-g2\\advancedproject\\advancedproject\\views\\maintenancerequests\\edit.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{B4100081-BB0A-41BA-A933-BD3CCDB833B9}|AdvancedProject\\AdvancedProject.csproj|solutionrelative:advancedproject\\views\\maintenancerequests\\edit.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{B4100081-BB0A-41BA-A933-BD3CCDB833B9}|AdvancedProject\\AdvancedProject.csproj|c:\\users\\hp\\desktop\\advanced-project-s6-g2\\advancedproject\\advancedproject\\models\\skill.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{B4100081-BB0A-41BA-A933-BD3CCDB833B9}|AdvancedProject\\AdvancedProject.csproj|solutionrelative:advancedproject\\models\\skill.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{B4100081-BB0A-41BA-A933-BD3CCDB833B9}|AdvancedProject\\AdvancedProject.csproj|c:\\users\\hp\\desktop\\advanced-project-s6-g2\\advancedproject\\advancedproject\\views\\maintenancerequests\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{B4100081-BB0A-41BA-A933-BD3CCDB833B9}|AdvancedProject\\AdvancedProject.csproj|solutionrelative:advancedproject\\views\\maintenancerequests\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{B4100081-BB0A-41BA-A933-BD3CCDB833B9}|AdvancedProject\\AdvancedProject.csproj|c:\\users\\hp\\desktop\\advanced-project-s6-g2\\advancedproject\\advancedproject\\wwwroot\\css\\site.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
@@ -39,10 +43,6 @@
       "RelativeMoniker": "D:0:0:{B4100081-BB0A-41BA-A933-BD3CCDB833B9}|AdvancedProject\\AdvancedProject.csproj|solutionrelative:advancedproject\\views\\maintenancerequests\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{B4100081-BB0A-41BA-A933-BD3CCDB833B9}|AdvancedProject\\AdvancedProject.csproj|c:\\users\\hp\\desktop\\advanced-project-s6-g2\\advancedproject\\advancedproject\\views\\maintenancerequests\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{B4100081-BB0A-41BA-A933-BD3CCDB833B9}|AdvancedProject\\AdvancedProject.csproj|solutionrelative:advancedproject\\views\\maintenancerequests\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{B4100081-BB0A-41BA-A933-BD3CCDB833B9}|AdvancedProject\\AdvancedProject.csproj|c:\\users\\hp\\desktop\\advanced-project-s6-g2\\advancedproject\\advancedproject\\data\\apcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{B4100081-BB0A-41BA-A933-BD3CCDB833B9}|AdvancedProject\\AdvancedProject.csproj|solutionrelative:advancedproject\\data\\apcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
@@ -54,7 +54,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 151,
-          "SelectedChildIndex": 11,
+          "SelectedChildIndex": 7,
           "Children": [
             {
               "$type": "Bookmark",
@@ -62,7 +62,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 5,
               "Title": "Tenant.cs",
               "DocumentMoniker": "C:\\Users\\HP\\Desktop\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Models\\Tenant.cs",
               "RelativeDocumentMoniker": "AdvancedProject\\Models\\Tenant.cs",
@@ -70,12 +70,11 @@
               "RelativeToolTip": "AdvancedProject\\Models\\Tenant.cs",
               "ViewState": "AgIAAA8AAAAAAAAAAAA1wAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-15T18:43:10.33Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-15T18:43:10.33Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 6,
               "Title": "Skill.cs",
               "DocumentMoniker": "C:\\Users\\HP\\Desktop\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Models\\Skill.cs",
               "RelativeDocumentMoniker": "AdvancedProject\\Models\\Skill.cs",
@@ -83,12 +82,11 @@
               "RelativeToolTip": "AdvancedProject\\Models\\Skill.cs",
               "ViewState": "AgIAAAQAAAAAAAAAAAAYwBAAAAAeAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-15T18:34:04.627Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-15T18:34:04.627Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 7,
               "Title": "site.css",
               "DocumentMoniker": "C:\\Users\\HP\\Desktop\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\wwwroot\\css\\site.css",
               "RelativeDocumentMoniker": "AdvancedProject\\wwwroot\\css\\site.css",
@@ -100,7 +98,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 8,
               "Title": "_Layout.cshtml",
               "DocumentMoniker": "C:\\Users\\HP\\Desktop\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Views\\Shared\\_Layout.cshtml",
               "RelativeDocumentMoniker": "AdvancedProject\\Views\\Shared\\_Layout.cshtml",
@@ -112,7 +110,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 9,
               "Title": "Create.cshtml",
               "DocumentMoniker": "C:\\Users\\HP\\Desktop\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Views\\MaintenanceRequests\\Create.cshtml",
               "RelativeDocumentMoniker": "AdvancedProject\\Views\\MaintenanceRequests\\Create.cshtml",
@@ -124,7 +122,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 3,
               "Title": "Details.cshtml",
               "DocumentMoniker": "C:\\Users\\HP\\Desktop\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Views\\MaintenanceRequests\\Details.cshtml",
               "RelativeDocumentMoniker": "AdvancedProject\\Views\\MaintenanceRequests\\Details.cshtml",
@@ -132,24 +130,25 @@
               "RelativeToolTip": "AdvancedProject\\Views\\MaintenanceRequests\\Details.cshtml",
               "ViewState": "AgIAAD8AAAAAAAAAAAAowGAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-04-15T17:11:20.512Z"
+              "WhenOpened": "2026-04-15T17:11:20.512Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 0,
               "Title": "Edit.cshtml",
               "DocumentMoniker": "C:\\Users\\HP\\Desktop\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Views\\MaintenanceRequests\\Edit.cshtml",
               "RelativeDocumentMoniker": "AdvancedProject\\Views\\MaintenanceRequests\\Edit.cshtml",
               "ToolTip": "C:\\Users\\HP\\Desktop\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Views\\MaintenanceRequests\\Edit.cshtml",
               "RelativeToolTip": "AdvancedProject\\Views\\MaintenanceRequests\\Edit.cshtml",
-              "ViewState": "AgIAAB4AAAAAAAAAAAAqwDoAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAACAAAAAAAAAAAAAqwDoAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2026-04-15T17:11:11.629Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 1,
               "Title": "Index.cshtml",
               "DocumentMoniker": "C:\\Users\\HP\\Desktop\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Views\\MaintenanceRequests\\Index.cshtml",
               "RelativeDocumentMoniker": "AdvancedProject\\Views\\MaintenanceRequests\\Index.cshtml",
@@ -162,7 +161,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 4,
               "Title": "MaintenanceRequest.cs",
               "DocumentMoniker": "C:\\Users\\HP\\Desktop\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Models\\MaintenanceRequest.cs",
               "RelativeDocumentMoniker": "AdvancedProject\\Models\\MaintenanceRequest.cs",
@@ -170,8 +169,7 @@
               "RelativeToolTip": "AdvancedProject\\Models\\MaintenanceRequest.cs",
               "ViewState": "AgIAABIAAAAAAAAAAAAmwBUAAAAXAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-15T17:10:32.555Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-15T17:10:32.555Z"
             },
             {
               "$type": "Document",
@@ -187,13 +185,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 2,
               "Title": "MaintenanceRequestsController.cs",
               "DocumentMoniker": "C:\\Users\\HP\\Desktop\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Controllers\\MaintenanceRequestsController.cs",
               "RelativeDocumentMoniker": "AdvancedProject\\Controllers\\MaintenanceRequestsController.cs",
               "ToolTip": "C:\\Users\\HP\\Desktop\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Controllers\\MaintenanceRequestsController.cs",
               "RelativeToolTip": "AdvancedProject\\Controllers\\MaintenanceRequestsController.cs",
-              "ViewState": "AgIAADoBAAAAAAAAAAAmwEgBAAANAAAAAAAAAA==",
+              "ViewState": "AgIAADYBAAAAAAAAAAAYwFIBAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-04-15T17:10:14.777Z",
               "EditorCaption": ""
@@ -211,6 +209,10 @@
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{d78612c7-9962-4b83-95d9-268046dad23a}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
             }
           ]
         }
