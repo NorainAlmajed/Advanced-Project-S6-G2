@@ -52,3 +52,6 @@ public partial class Lease
     [InverseProperty("Leases")]
     public virtual Unit Unit { get; set; } 
 }
+
+
+

@@ -20,7 +20,7 @@ namespace AdvancedProject.Controllers
         }
 
         // GET: MaintenanceStaffs
-        public async Task<IActionResult> Index(string searchTerm, string availabilityFilter, int? skillId)
+        public async Task<IActionResult> Index(string searchTerm, string availabilityFilter, List<int> skillIds)
         {
             var staffQuery = _context.MaintenanceStaffs
                 .Include(m => m.User)
@@ -44,18 +44,28 @@ namespace AdvancedProject.Controllers
                 staffQuery = staffQuery.Where(m => m.AvailabilityStatus == availabilityFilter);
             }
 
-            if (skillId.HasValue)
+            if (skillIds != null && skillIds.Any())
             {
-                staffQuery = staffQuery.Where(m => m.Skills.Any(s => s.SkillId == skillId.Value));
+                foreach (var skillId in skillIds)
+                {
+                    staffQuery = staffQuery.Where(m => m.Skills.Any(s => s.SkillId == skillId));
+                }
             }
+
+            var staffList = await staffQuery.ToListAsync();
+            var allSkills = await _context.Skills.ToListAsync();
 
             ViewData["CurrentSearchTerm"] = searchTerm;
             ViewData["CurrentAvailabilityFilter"] = availabilityFilter;
-            ViewData["CurrentSkillId"] = skillId;
+            ViewData["CurrentSkillIds"] = skillIds ?? new List<int>();
+            ViewData["Skills"] = allSkills;
 
-            ViewData["Skills"] = new SelectList(await _context.Skills.ToListAsync(), "SkillId", "Name", skillId);
+            if (skillIds != null && skillIds.Count > 1 && !staffList.Any())
+            {
+                ViewData["SkillMatchMessage"] = "No maintenance staff member has all the selected skills together.";
+            }
 
-            return View(await staffQuery.ToListAsync());
+            return View(staffList);
         }
 
         // GET: MaintenanceStaffs/Details/5
@@ -87,8 +97,6 @@ namespace AdvancedProject.Controllers
         }
 
         // POST: MaintenanceStaffs/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("StaffId,AvailabilityStatus,UserId")] MaintenanceStaff maintenanceStaff)
@@ -99,6 +107,7 @@ namespace AdvancedProject.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+
             ViewData["UserId"] = new SelectList(_context.Users, "UserId", "UserId", maintenanceStaff.UserId);
             return View(maintenanceStaff);
         }
@@ -116,13 +125,12 @@ namespace AdvancedProject.Controllers
             {
                 return NotFound();
             }
+
             ViewData["UserId"] = new SelectList(_context.Users, "UserId", "UserId", maintenanceStaff.UserId);
             return View(maintenanceStaff);
         }
 
         // POST: MaintenanceStaffs/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("StaffId,AvailabilityStatus,UserId")] MaintenanceStaff maintenanceStaff)
@@ -150,8 +158,10 @@ namespace AdvancedProject.Controllers
                         throw;
                     }
                 }
+
                 return RedirectToAction(nameof(Index));
             }
+
             ViewData["UserId"] = new SelectList(_context.Users, "UserId", "UserId", maintenanceStaff.UserId);
             return View(maintenanceStaff);
         }
@@ -167,6 +177,7 @@ namespace AdvancedProject.Controllers
             var maintenanceStaff = await _context.MaintenanceStaffs
                 .Include(m => m.User)
                 .FirstOrDefaultAsync(m => m.StaffId == id);
+
             if (maintenanceStaff == null)
             {
                 return NotFound();

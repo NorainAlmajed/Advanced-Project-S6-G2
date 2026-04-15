@@ -1,13 +1,18 @@
 ﻿@model IEnumerable<AdvancedProject.Models.MaintenanceStaff>
-@using Microsoft.AspNetCore.Mvc.Rendering
+@using AdvancedProject.Models
 
 @{
     ViewData["Title"] = "Maintenance Staff";
 
     string currentSearch = ViewData["CurrentSearchTerm"]?.ToString() ?? "";
     string currentAvailability = ViewData["CurrentAvailabilityFilter"]?.ToString() ?? "";
-    int? currentSkillId = ViewData["CurrentSkillId"] as int?;
-    var skillsList = ViewData["Skills"] as SelectList;
+    var currentSkillIds = ViewData["CurrentSkillIds"] as List<int> ?? new List<int>();
+    var skillsList = ViewData["Skills"] as List<Skill> ?? new List<Skill>();
+    string skillMatchMessage = ViewData["SkillMatchMessage"]?.ToString() ?? "";
+
+    string selectedSkillsText = currentSkillIds.Any()
+        ? $"{currentSkillIds.Count} skill(s) selected"
+        : "All Skills";
 }
 
 <div class="container py-4 users-page">
@@ -67,11 +72,57 @@
                 </div>
 
                 <div class="col-lg-2">
-                    <label for="skillId" class="form-label fw-semibold">Skill</label>
-                    <select id="skillId" name="skillId" asp-items="skillsList" class="form-select form-select-lg users-search-input">
-                        <option value="">All Skills</option>
-                    </select>
+                    <label class="form-label fw-semibold">Skill</label>
+                    <div class="dropdown">
+                        <button class="btn btn-outline-secondary dropdown-toggle w-100 text-start"
+                                type="button"
+                                id="skillsDropdownButton"
+                                data-bs-toggle="dropdown"
+                                data-bs-auto-close="outside"
+                                aria-expanded="false">
+
+
+                            <span id="skillsDropdownText">@selectedSkillsText</span>
+                        </button>
+
+                        <div class="dropdown-menu p-3 w-100" style="min-width: 260px; max-height: 260px; overflow-y: auto;">
+                            @if (skillsList.Any())
+                            {
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" value="" id="selectAllSkills">
+                                    <label class="form-check-label fw-semibold" for="selectAllSkills">
+                                        Select / Clear All
+                                    </label>
+                                </div>
+
+                                <hr class="my-2" />
+
+                                @foreach (var skill in skillsList)
+                                {
+                                    bool isChecked = currentSkillIds.Contains(skill.SkillId);
+
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input skill-checkbox"
+                                               type="checkbox"
+                                               name="skillIds"
+                                               value="@skill.SkillId"
+                                               id="skill_@skill.SkillId"
+                                               @(isChecked ? "checked" : "") />
+                                        <label class="form-check-label" for="skill_@skill.SkillId">
+                                            @skill.Name
+                                        </label>
+                                    </div>
+                                }
+                            }
+                            else
+                            {
+                                <span class="text-muted">No skills available</span>
+                            }
+                        </div>
+                    </div>
                 </div>
+
+
 
                 <div class="col-lg-2 d-flex gap-2">
                     <button type="submit" class="btn btn-primary users-search-btn flex-fill">
@@ -86,6 +137,13 @@
         </div>
     </div>
 
+    @if (!string.IsNullOrEmpty(skillMatchMessage))
+    {
+        <div class="alert alert-warning shadow-soft border-0 mb-4">
+            @skillMatchMessage
+        </div>
+    }
+
     <div class="card shadow-soft border-0 users-table-card">
         <div class="table-responsive">
             <table class="table mb-0 users-table align-middle">
@@ -97,8 +155,6 @@
                         <th>Phone</th>
                         <th>Role</th>
                         <th>Availability</th>
-                        @* <th>Skills</th> *@
-
                         <th class="text-end">Action</th>
                     </tr>
                 </thead>
@@ -129,7 +185,6 @@
                                         @item.AvailabilityStatus
                                     </span>
                                 </td>
-                               
                                 <td class="text-end">
                                     <a asp-action="Details" asp-route-id="@item.StaffId" class="btn btn-primary btn-sm users-details-btn">
                                         View Details
@@ -142,7 +197,6 @@
                     {
                         <tr>
                             <td colspan="7" class="text-center py-4 text-muted">
-
                                 No maintenance staff found.
                             </td>
                         </tr>
@@ -153,3 +207,44 @@
     </div>
 
 </div>
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const skillCheckboxes = document.querySelectorAll(".skill-checkbox");
+            const selectAllCheckbox = document.getElementById("selectAllSkills");
+            const dropdownText = document.getElementById("skillsDropdownText");
+
+            function updateDropdownText() {
+                const checked = document.querySelectorAll(".skill-checkbox:checked");
+                const count = checked.length;
+
+                if (count === 0) {
+                    dropdownText.textContent = "All Skills";
+                } else if (count === 1) {
+                    const label = checked[0].closest(".form-check").querySelector("label").textContent.trim();
+                    dropdownText.textContent = label;
+                } else {
+                    dropdownText.textContent = count + " skills selected";
+                }
+
+                selectAllCheckbox.checked = count === skillCheckboxes.length && skillCheckboxes.length > 0;
+            }
+
+            if (selectAllCheckbox) {
+                selectAllCheckbox.addEventListener("change", function () {
+                    skillCheckboxes.forEach(cb => cb.checked = selectAllCheckbox.checked);
+                    updateDropdownText();
+                });
+            }
+
+            skillCheckboxes.forEach(cb => {
+                cb.addEventListener("change", function () {
+                    updateDropdownText();
+                });
+            });
+
+            updateDropdownText();
+        });
+    </script>
+}
