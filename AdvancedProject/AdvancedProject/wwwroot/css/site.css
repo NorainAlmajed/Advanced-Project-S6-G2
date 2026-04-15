@@ -812,3 +812,209 @@ body {
     background: rgba(244, 114, 182, 0.15); /* light pink */
     color: #db2777;
 }
+
+
+
+
+
+
+
+
+
+
+
+/* ============================= */
+/*      Maintenance Requests     */
+/* ============================= */
+
+.requests-page .users-subtitle {
+    color: var(--text-muted);
+    font-size: 1.05rem;
+}
+
+/* -------- TOTAL BOX -------- */
+.request-total-box {
+    background: rgba(255, 255, 255, 0.92);
+    border-radius: 14px;
+    min-height: 56px;
+    height: 56px;
+    padding: 0.7rem 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border: 1px solid rgba(255, 255, 255, 0.45);
+}
+
+.request-total-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: #6b7280;
+    text-transform: uppercase;
+    line-height: 1;
+    margin-bottom: 0.15rem;
+}
+
+.request-total-value {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--text-main);
+    line-height: 1;
+}
+
+/* -------- CARD -------- */
+.request-card {
+    border-radius: 24px;
+    background: linear-gradient(180deg, #ffffff 0%, #f8fbfb 100%);
+    border: none; /* REMOVE full border */
+    transition: all 0.2s ease;
+}
+
+    .request-card:hover {
+        transform: translateY(-3px);
+    }
+
+/* -------- LEFT BORDER ONLY -------- */
+.request-card-priority-high {
+    border-left: 3px solid #dc3545;
+}
+
+.request-card-priority-medium {
+    border-left: 3px solid #f59e0b;
+}
+
+.request-card-priority-low {
+    border-left: 3px solid #1e8e6e;
+}
+
+/* -------- HEADER -------- */
+.request-id-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.48rem 0.82rem;
+    border-radius: 999px;
+    background: rgba(0, 91, 113, 0.12);
+    color: var(--primary);
+    font-weight: 800;
+    font-size: 0.95rem;
+}
+
+.request-date-small {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    font-weight: 600;
+    white-space: nowrap;
+    padding-top: 0.35rem;
+}
+
+/* -------- TITLE -------- */
+.request-title {
+    font-size: 1.7rem;
+    font-weight: 800;
+    color: var(--text-main);
+    line-height: 1.2;
+}
+
+/* -------- META (Tenant / Unit / Description) -------- */
+.request-meta-list {
+    display: grid;
+    gap: 0.85rem;
+}
+
+.request-meta-item {
+    background: #f8fbfb;
+    border: 1px solid rgba(0, 91, 113, 0.06);
+    border-radius: 16px;
+    padding: 0.9rem 1rem;
+}
+
+.request-meta-label {
+    display: block;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 0.35rem;
+}
+
+.request-meta-value {
+    display: block;
+    color: var(--text-main);
+    font-weight: 600;
+    font-size: 1rem;
+    line-height: 1.45;
+}
+
+/* -------- DESCRIPTION -------- */
+.request-description-item {
+    background: linear-gradient(180deg, #f9fcfc 0%, #f4f9fa 100%);
+}
+
+.request-description-text {
+    font-weight: 500;
+    color: #374151;
+}
+
+/* -------- PRIORITY PILLS -------- */
+.request-pill-priority-high {
+    background: rgba(220, 53, 69, 0.14);
+    color: #b42318;
+}
+
+.request-pill-priority-medium {
+    background: rgba(245, 158, 11, 0.18);
+    color: #b45309;
+}
+
+.request-pill-priority-low {
+    background: rgba(30, 142, 110, 0.14);
+    color: var(--accent);
+}
+
+/* -------- STATUS PILLS -------- */
+.request-pill-status-pending {
+    background: rgba(244, 114, 182, 0.14);
+    color: #be185d;
+}
+
+.request-pill-status-progress {
+    background: rgba(59, 130, 246, 0.14);
+    color: #2563eb;
+}
+
+.request-pill-status-resolved {
+    background: rgba(30, 142, 110, 0.14);
+    color: var(--accent);
+}
+
+.request-pill-status-closed {
+    background: rgba(107, 114, 128, 0.14);
+    color: #4b5563;
+}
+
+/* -------- BUTTONS -------- */
+.request-action-btn {
+    min-height: 54px;
+    border-radius: 14px;
+    font-weight: 700;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+/* -------- EMPTY STATE -------- */
+.empty-state-card {
+    border-radius: 24px;
+    background: #ffffff;
+}
+
+/* -------- RESPONSIVE -------- */
+@media (max-width: 768px) {
+    .request-title {
+        font-size: 1.35rem;
+    }
+}
