@@ -46,6 +46,8 @@ public partial class APContext : DbContext
 
     public DbSet<UnitType> UnitTypes { get; set; }
 
+    public DbSet<NotificationType> NotificationTypes { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
         => optionsBuilder.UseSqlServer("Server=(localdb)\\MSSQLLocalDB;Database=AdvancedDB;Trusted_Connection=True;TrustServerCertificate=True;");
@@ -296,18 +298,34 @@ public partial class APContext : DbContext
        new Payment { PaymentId = 5, LeaseId = 5, Amount = 250, PaymentDate = new DateTime(2026, 3, 15, 8, 19, 27), Status = "Pending" }
    );
 
+        modelBuilder.Entity<NotificationType>().HasData(
+        new NotificationType { NotificationTypeId = 1, Name = "Lease" },
+        new NotificationType { NotificationTypeId = 2, Name = "LeaseApplication" },
+        new NotificationType { NotificationTypeId = 3, Name = "Maintenance" },
+        new NotificationType { NotificationTypeId = 4, Name = "Payment" }
+        );
+
         modelBuilder.Entity<Notification>().HasData(
-       new Notification { NotificationId = 1, UserId = 1, Message = "New lease application received", CreatedAt = new DateTime(2026, 2, 1, 10, 33, 21), Type = "LeaseApplication" },
-       new Notification { NotificationId = 2, UserId = 2, Message = "Your application has been approved", CreatedAt = new DateTime(2026, 2, 3, 9, 18, 55), Type = "LeaseApplication" },
-       new Notification { NotificationId = 3, UserId = 3, Message = "Maintenance request updated", CreatedAt = new DateTime(2026, 3, 2, 14, 25, 14), Type = "MaintenanceRequest" },
-       new Notification { NotificationId = 4, UserId = 4, Message = "Payment received successfully", CreatedAt = new DateTime(2026, 3, 12, 13, 44, 21), Type = "Payment" },
-       new Notification { NotificationId = 5, UserId = 5, Message = "Lease activated for your unit", CreatedAt = new DateTime(2026, 3, 15, 21, 4, 17), Type = "Lease" },
-       new Notification { NotificationId = 6, UserId = 7, Message = "New maintenance request assigned", CreatedAt = new DateTime(2026, 3, 1, 12, 6, 33), Type = "MaintenanceRequest" },
-       new Notification { NotificationId = 7, UserId = 8, Message = "Electrical repair marked as in progress", CreatedAt = new DateTime(2026, 3, 2, 8, 15, 32), Type = "MaintenanceRequest" },
-       new Notification { NotificationId = 8, UserId = 9, Message = "HVAC issue reported in Unit A2", CreatedAt = new DateTime(2026, 3, 3, 21, 17, 28), Type = "MaintenanceRequest" },
-       new Notification { NotificationId = 9, UserId = 10, Message = "Carpentry issue reported in Unit B2", CreatedAt = new DateTime(2026, 3, 4, 17, 5, 43), Type = "MaintenanceRequest" },
-       new Notification { NotificationId = 10, UserId = 11, Message = "Painting issue reported in Unit A3", CreatedAt = new DateTime(2026, 3, 5, 23, 14, 10), Type = "MaintenanceRequest" }
-    );
+         new Notification { NotificationId = 1, UserId = 1, NotificationTypeId = 2, Title = "New Lease Application", Message = "A new lease application has been submitted.", CreatedAt = new DateTime(2026, 2, 1, 10, 33, 21) },
+
+         new Notification { NotificationId = 2, UserId = 2, NotificationTypeId = 2, Title = "Application Approved", Message = "Your lease application has been approved.", CreatedAt = new DateTime(2026, 2, 3, 9, 18, 55) },
+
+         new Notification { NotificationId = 3, UserId = 3, NotificationTypeId = 3, Title = "Maintenance Update", Message = "Your maintenance request status has been updated.", CreatedAt = new DateTime(2026, 3, 2, 14, 25, 14) },
+
+         new Notification { NotificationId = 4, UserId = 4, NotificationTypeId = 4, Title = "Payment Received", Message = "Your payment has been successfully received.", CreatedAt = new DateTime(2026, 3, 12, 13, 44, 21) },
+
+         new Notification { NotificationId = 5, UserId = 5, NotificationTypeId = 1, Title = "Lease Activated", Message = "Your lease is now active.", CreatedAt = new DateTime(2026, 3, 15, 21, 4, 17) },
+
+         new Notification { NotificationId = 6, UserId = 7, NotificationTypeId = 3, Title = "New Assignment", Message = "You have been assigned a new maintenance request.", CreatedAt = new DateTime(2026, 3, 1, 12, 6, 33) },
+
+         new Notification { NotificationId = 7, UserId = 8, NotificationTypeId = 3, Title = "Work In Progress", Message = "Maintenance work is now in progress.", CreatedAt = new DateTime(2026, 3, 2, 8, 15, 32) },
+
+         new Notification { NotificationId = 8, UserId = 9, NotificationTypeId = 3, Title = "Issue Reported", Message = "A new HVAC issue has been reported.", CreatedAt = new DateTime(2026, 3, 3, 21, 17, 28) },
+
+         new Notification { NotificationId = 9, UserId = 10, NotificationTypeId = 3, Title = "Issue Reported", Message = "A carpentry issue has been reported.", CreatedAt = new DateTime(2026, 3, 4, 17, 5, 43) },
+
+         new Notification { NotificationId = 10, UserId = 11, NotificationTypeId = 3, Title = "Issue Reported", Message = "A painting issue has been reported.", CreatedAt = new DateTime(2026, 3, 5, 23, 14, 10) }
+         );
 
         modelBuilder.Entity<Amenity>().HasData(
         new Amenity { AmenityId = 1, Name = "Parking" },

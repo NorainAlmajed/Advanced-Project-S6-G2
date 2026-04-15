@@ -22,7 +22,7 @@ namespace AdvancedProject.Controllers
         // GET: Notifications
         public async Task<IActionResult> Index()
         {
-            var aPContext = _context.Notifications.Include(n => n.User);
+            var aPContext = _context.Notifications.Include(n => n.NotificationType).Include(n => n.User);
             return View(await aPContext.ToListAsync());
         }
 
@@ -35,6 +35,7 @@ namespace AdvancedProject.Controllers
             }
 
             var notification = await _context.Notifications
+                .Include(n => n.NotificationType)
                 .Include(n => n.User)
                 .FirstOrDefaultAsync(m => m.NotificationId == id);
             if (notification == null)
@@ -48,6 +49,7 @@ namespace AdvancedProject.Controllers
         // GET: Notifications/Create
         public IActionResult Create()
         {
+            ViewData["NotificationTypeId"] = new SelectList(_context.NotificationTypes, "NotificationTypeId", "NotificationTypeId");
             ViewData["UserId"] = new SelectList(_context.Users, "UserId", "UserId");
             return View();
         }
@@ -57,7 +59,7 @@ namespace AdvancedProject.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("NotificationId,UserId,Message,CreatedAt,Type")] Notification notification)
+        public async Task<IActionResult> Create([Bind("NotificationId,UserId,Message,CreatedAt,Title,NotificationTypeId")] Notification notification)
         {
             if (ModelState.IsValid)
             {
@@ -65,6 +67,7 @@ namespace AdvancedProject.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["NotificationTypeId"] = new SelectList(_context.NotificationTypes, "NotificationTypeId", "NotificationTypeId", notification.NotificationTypeId);
             ViewData["UserId"] = new SelectList(_context.Users, "UserId", "UserId", notification.UserId);
             return View(notification);
         }
@@ -82,6 +85,7 @@ namespace AdvancedProject.Controllers
             {
                 return NotFound();
             }
+            ViewData["NotificationTypeId"] = new SelectList(_context.NotificationTypes, "NotificationTypeId", "NotificationTypeId", notification.NotificationTypeId);
             ViewData["UserId"] = new SelectList(_context.Users, "UserId", "UserId", notification.UserId);
             return View(notification);
         }
@@ -91,7 +95,7 @@ namespace AdvancedProject.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("NotificationId,UserId,Message,CreatedAt,Type")] Notification notification)
+        public async Task<IActionResult> Edit(int id, [Bind("NotificationId,UserId,Message,CreatedAt,Title,NotificationTypeId")] Notification notification)
         {
             if (id != notification.NotificationId)
             {
@@ -118,6 +122,7 @@ namespace AdvancedProject.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["NotificationTypeId"] = new SelectList(_context.NotificationTypes, "NotificationTypeId", "NotificationTypeId", notification.NotificationTypeId);
             ViewData["UserId"] = new SelectList(_context.Users, "UserId", "UserId", notification.UserId);
             return View(notification);
         }
@@ -131,6 +136,7 @@ namespace AdvancedProject.Controllers
             }
 
             var notification = await _context.Notifications
+                .Include(n => n.NotificationType)
                 .Include(n => n.User)
                 .FirstOrDefaultAsync(m => m.NotificationId == id);
             if (notification == null)

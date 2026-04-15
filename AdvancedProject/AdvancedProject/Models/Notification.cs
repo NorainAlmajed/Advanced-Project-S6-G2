@@ -19,8 +19,13 @@ public partial class Notification
 
     public DateTime CreatedAt { get; set; }
 
-    [StringLength(50)]
-    public string Type { get; set; } = null!;
+    [StringLength(100)]
+    public string Title { get; set; } = null!;
+
+    public int NotificationTypeId { get; set; }
+
+    [ForeignKey("NotificationTypeId")]
+    public virtual NotificationType NotificationType { get; set; } = null!;
 
     [ForeignKey("UserId")]
     [InverseProperty("Notifications")]
