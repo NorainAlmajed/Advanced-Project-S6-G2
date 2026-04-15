@@ -25,12 +25,6 @@
                 @Html.DisplayNameFor(model => model.Status)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Notes)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.AssignedStaff)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.Skill)
             </th>
             <th>
@@ -58,12 +52,6 @@
                 @Html.DisplayFor(modelItem => item.Status)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Notes)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AssignedStaff.StaffId)
-            </td>
-            <td>
                 @Html.DisplayFor(modelItem => item.Skill.SkillId)
             </td>
             <td>
@@ -73,8 +61,8 @@
                 @Html.DisplayFor(modelItem => item.Unit.UnitId)
             </td>
             <td>
-                <a asp-action="Details" asp-route-id="@item.RequestId">Details</a> 
-                    <a asp-action="Delete" asp-route-id="@item.RequestId">Delete</a>
+a                <a asp-action="Details" asp-route-id="@item.RequestId">Details</a> 
+                <a asp-action="Delete" asp-route-id="@item.RequestId">Delete</a>
             </td>
         </tr>
 }
