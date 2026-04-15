@@ -794,3 +794,7 @@ body {
     .users-search-card .dropdown-menu .form-check-input {
         border: 1px solid #b8c7cc;
     }
+
+#skillsDropdownButton::after {
+    display: none !important;
+}
