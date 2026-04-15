@@ -46,12 +46,18 @@ public partial class APContext : DbContext
 
     public DbSet<UnitType> UnitTypes { get; set; }
 
+    public DbSet<NotificationType> NotificationTypes { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
         => optionsBuilder.UseSqlServer("Server=(localdb)\\MSSQLLocalDB;Database=AdvancedDB;Trusted_Connection=True;TrustServerCertificate=True;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<Unit>()
+        .Property(u => u.IsActive)
+        .HasDefaultValue(true);
+
         modelBuilder.Entity<Lease>(entity =>
         {
             entity.Property(e => e.CreatedAt).HasDefaultValueSql("(getdate())");
@@ -60,6 +66,12 @@ public partial class APContext : DbContext
 
             entity.HasOne(d => d.Unit).WithMany(p => p.Leases).OnDelete(DeleteBehavior.ClientSetNull);
         });
+
+        base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<Property>()
+            .Property(p => p.IsActive)
+            .HasDefaultValue(true);
 
         modelBuilder.Entity<LeaseApplication>(entity =>
         {
@@ -160,25 +172,27 @@ public partial class APContext : DbContext
             .HasForeignKey(u => u.UnitTypeId);
         });
 
+
+
         modelBuilder.Entity<User>(entity =>
         {
             entity.Property(e => e.CreatedAt).HasDefaultValueSql("(getdate())");
         });
 
         modelBuilder.Entity<User>().HasData(
-      new User { UserId = 1, Username = "manager", Password = "Manager123", FullName = "System Manager", Email = "manager@mail.com", Phone = "33338876", Role = "Manager", IsActive = true, CreatedAt = new DateTime(2026, 1, 1) },
+      new User { UserId = 1, Username = "manager", Password = "Manager123", FullName = "System Manager", Email = "manager@mail.com", Phone = "33338876", Role = "Manager", IsActive = true, CreatedAt = new DateTime(2026, 1, 1), Gender = "M" },
 
-      new User { UserId = 2, Username = "zahraa.hubail", Password = "Zahraa.123", FullName = "Zahraa Hubail", Email = "zahraa.hubail8@gmail.com", Phone = "33735771", Role = "Tenant", IsActive = true, CreatedAt = new DateTime(2026, 2, 12, 2, 3, 4) },
-      new User { UserId = 3, Username = "raghad.aleskafi", Password = "Raghad.123", FullName = "Raghad Aleskafi", Email = "raghad@gmail.com", Phone = "39004266", Role = "Tenant", IsActive = true, CreatedAt = new DateTime(2026, 3, 15, 15, 12, 55) },
-      new User { UserId = 4, Username = "fatima.alaiwi", Password = "Fatima.123", FullName = "Fatima Alaiwi", Email = "fatima@gmail.com", Phone = "36635578", Role = "Tenant", IsActive = true, CreatedAt = new DateTime(2026, 3, 20, 6, 11, 2) },
-      new User { UserId = 5, Username = "norain.hassan", Password = "Norain.123", FullName = "Norain Hassan", Email = "norain@mail.com", Phone = "33744063", Role = "Tenant", IsActive = true, CreatedAt = new DateTime(2026, 3, 25, 5, 15, 27) },
-      new User { UserId = 6, Username = "ahmed.ali", Password = "Ahmed.999", FullName = "Ahmed Ali", Email = "ahmed.ali@gmail.com", Phone = "33871125", Role = "Tenant", IsActive = true, CreatedAt = new DateTime(2026, 3, 28, 7, 17, 22) },
+      new User { UserId = 2, Username = "zahraa.hubail", Password = "Zahraa.123", FullName = "Zahraa Hubail", Email = "zahraa.hubail8@gmail.com", Phone = "33735771", Role = "Tenant", IsActive = true, CreatedAt = new DateTime(2026, 2, 12, 2, 3, 4), Gender = "F" },
+      new User { UserId = 3, Username = "raghad.aleskafi", Password = "Raghad.123", FullName = "Raghad Aleskafi", Email = "raghad@gmail.com", Phone = "39004266", Role = "Tenant", IsActive = true, CreatedAt = new DateTime(2026, 3, 15, 15, 12, 55), Gender = "F" },
+      new User { UserId = 4, Username = "fatima.alaiwi", Password = "Fatima.123", FullName = "Fatima Alaiwi", Email = "fatima@gmail.com", Phone = "36635578", Role = "Tenant", IsActive = true, CreatedAt = new DateTime(2026, 3, 20, 6, 11, 2), Gender = "F" },
+      new User { UserId = 5, Username = "norain.almajed", Password = "Norain.123", FullName = "Norain Almajed", Email = "norain@mail.com", Phone = "33744063", Role = "Tenant", IsActive = true, CreatedAt = new DateTime(2026, 3, 25, 5, 15, 27), Gender = "F" },
+      new User { UserId = 6, Username = "ahmed.ali", Password = "Ahmed.999", FullName = "Ahmed Ali", Email = "ahmed.ali@gmail.com", Phone = "33871125", Role = "Tenant", IsActive = true, CreatedAt = new DateTime(2026, 3, 28, 7, 17, 22), Gender = "M" },
 
-      new User { UserId = 7, Username = "ali.hassan", Password = "Ali.123", FullName = "Ali Hassan", Email = "alihassan@mail.com", Phone = "39207552", Role = "Staff", IsActive = true, CreatedAt = new DateTime(2026, 3, 10, 9, 16, 34) },
-      new User { UserId = 8, Username = "sara.mohamed", Password = "Sara.888", FullName = "Sara Mohamed", Email = "sara.mohamed@gmail.com", Phone = "33699152", Role = "Staff", IsActive = true, CreatedAt = new DateTime(2026, 3, 11, 9, 10, 10) },
-      new User { UserId = 9, Username = "abbas.hadi", Password = "Abbas.123", FullName = "Abbas Hadi", Email = "abbas@gmail.com", Phone = "33546672", Role = "Staff", IsActive = true, CreatedAt = new DateTime(2026, 3, 12, 10, 2, 15) },
-      new User { UserId = 10, Username = "laila.yaser", Password = "Laila.999", FullName = "Laila Yaser", Email = "laila@gmail.com", Phone = "39126632", Role = "Staff", IsActive = true, CreatedAt = new DateTime(2026, 3, 13, 6, 21, 41) },
-      new User { UserId = 11, Username = "mohammed.karim", Password = "mohammed.123", FullName = "Mohammed Karim", Email = "mohammed@gmail.com", Phone = "33921092", Role = "Staff", IsActive = true, CreatedAt = new DateTime(2026, 3, 14, 8, 13, 44) }
+      new User { UserId = 7, Username = "ali.hassan", Password = "Ali.123", FullName = "Ali Hassan", Email = "alihassan@mail.com", Phone = "39207552", Role = "Staff", IsActive = true, CreatedAt = new DateTime(2026, 3, 10, 9, 16, 34), Gender = "M" },
+      new User { UserId = 8, Username = "sara.mohamed", Password = "Sara.888", FullName = "Sara Mohamed", Email = "sara.mohamed@gmail.com", Phone = "33699152", Role = "Staff", IsActive = true, CreatedAt = new DateTime(2026, 3, 11, 9, 10, 10), Gender = "F" },
+      new User { UserId = 9, Username = "abbas.hadi", Password = "Abbas.123", FullName = "Abbas Hadi", Email = "abbas@gmail.com", Phone = "33546672", Role = "Staff", IsActive = true, CreatedAt = new DateTime(2026, 3, 12, 10, 2, 15), Gender = "M" },
+      new User { UserId = 10, Username = "layla.yaser", Password = "Layla.999", FullName = "Layla Yaser", Email = "layla@gmail.com", Phone = "39126632", Role = "Staff", IsActive = true, CreatedAt = new DateTime(2026, 3, 13, 6, 21, 41), Gender = "F" },
+      new User { UserId = 11, Username = "mohammed.karim", Password = "mohammed.123", FullName = "Mohammed Karim", Email = "mohammed@gmail.com", Phone = "33921092", Role = "Staff", IsActive = true, CreatedAt = new DateTime(2026, 3, 14, 8, 13, 44), Gender = "M" }
       );
 
 
@@ -230,19 +244,19 @@ public partial class APContext : DbContext
     ));
 
         modelBuilder.Entity<Property>().HasData(
-         new Property { PropertyId = 1, Name = "Abraj Al Lulu", Building = "611", Road = "271", Block = "220", City = "Manama", Description = "A modern residential complex offering comfort and essential amenities.", CreatedAt = new DateTime(2026, 1, 1, 12, 55, 21) },
-         new Property { PropertyId = 2, Name = "Almoayyed Tower", Building = "246", Road = "811", Block = "708", City = "Muharraq", Description = "A contemporary tower with modern facilities in a prime location.", CreatedAt = new DateTime(2026, 1, 5, 15, 22, 29) },
-         new Property { PropertyId = 3, Name = "United Tower", Building = "922", Road = "3062", Block = "461", City = "Riffa", Description = "A residential property with spacious apartments for families.", CreatedAt = new DateTime(2026, 1, 10, 3, 31, 43) }
+         new Property { PropertyId = 1, Name = "Abraj Al Lulu", Building = "611", Road = "271", Block = "220", City = "Manama", Description = "A modern residential complex offering comfort and essential amenities.", CreatedAt = new DateTime(2026, 1, 1, 12, 55, 21), IsActive = true },
+         new Property { PropertyId = 2, Name = "Almoayyed Tower", Building = "246", Road = "811", Block = "708", City = "Muharraq", Description = "A contemporary tower with modern facilities in a prime location.", CreatedAt = new DateTime(2026, 1, 5, 15, 22, 29), IsActive = true },
+         new Property { PropertyId = 3, Name = "United Tower", Building = "922", Road = "3062", Block = "461", City = "Riffa", Description = "A residential property with spacious apartments for families.", CreatedAt = new DateTime(2026, 1, 10, 3, 31, 43), IsActive = true }
      );
 
 
         modelBuilder.Entity<Unit>().HasData(
-       new Unit { UnitId = 1, PropertyId = 1, UnitNumber = "A1", UnitTypeId = 1, SizeSqFt = 100, RentAmount = 300, AvailabilityStatus = "Available", CreatedAt = new DateTime(2026, 1, 1, 4, 12, 55) },
-       new Unit { UnitId = 2, PropertyId = 1, UnitNumber = "A2", UnitTypeId = 1, SizeSqFt = 120, RentAmount = 350, AvailabilityStatus = "Occupied", CreatedAt = new DateTime(2026, 1, 2, 23, 16, 33) },
-       new Unit { UnitId = 3, PropertyId = 2, UnitNumber = "B1", UnitTypeId = 2, SizeSqFt = 200, RentAmount = 500, AvailabilityStatus = "Available", CreatedAt = new DateTime(2026, 1, 3, 9, 11, 7) },
-       new Unit { UnitId = 4, PropertyId = 2, UnitNumber = "B2", UnitTypeId = 2, SizeSqFt = 250, RentAmount = 550, AvailabilityStatus = "Occupied", CreatedAt = new DateTime(2026, 1, 4, 7, 16, 22) },
-       new Unit { UnitId = 5, PropertyId = 1, UnitNumber = "A3", UnitTypeId = 3, SizeSqFt = 80, RentAmount = 250, AvailabilityStatus = "Available", CreatedAt = new DateTime(2026, 1, 5, 10, 10, 12) },
-       new Unit { UnitId = 6, PropertyId = 3, UnitNumber = "C1", UnitTypeId = 1, SizeSqFt = 110, RentAmount = 320, AvailabilityStatus = "Available", CreatedAt = new DateTime(2026, 1, 6, 4, 15, 45) }
+       new Unit { UnitId = 1, PropertyId = 1, UnitNumber = "A1", UnitTypeId = 1, SizeSqFt = 100, RentAmount = 300, AvailabilityStatus = "Available", CreatedAt = new DateTime(2026, 1, 1, 4, 12, 55), IsActive = true },
+       new Unit { UnitId = 2, PropertyId = 1, UnitNumber = "A2", UnitTypeId = 1, SizeSqFt = 120, RentAmount = 350, AvailabilityStatus = "Occupied", CreatedAt = new DateTime(2026, 1, 2, 23, 16, 33), IsActive = true },
+       new Unit { UnitId = 3, PropertyId = 2, UnitNumber = "B1", UnitTypeId = 2, SizeSqFt = 200, RentAmount = 500, AvailabilityStatus = "Available", CreatedAt = new DateTime(2026, 1, 3, 9, 11, 7), IsActive = true },
+       new Unit { UnitId = 4, PropertyId = 2, UnitNumber = "B2", UnitTypeId = 2, SizeSqFt = 250, RentAmount = 550, AvailabilityStatus = "Occupied", CreatedAt = new DateTime(2026, 1, 4, 7, 16, 22), IsActive = true },
+       new Unit { UnitId = 5, PropertyId = 1, UnitNumber = "A3", UnitTypeId = 3, SizeSqFt = 80, RentAmount = 250, AvailabilityStatus = "Available", CreatedAt = new DateTime(2026, 1, 5, 10, 10, 12), IsActive = true },
+       new Unit { UnitId = 6, PropertyId = 3, UnitNumber = "C1", UnitTypeId = 1, SizeSqFt = 110, RentAmount = 320, AvailabilityStatus = "Available", CreatedAt = new DateTime(2026, 1, 6, 4, 15, 45), IsActive = true }
    );
 
 
@@ -284,18 +298,34 @@ public partial class APContext : DbContext
        new Payment { PaymentId = 5, LeaseId = 5, Amount = 250, PaymentDate = new DateTime(2026, 3, 15, 8, 19, 27), Status = "Pending" }
    );
 
+        modelBuilder.Entity<NotificationType>().HasData(
+        new NotificationType { NotificationTypeId = 1, Name = "Lease" },
+        new NotificationType { NotificationTypeId = 2, Name = "LeaseApplication" },
+        new NotificationType { NotificationTypeId = 3, Name = "Maintenance" },
+        new NotificationType { NotificationTypeId = 4, Name = "Payment" }
+        );
+
         modelBuilder.Entity<Notification>().HasData(
-       new Notification { NotificationId = 1, UserId = 1, Message = "New lease application received", CreatedAt = new DateTime(2026, 2, 1, 10, 33, 21), Type = "LeaseApplication" },
-       new Notification { NotificationId = 2, UserId = 2, Message = "Your application has been approved", CreatedAt = new DateTime(2026, 2, 3, 9, 18, 55), Type = "LeaseApplication" },
-       new Notification { NotificationId = 3, UserId = 3, Message = "Maintenance request updated", CreatedAt = new DateTime(2026, 3, 2, 14, 25, 14), Type = "MaintenanceRequest" },
-       new Notification { NotificationId = 4, UserId = 4, Message = "Payment received successfully", CreatedAt = new DateTime(2026, 3, 12, 13, 44, 21), Type = "Payment" },
-       new Notification { NotificationId = 5, UserId = 5, Message = "Lease activated for your unit", CreatedAt = new DateTime(2026, 3, 15, 21, 4, 17), Type = "Lease" },
-       new Notification { NotificationId = 6, UserId = 7, Message = "New maintenance request assigned", CreatedAt = new DateTime(2026, 3, 1, 12, 6, 33), Type = "MaintenanceRequest" },
-       new Notification { NotificationId = 7, UserId = 8, Message = "Electrical repair marked as in progress", CreatedAt = new DateTime(2026, 3, 2, 8, 15, 32), Type = "MaintenanceRequest" },
-       new Notification { NotificationId = 8, UserId = 9, Message = "HVAC issue reported in Unit A2", CreatedAt = new DateTime(2026, 3, 3, 21, 17, 28), Type = "MaintenanceRequest" },
-       new Notification { NotificationId = 9, UserId = 10, Message = "Carpentry issue reported in Unit B2", CreatedAt = new DateTime(2026, 3, 4, 17, 5, 43), Type = "MaintenanceRequest" },
-       new Notification { NotificationId = 10, UserId = 11, Message = "Painting issue reported in Unit A3", CreatedAt = new DateTime(2026, 3, 5, 23, 14, 10), Type = "MaintenanceRequest" }
-    );
+         new Notification { NotificationId = 1, UserId = 1, NotificationTypeId = 2, Title = "New Lease Application", Message = "A new lease application has been submitted.", CreatedAt = new DateTime(2026, 2, 1, 10, 33, 21) },
+
+         new Notification { NotificationId = 2, UserId = 2, NotificationTypeId = 2, Title = "Application Approved", Message = "Your lease application has been approved.", CreatedAt = new DateTime(2026, 2, 3, 9, 18, 55) },
+
+         new Notification { NotificationId = 3, UserId = 3, NotificationTypeId = 3, Title = "Maintenance Update", Message = "Your maintenance request status has been updated.", CreatedAt = new DateTime(2026, 3, 2, 14, 25, 14) },
+
+         new Notification { NotificationId = 4, UserId = 4, NotificationTypeId = 4, Title = "Payment Received", Message = "Your payment has been successfully received.", CreatedAt = new DateTime(2026, 3, 12, 13, 44, 21) },
+
+         new Notification { NotificationId = 5, UserId = 5, NotificationTypeId = 1, Title = "Lease Activated", Message = "Your lease is now active.", CreatedAt = new DateTime(2026, 3, 15, 21, 4, 17) },
+
+         new Notification { NotificationId = 6, UserId = 7, NotificationTypeId = 3, Title = "New Assignment", Message = "You have been assigned a new maintenance request.", CreatedAt = new DateTime(2026, 3, 1, 12, 6, 33) },
+
+         new Notification { NotificationId = 7, UserId = 8, NotificationTypeId = 3, Title = "Work In Progress", Message = "Maintenance work is now in progress.", CreatedAt = new DateTime(2026, 3, 2, 8, 15, 32) },
+
+         new Notification { NotificationId = 8, UserId = 9, NotificationTypeId = 3, Title = "Issue Reported", Message = "A new HVAC issue has been reported.", CreatedAt = new DateTime(2026, 3, 3, 21, 17, 28) },
+
+         new Notification { NotificationId = 9, UserId = 10, NotificationTypeId = 3, Title = "Issue Reported", Message = "A carpentry issue has been reported.", CreatedAt = new DateTime(2026, 3, 4, 17, 5, 43) },
+
+         new Notification { NotificationId = 10, UserId = 11, NotificationTypeId = 3, Title = "Issue Reported", Message = "A painting issue has been reported.", CreatedAt = new DateTime(2026, 3, 5, 23, 14, 10) }
+         );
 
         modelBuilder.Entity<Amenity>().HasData(
         new Amenity { AmenityId = 1, Name = "Parking" },

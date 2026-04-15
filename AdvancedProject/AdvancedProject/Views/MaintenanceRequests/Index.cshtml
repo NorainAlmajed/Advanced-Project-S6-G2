@@ -13,6 +13,9 @@
     <thead>
         <tr>
             <th>
+                @Html.DisplayNameFor(model => model.RequestId)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.RequestDate)
             </th>
             <th>
@@ -23,21 +26,6 @@
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Notes)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CompletedDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.AssignedTime)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ResolvedTime)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ClosedTime)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.InProgressTime)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.AssignedStaff)
@@ -58,6 +46,9 @@
 @foreach (var item in Model) {
         <tr>
             <td>
+                @Html.DisplayFor(modelItem => item.RequestId)
+            </td>
+            <td>
                 @Html.DisplayFor(modelItem => item.RequestDate)
             </td>
             <td>
@@ -68,21 +59,6 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Notes)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CompletedDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AssignedTime)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ResolvedTime)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ClosedTime)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.InProgressTime)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.AssignedStaff.StaffId)
@@ -97,9 +73,7 @@
                 @Html.DisplayFor(modelItem => item.Unit.UnitId)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.RequestId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.RequestId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.RequestId">Delete</a>
+                <a asp-action="Details" asp-route-id="@item.RequestId">Details</a> 
             </td>
         </tr>
 }

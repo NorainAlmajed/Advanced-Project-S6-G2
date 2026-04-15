@@ -4,6 +4,7 @@ using AdvancedProject.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AdvancedProject.Migrations
 {
     [DbContext(typeof(APContext))]
-    partial class APContextModelSnapshot : ModelSnapshot
+    [Migration("20260415114529_AddedGenderAttributes")]
+    partial class AddedGenderAttributes
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -559,20 +562,15 @@ namespace AdvancedProject.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.Property<int>("NotificationTypeId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Title")
+                    b.Property<string>("Type")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("NotificationId");
-
-                    b.HasIndex("NotificationTypeId");
 
                     b.HasIndex(new[] { "UserId" }, "IX_Notifications_UserId");
 
@@ -583,131 +581,81 @@ namespace AdvancedProject.Migrations
                         {
                             NotificationId = 1,
                             CreatedAt = new DateTime(2026, 2, 1, 10, 33, 21, 0, DateTimeKind.Unspecified),
-                            Message = "A new lease application has been submitted.",
-                            NotificationTypeId = 2,
-                            Title = "New Lease Application",
+                            Message = "New lease application received",
+                            Type = "LeaseApplication",
                             UserId = 1
                         },
                         new
                         {
                             NotificationId = 2,
                             CreatedAt = new DateTime(2026, 2, 3, 9, 18, 55, 0, DateTimeKind.Unspecified),
-                            Message = "Your lease application has been approved.",
-                            NotificationTypeId = 2,
-                            Title = "Application Approved",
+                            Message = "Your application has been approved",
+                            Type = "LeaseApplication",
                             UserId = 2
                         },
                         new
                         {
                             NotificationId = 3,
                             CreatedAt = new DateTime(2026, 3, 2, 14, 25, 14, 0, DateTimeKind.Unspecified),
-                            Message = "Your maintenance request status has been updated.",
-                            NotificationTypeId = 3,
-                            Title = "Maintenance Update",
+                            Message = "Maintenance request updated",
+                            Type = "MaintenanceRequest",
                             UserId = 3
                         },
                         new
                         {
                             NotificationId = 4,
                             CreatedAt = new DateTime(2026, 3, 12, 13, 44, 21, 0, DateTimeKind.Unspecified),
-                            Message = "Your payment has been successfully received.",
-                            NotificationTypeId = 4,
-                            Title = "Payment Received",
+                            Message = "Payment received successfully",
+                            Type = "Payment",
                             UserId = 4
                         },
                         new
                         {
                             NotificationId = 5,
                             CreatedAt = new DateTime(2026, 3, 15, 21, 4, 17, 0, DateTimeKind.Unspecified),
-                            Message = "Your lease is now active.",
-                            NotificationTypeId = 1,
-                            Title = "Lease Activated",
+                            Message = "Lease activated for your unit",
+                            Type = "Lease",
                             UserId = 5
                         },
                         new
                         {
                             NotificationId = 6,
                             CreatedAt = new DateTime(2026, 3, 1, 12, 6, 33, 0, DateTimeKind.Unspecified),
-                            Message = "You have been assigned a new maintenance request.",
-                            NotificationTypeId = 3,
-                            Title = "New Assignment",
+                            Message = "New maintenance request assigned",
+                            Type = "MaintenanceRequest",
                             UserId = 7
                         },
                         new
                         {
                             NotificationId = 7,
                             CreatedAt = new DateTime(2026, 3, 2, 8, 15, 32, 0, DateTimeKind.Unspecified),
-                            Message = "Maintenance work is now in progress.",
-                            NotificationTypeId = 3,
-                            Title = "Work In Progress",
+                            Message = "Electrical repair marked as in progress",
+                            Type = "MaintenanceRequest",
                             UserId = 8
                         },
                         new
                         {
                             NotificationId = 8,
                             CreatedAt = new DateTime(2026, 3, 3, 21, 17, 28, 0, DateTimeKind.Unspecified),
-                            Message = "A new HVAC issue has been reported.",
-                            NotificationTypeId = 3,
-                            Title = "Issue Reported",
+                            Message = "HVAC issue reported in Unit A2",
+                            Type = "MaintenanceRequest",
                             UserId = 9
                         },
                         new
                         {
                             NotificationId = 9,
                             CreatedAt = new DateTime(2026, 3, 4, 17, 5, 43, 0, DateTimeKind.Unspecified),
-                            Message = "A carpentry issue has been reported.",
-                            NotificationTypeId = 3,
-                            Title = "Issue Reported",
+                            Message = "Carpentry issue reported in Unit B2",
+                            Type = "MaintenanceRequest",
                             UserId = 10
                         },
                         new
                         {
                             NotificationId = 10,
                             CreatedAt = new DateTime(2026, 3, 5, 23, 14, 10, 0, DateTimeKind.Unspecified),
-                            Message = "A painting issue has been reported.",
-                            NotificationTypeId = 3,
-                            Title = "Issue Reported",
+                            Message = "Painting issue reported in Unit A3",
+                            Type = "MaintenanceRequest",
                             UserId = 11
-                        });
-                });
-
-            modelBuilder.Entity("AdvancedProject.Models.NotificationType", b =>
-                {
-                    b.Property<int>("NotificationTypeId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("NotificationTypeId"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.HasKey("NotificationTypeId");
-
-                    b.ToTable("NotificationTypes");
-
-                    b.HasData(
-                        new
-                        {
-                            NotificationTypeId = 1,
-                            Name = "Lease"
-                        },
-                        new
-                        {
-                            NotificationTypeId = 2,
-                            Name = "LeaseApplication"
-                        },
-                        new
-                        {
-                            NotificationTypeId = 3,
-                            Name = "Maintenance"
-                        },
-                        new
-                        {
-                            NotificationTypeId = 4,
-                            Name = "Payment"
                         });
                 });
 
@@ -1619,18 +1567,10 @@ namespace AdvancedProject.Migrations
 
             modelBuilder.Entity("AdvancedProject.Models.Notification", b =>
                 {
-                    b.HasOne("AdvancedProject.Models.NotificationType", "NotificationType")
-                        .WithMany("Notifications")
-                        .HasForeignKey("NotificationTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("AdvancedProject.Models.User", "User")
                         .WithMany("Notifications")
                         .HasForeignKey("UserId")
                         .IsRequired();
-
-                    b.Navigation("NotificationType");
 
                     b.Navigation("User");
                 });
@@ -1722,11 +1662,6 @@ namespace AdvancedProject.Migrations
             modelBuilder.Entity("AdvancedProject.Models.MaintenanceStaff", b =>
                 {
                     b.Navigation("MaintenanceRequests");
-                });
-
-            modelBuilder.Entity("AdvancedProject.Models.NotificationType", b =>
-                {
-                    b.Navigation("Notifications");
                 });
 
             modelBuilder.Entity("AdvancedProject.Models.Property", b =>
