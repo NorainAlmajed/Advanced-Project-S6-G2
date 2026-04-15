@@ -1,70 +1,188 @@
 ﻿@model IEnumerable<AdvancedProject.Models.MaintenanceRequest>
+@using Microsoft.AspNetCore.Mvc.Rendering
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Maintenance Requests";
+    var totalRequests = Model?.Count() ?? 0;
 }
 
-<h1>Index</h1>
+<div class="requests-page">
+    <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-start gap-3 mb-4">
+        <div>
+            <p class="details-eyebrow mb-2">MAINTENANCE BOARD</p>
+            <h1 class="details-title mb-2">Maintenance Requests</h1>
+            <p class="users-subtitle mb-0">Browse and manage submitted maintenance requests by type, priority, and status.</p>
+        </div>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.RequestId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.RequestDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Priority)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Status)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Skill.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Tenant.User.FullName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Unit.UnitNumber)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.RequestId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.RequestDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Priority)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Status)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Skill.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Tenant.User.FullName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Unit.UnitNumber)
-            </td>
-            <td>
-                <a asp-action="Details" asp-route-id="@item.RequestId">Details</a> 
-                <a asp-action="Delete" asp-route-id="@item.RequestId">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+        <a asp-action="Create" class="btn btn-light-custom users-create-btn">
+            + Create New Request
+        </a>
+    </div>
+
+    <div class="card search-card users-search-card shadow-soft border-0 mb-4">
+        <div class="card-body p-4">
+            <form asp-action="Index" method="get">
+
+                <div class="row g-3 align-items-end">
+                    <div class="col-lg-4">
+                        <label class="form-label fw-semibold">Search Requests</label>
+                        <input type="text"
+                               name="searchTerm"
+                               value="@ViewBag.SearchTerm"
+                               class="form-control users-search-input"
+                               placeholder="Search by request ID, type, or tenant full name..." />
+                    </div>
+
+                    <div class="col-lg-2">
+                        <label class="form-label fw-semibold">Priority</label>
+                        <select name="priorityFilter" class="form-select users-search-input">
+                            <option value="">All Priorities</option>
+                            <option value="High" selected="@(ViewBag.PriorityFilter == "High")">High</option>
+                            <option value="Medium" selected="@(ViewBag.PriorityFilter == "Medium")">Medium</option>
+                            <option value="Low" selected="@(ViewBag.PriorityFilter == "Low")">Low</option>
+                        </select>
+                    </div>
+
+                    <div class="col-lg-2">
+                        <label class="form-label fw-semibold">Status</label>
+                        <select name="statusFilter" class="form-select users-search-input">
+                            <option value="">All Statuses</option>
+                            <option value="Pending" selected="@(ViewBag.StatusFilter == "Pending")">Pending</option>
+                            <option value="In Progress" selected="@(ViewBag.StatusFilter == "In Progress")">In Progress</option>
+                            <option value="Resolved" selected="@(ViewBag.StatusFilter == "Resolved")">Resolved</option>
+                            <option value="Closed" selected="@(ViewBag.StatusFilter == "Closed")">Closed</option>
+                        </select>
+                    </div>
+
+                    <div class="col-lg-2">
+                        <label class="form-label fw-semibold">Type</label>
+                        <select name="typeFilter" class="form-select users-search-input" asp-items="ViewBag.TypeList">
+                            <option value="">All Types</option>
+                        </select>
+                    </div>
+
+                    <div class="col-lg-2">
+                        <label class="form-label fw-semibold">Sort By</label>
+                        <select name="sortOrder" class="form-select users-search-input">
+                            <option value="" selected="@(string.IsNullOrEmpty(ViewBag.SortOrder))">Latest First</option>
+                            <option value="oldest" selected="@(ViewBag.SortOrder == "oldest")">Oldest First</option>
+                            <option value="id_asc" selected="@(ViewBag.SortOrder == "id_asc")">Request ID Asc</option>
+                            <option value="id_desc" selected="@(ViewBag.SortOrder == "id_desc")">Request ID Desc</option>
+                        </select>
+                    </div>
+
+                    <div class="col-lg-2 d-grid">
+                        <button type="submit" class="btn btn-primary users-search-btn">Search</button>
+                    </div>
+
+                    <div class="col-lg-2 d-grid">
+                        <a asp-action="Index" class="btn btn-outline-light users-reset-btn">Reset</a>
+                    </div>
+
+                    <div class="col-lg-2">
+                        <div class="request-total-box request-total-box-inline">
+                            <div class="request-total-label">TOTAL REQUESTS</div>
+                            <div class="request-total-value">@totalRequests</div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+   
+
+    @if (Model != null && Model.Any())
+    {
+        <div class="row g-4">
+            @foreach (var item in Model)
+            {
+                var priorityClass = item.Priority switch
+                {
+                    "High" => "request-pill-priority-high",
+                    "Medium" => "request-pill-priority-medium",
+                    "Low" => "request-pill-priority-low",
+                    _ => "badge-soft-default"
+                };
+
+                var priorityCardClass = item.Priority switch
+                {
+                    "High" => "request-card-priority-high",
+                    "Medium" => "request-card-priority-medium",
+                    "Low" => "request-card-priority-low",
+                    _ => ""
+                };
+
+                var statusClass = item.Status switch
+                {
+                    "Pending" => "request-pill-status-pending",
+                    "In Progress" => "request-pill-status-progress",
+                    "Resolved" => "request-pill-status-resolved",
+                    "Closed" => "request-pill-status-closed",
+                    _ => "badge-soft-default"
+                };
+
+                <div class="col-12 col-md-6 col-xl-4">
+                    <div class="card request-card @priorityCardClass h-100">
+                        <div class="card-body p-4 d-flex flex-column">
+                            <div class="d-flex justify-content-between align-items-start gap-3 mb-3">
+                                <div class="d-flex align-items-center gap-2 flex-wrap">
+                                    <span class="request-id-badge">#@item.RequestId</span>
+                                    <span class="custom-pill @priorityClass">@item.Priority</span>
+                                    <span class="custom-pill @statusClass">@item.Status</span>
+                                </div>
+
+                                <span class="request-date-small">
+                                    @item.RequestDate.ToString("dd MMM yyyy")
+                                </span>
+                            </div>
+
+                            <div class="mb-3">
+                                <p class="small-label mb-2">TYPE</p>
+                                <h3 class="request-title mb-0">@item.Skill?.Name</h3>
+                            </div>
+
+                            <div class="request-meta-list mb-3">
+                                <div class="request-meta-item">
+                                    <span class="request-meta-label">Tenant</span>
+                                    <span class="request-meta-value">@item.Tenant?.User?.FullName</span>
+                                </div>
+
+                                <div class="request-meta-item">
+                                    <span class="request-meta-label">Unit</span>
+                                    <span class="request-meta-value">@item.Unit?.UnitNumber</span>
+                                </div>
+
+                               
+                            </div>
+
+                            <div class="mt-auto">
+                                <div class="row g-2">
+                                    <div class="col-6 d-grid">
+                                        <a asp-action="Details" asp-route-id="@item.RequestId" class="btn btn-primary request-action-btn">
+                                            View Details
+                                        </a>
+                                    </div>
+                                    <div class="col-6 d-grid">
+                                        <a asp-action="Delete" asp-route-id="@item.RequestId" class="btn btn-outline-danger request-action-btn">
+                                            Delete
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="card shadow-soft border-0 empty-state-card">
+            <div class="card-body p-5 text-center">
+                <h4 class="mb-2">No maintenance requests found</h4>
+                <p class="text-muted mb-0">Try changing the search or filters.</p>
+            </div>
+        </div>
+    }
+</div>

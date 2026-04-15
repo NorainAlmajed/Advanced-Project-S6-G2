@@ -20,10 +20,69 @@ namespace AdvancedProject.Controllers
         }
 
         // GET: MaintenanceRequests
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchTerm, string priorityFilter, string statusFilter, int? typeFilter, string sortOrder)
         {
-            var aPContext = _context.MaintenanceRequests.Include(m => m.AssignedStaff).ThenInclude(e => e.User). Include(m => m.Skill).Include(m => m.Tenant).ThenInclude(e => e.User).Include(m => m.Unit);
-            return View(await aPContext.ToListAsync());
+            var query = _context.MaintenanceRequests
+                .Include(m => m.AssignedStaff)
+                    .ThenInclude(s => s.User)
+                .Include(m => m.Skill)
+                .Include(m => m.Tenant)
+                    .ThenInclude(t => t.User)
+                .Include(m => m.Unit)
+                .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                searchTerm = searchTerm.Trim();
+
+                query = query.Where(m =>
+                    m.RequestId.ToString().Contains(searchTerm) ||
+                    (m.Skill != null && m.Skill.Name.Contains(searchTerm)) ||
+                    (m.Tenant != null && m.Tenant.User != null && m.Tenant.User.FullName.Contains(searchTerm)));
+            }
+
+            if (!string.IsNullOrWhiteSpace(priorityFilter))
+            {
+                query = query.Where(m => m.Priority == priorityFilter);
+            }
+
+            if (!string.IsNullOrWhiteSpace(statusFilter))
+            {
+                query = query.Where(m => m.Status == statusFilter);
+            }
+
+            if (typeFilter.HasValue)
+            {
+                query = query.Where(m => m.SkillId == typeFilter.Value);
+            }
+
+            ViewBag.SearchTerm = searchTerm;
+            ViewBag.PriorityFilter = priorityFilter;
+            ViewBag.StatusFilter = statusFilter;
+            ViewBag.TypeFilter = typeFilter;
+
+            ViewBag.TypeList = new SelectList(
+                await _context.Skills.OrderBy(s => s.Name).ToListAsync(),
+                "SkillId",
+                "Name",
+                typeFilter
+            );
+
+
+            ViewBag.SortOrder = sortOrder;
+
+            query = sortOrder switch
+            {
+                "oldest" => query.OrderBy(m => m.RequestDate),
+                "id_asc" => query.OrderBy(m => m.RequestId),
+                "id_desc" => query.OrderByDescending(m => m.RequestId),
+                _ => query.OrderByDescending(m => m.RequestDate) // latest first
+            };
+
+
+            var requests = await query.ToListAsync();
+
+            return View(requests);
         }
 
         // GET: MaintenanceRequests/Details/5
