@@ -22,7 +22,7 @@ namespace AdvancedProject.Controllers
         // GET: MaintenanceRequests
         public async Task<IActionResult> Index()
         {
-            var aPContext = _context.MaintenanceRequests.Include(m => m.AssignedStaff).Include(m => m.Skill).Include(m => m.Tenant).Include(m => m.Unit);
+            var aPContext = _context.MaintenanceRequests.Include(m => m.AssignedStaff).ThenInclude(e => e.User). Include(m => m.Skill).Include(m => m.Tenant).ThenInclude(e => e.User).Include(m => m.Unit);
             return View(await aPContext.ToListAsync());
         }
 
