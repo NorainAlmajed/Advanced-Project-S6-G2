@@ -104,50 +104,58 @@ namespace AdvancedProject.Controllers
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
-            {
                 return NotFound();
-            }
 
-            var @property = await _context.Properties.FindAsync(id);
-            if (@property == null)
-            {
+            var property = await _context.Properties.FindAsync(id);
+            if (property == null)
                 return NotFound();
-            }
-            return View(@property);
+
+            ViewData["GovernorateId"] = new SelectList(
+                _context.Governorates,
+                "GovernorateId",
+                "Name",
+                property.GovernorateId
+            );
+
+            return View(property);
         }
 
         // POST: Properties/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("PropertyId,Name,City,Description,Block,Building,Road,GovernorateId")] Property @property)
+        public async Task<IActionResult> Edit(int id, [Bind("PropertyId,Name,City,Description,Block,Building,Road,GovernorateId")] Property property)
         {
-            if (id != @property.PropertyId)
-            {
+            if (id != property.PropertyId)
                 return NotFound();
-            }
 
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(@property);
+                    _context.Update(property);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!PropertyExists(@property.PropertyId))
-                    {
+                    if (!PropertyExists(property.PropertyId))
                         return NotFound();
-                    }
                     else
-                    {
                         throw;
-                    }
                 }
+
                 return RedirectToAction(nameof(Index));
             }
-            return View(@property);
+
+            ViewData["GovernorateId"] = new SelectList(
+                _context.Governorates,
+                "GovernorateId",
+                "Name",
+                property.GovernorateId
+            );
+
+            return View(property);
         }
+
 
         // GET: Properties/Delete/5
         public async Task<IActionResult> Delete(int? id)
