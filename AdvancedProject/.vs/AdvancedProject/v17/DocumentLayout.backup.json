@@ -70,9 +70,9 @@
               "Title": "site.css",
               "DocumentMoniker": "D:\\year3 sem2\\advanced programming project\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\wwwroot\\css\\site.css",
               "RelativeDocumentMoniker": "AdvancedProject\\wwwroot\\css\\site.css",
-              "ToolTip": "D:\\year3 sem2\\advanced programming project\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\wwwroot\\css\\site.css*",
-              "RelativeToolTip": "AdvancedProject\\wwwroot\\css\\site.css*",
-              "ViewState": "AgIAAMMFAAAAAAAAAAAYwOIFAAAFAAAAAAAAAA==",
+              "ToolTip": "D:\\year3 sem2\\advanced programming project\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\wwwroot\\css\\site.css",
+              "RelativeToolTip": "AdvancedProject\\wwwroot\\css\\site.css",
+              "ViewState": "AgIAAMgFAAAAAAAAAAAcwOIFAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
               "WhenOpened": "2026-04-16T17:39:12.496Z",
               "EditorCaption": ""
@@ -83,12 +83,11 @@
               "Title": "Index.cshtml",
               "DocumentMoniker": "D:\\year3 sem2\\advanced programming project\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Views\\Notifications\\Index.cshtml",
               "RelativeDocumentMoniker": "AdvancedProject\\Views\\Notifications\\Index.cshtml",
-              "ToolTip": "D:\\year3 sem2\\advanced programming project\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Views\\Notifications\\Index.cshtml*",
-              "RelativeToolTip": "AdvancedProject\\Views\\Notifications\\Index.cshtml*",
+              "ToolTip": "D:\\year3 sem2\\advanced programming project\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Views\\Notifications\\Index.cshtml",
+              "RelativeToolTip": "AdvancedProject\\Views\\Notifications\\Index.cshtml",
               "ViewState": "AgIAAGMAAAAAAAAAAAAAAGMAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-04-16T17:23:30.469Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-16T17:23:30.469Z"
             },
             {
               "$type": "Document",
@@ -100,8 +99,7 @@
               "RelativeToolTip": "AdvancedProject\\Controllers\\NotificationsController.cs",
               "ViewState": "AgIAABAAAAAAAAAAAAAQwCgAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-16T17:23:09.337Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-16T17:23:09.337Z"
             },
             {
               "$type": "Document",
@@ -173,8 +171,7 @@
               "RelativeToolTip": "AdvancedProject\\Data\\APContext.cs",
               "ViewState": "AgIAAHoBAAAAAAAAAAAIwJABAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-16T16:23:16.915Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-16T16:23:16.915Z"
             },
             {
               "$type": "Document",
@@ -198,8 +195,7 @@
               "RelativeToolTip": "AdvancedProject\\Controllers\\MaintenanceRequestsController.cs",
               "ViewState": "AgIAAGIBAAAAAAAAAAAIwGcBAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-16T16:21:28.971Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-16T16:21:28.971Z"
             },
             {
               "$type": "Document",
