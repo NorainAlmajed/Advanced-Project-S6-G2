@@ -125,7 +125,7 @@ namespace AdvancedProject.Controllers
         // POST: Payments/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("LeaseId,Status,PaymentMethodId,PaymentFrequencyId, StartDate")] Payment payment)
+        public async Task<IActionResult> Create([Bind("LeaseId,Status,PaymentMethodId,PaymentFrequencyId, StartDate,GovernorateId")] Payment payment)
         {
             if (ModelState.IsValid)
             {
