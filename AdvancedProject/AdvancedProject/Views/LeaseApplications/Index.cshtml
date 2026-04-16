@@ -95,8 +95,14 @@
                             <tr>
                                 <td class="fw-bold">@item.ApplicationId</td>
 
-                                <td>@item.Tenant.User.FullName</td>
-
+                                <td>
+                                    <div class="fw-semibold">
+                                        @item.Tenant.User.FullName
+                                    </div>
+                                    <div class="lease-property-name">
+                                        @item.Tenant.User.Username
+                                    </div>
+                                </td>
                                 <td>
                                     <div class="fw-semibold">@item.Unit.UnitNumber</div>
                                     <div class="lease-property-name">@item.Unit.Property.Name</div>
