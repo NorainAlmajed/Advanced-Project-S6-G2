@@ -9,7 +9,6 @@ namespace AdvancedProject.Models;
 
 [Index("AssignedStaffId", Name = "IX_MaintenanceRequests_AssignedStaffId")]
 [Index("SkillId", Name = "IX_MaintenanceRequests_SkillId")]
-[Index("TenantId", Name = "IX_MaintenanceRequests_TenantId")]
 [Index("UnitId", Name = "IX_MaintenanceRequests_UnitId")]
 public partial class MaintenanceRequest
 {
@@ -19,7 +18,11 @@ public partial class MaintenanceRequest
     [Display(Name = "Unit Number")]
     public int UnitId { get; set; }
 
-    public int TenantId { get; set; }
+    public int UserId { get; set; }
+
+    [ForeignKey("UserId")]
+    [ValidateNever]
+    public virtual User User { get; set; } = null!;
 
     public DateTime RequestDate { get; set; }
 
@@ -58,10 +61,6 @@ public partial class MaintenanceRequest
     [InverseProperty("MaintenanceRequests")]
     public virtual Skill Skill { get; set; } = null!;
 
-    [ValidateNever]
-    [ForeignKey("TenantId")]
-    [InverseProperty("MaintenanceRequests")]
-    public virtual Tenant Tenant { get; set; } = null!;
 
     [ValidateNever]
     [ForeignKey("UnitId")]

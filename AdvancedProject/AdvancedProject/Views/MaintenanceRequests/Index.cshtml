@@ -32,7 +32,7 @@
                                name="searchTerm"
                                value="@ViewBag.SearchTerm"
                                class="form-control users-search-input"
-                               placeholder="Search by request ID, type, or tenant full name..." />
+                               placeholder="Search by request ID, type, or user phone number..." />
                     </div>
 
                     <!-- FILTERS -->
@@ -144,8 +144,8 @@
 
                             <div class="request-meta-list mb-2">
                                 <div class="request-meta-item">
-                                    <span class="request-meta-label">Tenant</span>
-                                    <span class="request-meta-value">@item.Tenant?.User?.FullName</span>
+                                    <span class="request-meta-label">Phone Number</span>
+                                    <span class="request-meta-value">@item.User?.Phone</span>
                                 </div>
 
                                 <div class="request-meta-item">

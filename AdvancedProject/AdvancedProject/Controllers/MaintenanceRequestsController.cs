@@ -26,8 +26,7 @@ namespace AdvancedProject.Controllers
             .Include(m => m.AssignedStaff)
                 .ThenInclude(s => s.User)
             .Include(m => m.Skill)
-            .Include(m => m.Tenant)
-                .ThenInclude(t => t.User)
+            .Include(m => m.User)
             .Include(m => m.Unit)
                 .ThenInclude(u => u.Property)
             .AsQueryable();
@@ -39,7 +38,7 @@ namespace AdvancedProject.Controllers
                 query = query.Where(m =>
                     m.RequestId.ToString().Contains(searchTerm) ||
                     (m.Skill != null && m.Skill.Name.Contains(searchTerm)) ||
-                    (m.Tenant != null && m.Tenant.User != null && m.Tenant.User.FullName.Contains(searchTerm)));
+                   (m.User != null && (m.User.Phone.Contains(searchTerm) )));
             }
 
             if (!string.IsNullOrWhiteSpace(priorityFilter))
@@ -97,7 +96,7 @@ namespace AdvancedProject.Controllers
             var maintenanceRequest = await _context.MaintenanceRequests
                 .Include(m => m.AssignedStaff)
                 .Include(m => m.Skill)
-                .Include(m => m.Tenant)
+                .Include(m => m.User)
                 .Include(m => m.Unit)
                 .FirstOrDefaultAsync(m => m.RequestId == id);
             if (maintenanceRequest == null)
@@ -111,7 +110,7 @@ namespace AdvancedProject.Controllers
         // GET: MaintenanceRequests/Create
         public IActionResult Create()
         {
-            int tenantId = 3; // temporary logged-in user
+            int tenantId = 1; // temporary logged-in user
 
             var activeLeases = _context.Leases
             .Include(l => l.Unit)
@@ -158,7 +157,7 @@ namespace AdvancedProject.Controllers
 
             if (ModelState.IsValid)
             {
-                maintenanceRequest.TenantId = 1;
+                maintenanceRequest.UserId = 2;
                 maintenanceRequest.RequestDate = DateTime.Now;
                 maintenanceRequest.Status = "Pending";
 
@@ -211,13 +210,13 @@ namespace AdvancedProject.Controllers
                 return NotFound();
 
             var maintenanceRequest = await _context.MaintenanceRequests
-                .Include(m => m.Tenant)
+                .Include(m => m.User)
                 .FirstOrDefaultAsync(m => m.RequestId == id);
 
             if (maintenanceRequest == null)
                 return NotFound();
 
-            int tenantId = maintenanceRequest.TenantId;
+            int tenantId = maintenanceRequest.UserId;
 
             // STEP 1: get UNIT IDs from leases only (safe + stable)
             var unitIds = await _context.Leases
@@ -326,7 +325,7 @@ namespace AdvancedProject.Controllers
             var maintenanceRequest = await _context.MaintenanceRequests
                 .Include(m => m.AssignedStaff)
                 .Include(m => m.Skill)
-                .Include(m => m.Tenant)
+                .Include(m => m.User)
                 .Include(m => m.Unit)
                 .FirstOrDefaultAsync(m => m.RequestId == id);
             if (maintenanceRequest == null)

@@ -46,4 +46,7 @@ public partial class User
 
     [InverseProperty("User")]
     public virtual ICollection<Tenant> Tenants { get; set; } = new List<Tenant>();
+
+    [InverseProperty("User")]
+    public virtual ICollection<MaintenanceRequest> MaintenanceRequests { get; set; } = new List<MaintenanceRequest>();
 }

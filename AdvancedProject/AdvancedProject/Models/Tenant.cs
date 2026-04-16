@@ -26,9 +26,6 @@ public partial class Tenant
     [InverseProperty("Tenant")]
     public virtual ICollection<Lease> Leases { get; set; } = new List<Lease>();
 
-    [InverseProperty("Tenant")]
-    public virtual ICollection<MaintenanceRequest> MaintenanceRequests { get; set; } = new List<MaintenanceRequest>();
-
     [ForeignKey("UserId")]
     [InverseProperty("Tenants")]
     public virtual User User { get; set; } = null!;
