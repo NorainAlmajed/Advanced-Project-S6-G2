@@ -57,21 +57,33 @@ namespace AdvancedProject.Controllers
         }
 
         // POST: Payments/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("PaymentId,LeaseId,Amount,StartDate,EndDate,Status,PaymentMethodId,PaymentFrequencyId")] Payment payment)
+        public async Task<IActionResult> Create([Bind("LeaseId,Status,PaymentMethodId,PaymentFrequencyId")] Payment payment)
         {
             if (ModelState.IsValid)
             {
+                var lease = await _context.Leases.FindAsync(payment.LeaseId);
+                var frequency = await _context.PaymentFrequencies.FindAsync(payment.PaymentFrequencyId);
+
+                if (lease == null || frequency == null)
+                {
+                    return NotFound();
+                }
+
+                payment.StartDate = lease.StartDate;
+                payment.EndDate = payment.StartDate.AddDays(7);
+                payment.Amount = lease.MonthlyRent * frequency.Frequency;
+
                 _context.Add(payment);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+
             ViewData["LeaseId"] = new SelectList(_context.Leases, "LeaseId", "LeaseId", payment.LeaseId);
             ViewData["PaymentFrequencyId"] = new SelectList(_context.PaymentFrequencies, "PaymentFrequencyId", "Name", payment.PaymentFrequencyId);
             ViewData["PaymentMethodId"] = new SelectList(_context.PaymentMethods, "PaymentMethodId", "Name", payment.PaymentMethodId);
+
             return View(payment);
         }
 
