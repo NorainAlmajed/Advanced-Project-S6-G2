@@ -44,7 +44,7 @@
               "RelativeDocumentMoniker": "AdvancedProject\\Views\\LeaseApplications\\Create.cshtml",
               "ToolTip": "D:\\year3 sem2\\advanced programming project\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Views\\LeaseApplications\\Create.cshtml",
               "RelativeToolTip": "AdvancedProject\\Views\\LeaseApplications\\Create.cshtml",
-              "ViewState": "AgIAAB4AAAAAAAAAAAAAADYAAAABAAAAAAAAAA==",
+              "ViewState": "AgIAADAAAAAAAAAAAADwvzYAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2026-04-16T19:26:10.384Z",
               "EditorCaption": ""
@@ -83,8 +83,7 @@
               "RelativeToolTip": "AdvancedProject\\Views\\Payments\\Index.cshtml",
               "ViewState": "AgIAAHUAAAAAAAAAAAAAAI0AAAAGAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-04-16T18:57:01.446Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-16T18:57:01.446Z"
             },
             {
               "$type": "Document",
@@ -96,8 +95,7 @@
               "RelativeToolTip": "AdvancedProject\\Controllers\\PaymentsController.cs",
               "ViewState": "AgIAADMAAAAAAAAAAAAAAEYAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-16T18:56:25.85Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-16T18:56:25.85Z"
             }
           ]
         }
