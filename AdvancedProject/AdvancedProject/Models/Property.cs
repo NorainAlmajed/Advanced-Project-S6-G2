@@ -1,8 +1,9 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore;
 
 namespace AdvancedProject.Models;
 
@@ -35,4 +36,10 @@ public partial class Property
 
     [InverseProperty("Property")]
     public virtual ICollection<Unit> Units { get; set; } = new List<Unit>();
+
+    public int GovernorateId { get; set; }
+
+    [ForeignKey("GovernorateId")]
+    [ValidateNever]
+    public virtual Governorate Governorate { get; set; } = null!;
 }
