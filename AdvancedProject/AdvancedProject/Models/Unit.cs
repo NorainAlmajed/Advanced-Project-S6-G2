@@ -21,16 +21,18 @@ public partial class Unit
     public int UnitTypeId { get; set; }
 
     [ForeignKey("UnitTypeId")]
-    public virtual UnitType UnitType { get; set; } = null!;
+    public virtual UnitType? UnitType { get; set; } = null!;
 
-    [Column(TypeName = "decimal(10, 0)")]
+    [Required(ErrorMessage = "Size is required")]
+    [Range(1, 100000)]
     public decimal SizeSqFt { get; set; }
 
-    [Column(TypeName = "decimal(10, 0)")]
+    [Required(ErrorMessage = "Rent is required")]
+    [Range(1, 100000)]
     public decimal RentAmount { get; set; }
 
     [StringLength(20)]
-    public string AvailabilityStatus { get; set; } = null!;
+    public string AvailabilityStatus { get; set; } = "Pending";
 
     public DateTime CreatedAt { get; set; }
 
