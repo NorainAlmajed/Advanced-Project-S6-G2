@@ -53,6 +53,9 @@ namespace AdvancedProject.Controllers
             ViewData["LeaseId"] = new SelectList(_context.Leases, "LeaseId", "LeaseId");
             ViewData["PaymentFrequencyId"] = new SelectList(_context.PaymentFrequencies, "PaymentFrequencyId", "Name");
             ViewData["PaymentMethodId"] = new SelectList(_context.PaymentMethods, "PaymentMethodId", "Name");
+
+            ViewData["StatusList"] = new SelectList(new List<string> {"Pending", "Paid", "Late"});
+
             return View();
         }
 
@@ -83,6 +86,7 @@ namespace AdvancedProject.Controllers
             ViewData["LeaseId"] = new SelectList(_context.Leases, "LeaseId", "LeaseId", payment.LeaseId);
             ViewData["PaymentFrequencyId"] = new SelectList(_context.PaymentFrequencies, "PaymentFrequencyId", "Name", payment.PaymentFrequencyId);
             ViewData["PaymentMethodId"] = new SelectList(_context.PaymentMethods, "PaymentMethodId", "Name", payment.PaymentMethodId);
+            ViewData["StatusList"] = new SelectList(new List<string>{"Pending", "Paid", "Late"});
 
             return View(payment);
         }
