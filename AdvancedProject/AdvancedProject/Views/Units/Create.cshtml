@@ -8,50 +8,51 @@
 
 <h4>Unit</h4>
 <hr />
+
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="PropertyId" class="control-label"></label>
-                <select asp-for="PropertyId" class ="form-control" asp-items="ViewBag.PropertyId"></select>
-            </div>
+        <form asp-action="Create" method="post">
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <input type="hidden" asp-for="PropertyId" />
             <div class="form-group">
                 <label asp-for="UnitNumber" class="control-label"></label>
-                <input asp-for="UnitNumber" class="form-control" />
+                <input asp-for="UnitNumber" class="form-control" placeholder="-- Enter Unit Number --" />
                 <span asp-validation-for="UnitNumber" class="text-danger"></span>
             </div>
+
             <div class="form-group">
                 <label asp-for="UnitTypeId" class="control-label"></label>
-                <select asp-for="UnitTypeId" class="form-control" asp-items="ViewBag.UnitTypeId"></select>
+                <select asp-for="UnitTypeId" class="form-control" asp-items="ViewBag.UnitTypeId">
+                    <option value="">-- Select Unit Type --</option>
+                </select>
                 <span asp-validation-for="UnitTypeId" class="text-danger"></span>
             </div>
+
             <div class="form-group">
                 <label asp-for="SizeSqFt" class="control-label"></label>
-                <input asp-for="SizeSqFt" class="form-control" />
+                <input asp-for="SizeSqFt" class="form-control" placeholder="-- Enter Size (SqFt) --" />
                 <span asp-validation-for="SizeSqFt" class="text-danger"></span>
             </div>
+
             <div class="form-group">
                 <label asp-for="RentAmount" class="control-label"></label>
-                <input asp-for="RentAmount" class="form-control" />
+                <input asp-for="RentAmount" class="form-control" placeholder="-- Enter Rent Amount --" />
                 <span asp-validation-for="RentAmount" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="AvailabilityStatus" class="control-label"></label>
-                <input asp-for="AvailabilityStatus" class="form-control" />
-                <span asp-validation-for="AvailabilityStatus" class="text-danger"></span>
-            </div>
-            <div class="form-group">
+
+            <div class="form-group mt-3">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
-<div>
+<div class="mt-3">
     <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }
