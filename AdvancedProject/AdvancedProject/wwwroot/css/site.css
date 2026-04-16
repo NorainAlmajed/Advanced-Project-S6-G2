@@ -1505,3 +1505,75 @@ body {
         color: #dc3545;
         background: #fff1f2;
     }
+
+
+
+/* ============================= */
+/*           Payments            */
+/* ============================= */
+
+.payments-page .users-subtitle {
+    color: var(--text-muted);
+    font-size: 1.05rem;
+}
+
+.payment-total-box {
+    background: rgba(255, 255, 255, 0.92);
+    border-radius: 14px;
+    min-height: 56px;
+    height: 56px;
+    padding: 0.7rem 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid rgba(255, 255, 255, 0.45);
+}
+
+.payment-total-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: #6b7280;
+    text-transform: uppercase;
+    line-height: 1;
+    margin-bottom: 0.15rem;
+}
+
+.payment-total-value {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--text-main);
+    line-height: 1;
+}
+
+.payment-status-paid {
+    background: rgba(30, 142, 110, 0.14);
+    color: var(--accent);
+}
+
+.payment-status-pending {
+    background: rgba(245, 158, 11, 0.18);
+    color: #b45309;
+}
+
+.payment-status-late {
+    background: rgba(220, 53, 69, 0.14);
+    color: #b42318;
+}
+
+.payment-details-btn {
+    background-color: var(--primary);
+    color: white;
+    border: 1px solid var(--primary);
+    border-radius: 12px;
+    font-weight: 700;
+    min-height: 42px;
+    padding: 0.55rem 1rem;
+}
+
+    .payment-details-btn:hover {
+        background-color: var(--primary-light);
+        border-color: var(--primary-light);
+        color: white;
+    }
