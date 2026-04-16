@@ -2,69 +2,147 @@
 
 @{
     ViewData["Title"] = "Lease Applications";
+
+    var currentSearchTerm = ViewData["CurrentSearchTerm"]?.ToString();
+    var currentStatusFilter = ViewData["CurrentStatusFilter"]?.ToString();
+    var currentDateFilter = ViewData["CurrentDateFilter"]?.ToString();
+    var totalApplications = ViewData["TotalApplications"] ?? 0;
 }
 
-<h1>Lease Applications</h1>
+<div class="lease-applications-page">
+    <div class="d-flex flex-column flex-lg-row align-items-lg-center justify-content-between gap-3 mb-4">
+        <div>
+            <h1 class="details-title mb-2">Lease Applications</h1>
+            <p class="users-subtitle mb-0">
+                Browse and manage lease applications by tenant, unit, property, and status.
+            </p>
+        </div>
+    </div>
 
-<a asp-controller="Properties" asp-action="Index">Create New</a>
+    <div class="card search-card users-search-card shadow-soft border-0 mb-4">
+        <div class="card-body p-4">
+            <form asp-action="Index" method="get">
+                <div class="row g-3 align-items-end">
+                    <div class="col-lg-5">
+                        <label class="form-label fw-semibold text-white">Search Applications</label>
+                        <input type="text"
+                               name="searchTerm"
+                               value="@currentSearchTerm"
+                               class="form-control users-search-input"
+                               placeholder="Search by application ID, tenant, unit, or property..." />
+                    </div>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.ApplicationId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Tenant)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Unit)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ApplicationDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.StartDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Duration)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Status)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.ApplicationId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Tenant.User.FullName)
-            </td>
-            <td>
-                 @Html.DisplayFor(modelItem => item.Unit.UnitNumber)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ApplicationDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.StartDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Duration.Months)
-            </td>
-            <td>
-                 @Html.DisplayFor(modelItem => item.Status)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.ApplicationId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.ApplicationId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.ApplicationId">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+                    <div class="col-lg-2">
+                        <label class="form-label fw-semibold text-white">Status</label>
+                        <select name="statusFilter" class="form-select users-search-input">
+                            <option value="">All Statuses</option>
+                            <option value="Pending" selected="@(currentStatusFilter == "Pending")">Pending</option>
+                            <option value="Approved" selected="@(currentStatusFilter == "Approved")">Approved</option>
+                            <option value="Rejected" selected="@(currentStatusFilter == "Rejected")">Rejected</option>
+                        </select>
+                    </div>
+
+                    <div class="col-lg-2">
+                        <label class="form-label fw-semibold text-white">Application Date</label>
+                        <select name="dateFilter" class="form-select users-search-input">
+                            <option value="">All Dates</option>
+                            <option value="Latest" selected="@(currentDateFilter == "Latest")">Latest</option>
+                            <option value="Oldest" selected="@(currentDateFilter == "Oldest")">Oldest</option>
+                        </select>
+                    </div>
+
+                    <div class="col-lg-1">
+                        <div class="lease-total-box">
+                            <span class="lease-total-label">Total</span>
+                            <span class="lease-total-value">@totalApplications</span>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-1">
+                        <button type="submit" class="btn btn-primary users-search-btn w-100">
+                            Search
+                        </button>
+                    </div>
+
+                    <div class="col-lg-1">
+                        <a asp-action="Index" class="btn btn-outline-light users-reset-btn w-100">
+                            Reset
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="users-table-card">
+        <div class="table-responsive">
+            <table class="table users-table align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th>Application ID</th>
+                        <th>Tenant</th>
+                        <th>Unit</th>
+                        <th>Applied On</th>
+                        <th>Status</th>
+                        <th class="text-center">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Any())
+                    {
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class="fw-bold">@item.ApplicationId</td>
+
+                                <td>@item.Tenant.User.FullName</td>
+
+                                <td>
+                                    <div class="fw-semibold">@item.Unit.UnitNumber</div>
+                                    <div class="lease-property-name">@item.Unit.Property.Name</div>
+                                </td>
+
+                                <td>@item.ApplicationDate.ToString("dd MMM yyyy")</td>
+
+                                <td>
+                                    @if (item.Status == "Approved")
+                                    {
+                                        <span class="custom-pill lease-status-approved">Approved</span>
+                                    }
+                                    else if (item.Status == "Pending")
+                                    {
+                                        <span class="custom-pill lease-status-pending">Pending</span>
+                                    }
+                                    else if (item.Status == "Rejected")
+                                    {
+                                        <span class="custom-pill lease-status-rejected">Rejected</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="custom-pill badge-soft-default">@item.Status</span>
+                                    }
+                                </td>
+
+                                <td class="text-center">
+                                    <a asp-action="Details"
+                                       asp-route-id="@item.ApplicationId"
+                                       class="btn btn-primary users-details-btn">
+                                        View Details
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="6" class="text-center py-4">
+                                No lease applications found.
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
