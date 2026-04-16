@@ -4,6 +4,7 @@ using AdvancedProject.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AdvancedProject.Migrations
 {
     [DbContext(typeof(APContext))]
-    partial class APContextModelSnapshot : ModelSnapshot
+    [Migration("20260416134106_UpdatesOnPaymentTables")]
+    partial class UpdatesOnPaymentTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -177,9 +180,9 @@ namespace AdvancedProject.Migrations
                             LeaseId = 2,
                             CreatedAt = new DateTime(2026, 3, 5, 6, 44, 3, 0, DateTimeKind.Unspecified),
                             DurationId = 1,
-                            EndDate = new DateTime(2026, 11, 5, 6, 44, 3, 0, DateTimeKind.Unspecified),
+                            EndDate = new DateTime(2026, 6, 30, 8, 0, 0, 0, DateTimeKind.Unspecified),
                             MonthlyRent = 500m,
-                            StartDate = new DateTime(2026, 3, 5, 6, 44, 3, 0, DateTimeKind.Unspecified),
+                            StartDate = new DateTime(2026, 7, 1, 12, 6, 12, 0, DateTimeKind.Unspecified),
                             Status = "Active",
                             TenantId = 2,
                             UnitId = 3
@@ -717,20 +720,19 @@ namespace AdvancedProject.Migrations
                     b.Property<decimal>("Amount")
                         .HasColumnType("decimal(10, 2)");
 
-                    b.Property<DateTime>("EndDate")
-                        .HasColumnType("datetime2");
-
                     b.Property<int>("LeaseId")
                         .HasColumnType("int");
+
+                    b.Property<DateTime>("PaymentDate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("(getdate())");
 
                     b.Property<int>("PaymentFrequencyId")
                         .HasColumnType("int");
 
                     b.Property<int>("PaymentMethodId")
                         .HasColumnType("int");
-
-                    b.Property<DateTime>("StartDate")
-                        .HasColumnType("datetime2");
 
                     b.Property<string>("Status")
                         .IsRequired()
@@ -752,55 +754,50 @@ namespace AdvancedProject.Migrations
                         {
                             PaymentId = 1,
                             Amount = 300m,
-                            EndDate = new DateTime(2026, 3, 8, 12, 11, 5, 0, DateTimeKind.Unspecified),
                             LeaseId = 1,
+                            PaymentDate = new DateTime(2026, 3, 1, 12, 11, 5, 0, DateTimeKind.Unspecified),
                             PaymentFrequencyId = 1,
                             PaymentMethodId = 1,
-                            StartDate = new DateTime(2026, 3, 1, 12, 11, 5, 0, DateTimeKind.Unspecified),
                             Status = "Paid"
                         },
                         new
                         {
                             PaymentId = 2,
                             Amount = 6000m,
-                            EndDate = new DateTime(2026, 3, 12, 9, 33, 12, 0, DateTimeKind.Unspecified),
                             LeaseId = 2,
+                            PaymentDate = new DateTime(2026, 3, 5, 9, 33, 12, 0, DateTimeKind.Unspecified),
                             PaymentFrequencyId = 4,
                             PaymentMethodId = 4,
-                            StartDate = new DateTime(2026, 3, 5, 9, 33, 12, 0, DateTimeKind.Unspecified),
                             Status = "Paid"
                         },
                         new
                         {
                             PaymentId = 3,
                             Amount = 2100m,
-                            EndDate = new DateTime(2026, 3, 17, 22, 11, 9, 0, DateTimeKind.Unspecified),
                             LeaseId = 3,
+                            PaymentDate = new DateTime(2026, 3, 10, 22, 11, 9, 0, DateTimeKind.Unspecified),
                             PaymentFrequencyId = 3,
                             PaymentMethodId = 2,
-                            StartDate = new DateTime(2026, 3, 10, 22, 11, 9, 0, DateTimeKind.Unspecified),
                             Status = "Late"
                         },
                         new
                         {
                             PaymentId = 4,
                             Amount = 1650m,
-                            EndDate = new DateTime(2026, 3, 19, 7, 15, 22, 0, DateTimeKind.Unspecified),
                             LeaseId = 4,
+                            PaymentDate = new DateTime(2026, 3, 12, 7, 15, 22, 0, DateTimeKind.Unspecified),
                             PaymentFrequencyId = 2,
                             PaymentMethodId = 5,
-                            StartDate = new DateTime(2026, 3, 12, 7, 15, 22, 0, DateTimeKind.Unspecified),
                             Status = "Paid"
                         },
                         new
                         {
                             PaymentId = 5,
                             Amount = 250m,
-                            EndDate = new DateTime(2026, 3, 22, 8, 19, 27, 0, DateTimeKind.Unspecified),
                             LeaseId = 5,
+                            PaymentDate = new DateTime(2026, 3, 15, 8, 19, 27, 0, DateTimeKind.Unspecified),
                             PaymentFrequencyId = 1,
                             PaymentMethodId = 3,
-                            StartDate = new DateTime(2026, 3, 15, 8, 19, 27, 0, DateTimeKind.Unspecified),
                             Status = "Pending"
                         });
                 });

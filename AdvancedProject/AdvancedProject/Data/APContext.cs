@@ -48,6 +48,10 @@ public partial class APContext : DbContext
 
     public DbSet<NotificationType> NotificationTypes { get; set; }
 
+    public virtual DbSet<PaymentMethod> PaymentMethods { get; set; }
+
+    public virtual DbSet<PaymentFrequency> PaymentFrequencies { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
         => optionsBuilder.UseSqlServer("Server=(localdb)\\MSSQLLocalDB;Database=AdvancedDB;Trusted_Connection=True;TrustServerCertificate=True;");
@@ -123,7 +127,6 @@ public partial class APContext : DbContext
 
         modelBuilder.Entity<Payment>(entity =>
         {
-            entity.Property(e => e.PaymentDate).HasDefaultValueSql("(getdate())");
 
             entity.HasOne(d => d.Lease).WithMany(p => p.Payments).OnDelete(DeleteBehavior.ClientSetNull);
         });
@@ -284,18 +287,34 @@ public partial class APContext : DbContext
 
         modelBuilder.Entity<Lease>().HasData(
       new Lease { LeaseId = 1, TenantId = 1, UnitId = 1, StartDate = new DateTime(2026, 6, 1, 8, 0, 0), EndDate = new DateTime(2026, 12, 1, 8, 0, 0), MonthlyRent = 300, Status = "Active", CreatedAt = new DateTime(2026, 2, 2, 13, 22, 17), DurationId = 1 },
-      new Lease { LeaseId = 2, TenantId = 2, UnitId = 3, StartDate = new DateTime(2026, 7, 1, 12, 6, 12), EndDate = new DateTime(2026, 6, 30, 8, 0 ,0), MonthlyRent = 500, Status = "Active", CreatedAt = new DateTime(2026, 3, 5, 6, 44, 3) , DurationId = 1}, 
+      new Lease { LeaseId = 2, TenantId = 2, UnitId = 3, StartDate = new DateTime(2026, 3, 5, 6, 44, 3), EndDate = new DateTime(2026, 11, 5, 6, 44, 3), MonthlyRent = 500, Status = "Active", CreatedAt = new DateTime(2026, 3, 5, 6, 44, 3) , DurationId = 1}, 
       new Lease { LeaseId = 3, TenantId = 3, UnitId = 1, StartDate = new DateTime(2026, 3, 10, 11, 1, 22), EndDate = new DateTime(2027, 3, 10, 8, 0, 0), MonthlyRent = 350, Status = "Terminated", CreatedAt = new DateTime(2026, 3, 10, 7, 52, 33) , DurationId = 3}, 
       new Lease { LeaseId = 4, TenantId = 4, UnitId = 4, StartDate = new DateTime(2026, 3, 15, 8, 0, 0), EndDate = new DateTime(2027, 3, 14, 8, 0, 0), MonthlyRent = 550, Status = "Active", CreatedAt = new DateTime(2026, 2, 5, 14, 30, 0), DurationId = 2 },
       new Lease { LeaseId = 5, TenantId = 5, UnitId = 5, StartDate = new DateTime(2026, 2, 1, 8, 0, 0), EndDate = new DateTime(2028, 1, 31, 8, 0, 0), MonthlyRent = 250, Status = "Active", CreatedAt = new DateTime(2026, 1, 15, 4, 32, 29) , DurationId = 3} 
   );
 
+        modelBuilder.Entity<PaymentMethod>().HasData(
+        new PaymentMethod { PaymentMethodId = 1, Name = "Cash" },
+        new PaymentMethod { PaymentMethodId = 2, Name = "Bank Transfer" },
+        new PaymentMethod { PaymentMethodId = 3, Name = "Credit Card" },
+        new PaymentMethod { PaymentMethodId = 4, Name = "Debit Card" },
+        new PaymentMethod { PaymentMethodId = 5, Name = "BenefitPay" }
+    );
+
+
+         modelBuilder.Entity<PaymentFrequency>().HasData(
+        new PaymentFrequency { PaymentFrequencyId = 1, Frequency = 1, Name = "Monthly"},
+        new PaymentFrequency { PaymentFrequencyId = 2, Frequency = 3, Name = "Quarterly (every 3 months)"},
+        new PaymentFrequency { PaymentFrequencyId = 3, Frequency = 6, Name = "Semi-Annual (every 6 months)"},
+        new PaymentFrequency { PaymentFrequencyId = 4, Frequency = 12, Name = "Yearly"}
+    );
+
         modelBuilder.Entity<Payment>().HasData(
-       new Payment { PaymentId = 1, LeaseId = 1, Amount = 300, PaymentDate = new DateTime(2026, 3, 1, 12, 11, 5), Status = "Paid" },
-       new Payment { PaymentId = 2, LeaseId = 2, Amount = 500, PaymentDate = new DateTime(2026, 3, 5, 9, 33, 12), Status = "Paid" },
-       new Payment { PaymentId = 3, LeaseId = 3, Amount = 350, PaymentDate = new DateTime(2026, 3, 10, 22, 11, 9), Status = "Late" },
-       new Payment { PaymentId = 4, LeaseId = 4, Amount = 550, PaymentDate = new DateTime(2026, 3, 12, 7, 15, 22), Status = "Paid" },
-       new Payment { PaymentId = 5, LeaseId = 5, Amount = 250, PaymentDate = new DateTime(2026, 3, 15, 8, 19, 27), Status = "Pending" }
+       new Payment { PaymentId = 1, LeaseId = 1, Amount = 300, StartDate = new DateTime(2026, 3, 1, 12, 11, 5), EndDate = new DateTime(2026, 3, 8, 12, 11, 5), Status = "Paid", PaymentMethodId = 1, PaymentFrequencyId = 1},
+       new Payment { PaymentId = 2, LeaseId = 2, Amount = 6000, StartDate = new DateTime(2026, 3, 5, 9, 33, 12), EndDate = new DateTime(2026, 3, 12, 9, 33, 12), Status = "Paid", PaymentMethodId = 4, PaymentFrequencyId = 4 },
+       new Payment { PaymentId = 3, LeaseId = 3, Amount = 2100, StartDate = new DateTime(2026, 3, 10, 22, 11, 9), EndDate = new DateTime(2026, 3, 17, 22, 11, 9), Status = "Late", PaymentMethodId = 2, PaymentFrequencyId = 3 },
+       new Payment { PaymentId = 4, LeaseId = 4, Amount = 1650, StartDate = new DateTime(2026, 3, 12, 7, 15, 22), EndDate = new DateTime(2026, 3, 19, 7, 15, 22), Status = "Paid", PaymentMethodId = 5, PaymentFrequencyId = 2 },
+       new Payment { PaymentId = 5, LeaseId = 5, Amount = 250, StartDate = new DateTime(2026, 3, 15, 8, 19, 27), EndDate = new DateTime(2026, 3, 22, 8, 19, 27), Status = "Pending", PaymentMethodId = 3, PaymentFrequencyId = 1 }
    );
 
         modelBuilder.Entity<NotificationType>().HasData(

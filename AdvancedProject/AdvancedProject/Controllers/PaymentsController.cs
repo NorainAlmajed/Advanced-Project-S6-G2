@@ -22,7 +22,7 @@ namespace AdvancedProject.Controllers
         // GET: Payments
         public async Task<IActionResult> Index()
         {
-            var aPContext = _context.Payments.Include(p => p.Lease);
+            var aPContext = _context.Payments.Include(p => p.Lease).Include(p => p.PaymentFrequency).Include(p => p.PaymentMethod);
             return View(await aPContext.ToListAsync());
         }
 
@@ -36,6 +36,8 @@ namespace AdvancedProject.Controllers
 
             var payment = await _context.Payments
                 .Include(p => p.Lease)
+                .Include(p => p.PaymentFrequency)
+                .Include(p => p.PaymentMethod)
                 .FirstOrDefaultAsync(m => m.PaymentId == id);
             if (payment == null)
             {
@@ -49,6 +51,8 @@ namespace AdvancedProject.Controllers
         public IActionResult Create()
         {
             ViewData["LeaseId"] = new SelectList(_context.Leases, "LeaseId", "LeaseId");
+            ViewData["PaymentFrequencyId"] = new SelectList(_context.PaymentFrequencies, "PaymentFrequencyId", "Name");
+            ViewData["PaymentMethodId"] = new SelectList(_context.PaymentMethods, "PaymentMethodId", "Name");
             return View();
         }
 
@@ -57,7 +61,7 @@ namespace AdvancedProject.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("PaymentId,LeaseId,Amount,PaymentDate,Status")] Payment payment)
+        public async Task<IActionResult> Create([Bind("PaymentId,LeaseId,Amount,StartDate,EndDate,Status,PaymentMethodId,PaymentFrequencyId")] Payment payment)
         {
             if (ModelState.IsValid)
             {
@@ -66,6 +70,8 @@ namespace AdvancedProject.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["LeaseId"] = new SelectList(_context.Leases, "LeaseId", "LeaseId", payment.LeaseId);
+            ViewData["PaymentFrequencyId"] = new SelectList(_context.PaymentFrequencies, "PaymentFrequencyId", "Name", payment.PaymentFrequencyId);
+            ViewData["PaymentMethodId"] = new SelectList(_context.PaymentMethods, "PaymentMethodId", "Name", payment.PaymentMethodId);
             return View(payment);
         }
 
@@ -83,6 +89,8 @@ namespace AdvancedProject.Controllers
                 return NotFound();
             }
             ViewData["LeaseId"] = new SelectList(_context.Leases, "LeaseId", "LeaseId", payment.LeaseId);
+            ViewData["PaymentFrequencyId"] = new SelectList(_context.PaymentFrequencies, "PaymentFrequencyId", "Name", payment.PaymentFrequencyId);
+            ViewData["PaymentMethodId"] = new SelectList(_context.PaymentMethods, "PaymentMethodId", "Name", payment.PaymentMethodId);
             return View(payment);
         }
 
@@ -91,7 +99,7 @@ namespace AdvancedProject.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("PaymentId,LeaseId,Amount,PaymentDate,Status")] Payment payment)
+        public async Task<IActionResult> Edit(int id, [Bind("PaymentId,LeaseId,Amount,StartDate,EndDate,Status,PaymentMethodId,PaymentFrequencyId")] Payment payment)
         {
             if (id != payment.PaymentId)
             {
@@ -119,6 +127,8 @@ namespace AdvancedProject.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["LeaseId"] = new SelectList(_context.Leases, "LeaseId", "LeaseId", payment.LeaseId);
+            ViewData["PaymentFrequencyId"] = new SelectList(_context.PaymentFrequencies, "PaymentFrequencyId", "Name", payment.PaymentFrequencyId);
+            ViewData["PaymentMethodId"] = new SelectList(_context.PaymentMethods, "PaymentMethodId", "Name", payment.PaymentMethodId);
             return View(payment);
         }
 
@@ -132,6 +142,8 @@ namespace AdvancedProject.Controllers
 
             var payment = await _context.Payments
                 .Include(p => p.Lease)
+                .Include(p => p.PaymentFrequency)
+                .Include(p => p.PaymentMethod)
                 .FirstOrDefaultAsync(m => m.PaymentId == id);
             if (payment == null)
             {
