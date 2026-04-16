@@ -577,85 +577,7 @@ body {
   
 
 
-    /*.users-table tbody td {
-        background-color: #f2f8f9;*/ /* light blue */
-    /*}*/
-
-  /*.users-table tbody td {*/
-        /*        background-color: #ffffff;
-*/
-        /*background-color: #f2f8f9;
-        padding: 1rem 1.1rem;
-        vertical-align: middle;
-        border-top: 1px solid rgba(0, 91, 113, 0.06);
-        transition: background-color 0.2s ease, transform 0.2s ease;
-    }*/
-
-    /*.users-table tbody td {
-        background-color: #f2f8f9;*/ /* light blue */
-        /*padding: 1rem 1.1rem;
-        vertical-align: middle;
-        border-top: 1px solid rgba(0, 91, 113, 0.06);
-        transition: background-color 0.2s ease;
-    }
-
-
-    .users-table tbody tr:hover td {
-        background-color: #e3f1f3;*/ /* darker on hover */
-    /*}*/
-
-
-
-
-/*    .users-table tbody tr {
-        transition: background-color 0.2s ease, box-shadow 0.2s ease;
-    }
-
-    .users-table.table tbody tr td {
-        background-color: #f2f8f9 !important;
-        padding: 1rem 1.1rem;
-        vertical-align: middle;
-        border-top: 1px solid rgba(0, 91, 113, 0.06);
-        transition: background-color 0.2s ease;
-    }
-
-    .users-table.table tbody tr:hover td {
-        background-color: #e3f1f3 !important;
-    }*/
-
-
-    /* USERS TABLE FINAL VERSION */
-
-    /*.users-table.table tbody tr {
-        background-color: #f2f8f9;*/ /* light blue */
-        /*transition: background-color 0.2s ease;
-    }
-
-        .users-table.table tbody tr:hover {
-            background-color: #e3f1f3;*/ /* slightly darker on hover */
-        /*}
-
-        .users-table.table tbody tr td {
-            padding: 1rem 1.1rem;
-            vertical-align: middle;
-            border-top: 1px solid rgba(0, 91, 113, 0.06);
-            background-color: transparent !important;
-        }*/
-
-
-
-    /*.users-table tbody tr td {
-        background-color: #f2f8f9 !important;*/ /* light blue */
-        /*padding: 1rem 1.1rem;
-        vertical-align: middle;
-        border-top: 1px solid rgba(0, 91, 113, 0.06);
-        transition: background-color 0.2s ease;
-    }
-
-    .users-table tbody tr:hover td {
-        background-color: #e3f1f3 !important;*/ /* darker on hover */
-    /*}*/
-
+ 
 
 
     .users-table tbody tr td {
@@ -1125,3 +1047,65 @@ body {
     .notification-bell-link svg {
         margin-top: 3px; /*  moves the bell DOWN */
     }
+
+
+
+/* ============================= */
+/*       Lease Applications      */
+/* ============================= */
+
+.lease-applications-page .users-subtitle {
+    color: var(--text-muted);
+    font-size: 1.05rem;
+}
+
+.lease-total-box {
+    background: rgba(255, 255, 255, 0.92);
+    border-radius: 14px;
+    min-height: 56px;
+    height: 56px;
+    padding: 0.7rem 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid rgba(255, 255, 255, 0.45);
+}
+
+.lease-total-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: #6b7280;
+    text-transform: uppercase;
+    line-height: 1;
+    margin-bottom: 0.15rem;
+}
+
+.lease-total-value {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--text-main);
+    line-height: 1;
+}
+
+.lease-property-name {
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    margin-top: 0.2rem;
+}
+
+.lease-status-approved {
+    background: rgba(30, 142, 110, 0.14);
+    color: var(--accent);
+}
+
+.lease-status-pending {
+    background: rgba(245, 158, 11, 0.18);
+    color: #b45309;
+}
+
+.lease-status-rejected {
+    background: rgba(220, 53, 69, 0.14);
+    color: #b42318;
+}

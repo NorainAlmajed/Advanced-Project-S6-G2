@@ -21,10 +21,59 @@ namespace AdvancedProject.Controllers
         }
 
         // GET: LeaseApplications
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchTerm, string statusFilter, string dateFilter)
         {
-            var aPContext = _context.LeaseApplications.Include(l => l.Unit).Include(l => l.Tenant).ThenInclude(e => e.User).Include(l => l.Duration);
-            return View(await aPContext.ToListAsync());
+            var applicationsQuery = _context.LeaseApplications
+     .Include(l => l.Tenant)
+         .ThenInclude(t => t.User)
+     .Include(l => l.Unit)
+         .ThenInclude(u => u.Property)
+     .Include(l => l.Duration)
+     .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                searchTerm = searchTerm.Trim();
+
+                applicationsQuery = applicationsQuery.Where(l =>
+                    l.ApplicationId.ToString().Contains(searchTerm) ||
+                    l.Tenant.User.FullName.Contains(searchTerm) ||
+                    l.Unit.UnitNumber.Contains(searchTerm) ||
+                    l.Unit.Property.Name.Contains(searchTerm));
+            }
+
+            if (!string.IsNullOrWhiteSpace(statusFilter))
+            {
+                applicationsQuery = applicationsQuery.Where(l => l.Status == statusFilter);
+            }
+
+            if (!string.IsNullOrWhiteSpace(dateFilter))
+            {
+                if (dateFilter == "Latest")
+                {
+                    applicationsQuery = applicationsQuery
+                        .OrderByDescending(l => l.ApplicationDate);
+                }
+                else
+                {
+                    applicationsQuery = applicationsQuery
+                        .OrderBy(l => l.ApplicationDate);
+                }
+            }
+            else
+            {
+                applicationsQuery = applicationsQuery
+                    .OrderByDescending(l => l.ApplicationDate);
+            }
+
+            var applications = await applicationsQuery.ToListAsync();
+
+            ViewData["CurrentSearchTerm"] = searchTerm;
+            ViewData["CurrentStatusFilter"] = statusFilter;
+            ViewData["CurrentDateFilter"] = dateFilter;
+            ViewData["TotalApplications"] = applications.Count;
+
+            return View(applications);
         }
 
         // GET: LeaseApplications/Details/5
@@ -36,9 +85,14 @@ namespace AdvancedProject.Controllers
             }
 
             var leaseApplication = await _context.LeaseApplications
-                .Include(l => l.Tenant).ThenInclude(e => e.User)
-                .Include(l => l.Unit).Include(l => l.Duration)
-                .FirstOrDefaultAsync(m => m.ApplicationId == id);
+       .Include(l => l.Tenant)
+           .ThenInclude(e => e.User)
+       .Include(l => l.Unit)
+           .ThenInclude(u => u.Property)
+       .Include(l => l.Duration)
+       .FirstOrDefaultAsync(m => m.ApplicationId == id);
+
+
             if (leaseApplication == null)
             {
                 return NotFound();
@@ -53,7 +107,7 @@ namespace AdvancedProject.Controllers
             var model = new LeaseApplication
             {
                 UnitId = unitId ?? 0,
-                StartDate = DateTime.Today.AddDays(1) // 👈 tomorrow
+                StartDate = DateTime.Today.AddDays(1) //  tomorrow
             };
 
             ViewData["DurationId"] = new SelectList(_context.Durations, "DurationId", "Months");
@@ -159,9 +213,12 @@ namespace AdvancedProject.Controllers
             }
 
             var leaseApplication = await _context.LeaseApplications
-                .Include(l => l.Tenant)
-                .Include(l => l.Unit)
-                .FirstOrDefaultAsync(m => m.ApplicationId == id);
+        .Include(l => l.Tenant)
+            .ThenInclude(e => e.User)
+        .Include(l => l.Unit)
+            .ThenInclude(u => u.Property)
+        .Include(l => l.Duration)
+        .FirstOrDefaultAsync(m => m.ApplicationId == id);
             if (leaseApplication == null)
             {
                 return NotFound();
