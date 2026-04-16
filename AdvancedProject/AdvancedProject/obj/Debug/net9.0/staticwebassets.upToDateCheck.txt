@@ -62,9 +62,10 @@ wwwroot\lib\jquery\dist\jquery.slim.js
 wwwroot\lib\jquery\dist\jquery.slim.min.js
 wwwroot\lib\jquery\dist\jquery.slim.min.map
 wwwroot\lib\jquery\LICENSE.txt
+D:\year3 sem2\advanced programming project\Advanced-Project-S6-G2\AdvancedProject\AdvancedProject\wwwroot\lib\jquery\dist\jquery.slim.min.map
+D:\year3 sem2\advanced programming project\Advanced-Project-S6-G2\AdvancedProject\AdvancedProject\wwwroot\lib\jquery\LICENSE.txt
 D:\year3 sem2\advanced programming project\Advanced-Project-S6-G2\AdvancedProject\AdvancedProject\wwwroot\css\site.css
 D:\year3 sem2\advanced programming project\Advanced-Project-S6-G2\AdvancedProject\AdvancedProject\wwwroot\favicon.ico
-D:\year3 sem2\advanced programming project\Advanced-Project-S6-G2\AdvancedProject\AdvancedProject\wwwroot\js\site.js
 D:\year3 sem2\advanced programming project\Advanced-Project-S6-G2\AdvancedProject\AdvancedProject\wwwroot\lib\bootstrap\dist\css\bootstrap-grid.css
 D:\year3 sem2\advanced programming project\Advanced-Project-S6-G2\AdvancedProject\AdvancedProject\wwwroot\lib\bootstrap\dist\css\bootstrap-grid.css.map
 D:\year3 sem2\advanced programming project\Advanced-Project-S6-G2\AdvancedProject\AdvancedProject\wwwroot\lib\bootstrap\dist\css\bootstrap-grid.min.css
@@ -122,5 +123,4 @@ D:\year3 sem2\advanced programming project\Advanced-Project-S6-G2\AdvancedProjec
 D:\year3 sem2\advanced programming project\Advanced-Project-S6-G2\AdvancedProject\AdvancedProject\wwwroot\lib\jquery\dist\jquery.min.map
 D:\year3 sem2\advanced programming project\Advanced-Project-S6-G2\AdvancedProject\AdvancedProject\wwwroot\lib\jquery\dist\jquery.slim.js
 D:\year3 sem2\advanced programming project\Advanced-Project-S6-G2\AdvancedProject\AdvancedProject\wwwroot\lib\jquery\dist\jquery.slim.min.js
-D:\year3 sem2\advanced programming project\Advanced-Project-S6-G2\AdvancedProject\AdvancedProject\wwwroot\lib\jquery\dist\jquery.slim.min.map
-D:\year3 sem2\advanced programming project\Advanced-Project-S6-G2\AdvancedProject\AdvancedProject\wwwroot\lib\jquery\LICENSE.txt
+D:\year3 sem2\advanced programming project\Advanced-Project-S6-G2\AdvancedProject\AdvancedProject\wwwroot\js\site.js
