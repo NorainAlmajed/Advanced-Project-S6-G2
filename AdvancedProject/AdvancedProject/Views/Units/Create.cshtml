@@ -30,13 +30,15 @@
 
             <div class="form-group">
                 <label asp-for="SizeSqFt" class="control-label"></label>
-                <input asp-for="SizeSqFt" class="form-control" placeholder="-- Enter Size (SqFt) --" />
+                <input asp-for="SizeSqFt" class="form-control" placeholder="-- Enter Size (SqFt) --"
+                       value="@(Model.SizeSqFt == 0 ? "" : Model.SizeSqFt.ToString())" />
                 <span asp-validation-for="SizeSqFt" class="text-danger"></span>
             </div>
 
             <div class="form-group">
                 <label asp-for="RentAmount" class="control-label"></label>
-                <input asp-for="RentAmount" class="form-control" placeholder="-- Enter Rent Amount --" />
+                <input asp-for="RentAmount" class="form-control" placeholder="-- Enter Rent Amount --"
+                       value="@(Model.RentAmount == 0 ? "" : Model.RentAmount.ToString())" />
                 <span asp-validation-for="RentAmount" class="text-danger"></span>
             </div>
 
