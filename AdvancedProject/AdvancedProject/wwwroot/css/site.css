@@ -1351,3 +1351,157 @@ body {
         border-color: #16795e;
         color: white;
     }
+
+
+/* ============================= */
+/*        Notifications Page     */
+/* ============================= */
+
+.notifications-page {
+    background: #f7fafb;
+    border-radius: 28px;
+    padding: 2rem;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08);
+}
+
+.notifications-filter-bar {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.filter-chip {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.7rem 1.3rem;
+    border-radius: 999px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: #4d6268;
+    background: #eef3f4;
+    border: 1px solid transparent;
+    transition: all 0.2s ease;
+}
+
+    .filter-chip:hover {
+        background: #dde7ea;
+        color: #005B71;
+    }
+
+    .filter-chip.active {
+        background: #005B71;
+        color: white;
+        box-shadow: 0 8px 18px rgba(0, 91, 113, 0.18);
+    }
+
+.notification-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.notification-card {
+    position: relative;
+    display: flex;
+    align-items: stretch;
+    background: #d4e7ec; /* MATCH YOUR OTHER CARDS */
+    border-radius: 22px;
+    overflow: hidden;
+    border: none;
+    transition: all 0.2s ease;
+}
+
+    .notification-card:hover {
+        transform: translateY(-3px);
+    }
+
+.notification-accent {
+    width: 6px;
+    min-width: 6px;
+    background: #005B71;
+}
+
+.notification-card.maintenance .notification-accent {
+    background: #e74c3c;
+}
+
+.notification-card.payment .notification-accent {
+    background: #1E8E6E;
+}
+
+.notification-content {
+    width: 100%;
+    padding: 1.2rem 1.35rem;
+}
+
+.notification-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 0.7rem;
+}
+
+.notification-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.type-badge {
+    display: inline-block;
+    padding: 0.35rem 0.7rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    background: #e8f3f6;
+    color: #005B71;
+}
+
+.maintenance-badge {
+    background: #fdeceb;
+    color: #c0392b;
+}
+
+.payment-badge {
+    background: #e8f7f1;
+    color: #1E8E6E;
+}
+
+.notification-time {
+    font-size: 0.88rem;
+    color: #7a8b91;
+    font-weight: 500;
+}
+
+.notification-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #1f2937;
+    margin-bottom: 0.35rem;
+}
+
+.notification-message {
+    color: #667781;
+    line-height: 1.6;
+    font-size: 0.97rem;
+}
+
+.delete-btn {
+    border: none;
+    background: transparent;
+    color: #8a9aa0;
+    font-size: 0.9rem;
+    font-weight: 600;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+    .delete-btn:hover {
+        color: #dc3545;
+        background: #fff1f2;
+    }
