@@ -160,35 +160,38 @@ namespace AdvancedProject.Controllers
         }
 
         // GET: Units/Create
-        public IActionResult Create()
+        public IActionResult Create(int propertyId)
         {
-            ViewData["PropertyId"] = new SelectList(_context.Properties, "PropertyId", "PropertyId");
+            if (propertyId == 0)
+                return BadRequest("PropertyId is required");
+
+            var model = new Unit
+            {
+                PropertyId = propertyId
+            };
+
             ViewData["UnitTypeId"] = new SelectList(_context.UnitTypes, "UnitTypeId", "Name");
-            return View();
+
+            return View(model);
         }
 
-        // POST: Units/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Create([Bind("UnitId,PropertyId,UnitNumber,Type,SizeSqFt,RentAmount,AvailabilityStatus,CreatedAt")] Unit unit)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        _context.Add(unit);
-        //        await _context.SaveChangesAsync();
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    ViewData["PropertyId"] = new SelectList(_context.Properties, "PropertyId", "PropertyId", unit.PropertyId);
-        //    return View(unit);
-        //}
 
+        //POST
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("UnitId,PropertyId,UnitNumber,UnitTypeId,SizeSqFt,RentAmount,AvailabilityStatus")] Unit unit)
+        public async Task<IActionResult> Create(Unit unit)
         {
-            unit.CreatedAt = DateTime.Now;
+            if (unit.PropertyId == 0)
+                ModelState.AddModelError("PropertyId", "Property is required");
+
+            if (unit.UnitTypeId == 0)
+                ModelState.AddModelError("UnitTypeId", "Unit type is required");
+
+            if (unit.SizeSqFt == null)
+                ModelState.AddModelError("SizeSqFt", "Size is required");
+
+            if (unit.RentAmount == null)
+                ModelState.AddModelError("RentAmount", "Rent is required");
 
             ModelState.Remove("Property");
             ModelState.Remove("Amenities");
@@ -196,15 +199,31 @@ namespace AdvancedProject.Controllers
             ModelState.Remove("Leases");
             ModelState.Remove("MaintenanceRequests");
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                _context.Add(unit);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                ViewData["UnitTypeId"] = new SelectList(_context.UnitTypes, "UnitTypeId", "Name", unit.UnitTypeId);
+                return View(unit);
             }
 
-            ViewData["PropertyId"] = new SelectList(_context.Properties, "PropertyId", "PropertyId", unit.PropertyId);
-            return View(unit);
+            unit.AvailabilityStatus = "Available";
+            unit.CreatedAt = DateTime.Now;
+
+            _context.Units.Add(unit);
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateException ex)
+            {
+                // THIS WILL SHOW REAL ERROR
+                ModelState.AddModelError("", ex.InnerException?.Message ?? ex.Message);
+
+                ViewData["UnitTypeId"] = new SelectList(_context.UnitTypes, "UnitTypeId", "Name", unit.UnitTypeId);
+                return View(unit);
+            }
+
+            return RedirectToAction(nameof(Index), new { id = unit.PropertyId });
         }
 
 
@@ -226,47 +245,6 @@ namespace AdvancedProject.Controllers
             ViewData["UnitTypeId"] = new SelectList(_context.UnitTypes, "UnitTypeId", "Name", unit.UnitTypeId);
             return View(unit);
         }
-
-        // POST: Units/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Edit(int id, [Bind("UnitId,PropertyId,UnitNumber,Type,SizeSqFt,RentAmount,AvailabilityStatus,CreatedAt")] Unit unit)
-        //{
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Edit(int id, [Bind("UnitId,PropertyId,UnitNumber,Type,SizeSqFt,RentAmount,AvailabilityStatus,CreatedAt")] Unit unit) 
-        //{
-        //    if (id != unit.UnitId)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    if (ModelState.IsValid)
-        //    {
-        //        try
-        //        {
-        //            _context.Update(unit);
-        //            await _context.SaveChangesAsync();
-        //        }
-        //        catch (DbUpdateConcurrencyException)
-        //        {
-        //            if (!UnitExists(unit.UnitId))
-        //            {
-        //                return NotFound();
-        //            }
-        //            else
-        //            {
-        //                throw;
-        //            }
-        //        }
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    ViewData["PropertyId"] = new SelectList(_context.Properties, "PropertyId", "PropertyId", unit.PropertyId);
-        //    return View(unit);
-        //}
-
 
 
         [HttpPost]
