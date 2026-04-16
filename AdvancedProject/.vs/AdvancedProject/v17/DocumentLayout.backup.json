@@ -58,8 +58,7 @@
               "RelativeToolTip": "AdvancedProject\\Controllers\\PropertiesController.cs",
               "ViewState": "AgIAABAAAAAAAAAAAAAxwCMAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-16T16:01:47.396Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-16T16:01:47.396Z"
             },
             {
               "$type": "Document",
@@ -67,9 +66,9 @@
               "Title": "Index.cshtml",
               "DocumentMoniker": "D:\\year3 sem2\\advanced programming project\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Views\\Properties\\Index.cshtml",
               "RelativeDocumentMoniker": "AdvancedProject\\Views\\Properties\\Index.cshtml",
-              "ToolTip": "D:\\year3 sem2\\advanced programming project\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Views\\Properties\\Index.cshtml*",
-              "RelativeToolTip": "AdvancedProject\\Views\\Properties\\Index.cshtml*",
-              "ViewState": "AgIAAFgAAAAAAAAAAAAiwH4AAAABAAAAAAAAAA==",
+              "ToolTip": "D:\\year3 sem2\\advanced programming project\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Views\\Properties\\Index.cshtml",
+              "RelativeToolTip": "AdvancedProject\\Views\\Properties\\Index.cshtml",
+              "ViewState": "AgIAAFwAAAAAAAAAAAAAAH4AAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2026-04-16T16:00:04.01Z",
               "EditorCaption": ""
@@ -84,8 +83,7 @@
               "RelativeToolTip": "AdvancedProject\\Views\\Leases\\Create.cshtml",
               "ViewState": "AgIAABgAAAAAAAAAAAAAABgAAAA9AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-04-16T15:48:46.905Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-16T15:48:46.905Z"
             },
             {
               "$type": "Document",
@@ -97,8 +95,7 @@
               "RelativeToolTip": "AdvancedProject\\Controllers\\LeaseApplicationsController.cs",
               "ViewState": "AgIAAGwAAAAAAAAAAAAmwH4AAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-16T15:19:36.843Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-16T15:19:36.843Z"
             },
             {
               "$type": "Document",
@@ -110,8 +107,7 @@
               "RelativeToolTip": "AdvancedProject\\Views\\LeaseApplications\\Create.cshtml",
               "ViewState": "AgIAAAMAAAAAAAAAAAAAAA4AAAAUAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-04-16T15:19:20.978Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-16T15:19:20.978Z"
             },
             {
               "$type": "Document",
@@ -123,8 +119,7 @@
               "RelativeToolTip": "AdvancedProject\\wwwroot\\css\\site.css",
               "ViewState": "AgIAADUAAAAAAAAAAAAIwEwAAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
-              "WhenOpened": "2026-04-16T15:10:02.247Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-16T15:10:02.247Z"
             },
             {
               "$type": "Document",
@@ -148,8 +143,7 @@
               "RelativeToolTip": "AdvancedProject\\Controllers\\LeasesController.cs",
               "ViewState": "AgIAAKwAAAAAAAAAAAAiwLwAAAARAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-16T14:56:39.704Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-16T14:56:39.704Z"
             }
           ]
         }
