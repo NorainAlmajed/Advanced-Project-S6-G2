@@ -17,7 +17,10 @@ public partial class Payment
     [Column(TypeName = "decimal(10, 2)")]
     public decimal Amount { get; set; }
 
-    public DateTime PaymentDate { get; set; }
+
+    public DateTime StartDate { get; set; }
+
+    public DateTime EndDate { get; set; }
 
     [StringLength(20)]
     public string Status { get; set; } = null!;
@@ -25,4 +28,17 @@ public partial class Payment
     [ForeignKey("LeaseId")]
     [InverseProperty("Payments")]
     public virtual Lease Lease { get; set; } = null!;
+
+
+    public int PaymentMethodId { get; set; }
+
+    [ForeignKey("PaymentMethodId")]
+    public virtual PaymentMethod PaymentMethod { get; set; } = null!;
+
+    public int PaymentFrequencyId { get; set; }
+
+    [ForeignKey("PaymentFrequencyId")]
+    public virtual PaymentFrequency PaymentFrequency { get; set; } = null!;
+
+
 }
