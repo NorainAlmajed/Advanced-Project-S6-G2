@@ -1085,3 +1085,43 @@ body {
     min-height: 60px;
     height: 60px;
 }
+
+/* ============================= */
+/*       NOTIFICATION BELL       */
+/* ============================= */
+
+.notification-bell-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* SAME spacing as other nav links */
+    padding: 0.65rem 1rem;
+    border-radius: 14px;
+    /* REMOVE button look */
+    background-color: transparent;
+    color: var(--text-main); /* black like others */
+
+    transition: all 0.2s ease;
+}
+
+    /* ICON */
+    .notification-bell-link svg {
+        width: 30px;
+        height: 30px;
+        color: var(--text-main); /* black */
+    }
+
+    /* HOVER = EXACT SAME AS NAV */
+    .notification-bell-link:hover {
+        background-color: #eef6f7; /* same as .app-nav-link:hover */
+        color: var(--primary);
+    }
+
+        /* change icon color on hover */
+        .notification-bell-link:hover svg {
+            color: var(--primary);
+        }
+
+    .notification-bell-link svg {
+        margin-top: 3px; /*  moves the bell DOWN */
+    }
