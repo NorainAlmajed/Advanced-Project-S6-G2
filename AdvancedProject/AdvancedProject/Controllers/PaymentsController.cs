@@ -32,10 +32,52 @@ namespace AdvancedProject.Controllers
         }
 
         // GET: Payments
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchTerm, string statusFilter, string dateFilter)
         {
-            var aPContext = _context.Payments.Include(p => p.Lease).Include(p => p.PaymentFrequency).Include(p => p.PaymentMethod);
-            return View(await aPContext.ToListAsync());
+            var paymentsQuery = _context.Payments
+                .Include(p => p.Lease)
+                .Include(p => p.PaymentFrequency)
+                .Include(p => p.PaymentMethod)
+                .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                searchTerm = searchTerm.Trim();
+
+                paymentsQuery = paymentsQuery.Where(p =>
+                    p.PaymentId.ToString().Contains(searchTerm) ||
+                    p.LeaseId.ToString().Contains(searchTerm));
+            }
+
+            if (!string.IsNullOrWhiteSpace(statusFilter))
+            {
+                paymentsQuery = paymentsQuery.Where(p => p.Status == statusFilter);
+            }
+
+            if (!string.IsNullOrWhiteSpace(dateFilter))
+            {
+                if (dateFilter == "Latest")
+                {
+                    paymentsQuery = paymentsQuery.OrderByDescending(p => p.StartDate);
+                }
+                else
+                {
+                    paymentsQuery = paymentsQuery.OrderBy(p => p.StartDate);
+                }
+            }
+            else
+            {
+                paymentsQuery = paymentsQuery.OrderByDescending(p => p.StartDate);
+            }
+
+            var payments = await paymentsQuery.ToListAsync();
+
+            ViewData["CurrentSearchTerm"] = searchTerm;
+            ViewData["CurrentStatusFilter"] = statusFilter;
+            ViewData["CurrentDateFilter"] = dateFilter;
+            ViewData["TotalPayments"] = payments.Count;
+
+            return View(payments);
         }
 
         // GET: Payments/Details/5
