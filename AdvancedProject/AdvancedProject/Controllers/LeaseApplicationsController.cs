@@ -104,13 +104,24 @@ namespace AdvancedProject.Controllers
         // GET: LeaseApplications/Create
         public IActionResult Create(int? unitId)
         {
+            var unit = _context.Units
+                .Include(u => u.Property)
+                .FirstOrDefault(u => u.UnitId == unitId);
+
+            if (unit == null)
+            {
+                return NotFound();
+            }
+
             var model = new LeaseApplication
             {
-                UnitId = unitId ?? 0,
-                StartDate = DateTime.Today.AddDays(1) //  tomorrow
+                UnitId = unit.UnitId,
+                StartDate = DateTime.Today.AddDays(1)
             };
 
             ViewData["DurationId"] = new SelectList(_context.Durations, "DurationId", "Months");
+            ViewBag.UnitNumber = unit.UnitNumber;
+            ViewBag.PropertyName = unit.Property.Name;
 
             return View(model);
         }

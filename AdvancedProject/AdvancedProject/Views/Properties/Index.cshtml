@@ -26,6 +26,8 @@
 
                 <form asp-action="Index" method="get">
                     <div class="row g-2">
+
+                        <!-- SEARCH -->
                         <div class="col-md-8">
                             <input type="text"
                                    name="searchString"
@@ -34,17 +36,22 @@
                                    value="@Context.Request.Query["searchString"]" />
                         </div>
 
+                       
+
+                        <!-- SEARCH BUTTON -->
                         <div class="col-md-2 d-grid">
                             <button type="submit" class="btn btn-primary btn-lg">
                                 Search
                             </button>
                         </div>
 
+                        <!-- RESET -->
                         <div class="col-md-2 d-grid">
                             <a asp-action="Index" class="btn btn-outline-light btn-lg">
                                 Reset
                             </a>
                         </div>
+
                     </div>
                 </form>
             </div>
@@ -73,8 +80,7 @@ else
         {
             <div class="col-md-6 col-lg-4 mb-4">
                 <div class="card h-100 shadow-soft border-0 property-card">
-
-                    <div class="card-body p-4">
+                    <div class="card-body p-4 d-flex flex-column">
 
                         <div class="mb-3">
                             <div class="small-label mb-1">PROPERTY</div>
@@ -88,35 +94,32 @@ else
                             </p>
                         </div>
 
-                        <div class="bg-light rounded-3 p-3 mb-3">
+                        <div class="mb-3">
                             <div class="small-label mb-1">DESCRIPTION</div>
 
-                            <p class="mb-0 text-muted">
+                            <p class="mb-0 text-muted property-description-text">
                                 @item.Description
                             </p>
                         </div>
 
-                    </div>
+                        <div class="mt-auto pt-4">
+                            <div class="d-flex gap-2">
+                                <a asp-action="Details"
+                                   asp-route-id="@item.PropertyId"
+                                   class="btn property-details-btn w-50">
+                                    Details
+                                </a>
 
-                    <div class="card-footer bg-white border-top-0 p-4 pt-0">
-                        <div class="d-flex gap-2">
-
-                            <a asp-action="Details"
-                               asp-route-id="@item.PropertyId"
-                               class="btn btn-outline-primary w-50">
-                                Details
-                            </a>
-
-                            <a asp-controller="Units"
-                               asp-action="Index"
-                               asp-route-id="@item.PropertyId"
-                               class="btn btn-accent w-50">
-                                View Units
-                            </a>
-
+                                <a asp-controller="Units"
+                                   asp-action="Index"
+                                   asp-route-id="@item.PropertyId"
+                                   class="btn property-units-btn w-50">
+                                    View Units
+                                </a>
+                            </div>
                         </div>
-                    </div>
 
+                    </div>
                 </div>
             </div>
         }

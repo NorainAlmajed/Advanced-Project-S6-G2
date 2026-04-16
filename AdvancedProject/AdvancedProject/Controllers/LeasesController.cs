@@ -115,7 +115,9 @@ namespace AdvancedProject.Controllers
         // GET: Leases/Create
         public async Task<IActionResult> Create(int unitId)
         {
-            var unit = await _context.Units.FindAsync(unitId);
+            var unit = await _context.Units
+                .Include(u => u.Property)
+                .FirstOrDefaultAsync(u => u.UnitId == unitId);
 
             if (unit == null)
                 return NotFound();
@@ -127,9 +129,11 @@ namespace AdvancedProject.Controllers
             };
 
             ViewBag.UnitNumber = unit.UnitNumber;
+            ViewBag.PropertyName = unit.Property.Name;
 
-            ViewData["TenantName"] = new SelectList(_context.Tenants.Include(t => t.User)
-                .Select(t => new { t.TenantId, Username = t.User.Username }),
+            ViewData["TenantName"] = new SelectList(
+                _context.Tenants.Include(t => t.User)
+                    .Select(t => new { t.TenantId, Username = t.User.Username }),
                 "TenantId", "Username");
 
             ViewData["DurationId"] = new SelectList(_context.Durations, "DurationId", "Months");
@@ -151,8 +155,39 @@ namespace AdvancedProject.Controllers
             ModelState.Remove("Unit");
             ModelState.Remove("Duration");
 
+            //if (!ModelState.IsValid)
+            //{
+            //    ViewData["TenantName"] = new SelectList(
+            //        _context.Tenants.Include(t => t.User)
+            //            .Select(t => new { t.TenantId, Username = t.User.Username }),
+            //        "TenantId",
+            //        "Username",
+            //        lease.TenantId
+            //    );
+
+            //    ViewData["DurationId"] = new SelectList(
+            //        _context.Durations,
+            //        "DurationId",
+            //        "Months",
+            //        lease.DurationId
+            //    );
+
+            //    return View(lease);
+            //}
+
+
             if (!ModelState.IsValid)
             {
+                var selectedUnit = await _context.Units
+    .Include(u => u.Property)
+    .FirstOrDefaultAsync(u => u.UnitId == lease.UnitId);
+
+                if (selectedUnit != null)
+                {
+                    ViewBag.UnitNumber = selectedUnit.UnitNumber;
+                    ViewBag.PropertyName = selectedUnit.Property.Name;
+                }
+
                 ViewData["TenantName"] = new SelectList(
                     _context.Tenants.Include(t => t.User)
                         .Select(t => new { t.TenantId, Username = t.User.Username }),
