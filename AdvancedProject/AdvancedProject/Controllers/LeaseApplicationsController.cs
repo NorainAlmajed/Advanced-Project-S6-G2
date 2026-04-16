@@ -179,40 +179,63 @@ namespace AdvancedProject.Controllers
         }
 
         // POST: LeaseApplications/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ApplicationId,TenantId,UnitId,ApplicationDate,Status,ApproveTime,RejectTime,StartDate,DurationId")] LeaseApplication leaseApplication)
+        public async Task<IActionResult> Edit(int id, [Bind("ApplicationId,StartDate,DurationId")] LeaseApplication leaseApplication)
         {
+            Console.WriteLine("POST HIT 🔥");
+
             if (id != leaseApplication.ApplicationId)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            var existing = await _context.LeaseApplications.FindAsync(id);
+
+            if (existing == null)
             {
-                try
-                {
-                    _context.Update(leaseApplication);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!LeaseApplicationExists(leaseApplication.ApplicationId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                return NotFound();
             }
-            ViewData["TenantId"] = new SelectList(_context.Tenants, "TenantId", "TenantId", leaseApplication.TenantId);
-            ViewData["UnitId"] = new SelectList(_context.Units, "UnitId", "UnitId", leaseApplication.UnitId);
-            return View(leaseApplication);
+
+            // 🔥 IMPORTANT: remove validation for fields not included in Bind
+            ModelState.Remove("Tenant");
+            ModelState.Remove("Unit");
+            ModelState.Remove("Duration");
+            ModelState.Remove("Status");
+
+            // optional validation (keep your logic style)
+            if (leaseApplication.StartDate.Date <= DateTime.Today)
+            {
+                ModelState.AddModelError("StartDate", "Start date must be in the future.");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                Console.WriteLine("ModelState NOT valid ❌");
+
+                var errors = ModelState.Values
+                    .SelectMany(v => v.Errors)
+                    .Select(e => e.ErrorMessage)
+                    .ToList();
+
+                foreach (var err in errors)
+                {
+                    Console.WriteLine(err);
+                }
+
+                ViewData["DurationId"] = new SelectList(_context.Durations, "DurationId", "Months", leaseApplication.DurationId);
+                return View(leaseApplication);
+            }
+
+            Console.WriteLine("ModelState valid ✅");
+
+            // ✅ update only allowed fields
+            existing.StartDate = leaseApplication.StartDate;
+            existing.DurationId = leaseApplication.DurationId;
+
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: LeaseApplications/Delete/5
