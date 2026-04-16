@@ -63,7 +63,7 @@ namespace AdvancedProject.Controllers
             else
             {
                 applicationsQuery = applicationsQuery
-                    .OrderByDescending(l => l.ApplicationDate);
+        .OrderByDescending(l => l.ApplicationDate);
             }
 
             var applications = await applicationsQuery.ToListAsync();

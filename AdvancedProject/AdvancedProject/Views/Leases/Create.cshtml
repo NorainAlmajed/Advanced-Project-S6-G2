@@ -22,9 +22,14 @@
 
                 <div class="lease-form-group">
                     <label asp-for="TenantId" class="lease-form-label">Tenant Username</label>
-                    <select asp-for="TenantId" class="form-select lease-form-input" asp-items="ViewBag.TenantName">
+
+                    <select asp-for="TenantId"
+                            id="tenantSelect"
+                            class="form-select lease-form-input searchable-select"
+                            asp-items="ViewBag.TenantName">
                         <option value="">-- Select Username --</option>
                     </select>
+
                     <span asp-validation-for="TenantId" class="text-danger small"></span>
                 </div>
 
@@ -37,6 +42,7 @@
                 <div class="lease-form-group">
                     <label asp-for="DurationId" class="lease-form-label">Duration</label>
                     <select asp-for="DurationId" class="form-select lease-form-input" asp-items="ViewBag.DurationId">
+                        ect lease-form-input" asp-items="ViewBag.DurationId">
                         <option value="">-- Select Duration --</option>
                     </select>
                     <span asp-validation-for="DurationId" class="text-danger small"></span>
@@ -60,4 +66,22 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+
+    <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const tenantSelect = document.getElementById("tenantSelect");
+
+            if (tenantSelect) {
+                new Choices(tenantSelect, {
+                    searchEnabled: true,
+                    itemSelectText: '',
+                    shouldSort: false,
+                    searchPlaceholderValue: 'Search username...',
+                    placeholder: true
+                });
+            }
+        });
+    </script>
 }
