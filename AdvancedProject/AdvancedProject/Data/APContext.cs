@@ -300,31 +300,30 @@ public partial class APContext : DbContext
 
         modelBuilder.Entity<NotificationType>().HasData(
         new NotificationType { NotificationTypeId = 1, Name = "Lease" },
-        new NotificationType { NotificationTypeId = 2, Name = "LeaseApplication" },
-        new NotificationType { NotificationTypeId = 3, Name = "Maintenance" },
-        new NotificationType { NotificationTypeId = 4, Name = "Payment" }
+        new NotificationType { NotificationTypeId = 2, Name = "Maintenance" },
+        new NotificationType { NotificationTypeId = 3, Name = "Payment" }
         );
 
         modelBuilder.Entity<Notification>().HasData(
-         new Notification { NotificationId = 1, UserId = 1, NotificationTypeId = 2, Title = "New Lease Application", Message = "A new lease application has been submitted.", CreatedAt = new DateTime(2026, 2, 1, 10, 33, 21) },
+         new Notification { NotificationId = 1, UserId = 1, NotificationTypeId = 1, Title = "New Lease Application", Message = "A new lease application has been submitted.", CreatedAt = new DateTime(2026, 2, 1, 10, 33, 21) },
 
-         new Notification { NotificationId = 2, UserId = 2, NotificationTypeId = 2, Title = "Application Approved", Message = "Your lease application has been approved.", CreatedAt = new DateTime(2026, 2, 3, 9, 18, 55) },
+         new Notification { NotificationId = 2, UserId = 2, NotificationTypeId = 1, Title = "Application Approved", Message = "Your lease application has been approved.", CreatedAt = new DateTime(2026, 2, 3, 9, 18, 55) },
 
-         new Notification { NotificationId = 3, UserId = 3, NotificationTypeId = 3, Title = "Maintenance Update", Message = "Your maintenance request status has been updated.", CreatedAt = new DateTime(2026, 3, 2, 14, 25, 14) },
+         new Notification { NotificationId = 3, UserId = 3, NotificationTypeId = 2, Title = "Maintenance Update", Message = "Your maintenance request status has been updated.", CreatedAt = new DateTime(2026, 3, 2, 14, 25, 14) },
 
-         new Notification { NotificationId = 4, UserId = 4, NotificationTypeId = 4, Title = "Payment Received", Message = "Your payment has been successfully received.", CreatedAt = new DateTime(2026, 3, 12, 13, 44, 21) },
+         new Notification { NotificationId = 4, UserId = 4, NotificationTypeId = 3, Title = "Payment Received", Message = "Your payment has been successfully received.", CreatedAt = new DateTime(2026, 3, 12, 13, 44, 21) },
 
          new Notification { NotificationId = 5, UserId = 5, NotificationTypeId = 1, Title = "Lease Activated", Message = "Your lease is now active.", CreatedAt = new DateTime(2026, 3, 15, 21, 4, 17) },
 
-         new Notification { NotificationId = 6, UserId = 7, NotificationTypeId = 3, Title = "New Assignment", Message = "You have been assigned a new maintenance request.", CreatedAt = new DateTime(2026, 3, 1, 12, 6, 33) },
+         new Notification { NotificationId = 6, UserId = 7, NotificationTypeId = 2, Title = "New Assignment", Message = "You have been assigned a new maintenance request.", CreatedAt = new DateTime(2026, 3, 1, 12, 6, 33) },
 
-         new Notification { NotificationId = 7, UserId = 8, NotificationTypeId = 3, Title = "Work In Progress", Message = "Maintenance work is now in progress.", CreatedAt = new DateTime(2026, 3, 2, 8, 15, 32) },
+         new Notification { NotificationId = 7, UserId = 8, NotificationTypeId = 2, Title = "Work In Progress", Message = "Maintenance work is now in progress.", CreatedAt = new DateTime(2026, 3, 2, 8, 15, 32) },
 
-         new Notification { NotificationId = 8, UserId = 9, NotificationTypeId = 3, Title = "Issue Reported", Message = "A new HVAC issue has been reported.", CreatedAt = new DateTime(2026, 3, 3, 21, 17, 28) },
+         new Notification { NotificationId = 8, UserId = 9, NotificationTypeId = 2, Title = "Issue Reported", Message = "A new HVAC issue has been reported.", CreatedAt = new DateTime(2026, 3, 3, 21, 17, 28) },
 
-         new Notification { NotificationId = 9, UserId = 10, NotificationTypeId = 3, Title = "Issue Reported", Message = "A carpentry issue has been reported.", CreatedAt = new DateTime(2026, 3, 4, 17, 5, 43) },
+         new Notification { NotificationId = 9, UserId = 10, NotificationTypeId = 2, Title = "Issue Reported", Message = "A carpentry issue has been reported.", CreatedAt = new DateTime(2026, 3, 4, 17, 5, 43) },
 
-         new Notification { NotificationId = 10, UserId = 11, NotificationTypeId = 3, Title = "Issue Reported", Message = "A painting issue has been reported.", CreatedAt = new DateTime(2026, 3, 5, 23, 14, 10) }
+         new Notification { NotificationId = 10, UserId = 11, NotificationTypeId = 2, Title = "Issue Reported", Message = "A painting issue has been reported.", CreatedAt = new DateTime(2026, 3, 5, 23, 14, 10) }
          );
 
         modelBuilder.Entity<Amenity>().HasData(
