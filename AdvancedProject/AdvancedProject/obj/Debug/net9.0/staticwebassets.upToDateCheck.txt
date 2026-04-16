@@ -1,5 +1,6 @@
 wwwroot\css\site.css
 wwwroot\favicon.ico
+wwwroot\images\Logo.png
 wwwroot\js\site.js
 wwwroot\lib\bootstrap\dist\css\bootstrap-grid.css
 wwwroot\lib\bootstrap\dist\css\bootstrap-grid.css.map
@@ -61,9 +62,8 @@ wwwroot\lib\jquery\dist\jquery.slim.js
 wwwroot\lib\jquery\dist\jquery.slim.min.js
 wwwroot\lib\jquery\dist\jquery.slim.min.map
 wwwroot\lib\jquery\LICENSE.txt
-wwwroot\images\Logo.png
+C:\Users\HP\Desktop\Advanced-Project-S6-G2\AdvancedProject\AdvancedProject\wwwroot\lib\bootstrap\dist\css\bootstrap-grid.css.map
 C:\Users\HP\Desktop\Advanced-Project-S6-G2\AdvancedProject\AdvancedProject\wwwroot\lib\bootstrap\dist\css\bootstrap-grid.css
-C:\Users\HP\Desktop\Advanced-Project-S6-G2\AdvancedProject\AdvancedProject\wwwroot\js\site.js
 C:\Users\HP\Desktop\Advanced-Project-S6-G2\AdvancedProject\AdvancedProject\wwwroot\lib\jquery\LICENSE.txt
 C:\Users\HP\Desktop\Advanced-Project-S6-G2\AdvancedProject\AdvancedProject\wwwroot\lib\jquery\dist\jquery.slim.min.map
 C:\Users\HP\Desktop\Advanced-Project-S6-G2\AdvancedProject\AdvancedProject\wwwroot\lib\jquery\dist\jquery.slim.min.js
@@ -121,6 +121,6 @@ C:\Users\HP\Desktop\Advanced-Project-S6-G2\AdvancedProject\AdvancedProject\wwwro
 C:\Users\HP\Desktop\Advanced-Project-S6-G2\AdvancedProject\AdvancedProject\wwwroot\lib\bootstrap\dist\css\bootstrap-grid.rtl.css
 C:\Users\HP\Desktop\Advanced-Project-S6-G2\AdvancedProject\AdvancedProject\wwwroot\lib\bootstrap\dist\css\bootstrap-grid.min.css.map
 C:\Users\HP\Desktop\Advanced-Project-S6-G2\AdvancedProject\AdvancedProject\wwwroot\lib\bootstrap\dist\css\bootstrap-grid.min.css
-C:\Users\HP\Desktop\Advanced-Project-S6-G2\AdvancedProject\AdvancedProject\wwwroot\lib\bootstrap\dist\css\bootstrap-grid.css.map
 C:\Users\HP\Desktop\Advanced-Project-S6-G2\AdvancedProject\AdvancedProject\wwwroot\favicon.ico
 C:\Users\HP\Desktop\Advanced-Project-S6-G2\AdvancedProject\AdvancedProject\wwwroot\css\site.css
+C:\Users\HP\Desktop\Advanced-Project-S6-G2\AdvancedProject\AdvancedProject\wwwroot\js\site.js

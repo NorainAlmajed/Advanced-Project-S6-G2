@@ -92,7 +92,7 @@ public partial class APContext : DbContext
 
             entity.HasOne(d => d.Skill).WithMany(p => p.MaintenanceRequests).OnDelete(DeleteBehavior.ClientSetNull);
 
-            entity.HasOne(d => d.Tenant).WithMany(p => p.MaintenanceRequests).OnDelete(DeleteBehavior.ClientSetNull);
+            entity.HasOne(d => d.User).WithMany(p => p.MaintenanceRequests).OnDelete(DeleteBehavior.ClientSetNull);
 
             entity.HasOne(d => d.Unit).WithMany(p => p.MaintenanceRequests).OnDelete(DeleteBehavior.ClientSetNull);
         });
@@ -264,11 +264,11 @@ public partial class APContext : DbContext
 
 
         modelBuilder.Entity<MaintenanceRequest>().HasData(
-       new MaintenanceRequest { RequestId = 1, UnitId = 2, TenantId = 1, SkillId = 1, Priority = "High", Status = "Pending", AssignedStaffId = 1, Notes = "Water leaking from bathroom pipe", RequestDate = new DateTime(2026, 3, 1, 13, 12, 3) },
-       new MaintenanceRequest { RequestId = 2, UnitId = 3, TenantId = 2, SkillId = 2, Priority = "Medium", Status = "In Progress", AssignedStaffId = 2, Notes = "Living room light not working", RequestDate = new DateTime(2026, 3, 2, 23, 12, 42) },
-       new MaintenanceRequest { RequestId = 3, UnitId = 1, TenantId = 3, SkillId = 3, Priority = "Low", Status = "Resolved", AssignedStaffId = 3, Notes = "AC cooling is weak", RequestDate = new DateTime(2026, 3, 3, 20, 20, 4) },
-       new MaintenanceRequest { RequestId = 4, UnitId = 4, TenantId = 4, SkillId = 4, Priority = "High", Status = "Pending", AssignedStaffId = 4, Notes = "Front door lock is broken", RequestDate = new DateTime(2026, 3, 4, 2, 44, 11) },
-       new MaintenanceRequest { RequestId = 5, UnitId = 5, TenantId = 5, SkillId = 5, Priority = "Low", Status = "Closed", AssignedStaffId = 5, Notes = "Wall paint is fading and peeling", RequestDate = new DateTime(2026, 3, 5, 11, 32, 0) }
+       new MaintenanceRequest { RequestId = 1, UnitId = 2, UserId = 2, SkillId = 1, Priority = "High", Status = "Pending", AssignedStaffId = 1, Notes = "Water leaking from bathroom pipe", RequestDate = new DateTime(2026, 3, 1, 13, 12, 3) },
+       new MaintenanceRequest { RequestId = 2, UnitId = 3, UserId = 3, SkillId = 2, Priority = "Medium", Status = "In Progress", AssignedStaffId = 2, Notes = "Living room light not working", RequestDate = new DateTime(2026, 3, 2, 23, 12, 42) },
+       new MaintenanceRequest { RequestId = 3, UnitId = 1, UserId = 4, SkillId = 3, Priority = "Low", Status = "Resolved", AssignedStaffId = 3, Notes = "AC cooling is weak", RequestDate = new DateTime(2026, 3, 3, 20, 20, 4) },
+       new MaintenanceRequest { RequestId = 4, UnitId = 4, UserId = 5, SkillId = 4, Priority = "High", Status = "Pending", AssignedStaffId = 4, Notes = "Front door lock is broken", RequestDate = new DateTime(2026, 3, 4, 2, 44, 11) },
+       new MaintenanceRequest { RequestId = 5, UnitId = 5, UserId = 6, SkillId = 5, Priority = "Low", Status = "Closed", AssignedStaffId = 5, Notes = "Wall paint is fading and peeling", RequestDate = new DateTime(2026, 3, 5, 11, 32, 0) }
    );
 
         modelBuilder.Entity<LeaseApplication>().HasData(
