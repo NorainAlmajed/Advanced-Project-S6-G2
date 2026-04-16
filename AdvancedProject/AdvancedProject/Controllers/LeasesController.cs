@@ -39,10 +39,56 @@ namespace AdvancedProject.Controllers
         }
 
         // GET: Leases
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchTerm, string statusFilter, string dateFilter)
         {
-            var aPContext = _context.Leases.Include(l => l.Unit).Include(e => e.Duration).Include(l => l.Tenant).ThenInclude(e => e.User).Include(e => e.Unit);
-            return View(await aPContext.ToListAsync());
+            var leasesQuery = _context.Leases
+                .Include(l => l.Tenant)
+                    .ThenInclude(t => t.User)
+                .Include(l => l.Unit)
+                    .ThenInclude(u => u.Property)
+                .Include(l => l.Duration)
+                .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                searchTerm = searchTerm.Trim();
+
+                leasesQuery = leasesQuery.Where(l =>
+                    l.LeaseId.ToString().Contains(searchTerm) ||
+                    l.Tenant.User.FullName.Contains(searchTerm) ||
+                    l.Unit.UnitNumber.Contains(searchTerm) ||
+                    l.Unit.Property.Name.Contains(searchTerm));
+            }
+
+            if (!string.IsNullOrWhiteSpace(statusFilter))
+            {
+                leasesQuery = leasesQuery.Where(l => l.Status == statusFilter);
+            }
+
+            if (!string.IsNullOrWhiteSpace(dateFilter))
+            {
+                if (dateFilter == "Latest")
+                {
+                    leasesQuery = leasesQuery.OrderByDescending(l => l.StartDate);
+                }
+                else
+                {
+                    leasesQuery = leasesQuery.OrderBy(l => l.StartDate);
+                }
+            }
+            else
+            {
+                leasesQuery = leasesQuery.OrderByDescending(l => l.StartDate);
+            }
+
+            var leases = await leasesQuery.ToListAsync();
+
+            ViewData["CurrentSearchTerm"] = searchTerm;
+            ViewData["CurrentStatusFilter"] = statusFilter;
+            ViewData["CurrentDateFilter"] = dateFilter;
+            ViewData["TotalLeases"] = leases.Count;
+
+            return View(leases);
         }
 
         // GET: Leases/Details/5
@@ -55,8 +101,9 @@ namespace AdvancedProject.Controllers
 
             var lease = await _context.Leases
                 .Include(l => l.Tenant).ThenInclude(e => e.User)
-                .Include(l => l.Unit).Include(e => e.Duration)
-                .FirstOrDefaultAsync(m => m.LeaseId == id);
+.Include(l => l.Unit)
+    .ThenInclude(u => u.Property)
+.Include(e => e.Duration).FirstOrDefaultAsync(m => m.LeaseId == id);
             if (lease == null)
             {
                 return NotFound();
