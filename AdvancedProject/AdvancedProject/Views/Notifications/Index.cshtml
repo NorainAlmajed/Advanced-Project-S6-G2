@@ -1,59 +1,99 @@
 ﻿@model IEnumerable<AdvancedProject.Models.Notification>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Notifications";
+    var selectedType = ViewBag.SelectedType as string ?? "All";
 }
 
-<h1>Index</h1>
+<div class="notifications-page">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+        <div>
+            <h1 class="fw-bold mb-1">Notifications</h1>
+            <p class="text-muted mb-0">Stay updated with maintenance, payment, and lease activity.</p>
+        </div>
+    </div>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Message)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CreatedAt)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Title)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.NotificationType)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.User)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Message)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreatedAt)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NotificationType.NotificationTypeId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.User.UserId)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.NotificationId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.NotificationId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.NotificationId">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+    <div class="notifications-filter-bar mb-4">
+        <a asp-action="Index"
+           asp-route-typeFilter="All"
+           class="filter-chip @(selectedType == "All" ? "active" : "")">
+            All
+        </a>
+
+        <a asp-action="Index"
+           asp-route-typeFilter="Maintenance"
+           class="filter-chip @(selectedType == "Maintenance" ? "active" : "")">
+            Maintenance
+        </a>
+
+        <a asp-action="Index"
+           asp-route-typeFilter="Payment"
+           class="filter-chip @(selectedType == "Payment" ? "active" : "")">
+            Payment
+        </a>
+
+        <a asp-action="Index"
+           asp-route-typeFilter="Lease"
+           class="filter-chip @(selectedType == "Lease" ? "active" : "")">
+            Lease
+        </a>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="empty-notification-state">
+            No notifications found for this category.
+        </div>
+    }
+    else
+    {
+        <div class="notification-list">
+            @foreach (var item in Model)
+            {
+                var typeName = item.NotificationType?.Name ?? "General";
+
+                var cardClass = typeName switch
+                {
+                    "Maintenance" => "notification-card maintenance",
+                    "Payment" => "notification-card payment",
+                    "Lease" => "notification-card lease",
+                    _ => "notification-card"
+                };
+
+                var badgeClass = typeName switch
+                {
+                    "Maintenance" => "type-badge maintenance-badge",
+                    "Payment" => "type-badge payment-badge",
+                    "Lease" => "type-badge lease-badge",
+                    _ => "type-badge"
+                };
+
+                <div class="@cardClass">
+                    <div class="notification-accent"></div>
+
+                    <div class="notification-content">
+                        <div class="notification-top">
+                            <div class="notification-meta">
+                                <span class="@badgeClass">@typeName</span>
+                                <span class="notification-time">
+                                    @item.CreatedAt.ToString("dd MMM yyyy • hh:mm tt")
+                                </span>
+                            </div>
+
+                            <form asp-action="Delete" asp-route-id="@item.NotificationId" method="post" class="delete-form m-0">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="delete-btn" title="Delete notification">
+                                    Delete
+                                </button>
+                            </form>
+                        </div>
+
+                        <h5 class="notification-title">@item.Title</h5>
+                        <p class="notification-message mb-0">@item.Message</p>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
