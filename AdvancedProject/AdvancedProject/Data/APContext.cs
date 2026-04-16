@@ -52,6 +52,8 @@ public partial class APContext : DbContext
 
     public virtual DbSet<PaymentFrequency> PaymentFrequencies { get; set; }
 
+    public DbSet<Governorate> Governorates { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
         => optionsBuilder.UseSqlServer("Server=(localdb)\\MSSQLLocalDB;Database=AdvancedDB;Trusted_Connection=True;TrustServerCertificate=True;");
@@ -246,10 +248,17 @@ public partial class APContext : DbContext
         new { StaffId = 5, SkillId = 3 }
     ));
 
+        modelBuilder.Entity<Governorate>().HasData(
+        new Governorate { GovernorateId = 1, Name = "Capital Governorate" },
+        new Governorate { GovernorateId = 2, Name = "Muharraq Governorate" },
+        new Governorate { GovernorateId = 3, Name = "Northern Governorate" },
+        new Governorate { GovernorateId = 4, Name = "Southern Governorate" }
+    );
+
         modelBuilder.Entity<Property>().HasData(
-         new Property { PropertyId = 1, Name = "Abraj Al Lulu", Building = "611", Road = "271", Block = "220", City = "Manama", Description = "A modern residential complex offering comfort and essential amenities.", CreatedAt = new DateTime(2026, 1, 1, 12, 55, 21), IsActive = true },
-         new Property { PropertyId = 2, Name = "Almoayyed Tower", Building = "246", Road = "811", Block = "708", City = "Muharraq", Description = "A contemporary tower with modern facilities in a prime location.", CreatedAt = new DateTime(2026, 1, 5, 15, 22, 29), IsActive = true },
-         new Property { PropertyId = 3, Name = "United Tower", Building = "922", Road = "3062", Block = "461", City = "Riffa", Description = "A residential property with spacious apartments for families.", CreatedAt = new DateTime(2026, 1, 10, 3, 31, 43), IsActive = true }
+         new Property { PropertyId = 1, Name = "Abraj Al Lulu", Building = "611", Road = "271", Block = "220", City = "Manama", Description = "A modern residential complex offering comfort and essential amenities.", CreatedAt = new DateTime(2026, 1, 1, 12, 55, 21), IsActive = true, GovernorateId = 1 }, 
+         new Property { PropertyId = 2, Name = "Almoayyed Tower", Building = "246", Road = "811", Block = "708", City = "Muharraq", Description = "A contemporary tower with modern facilities in a prime location.", CreatedAt = new DateTime(2026, 1, 5, 15, 22, 29), IsActive = true, GovernorateId = 2 },
+         new Property { PropertyId = 3, Name = "United Tower", Building = "922", Road = "3062", Block = "461", City = "Riffa", Description = "A residential property with spacious apartments for families.", CreatedAt = new DateTime(2026, 1, 10, 3, 31, 43), IsActive = true, GovernorateId = 4 }
      );
 
 
@@ -342,7 +351,10 @@ public partial class APContext : DbContext
 
          new Notification { NotificationId = 9, UserId = 10, NotificationTypeId = 2, Title = "Issue Reported", Message = "A carpentry issue has been reported.", CreatedAt = new DateTime(2026, 3, 4, 17, 5, 43) },
 
-         new Notification { NotificationId = 10, UserId = 11, NotificationTypeId = 2, Title = "Issue Reported", Message = "A painting issue has been reported.", CreatedAt = new DateTime(2026, 3, 5, 23, 14, 10) }
+         new Notification { NotificationId = 10, UserId = 11, NotificationTypeId = 2, Title = "Issue Reported", Message = "A painting issue has been reported.", CreatedAt = new DateTime(2026, 3, 5, 23, 14, 10) },
+
+         new Notification { NotificationId = 11, UserId = 2, NotificationTypeId = 3, Title = "Payment Received", Message = "Your payment has been successfully received.", CreatedAt = new DateTime(2026, 3, 11, 13, 44, 21) }
+
          );
 
         modelBuilder.Entity<Amenity>().HasData(
