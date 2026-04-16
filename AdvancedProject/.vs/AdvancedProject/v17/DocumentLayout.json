@@ -3,16 +3,28 @@
   "WorkspaceRootPath": "D:\\year3 sem2\\advanced programming project\\Advanced-Project-S6-G2\\AdvancedProject\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{B4100081-BB0A-41BA-A933-BD3CCDB833B9}|AdvancedProject\\AdvancedProject.csproj|d:\\year3 sem2\\advanced programming project\\advanced-project-s6-g2\\advancedproject\\advancedproject\\wwwroot\\css\\site.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
+      "RelativeMoniker": "D:0:0:{B4100081-BB0A-41BA-A933-BD3CCDB833B9}|AdvancedProject\\AdvancedProject.csproj|solutionrelative:advancedproject\\wwwroot\\css\\site.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B4100081-BB0A-41BA-A933-BD3CCDB833B9}|AdvancedProject\\AdvancedProject.csproj|d:\\year3 sem2\\advanced programming project\\advanced-project-s6-g2\\advancedproject\\advancedproject\\views\\notifications\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{B4100081-BB0A-41BA-A933-BD3CCDB833B9}|AdvancedProject\\AdvancedProject.csproj|solutionrelative:advancedproject\\views\\notifications\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B4100081-BB0A-41BA-A933-BD3CCDB833B9}|AdvancedProject\\AdvancedProject.csproj|d:\\year3 sem2\\advanced programming project\\advanced-project-s6-g2\\advancedproject\\advancedproject\\controllers\\notificationscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B4100081-BB0A-41BA-A933-BD3CCDB833B9}|AdvancedProject\\AdvancedProject.csproj|solutionrelative:advancedproject\\controllers\\notificationscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B4100081-BB0A-41BA-A933-BD3CCDB833B9}|AdvancedProject\\AdvancedProject.csproj|d:\\year3 sem2\\advanced programming project\\advanced-project-s6-g2\\advancedproject\\advancedproject\\data\\apcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B4100081-BB0A-41BA-A933-BD3CCDB833B9}|AdvancedProject\\AdvancedProject.csproj|solutionrelative:advancedproject\\data\\apcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{B4100081-BB0A-41BA-A933-BD3CCDB833B9}|AdvancedProject\\AdvancedProject.csproj|d:\\year3 sem2\\advanced programming project\\advanced-project-s6-g2\\advancedproject\\advancedproject\\controllers\\maintenancerequestscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{B4100081-BB0A-41BA-A933-BD3CCDB833B9}|AdvancedProject\\AdvancedProject.csproj|solutionrelative:advancedproject\\controllers\\maintenancerequestscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{B4100081-BB0A-41BA-A933-BD3CCDB833B9}|AdvancedProject\\AdvancedProject.csproj|d:\\year3 sem2\\advanced programming project\\advanced-project-s6-g2\\advancedproject\\advancedproject\\views\\maintenancerequests\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{B4100081-BB0A-41BA-A933-BD3CCDB833B9}|AdvancedProject\\AdvancedProject.csproj|solutionrelative:advancedproject\\views\\maintenancerequests\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{B4100081-BB0A-41BA-A933-BD3CCDB833B9}|AdvancedProject\\AdvancedProject.csproj|d:\\year3 sem2\\advanced programming project\\advanced-project-s6-g2\\advancedproject\\advancedproject\\data\\apcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{B4100081-BB0A-41BA-A933-BD3CCDB833B9}|AdvancedProject\\AdvancedProject.csproj|solutionrelative:advancedproject\\data\\apcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{B4100081-BB0A-41BA-A933-BD3CCDB833B9}|AdvancedProject\\AdvancedProject.csproj|d:\\year3 sem2\\advanced programming project\\advanced-project-s6-g2\\advancedproject\\advancedproject\\models\\tenant.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -46,7 +58,7 @@
       "DocumentGroups": [
         {
           "DockedHeight": 85,
-          "SelectedChildIndex": 8,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Bookmark",
@@ -54,7 +66,46 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 0,
+              "Title": "site.css",
+              "DocumentMoniker": "D:\\year3 sem2\\advanced programming project\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\wwwroot\\css\\site.css",
+              "RelativeDocumentMoniker": "AdvancedProject\\wwwroot\\css\\site.css",
+              "ToolTip": "D:\\year3 sem2\\advanced programming project\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\wwwroot\\css\\site.css",
+              "RelativeToolTip": "AdvancedProject\\wwwroot\\css\\site.css",
+              "ViewState": "AgIAAMgFAAAAAAAAAAAcwOIFAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
+              "WhenOpened": "2026-04-16T17:39:12.496Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "D:\\year3 sem2\\advanced programming project\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Views\\Notifications\\Index.cshtml",
+              "RelativeDocumentMoniker": "AdvancedProject\\Views\\Notifications\\Index.cshtml",
+              "ToolTip": "D:\\year3 sem2\\advanced programming project\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Views\\Notifications\\Index.cshtml",
+              "RelativeToolTip": "AdvancedProject\\Views\\Notifications\\Index.cshtml",
+              "ViewState": "AgIAAGMAAAAAAAAAAAAAAGMAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-04-16T17:23:30.469Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "NotificationsController.cs",
+              "DocumentMoniker": "D:\\year3 sem2\\advanced programming project\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Controllers\\NotificationsController.cs",
+              "RelativeDocumentMoniker": "AdvancedProject\\Controllers\\NotificationsController.cs",
+              "ToolTip": "D:\\year3 sem2\\advanced programming project\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Controllers\\NotificationsController.cs",
+              "RelativeToolTip": "AdvancedProject\\Controllers\\NotificationsController.cs",
+              "ViewState": "AgIAABAAAAAAAAAAAAAQwCgAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-16T17:23:09.337Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
               "Title": "Delete.cshtml",
               "DocumentMoniker": "D:\\year3 sem2\\advanced programming project\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Views\\MaintenanceRequests\\Delete.cshtml",
               "RelativeDocumentMoniker": "AdvancedProject\\Views\\MaintenanceRequests\\Delete.cshtml",
@@ -66,7 +117,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 9,
               "Title": "Edit.cshtml",
               "DocumentMoniker": "D:\\year3 sem2\\advanced programming project\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Views\\MaintenanceRequests\\Edit.cshtml",
               "RelativeDocumentMoniker": "AdvancedProject\\Views\\MaintenanceRequests\\Edit.cshtml",
@@ -78,7 +129,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 5,
               "Title": "Index.cshtml",
               "DocumentMoniker": "D:\\year3 sem2\\advanced programming project\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Views\\MaintenanceRequests\\Index.cshtml",
               "RelativeDocumentMoniker": "AdvancedProject\\Views\\MaintenanceRequests\\Index.cshtml",
@@ -90,7 +141,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 6,
               "Title": "Tenant.cs",
               "DocumentMoniker": "D:\\year3 sem2\\advanced programming project\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Models\\Tenant.cs",
               "RelativeDocumentMoniker": "AdvancedProject\\Models\\Tenant.cs",
@@ -102,7 +153,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 10,
               "Title": "Create.cshtml",
               "DocumentMoniker": "D:\\year3 sem2\\advanced programming project\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Views\\MaintenanceRequests\\Create.cshtml",
               "RelativeDocumentMoniker": "AdvancedProject\\Views\\MaintenanceRequests\\Create.cshtml",
@@ -114,19 +165,20 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "APContext.cs",
               "DocumentMoniker": "D:\\year3 sem2\\advanced programming project\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Data\\APContext.cs",
               "RelativeDocumentMoniker": "AdvancedProject\\Data\\APContext.cs",
               "ToolTip": "D:\\year3 sem2\\advanced programming project\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Data\\APContext.cs",
               "RelativeToolTip": "AdvancedProject\\Data\\APContext.cs",
-              "ViewState": "AgIAAIEBAAAAAAAAAAAgwJABAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAHoBAAAAAAAAAAAIwJABAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-16T16:23:16.915Z"
+              "WhenOpened": "2026-04-16T16:23:16.915Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 8,
               "Title": "MaintenanceRequest.cs",
               "DocumentMoniker": "D:\\year3 sem2\\advanced programming project\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Models\\MaintenanceRequest.cs",
               "RelativeDocumentMoniker": "AdvancedProject\\Models\\MaintenanceRequest.cs",
@@ -138,20 +190,20 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 4,
               "Title": "MaintenanceRequestsController.cs",
               "DocumentMoniker": "D:\\year3 sem2\\advanced programming project\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Controllers\\MaintenanceRequestsController.cs",
               "RelativeDocumentMoniker": "AdvancedProject\\Controllers\\MaintenanceRequestsController.cs",
               "ToolTip": "D:\\year3 sem2\\advanced programming project\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Controllers\\MaintenanceRequestsController.cs",
               "RelativeToolTip": "AdvancedProject\\Controllers\\MaintenanceRequestsController.cs",
-              "ViewState": "AgIAAGEBAAAAAAAAAAA0wGcBAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAGIBAAAAAAAAAAAIwGcBAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-04-16T16:21:28.971Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 11,
               "Title": "PaymentFrequency.cs",
               "DocumentMoniker": "D:\\year3 sem2\\advanced programming project\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Models\\PaymentFrequency.cs",
               "RelativeDocumentMoniker": "AdvancedProject\\Models\\PaymentFrequency.cs",

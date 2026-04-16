@@ -20,10 +20,24 @@ namespace AdvancedProject.Controllers
         }
 
         // GET: Notifications
-        public async Task<IActionResult> Index()
+        // GET: Notifications
+        public async Task<IActionResult> Index(string typeFilter = "All")
         {
-            var aPContext = _context.Notifications.Include(n => n.NotificationType).Include(n => n.User);
-            return View(await aPContext.ToListAsync());
+            var query = _context.Notifications
+                .Include(n => n.NotificationType)
+                .Include(n => n.User)
+                .AsQueryable();
+
+            if (!string.IsNullOrEmpty(typeFilter) && typeFilter != "All")
+            {
+                query = query.Where(n => n.NotificationType.Name == typeFilter);
+            }
+
+            ViewBag.SelectedType = typeFilter;
+
+            return View(await query
+                .OrderByDescending(n => n.CreatedAt)
+                .ToListAsync());
         }
 
         // GET: Notifications/Details/5
