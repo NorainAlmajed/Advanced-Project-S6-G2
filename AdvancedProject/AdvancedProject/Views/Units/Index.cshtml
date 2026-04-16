@@ -121,7 +121,9 @@
 </form>
 
 <p>
-    <a asp-action="Create" class="btn btn-primary">Create New</a>
+    <a asp-action="Create" asp-route-propertyId="@propertyId" class="btn btn-primary">
+        Create New
+    </a>
 </p>
 
 @if (!Model.Any())
