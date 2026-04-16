@@ -1,8 +1,9 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore;
 
 namespace AdvancedProject.Models;
 
@@ -32,13 +33,16 @@ public partial class LeaseApplication
     public int DurationId { get; set; }
 
     [ForeignKey("DurationId")]
+    [ValidateNever]
     public Duration Duration { get; set; }
 
     [ForeignKey("TenantId")]
     [InverseProperty("LeaseApplications")]
+    [ValidateNever]
     public virtual Tenant Tenant { get; set; } = null!;
 
     [ForeignKey("UnitId")]
     [InverseProperty("LeaseApplications")]
+    [ValidateNever]
     public virtual Unit Unit { get; set; } = null!;
 }

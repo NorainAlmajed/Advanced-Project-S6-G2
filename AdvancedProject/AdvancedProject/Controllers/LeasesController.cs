@@ -101,9 +101,9 @@ namespace AdvancedProject.Controllers
 
             var lease = await _context.Leases
                 .Include(l => l.Tenant).ThenInclude(e => e.User)
-.Include(l => l.Unit)
-    .ThenInclude(u => u.Property)
-.Include(e => e.Duration).FirstOrDefaultAsync(m => m.LeaseId == id);
+                .Include(l => l.Unit)
+                    .ThenInclude(u => u.Property)
+                .Include(e => e.Duration).FirstOrDefaultAsync(m => m.LeaseId == id);
             if (lease == null)
             {
                 return NotFound();
@@ -155,32 +155,11 @@ namespace AdvancedProject.Controllers
             ModelState.Remove("Unit");
             ModelState.Remove("Duration");
 
-            //if (!ModelState.IsValid)
-            //{
-            //    ViewData["TenantName"] = new SelectList(
-            //        _context.Tenants.Include(t => t.User)
-            //            .Select(t => new { t.TenantId, Username = t.User.Username }),
-            //        "TenantId",
-            //        "Username",
-            //        lease.TenantId
-            //    );
-
-            //    ViewData["DurationId"] = new SelectList(
-            //        _context.Durations,
-            //        "DurationId",
-            //        "Months",
-            //        lease.DurationId
-            //    );
-
-            //    return View(lease);
-            //}
-
-
             if (!ModelState.IsValid)
             {
                 var selectedUnit = await _context.Units
-    .Include(u => u.Property)
-    .FirstOrDefaultAsync(u => u.UnitId == lease.UnitId);
+                .Include(u => u.Property)
+                .FirstOrDefaultAsync(u => u.UnitId == lease.UnitId);
 
                 if (selectedUnit != null)
                 {
@@ -265,50 +244,85 @@ namespace AdvancedProject.Controllers
         }
 
         // POST: Leases/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("LeaseId,TenantId,UnitId,StartDate,EndDate,MonthlyRent,Status,CreatedAt,TerminationDate,DurationId")] Lease lease)
+        public async Task<IActionResult> Edit(int id, [Bind("LeaseId,StartDate,DurationId")] Lease lease)
         {
             if (id != lease.LeaseId)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            // Remove navigation validation issues
+            ModelState.Remove("Tenant");
+            ModelState.Remove("Unit");
+            ModelState.Remove("Duration");
+            ModelState.Remove("Status");
+            ModelState.Remove("MonthlyRent");
+            ModelState.Remove("CreatedAt");
+            ModelState.Remove("EndDate");
+
+            if (!ModelState.IsValid)
             {
-                try
-                {
-
-                    var duration = await _context.Durations.FindAsync(lease.DurationId);
-
-                    if (duration == null)
-                        return Content("Duration not found");
-
-                    lease.EndDate = lease.StartDate.AddMonths(duration.Months).AddDays(-1);
-
-                    _context.Update(lease);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!LeaseExists(lease.LeaseId))
+                var tenants = _context.Tenants
+                    .Include(t => t.User)
+                    .Select(t => new
                     {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                        t.TenantId,
+                        Username = t.User.Username
+                    })
+                    .ToList();
+
+                ViewData["TenantId"] = new SelectList(
+                    tenants,
+                    "TenantId",
+                    "Username",
+                    lease.TenantId
+                );
+
+                ViewData["UnitId"] = new SelectList(
+                    _context.Units,
+                    "UnitId",
+                    "UnitNumber",
+                    lease.UnitId
+                );
+
+                ViewData["DurationId"] = new SelectList(
+                    _context.Durations,
+                    "DurationId",
+                    "Months",
+                    lease.DurationId
+                );
+
+                return View(lease);
             }
-            ViewData["TenantId"] = new SelectList(_context.Tenants.Include(t => t.User)
-            .Select(t => new { t.TenantId, Username = t.User.Username }),
-            "TenantId", "Username", lease.TenantId);
-            ViewData["UnitId"] = new SelectList(_context.Units, "UnitId", "UnitId", lease.UnitId);
-            return View(lease);
+
+            var existing = await _context.Leases
+                .Include(l => l.Duration)
+                .FirstOrDefaultAsync(l => l.LeaseId == id);
+
+            if (existing == null)
+            {
+                return NotFound();
+            }
+
+            var duration = await _context.Durations.FindAsync(lease.DurationId);
+
+            if (duration == null)
+            {
+                ModelState.AddModelError("", "Duration not found");
+                return View(lease);
+            }
+
+            existing.StartDate = lease.StartDate;
+            existing.DurationId = lease.DurationId;
+
+            // EndDate = StartDate + Duration.Months
+            existing.EndDate = lease.StartDate.AddMonths(duration.Months);
+
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: Leases/Delete/5
