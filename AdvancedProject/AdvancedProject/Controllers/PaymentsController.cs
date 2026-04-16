@@ -67,7 +67,7 @@ namespace AdvancedProject.Controllers
             }
             else
             {
-                paymentsQuery = paymentsQuery.OrderByDescending(p => p.StartDate);
+                paymentsQuery = paymentsQuery.OrderBy(p => p.PaymentId); // default starts from 1
             }
 
             var payments = await paymentsQuery.ToListAsync();
