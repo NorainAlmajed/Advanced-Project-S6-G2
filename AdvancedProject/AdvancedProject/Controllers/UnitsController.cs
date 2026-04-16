@@ -171,6 +171,7 @@ namespace AdvancedProject.Controllers
             };
 
             ViewData["UnitTypeId"] = new SelectList(_context.UnitTypes, "UnitTypeId", "Name");
+            ViewBag.AmenityList = _context.Amenities.OrderBy(a => a.Name).ToList();
 
             return View(model);
         }
@@ -179,19 +180,13 @@ namespace AdvancedProject.Controllers
         //POST
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Unit unit)
+        public async Task<IActionResult> Create(Unit unit, int[] selectedAmenities)
         {
             if (unit.PropertyId == 0)
                 ModelState.AddModelError("PropertyId", "Property is required");
 
             if (unit.UnitTypeId == 0)
                 ModelState.AddModelError("UnitTypeId", "Unit type is required");
-
-            if (unit.SizeSqFt == null)
-                ModelState.AddModelError("SizeSqFt", "Size is required");
-
-            if (unit.RentAmount == null)
-                ModelState.AddModelError("RentAmount", "Rent is required");
 
             ModelState.Remove("Property");
             ModelState.Remove("Amenities");
@@ -202,11 +197,24 @@ namespace AdvancedProject.Controllers
             if (!ModelState.IsValid)
             {
                 ViewData["UnitTypeId"] = new SelectList(_context.UnitTypes, "UnitTypeId", "Name", unit.UnitTypeId);
+                ViewBag.AmenityList = _context.Amenities.OrderBy(a => a.Name).ToList();
                 return View(unit);
             }
 
             unit.AvailabilityStatus = "Available";
             unit.CreatedAt = DateTime.Now;
+
+            if (selectedAmenities != null && selectedAmenities.Any())
+            {
+                var amenities = await _context.Amenities
+                    .Where(a => selectedAmenities.Contains(a.AmenityId))
+                    .ToListAsync();
+
+                foreach (var amenity in amenities)
+                {
+                    unit.Amenities.Add(amenity);
+                }
+            }
 
             _context.Units.Add(unit);
 
@@ -216,17 +224,15 @@ namespace AdvancedProject.Controllers
             }
             catch (DbUpdateException ex)
             {
-                // THIS WILL SHOW REAL ERROR
                 ModelState.AddModelError("", ex.InnerException?.Message ?? ex.Message);
 
                 ViewData["UnitTypeId"] = new SelectList(_context.UnitTypes, "UnitTypeId", "Name", unit.UnitTypeId);
+                ViewBag.AmenityList = _context.Amenities.OrderBy(a => a.Name).ToList();
                 return View(unit);
             }
 
             return RedirectToAction(nameof(Index), new { id = unit.PropertyId });
         }
-
-
 
         // GET: Units/Edit/5
         public async Task<IActionResult> Edit(int? id)

@@ -14,7 +14,8 @@ public partial class Amenity
     [StringLength(50)]
     public string Name { get; set; } = null!;
 
-    [ForeignKey("AmenityId")]
+    //[ForeignKey("AmenityId")]
+
     [InverseProperty("Amenities")]
     public virtual ICollection<Unit> Units { get; set; } = new List<Unit>();
 }
