@@ -19,31 +19,32 @@
     }
 </h1>
 
-<form asp-action="Index" method="get" class="mb-4">
+<form asp-action="Index" method="get" class="mb-4 units-page">
     <input type="hidden" name="id" value="@propertyId" />
 
-    <div class="card shadow-sm border-0">
+    <div class="card search-card users-search-card shadow-soft border-0">
         <div class="card-body">
             <div class="row g-3 align-items-end">
                 <div class="col-lg-4">
                     <label class="form-label fw-semibold">Search</label>
                     <input type="text"
                            name="searchString"
-                           class="form-control"
+                           class="form-control users-search-input"
                            placeholder="Search by unit number or type."
                            value="@ViewBag.CurrentSearch" />
                 </div>
 
                 <div class="col-lg-2">
                     <label class="form-label fw-semibold">Property Type</label>
-                    <select name="typeFilter" class="form-select" asp-items="ViewBag.TypeList">
+                    <select name="typeFilter" class="form-select users-search-input" asp-items="ViewBag.TypeList">
                         <option value="">All Types</option>
                     </select>
                 </div>
 
                 <div class="col-lg-2">
                     <label class="form-label fw-semibold">Price Range</label>
-                    <select name="priceFilter" class="form-select">
+                    <select name="priceFilter" class="form-select users-search-input">
+                    
                         <option value="">All Prices</option>
                         <option value="Under300" selected="@(ViewBag.CurrentPrice == "Under300")">Under 300</option>
                         <option value="300to400" selected="@(ViewBag.CurrentPrice == "300to400")">300 to 400</option>
@@ -55,7 +56,7 @@
                 <div class="col-lg-2">
                     <label class="form-label fw-semibold">Amenities</label>
                     <div class="dropdown">
-                        <button class="btn btn-outline-secondary dropdown-toggle w-100 text-start"
+                        <button class="btn btn-light w-100 text-start users-search-input dropdown-toggle"
                                 type="button"
                                 data-bs-toggle="dropdown"
                                 data-bs-auto-close="outside"
@@ -90,18 +91,17 @@
                 </div>
 
                 <div class="col-lg-1 d-grid">
-                    <button type="submit" class="btn btn-primary">
+                    <button type="submit" class="btn users-search-btn btn-light-custom">
                         Apply
                     </button>
                 </div>
 
                 <div class="col-lg-1 d-grid">
-                    <a asp-action="Index" asp-route-id="@propertyId" class="btn btn-outline-secondary">
+                    <a asp-action="Index" asp-route-id="@propertyId" class="btn users-reset-btn btn-outline-light">
                         Reset
                     </a>
                 </div>
             </div>
-
             <div class="mt-3">
                 <label class="form-label fw-semibold d-block mb-2">Status</label>
 
@@ -136,8 +136,7 @@ else
         @foreach (var item in Model)
         {
             <div class="col-sm-12 col-md-6 col-lg-3 mb-4">
-                <div class="card h-100 shadow-sm">
-
+                <div class="card h-100 shadow-sm unit-card">
                     <div class="card-body">
                         <h5 class="card-title">
                             Unit @Html.DisplayFor(modelItem => item.UnitNumber)
@@ -193,7 +192,7 @@ else
                         }
                     </div>
 
-                    <div class="card-footer bg-white border-top-0">
+                    <div class="card-footer unit-card-footer border-top-0">
                         <a asp-action="Details"
                            asp-route-id="@item.UnitId"
                            asp-route-propertyId="@item.PropertyId"
