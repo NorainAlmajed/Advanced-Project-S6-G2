@@ -59,25 +59,45 @@ namespace AdvancedProject.Controllers
         // GET: Properties/Create
         public IActionResult Create()
         {
+            ViewData["GovernorateId"] = new SelectList(
+                _context.Governorates,
+                "GovernorateId",
+                "Name"
+            );
+
             return View();
         }
 
+
         // POST: Properties/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // POST: Properties/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("PropertyId,Name,City,Description,Block,Building,Road")] Property @property)
+        public async Task<IActionResult> Create([Bind("PropertyId,Name,City,Description,Block,Building,Road,GovernorateId")] Property property)
         {
-            @property.CreatedAt = DateTime.Now;
+            if (property.GovernorateId == 0)
+            {
+                ModelState.AddModelError("GovernorateId", "Please select a governorate.");
+            }
+
             if (ModelState.IsValid)
             {
-                _context.Add(@property);
+                property.CreatedAt = DateTime.Now;
+
+                _context.Add(property);
                 await _context.SaveChangesAsync();
 
                 return RedirectToAction(nameof(Index));
             }
-            return View(@property);
+
+            ViewData["GovernorateId"] = new SelectList(
+                _context.Governorates,
+                "GovernorateId",
+                "Name",
+                property.GovernorateId
+            );
+
+            return View(property);
         }
 
         // GET: Properties/Edit/5
@@ -97,11 +117,9 @@ namespace AdvancedProject.Controllers
         }
 
         // POST: Properties/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("PropertyId,Name,City,Description,CreatedAt,Block,Building,Road")] Property @property)
+        public async Task<IActionResult> Edit(int id, [Bind("PropertyId,Name,City,Description,Block,Building,Road,GovernorateId")] Property @property)
         {
             if (id != @property.PropertyId)
             {
