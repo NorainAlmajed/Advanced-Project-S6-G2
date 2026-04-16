@@ -16,7 +16,7 @@ namespace AdvancedProject.Controllers
 
         private void PopulateDropdowns()
         {
-            ViewData["LeaseId"] = new SelectList(_context.Leases, "LeaseId", "LeaseId");
+            ViewData["LeaseId"] = new SelectList(_context.Leases.Where(l => l.Status == "Active"), "LeaseId", "LeaseId");
             ViewData["PaymentFrequencyId"] = new SelectList(_context.PaymentFrequencies, "PaymentFrequencyId", "Name");
             ViewData["PaymentMethodId"] = new SelectList(_context.PaymentMethods, "PaymentMethodId", "Name");
 
