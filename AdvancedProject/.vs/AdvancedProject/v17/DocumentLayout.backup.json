@@ -62,8 +62,7 @@
               "RelativeToolTip": "AdvancedProject\\Models\\Property.cs",
               "ViewState": "AgIAAA4AAAAAAAAAAAA8wCYAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-15T19:58:48.032Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-15T19:58:48.032Z"
             },
             {
               "$type": "Document",
@@ -75,8 +74,7 @@
               "RelativeToolTip": "AdvancedProject\\Models\\Unit.cs",
               "ViewState": "AgIAACAAAAAAAAAAAAAuwDoAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-15T19:58:21.304Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-15T19:58:21.304Z"
             },
             {
               "$type": "Document",
@@ -88,8 +86,7 @@
               "RelativeToolTip": "AdvancedProject\\Controllers\\UnitsController.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABUAAAAVAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-15T19:58:13.317Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-15T19:58:13.317Z"
             },
             {
               "$type": "Document",
@@ -101,8 +98,7 @@
               "RelativeToolTip": "AdvancedProject\\wwwroot\\css\\site.css",
               "ViewState": "AgIAABgEAAAAAAAAAAAswC4EAAAYAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
-              "WhenOpened": "2026-04-15T17:11:50.542Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-15T17:11:50.542Z"
             },
             {
               "$type": "Document",
@@ -122,8 +118,8 @@
               "Title": "Index.cshtml",
               "DocumentMoniker": "D:\\year3 sem2\\advanced programming project\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Views\\MaintenanceRequests\\Index.cshtml",
               "RelativeDocumentMoniker": "AdvancedProject\\Views\\MaintenanceRequests\\Index.cshtml",
-              "ToolTip": "D:\\year3 sem2\\advanced programming project\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Views\\MaintenanceRequests\\Index.cshtml*",
-              "RelativeToolTip": "AdvancedProject\\Views\\MaintenanceRequests\\Index.cshtml*",
+              "ToolTip": "D:\\year3 sem2\\advanced programming project\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Views\\MaintenanceRequests\\Index.cshtml",
+              "RelativeToolTip": "AdvancedProject\\Views\\MaintenanceRequests\\Index.cshtml",
               "ViewState": "AgIAAIgAAAAAAAAAAAAtwJkAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2026-04-15T17:11:02.709Z",
@@ -151,8 +147,7 @@
               "RelativeToolTip": "AdvancedProject\\Data\\APContext.cs",
               "ViewState": "AgIAAF0BAAAAAAAAAAAiwH4BAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-15T17:10:21.658Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-15T17:10:21.658Z"
             },
             {
               "$type": "Document",
@@ -160,12 +155,11 @@
               "Title": "MaintenanceRequestsController.cs",
               "DocumentMoniker": "D:\\year3 sem2\\advanced programming project\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Controllers\\MaintenanceRequestsController.cs",
               "RelativeDocumentMoniker": "AdvancedProject\\Controllers\\MaintenanceRequestsController.cs",
-              "ToolTip": "D:\\year3 sem2\\advanced programming project\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Controllers\\MaintenanceRequestsController.cs*",
-              "RelativeToolTip": "AdvancedProject\\Controllers\\MaintenanceRequestsController.cs*",
+              "ToolTip": "D:\\year3 sem2\\advanced programming project\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Controllers\\MaintenanceRequestsController.cs",
+              "RelativeToolTip": "AdvancedProject\\Controllers\\MaintenanceRequestsController.cs",
               "ViewState": "AgIAAA8AAAAAAAAAAAAlwCAAAAAXAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-15T17:10:14.777Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-15T17:10:14.777Z"
             }
           ]
         }
