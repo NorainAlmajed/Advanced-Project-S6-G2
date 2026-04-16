@@ -47,7 +47,19 @@
                             <a class="nav-link app-nav-link" asp-controller="Payments" asp-action="Index">Payments</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link app-nav-link" asp-controller="Notifications" asp-action="Index">Notifications</a>
+                            <a class="nav-link app-nav-link notification-bell-link"
+                               asp-controller="Notifications"
+                               asp-action="Index"
+                               title="Notifications">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+
+                                    <!-- bell body -->
+                                    <path d="M12 2a5 5 0 0 0-5 5v3c0 .8-.3 1.5-.8 2.1L5 14h14l-1.2-1.9c-.5-.6-.8-1.3-.8-2.1V7a5 5 0 0 0-5-5z" />
+
+                                    <!--  moved UP (was 18 → now 16.5) -->
+                                    <path d="M9 16a3 3 0 0 0 6 0H9z" />
+                                </svg>
+                            </a>
                         </li>
                     </ul>
                 </div>
