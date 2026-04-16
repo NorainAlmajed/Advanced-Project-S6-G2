@@ -1109,3 +1109,245 @@ body {
     background: rgba(220, 53, 69, 0.14);
     color: #b42318;
 }
+
+
+/* ============================= */
+/*            Leases             */
+/* ============================= */
+
+.leases-page .users-subtitle {
+    color: var(--text-muted);
+    font-size: 1.05rem;
+}
+
+.lease-total-box {
+    background: rgba(255, 255, 255, 0.92);
+    border-radius: 14px;
+    min-height: 56px;
+    height: 56px;
+    padding: 0.7rem 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid rgba(255, 255, 255, 0.45);
+}
+
+.lease-total-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: #6b7280;
+    text-transform: uppercase;
+    line-height: 1;
+    margin-bottom: 0.15rem;
+}
+
+.lease-total-value {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--text-main);
+    line-height: 1;
+}
+
+.lease-property-name {
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    margin-top: 0.2rem;
+}
+
+.lease-status-active {
+    background: rgba(30, 142, 110, 0.14);
+    color: var(--accent);
+}
+
+.lease-status-terminated {
+    background: rgba(220, 53, 69, 0.14);
+    color: #b42318;
+}
+
+
+/* ============================= */
+/*     Lease Application Form    */
+/* ============================= */
+
+.lease-form-page {
+    padding: 1.5rem 0 0.5rem;
+}
+
+.lease-form-wrapper {
+    max-width: 760px;
+    margin: 0 auto;
+}
+
+.lease-form-card {
+    background: #ffffff;
+    border-radius: 26px;
+    border: 1px solid rgba(0, 91, 113, 0.08);
+    overflow: hidden;
+}
+
+.lease-form-header {
+    padding: 2rem 2rem 1.25rem;
+    background: linear-gradient(135deg, #005B71, #1E8E6E);
+    color: white;
+}
+
+.lease-form-eyebrow {
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    opacity: 0.9;
+}
+
+.lease-form-title {
+    font-size: 2.2rem;
+    font-weight: 800;
+    line-height: 1.1;
+}
+
+.lease-form-subtitle {
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.lease-form-body {
+    padding: 2rem;
+}
+
+.lease-form-group {
+    margin-bottom: 1.5rem;
+}
+
+.lease-form-label {
+    display: block;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text-main);
+    margin-bottom: 0.55rem;
+}
+
+.lease-form-input {
+    min-height: 58px;
+    border-radius: 16px;
+    border: 1px solid rgba(0, 91, 113, 0.12);
+    background-color: #f8fbfb;
+    font-size: 1rem;
+    padding: 0.85rem 1rem;
+    color: var(--text-main);
+}
+
+    .lease-form-input:focus {
+        border-color: var(--primary);
+        background-color: #ffffff;
+        box-shadow: 0 0 0 0.2rem rgba(0, 91, 113, 0.10);
+    }
+
+.lease-form-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1.75rem;
+    flex-wrap: wrap;
+}
+
+.lease-submit-btn {
+    min-height: 54px;
+    border-radius: 14px;
+    padding: 0 1.5rem;
+    font-weight: 700;
+    font-size: 1rem;
+}
+
+.lease-back-link {
+    color: var(--primary);
+    font-weight: 700;
+    text-decoration: none;
+    padding: 0.85rem 0.2rem;
+}
+
+    .lease-back-link:hover {
+        color: var(--accent);
+        text-decoration: underline;
+    }
+
+@media (max-width: 768px) {
+    .lease-form-header,
+    .lease-form-body {
+        padding: 1.5rem;
+    }
+
+    .lease-form-title {
+        font-size: 1.8rem;
+    }
+
+    .lease-submit-btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+
+/*for the card input thead property
+*/
+/*.property-card {
+    background-color: #d4e7ec;
+}*/
+
+/* ============================= */
+/*         Properties Page       */
+/* ============================= */
+
+.property-card {
+    background-color: #d4e7ec;
+    border-radius: 20px;
+    transition: all 0.2s ease;
+}
+
+    .property-card:hover {
+        transform: translateY(-3px);
+    }
+
+    .property-card .card-body {
+        background-color: transparent;
+    }
+
+.property-card-footer {
+    background-color: #d4e7ec;
+}
+
+.property-description-text {
+    line-height: 1.6;
+    color: var(--text-main);
+}
+
+.property-details-btn {
+    background-color: var(--primary);
+    color: white;
+    border: 1px solid var(--primary);
+    border-radius: 12px;
+    font-weight: 700;
+    min-height: 42px;
+}
+
+    .property-details-btn:hover {
+        background-color: var(--primary-light);
+        border-color: var(--primary-light);
+        color: white;
+    }
+
+.property-units-btn {
+    background-color: var(--accent);
+    color: white;
+    border: 1px solid var(--accent);
+    border-radius: 12px;
+    font-weight: 700;
+    min-height: 42px;
+}
+
+    .property-units-btn:hover {
+        background-color: #16795e;
+        border-color: #16795e;
+        color: white;
+    }

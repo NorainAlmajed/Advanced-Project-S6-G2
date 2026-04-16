@@ -39,10 +39,56 @@ namespace AdvancedProject.Controllers
         }
 
         // GET: Leases
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchTerm, string statusFilter, string dateFilter)
         {
-            var aPContext = _context.Leases.Include(l => l.Unit).Include(e => e.Duration).Include(l => l.Tenant).ThenInclude(e => e.User).Include(e => e.Unit);
-            return View(await aPContext.ToListAsync());
+            var leasesQuery = _context.Leases
+                .Include(l => l.Tenant)
+                    .ThenInclude(t => t.User)
+                .Include(l => l.Unit)
+                    .ThenInclude(u => u.Property)
+                .Include(l => l.Duration)
+                .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                searchTerm = searchTerm.Trim();
+
+                leasesQuery = leasesQuery.Where(l =>
+                    l.LeaseId.ToString().Contains(searchTerm) ||
+                    l.Tenant.User.FullName.Contains(searchTerm) ||
+                    l.Unit.UnitNumber.Contains(searchTerm) ||
+                    l.Unit.Property.Name.Contains(searchTerm));
+            }
+
+            if (!string.IsNullOrWhiteSpace(statusFilter))
+            {
+                leasesQuery = leasesQuery.Where(l => l.Status == statusFilter);
+            }
+
+            if (!string.IsNullOrWhiteSpace(dateFilter))
+            {
+                if (dateFilter == "Latest")
+                {
+                    leasesQuery = leasesQuery.OrderByDescending(l => l.StartDate);
+                }
+                else
+                {
+                    leasesQuery = leasesQuery.OrderBy(l => l.StartDate);
+                }
+            }
+            else
+            {
+                leasesQuery = leasesQuery.OrderByDescending(l => l.StartDate);
+            }
+
+            var leases = await leasesQuery.ToListAsync();
+
+            ViewData["CurrentSearchTerm"] = searchTerm;
+            ViewData["CurrentStatusFilter"] = statusFilter;
+            ViewData["CurrentDateFilter"] = dateFilter;
+            ViewData["TotalLeases"] = leases.Count;
+
+            return View(leases);
         }
 
         // GET: Leases/Details/5
@@ -55,8 +101,9 @@ namespace AdvancedProject.Controllers
 
             var lease = await _context.Leases
                 .Include(l => l.Tenant).ThenInclude(e => e.User)
-                .Include(l => l.Unit).Include(e => e.Duration)
-                .FirstOrDefaultAsync(m => m.LeaseId == id);
+.Include(l => l.Unit)
+    .ThenInclude(u => u.Property)
+.Include(e => e.Duration).FirstOrDefaultAsync(m => m.LeaseId == id);
             if (lease == null)
             {
                 return NotFound();
@@ -68,7 +115,9 @@ namespace AdvancedProject.Controllers
         // GET: Leases/Create
         public async Task<IActionResult> Create(int unitId)
         {
-            var unit = await _context.Units.FindAsync(unitId);
+            var unit = await _context.Units
+                .Include(u => u.Property)
+                .FirstOrDefaultAsync(u => u.UnitId == unitId);
 
             if (unit == null)
                 return NotFound();
@@ -80,9 +129,11 @@ namespace AdvancedProject.Controllers
             };
 
             ViewBag.UnitNumber = unit.UnitNumber;
+            ViewBag.PropertyName = unit.Property.Name;
 
-            ViewData["TenantName"] = new SelectList(_context.Tenants.Include(t => t.User)
-                .Select(t => new { t.TenantId, Username = t.User.Username }),
+            ViewData["TenantName"] = new SelectList(
+                _context.Tenants.Include(t => t.User)
+                    .Select(t => new { t.TenantId, Username = t.User.Username }),
                 "TenantId", "Username");
 
             ViewData["DurationId"] = new SelectList(_context.Durations, "DurationId", "Months");
@@ -104,8 +155,39 @@ namespace AdvancedProject.Controllers
             ModelState.Remove("Unit");
             ModelState.Remove("Duration");
 
+            //if (!ModelState.IsValid)
+            //{
+            //    ViewData["TenantName"] = new SelectList(
+            //        _context.Tenants.Include(t => t.User)
+            //            .Select(t => new { t.TenantId, Username = t.User.Username }),
+            //        "TenantId",
+            //        "Username",
+            //        lease.TenantId
+            //    );
+
+            //    ViewData["DurationId"] = new SelectList(
+            //        _context.Durations,
+            //        "DurationId",
+            //        "Months",
+            //        lease.DurationId
+            //    );
+
+            //    return View(lease);
+            //}
+
+
             if (!ModelState.IsValid)
             {
+                var selectedUnit = await _context.Units
+    .Include(u => u.Property)
+    .FirstOrDefaultAsync(u => u.UnitId == lease.UnitId);
+
+                if (selectedUnit != null)
+                {
+                    ViewBag.UnitNumber = selectedUnit.UnitNumber;
+                    ViewBag.PropertyName = selectedUnit.Property.Name;
+                }
+
                 ViewData["TenantName"] = new SelectList(
                     _context.Tenants.Include(t => t.User)
                         .Select(t => new { t.TenantId, Username = t.User.Username }),

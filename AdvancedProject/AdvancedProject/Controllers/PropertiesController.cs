@@ -22,8 +22,7 @@ namespace AdvancedProject.Controllers
         // GET: Properties
         public async Task<IActionResult> Index(string searchString)
         {
-            var properties = from p in _context.Properties
-                             select p;
+            var properties = _context.Properties.AsQueryable();
 
             if (!string.IsNullOrEmpty(searchString))
             {
@@ -32,6 +31,9 @@ namespace AdvancedProject.Controllers
                     p.City.Contains(searchString)
                 );
             }
+
+
+
 
             return View(await properties.ToListAsync());
         }
