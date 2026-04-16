@@ -26,6 +26,19 @@ namespace AdvancedProject.Controllers
     });
         }
 
+        private void PopulateEditDropdowns(Payment payment = null)
+        {
+            ViewData["PaymentMethodId"] = new SelectList(_context.PaymentMethods, "PaymentMethodId", "Name", payment?.PaymentMethodId);
+            ViewData["PaymentFrequencyId"] = new SelectList(_context.PaymentFrequencies, "PaymentFrequencyId", "Name", payment?.PaymentFrequencyId);
+
+            ViewData["StatusList"] = new SelectList(new List<string>
+    {
+        "Pending",
+        "Paid",
+        "Late"
+    }, payment?.Status);
+        }
+
         public PaymentsController(APContext context)
         {
             _context = context;
@@ -67,7 +80,7 @@ namespace AdvancedProject.Controllers
             }
             else
             {
-                paymentsQuery = paymentsQuery.OrderBy(p => p.PaymentId); // default starts from 1
+                paymentsQuery = paymentsQuery.OrderByDescending(p => p.StartDate); // default starts from 1
             }
 
             var payments = await paymentsQuery.ToListAsync();
@@ -98,6 +111,7 @@ namespace AdvancedProject.Controllers
                 return NotFound();
             }
 
+            PopulateEditDropdowns(payment);
             return View(payment);
         }
 
@@ -111,7 +125,7 @@ namespace AdvancedProject.Controllers
         // POST: Payments/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("LeaseId,Status,PaymentMethodId,PaymentFrequencyId, StartDate")] Payment payment)
+        public async Task<IActionResult> Create([Bind("LeaseId,Status,PaymentMethodId,PaymentFrequencyId, StartDate,GovernorateId")] Payment payment)
         {
             if (ModelState.IsValid)
             {
@@ -153,59 +167,73 @@ namespace AdvancedProject.Controllers
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
-            {
                 return NotFound();
-            }
 
             var payment = await _context.Payments.FindAsync(id);
+
             if (payment == null)
-            {
                 return NotFound();
-            }
-            ViewData["LeaseId"] = new SelectList(_context.Leases, "LeaseId", "LeaseId", payment.LeaseId);
-            ViewData["PaymentFrequencyId"] = new SelectList(_context.PaymentFrequencies, "PaymentFrequencyId", "Name", payment.PaymentFrequencyId);
-            ViewData["PaymentMethodId"] = new SelectList(_context.PaymentMethods, "PaymentMethodId", "Name", payment.PaymentMethodId);
+
+            PopulateEditDropdowns(payment);
+
             return View(payment);
         }
 
         // POST: Payments/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("PaymentId,LeaseId,Amount,StartDate,EndDate,Status,PaymentMethodId,PaymentFrequencyId")] Payment payment)
+        public async Task<IActionResult> Edit(int id, [Bind("PaymentId,StartDate,Status,PaymentMethodId,PaymentFrequencyId")] Payment payment)
         {
             if (id != payment.PaymentId)
-            {
                 return NotFound();
-            }
 
-            if (ModelState.IsValid)
+            var existing = await _context.Payments
+                .Include(p => p.Lease)
+                .ThenInclude(l => l.Duration)
+                .FirstOrDefaultAsync(p => p.PaymentId == id);
+
+            if (existing == null)
+                return NotFound();
+
+            var frequency = await _context.PaymentFrequencies
+                .FirstOrDefaultAsync(f => f.PaymentFrequencyId == payment.PaymentFrequencyId);
+
+            if (frequency == null)
             {
-                try
-                {
-                    _context.Update(payment);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!PaymentExists(payment.PaymentId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                ModelState.AddModelError("", "Invalid frequency.");
+                PopulateEditDropdowns(payment);
+                return View(payment);
             }
-            ViewData["LeaseId"] = new SelectList(_context.Leases, "LeaseId", "LeaseId", payment.LeaseId);
-            ViewData["PaymentFrequencyId"] = new SelectList(_context.PaymentFrequencies, "PaymentFrequencyId", "Name", payment.PaymentFrequencyId);
-            ViewData["PaymentMethodId"] = new SelectList(_context.PaymentMethods, "PaymentMethodId", "Name", payment.PaymentMethodId);
-            return View(payment);
-        }
 
+            // validation: lease range
+            if (payment.StartDate < existing.Lease.StartDate || payment.StartDate > existing.Lease.EndDate)
+            {
+                ModelState.AddModelError("StartDate", "Start date must be within lease period.");
+                PopulateEditDropdowns(payment);
+                return View(payment);
+            }
+
+            // validation: rule
+            if (existing.Lease.Duration.Months == 6 && frequency.Frequency == 12)
+            {
+                ModelState.AddModelError("PaymentFrequencyId", "Yearly Frequency is not allowed for 6 month leases.");
+                PopulateEditDropdowns(payment);
+                return View(payment);
+            }
+
+            // update
+            existing.StartDate = payment.StartDate;
+            existing.Status = payment.Status;
+            existing.PaymentMethodId = payment.PaymentMethodId;
+            existing.PaymentFrequencyId = payment.PaymentFrequencyId;
+
+            existing.EndDate = payment.StartDate.AddDays(7);
+            existing.Amount = existing.Lease.MonthlyRent * frequency.Frequency;
+
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
+        }
         // GET: Payments/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
