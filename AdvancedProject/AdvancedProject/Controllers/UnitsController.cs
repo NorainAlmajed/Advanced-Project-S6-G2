@@ -235,6 +235,7 @@ namespace AdvancedProject.Controllers
         }
 
         // GET: Units/Edit/5
+        // GET: Units/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -242,20 +243,27 @@ namespace AdvancedProject.Controllers
                 return NotFound();
             }
 
-            var unit = await _context.Units.FindAsync(id);
+            var unit = await _context.Units
+                .Include(u => u.Amenities)
+                .FirstOrDefaultAsync(u => u.UnitId == id);
+
             if (unit == null)
             {
                 return NotFound();
             }
+
             ViewData["PropertyId"] = new SelectList(_context.Properties, "PropertyId", "PropertyId", unit.PropertyId);
             ViewData["UnitTypeId"] = new SelectList(_context.UnitTypes, "UnitTypeId", "Name", unit.UnitTypeId);
+            ViewBag.AmenityList = await _context.Amenities.OrderBy(a => a.Name).ToListAsync();
+            ViewBag.SelectedAmenities = unit.Amenities.Select(a => a.AmenityId).ToArray();
+
             return View(unit);
         }
 
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("UnitId,PropertyId,UnitNumber,UnitTypeId,SizeSqFt,RentAmount,AvailabilityStatus,CreatedAt")] Unit unit)
+        public async Task<IActionResult> Edit(int id, [Bind("UnitId,PropertyId,UnitNumber,UnitTypeId,SizeSqFt,RentAmount,AvailabilityStatus,CreatedAt")] Unit unit, int[] selectedAmenities)
         {
             if (id != unit.UnitId)
             {
@@ -268,31 +276,67 @@ namespace AdvancedProject.Controllers
             ModelState.Remove("Leases");
             ModelState.Remove("MaintenanceRequests");
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(unit);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!UnitExists(unit.UnitId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                ViewData["PropertyId"] = new SelectList(_context.Properties, "PropertyId", "PropertyId", unit.PropertyId);
+                ViewData["UnitTypeId"] = new SelectList(_context.UnitTypes, "UnitTypeId", "Name", unit.UnitTypeId);
+                ViewBag.AmenityList = await _context.Amenities.OrderBy(a => a.Name).ToListAsync();
+                ViewBag.SelectedAmenities = selectedAmenities ?? Array.Empty<int>();
+                return View(unit);
             }
 
-            ViewData["PropertyId"] = new SelectList(_context.Properties, "PropertyId", "PropertyId", unit.PropertyId);
-            ViewData["UnitTypeId"] = new SelectList(_context.UnitTypes, "UnitTypeId", "Name", unit.UnitTypeId);
-            return View(unit);
+            var existingUnit = await _context.Units
+                .Include(u => u.Amenities)
+                .FirstOrDefaultAsync(u => u.UnitId == id);
+
+            if (existingUnit == null)
+            {
+                return NotFound();
+            }
+
+            existingUnit.PropertyId = unit.PropertyId;
+            existingUnit.UnitNumber = unit.UnitNumber;
+            existingUnit.UnitTypeId = unit.UnitTypeId;
+            existingUnit.SizeSqFt = unit.SizeSqFt;
+            existingUnit.RentAmount = unit.RentAmount;
+            existingUnit.AvailabilityStatus = unit.AvailabilityStatus;
+            existingUnit.CreatedAt = unit.CreatedAt;
+
+            existingUnit.Amenities.Clear();
+
+            if (selectedAmenities != null && selectedAmenities.Any())
+            {
+                var amenities = await _context.Amenities
+                    .Where(a => selectedAmenities.Contains(a.AmenityId))
+                    .ToListAsync();
+
+                foreach (var amenity in amenities)
+                {
+                    existingUnit.Amenities.Add(amenity);
+                }
+            }
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!UnitExists(unit.UnitId))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return RedirectToAction(nameof(Index), new { id = existingUnit.PropertyId });
         }
+
+
+
         // GET: Units/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
