@@ -4,6 +4,7 @@
     ViewData["Title"] = "Index";
 }
 
+<div class="properties-page">
 <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
     <div>
         <h1 class="fw-bold mb-1">Properties</h1>
@@ -25,29 +26,36 @@
                 <h5 class="card-title mb-3">Find a Property</h5>
 
                 <form asp-action="Index" method="get">
-                    <div class="row g-2">
+                    <div class="row g-2 align-items-stretch">
 
                         <!-- SEARCH -->
-                        <div class="col-md-8">
+                        <div class="col-md-5">
                             <input type="text"
                                    name="searchString"
-                                   class="form-control form-control-lg"
+                                   class="form-control form-control-lg property-search-input"
                                    placeholder="Search properties..."
                                    value="@Context.Request.Query["searchString"]" />
                         </div>
 
-                       
+                        <!-- GOVERNORATE FILTER -->
+                        <div class="col-md-3">
+                            <select name="governorateId"
+                                    class="form-select form-select-lg property-search-input"
+                                    asp-items="ViewBag.Governorates">
+                                <option value="">All Governorates</option>
+                            </select>
+                        </div>
 
                         <!-- SEARCH BUTTON -->
                         <div class="col-md-2 d-grid">
-                            <button type="submit" class="btn btn-primary btn-lg">
+                            <button type="submit" class="btn btn-primary btn-lg property-search-btn">
                                 Search
                             </button>
                         </div>
 
                         <!-- RESET -->
                         <div class="col-md-2 d-grid">
-                            <a asp-action="Index" class="btn btn-outline-light btn-lg">
+                            <a asp-action="Index" class="btn btn-outline-light btn-lg property-reset-btn">
                                 Reset
                             </a>
                         </div>
@@ -124,4 +132,6 @@ else
             </div>
         }
     </div>
+
 }
+</div>
