@@ -67,25 +67,73 @@ namespace AdvancedProject.Controllers
         // GET: Tenants/Create
         public IActionResult Create()
         {
-            ViewData["UserId"] = new SelectList(_context.Users, "UserId", "UserId");
-            return View();
+            return View(new TenantCreateVM());
         }
 
+
+
         // POST: Tenants/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("TenantId,Dob,NationalId,UserId")] Tenant tenant)
+        public async Task<IActionResult> Create(TenantCreateVM vm)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(tenant);
+
+                var age = DateTime.Today.Year - vm.Dob.Year;
+
+                if (vm.Dob.Date > DateTime.Today.AddYears(-age))
+                {
+                    age--; // adjust if birthday hasn't happened yet this year
+                }
+
+                if (age < 21)
+                {
+                    ModelState.AddModelError("Dob", "Tenant must be at least 21 years old.");
+                    return View(vm);
+                }
+
+                var username = vm.Username.ToLower();
+
+                if (_context.Users.Any(u => u.Username.ToLower() == username))
+                {
+                    ModelState.AddModelError("Username", "Username already exists");
+                    return View(vm);
+                }
+
+
+                // 1. Create User
+                var user = new User
+                {
+                    Username = vm.Username.ToLower(),
+                    Password = vm.Password,
+                    FullName = vm.FullName,
+                    Email = vm.Email,
+                    Phone = vm.Phone,
+                    Gender = vm.Gender,
+                    Role = "Tenant",
+                    CreatedAt = DateTime.Now,
+                    IsActive = true
+                };
+
+                _context.Users.Add(user);
+                await _context.SaveChangesAsync(); // VERY IMPORTANT (to get UserId)
+
+                // 2. Create Tenant
+                var tenant = new Tenant
+                {
+                    Dob = DateOnly.FromDateTime(vm.Dob),
+                    NationalId = vm.NationalId,
+                    UserId = user.UserId
+                };
+
+                _context.Tenants.Add(tenant);
                 await _context.SaveChangesAsync();
+
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["UserId"] = new SelectList(_context.Users, "UserId", "UserId", tenant.UserId);
-            return View(tenant);
+
+            return View(vm);
         }
 
         // GET: Tenants/Edit/5
@@ -96,7 +144,9 @@ namespace AdvancedProject.Controllers
                 return NotFound();
             }
 
-            var tenant = await _context.Tenants.FindAsync(id);
+            var tenant = await _context.Tenants
+            .Include(t => t.User)
+            .FirstOrDefaultAsync(t => t.TenantId == id);
             if (tenant == null)
             {
                 return NotFound();
@@ -106,8 +156,6 @@ namespace AdvancedProject.Controllers
         }
 
         // POST: Tenants/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("TenantId,Dob,NationalId,UserId")] Tenant tenant)
@@ -165,9 +213,16 @@ namespace AdvancedProject.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var tenant = await _context.Tenants.FindAsync(id);
+            var tenant = await _context.Tenants
+    .FirstOrDefaultAsync(t => t.TenantId == id);
+
             if (tenant != null)
             {
+                var user = await _context.Users.FindAsync(tenant.UserId);
+
+                if (user != null)
+                    _context.Users.Remove(user);
+
                 _context.Tenants.Remove(tenant);
             }
 

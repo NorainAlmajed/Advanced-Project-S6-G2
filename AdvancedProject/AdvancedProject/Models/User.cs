@@ -32,7 +32,7 @@ public partial class User
 
     public DateTime CreatedAt { get; set; }
 
-    public bool IsActive { get; set; }
+    public bool IsActive { get; set; } = true;
     public string Gender { get; set; } = "M";
 
     [InverseProperty("User")]

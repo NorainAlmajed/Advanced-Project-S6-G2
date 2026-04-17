@@ -16,7 +16,7 @@
         initials = string.Concat(parts.Take(2).Select(p => char.ToUpper(p[0])));
     }
 
-    string dobText = Model.Dob.HasValue ? Model.Dob.Value.ToString("dd MMM yyyy") : "Not available";
+    string dobText = Model.Dob.ToString("dd MMM yyyy");
     string createdAtText = Model.User != null ? Model.User.CreatedAt.ToString("dd MMM yyyy") : "Not available";
     string genderClass = Model.User?.Gender == "F" ? "badge-gender-female" : "badge-gender-male";
     string genderText = Model.User?.Gender == "F" ? "Female" : "Male";
