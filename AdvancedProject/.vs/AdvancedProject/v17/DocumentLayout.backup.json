@@ -74,9 +74,9 @@
               "Title": "Edit.cshtml",
               "DocumentMoniker": "D:\\year3 sem2\\advanced programming project\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Views\\Units\\Edit.cshtml",
               "RelativeDocumentMoniker": "AdvancedProject\\Views\\Units\\Edit.cshtml",
-              "ToolTip": "D:\\year3 sem2\\advanced programming project\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Views\\Units\\Edit.cshtml*",
-              "RelativeToolTip": "AdvancedProject\\Views\\Units\\Edit.cshtml*",
-              "ViewState": "AgIAAEIAAAAAAAAAAAAYwG0AAAAAAAAAAAAAAA==",
+              "ToolTip": "D:\\year3 sem2\\advanced programming project\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Views\\Units\\Edit.cshtml",
+              "RelativeToolTip": "AdvancedProject\\Views\\Units\\Edit.cshtml",
+              "ViewState": "AgIAAEgAAAAAAAAAAAAkwFEAAABCAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2026-04-17T18:33:39.311Z",
               "EditorCaption": ""
@@ -91,8 +91,7 @@
               "RelativeToolTip": "AdvancedProject\\Views\\Units\\Index.cshtml",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABQAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-04-17T00:26:23.86Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-17T00:26:23.86Z"
             },
             {
               "$type": "Document",
@@ -104,8 +103,7 @@
               "RelativeToolTip": "AdvancedProject\\wwwroot\\css\\site.css",
               "ViewState": "AgIAAPQHAAAAAAAAAAAAAAsIAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
-              "WhenOpened": "2026-04-17T00:22:52.493Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-17T00:22:52.493Z"
             },
             {
               "$type": "Document",
@@ -141,8 +139,7 @@
               "RelativeToolTip": "AdvancedProject\\Models\\Amenity.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABUAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-16T21:51:20.794Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-16T21:51:20.794Z"
             },
             {
               "$type": "Document",
@@ -154,8 +151,7 @@
               "RelativeToolTip": "AdvancedProject\\Models\\Unit.cs",
               "ViewState": "AgIAACIAAAAAAAAAAAAuwDwAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-16T21:50:59.915Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-16T21:50:59.915Z"
             },
             {
               "$type": "Document",
@@ -175,12 +171,11 @@
               "Title": "UnitsController.cs",
               "DocumentMoniker": "D:\\year3 sem2\\advanced programming project\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Controllers\\UnitsController.cs",
               "RelativeDocumentMoniker": "AdvancedProject\\Controllers\\UnitsController.cs",
-              "ToolTip": "D:\\year3 sem2\\advanced programming project\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Controllers\\UnitsController.cs*",
-              "RelativeToolTip": "AdvancedProject\\Controllers\\UnitsController.cs*",
+              "ToolTip": "D:\\year3 sem2\\advanced programming project\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Controllers\\UnitsController.cs",
+              "RelativeToolTip": "AdvancedProject\\Controllers\\UnitsController.cs",
               "ViewState": "AgIAAFQBAAAAAAAAAAAAwHsBAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-16T21:50:17.511Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-16T21:50:17.511Z"
             },
             {
               "$type": "Document",
