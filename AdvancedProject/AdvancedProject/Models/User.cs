@@ -7,6 +7,8 @@ using Microsoft.EntityFrameworkCore;
 namespace AdvancedProject.Models;
 
 [Index("Username", Name = "Unique_Username_Users", IsUnique = true)]
+[Index("Email", Name = "Unique_Email_Users", IsUnique = true)]
+[Index("Phone", Name = "Unique_Phone_Users", IsUnique = true)]
 public partial class User
 {
     [Key]
