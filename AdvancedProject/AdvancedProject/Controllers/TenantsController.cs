@@ -139,54 +139,87 @@ namespace AdvancedProject.Controllers
         // GET: Tenants/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var tenant = await _context.Tenants
-            .Include(t => t.User)
-            .FirstOrDefaultAsync(t => t.TenantId == id);
-            if (tenant == null)
+                .Include(t => t.User)
+                .FirstOrDefaultAsync(t => t.TenantId == id);
+
+            if (tenant == null) return NotFound();
+
+            var vm = new TenantEditVM
             {
-                return NotFound();
-            }
-            ViewData["UserId"] = new SelectList(_context.Users, "UserId", "UserId", tenant.UserId);
-            return View(tenant);
+                TenantId = tenant.TenantId,
+                UserId = tenant.UserId,
+                Username = tenant.User.Username,
+                FullName = tenant.User.FullName,
+                Email = tenant.User.Email,
+                Phone = tenant.User.Phone,
+                Gender = tenant.User.Gender,
+                Dob = tenant.Dob.ToDateTime(TimeOnly.MinValue),
+                NationalId = tenant.NationalId
+            };
+
+            return View(vm);
         }
 
         // POST: Tenants/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("TenantId,Dob,NationalId,UserId")] Tenant tenant)
+        public async Task<IActionResult> Edit(TenantEditVM vm)
         {
-            if (id != tenant.TenantId)
-            {
-                return NotFound();
-            }
-
             if (ModelState.IsValid)
             {
-                try
+                // ✅ Age validation
+                var age = DateTime.Today.Year - vm.Dob.Year;
+                if (vm.Dob > DateTime.Today.AddYears(-age)) age--;
+
+                if (age < 21)
                 {
-                    _context.Update(tenant);
-                    await _context.SaveChangesAsync();
+                    ModelState.AddModelError("Dob", "Tenant must be at least 21 years old.");
+                    return View(vm);
                 }
-                catch (DbUpdateConcurrencyException)
+
+                // ✅ Username check (ignore same user)
+                var username = vm.Username.ToLower();
+
+                bool exists = _context.Users
+                    .Any(u => u.Username.ToLower() == username && u.UserId != vm.UserId);
+
+                if (exists)
                 {
-                    if (!TenantExists(tenant.TenantId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    ModelState.AddModelError("Username", "Username already exists");
+                    return View(vm);
                 }
+
+                var tenant = await _context.Tenants.FindAsync(vm.TenantId);
+                var user = await _context.Users.FindAsync(vm.UserId);
+
+                if (tenant == null || user == null) return NotFound();
+
+                //Update User
+                user.Username = vm.Username.ToLower();
+                user.FullName = vm.FullName;
+                user.Email = vm.Email;
+                user.Phone = vm.Phone;
+                user.Gender = vm.Gender;
+
+                // password only if entered
+                if (!string.IsNullOrWhiteSpace(vm.Password))
+                {
+                    user.Password = vm.Password;
+                }
+
+                //Update Tenant
+                tenant.Dob = DateOnly.FromDateTime(vm.Dob);
+                tenant.NationalId = vm.NationalId;
+
+                await _context.SaveChangesAsync();
+
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["UserId"] = new SelectList(_context.Users, "UserId", "UserId", tenant.UserId);
-            return View(tenant);
+
+            return View(vm);
         }
 
         // GET: Tenants/Delete/5
