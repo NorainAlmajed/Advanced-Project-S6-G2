@@ -101,61 +101,84 @@ namespace AdvancedProject.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(MaintenanceStaffCreateVM vm)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                var username = vm.Username.Trim().ToLower();
-
-                // Username check
-                if (_context.Users.Any(u => u.Username.ToLower() == username))
-                {
-                    ModelState.AddModelError("Username", "Username already exists");
-                    ViewData["Skills"] = await _context.Skills.ToListAsync();
-                    return View(vm);
-                }
-
-                // 1. Create User
-                var user = new User
-                {
-                    Username = username,
-                    Password = vm.Password,
-                    FullName = vm.FullName,
-                    Email = vm.Email,
-                    Phone = vm.Phone,
-                    Gender = vm.Gender,
-                    Role = "MaintenanceStaff", // ⚠️ not Tenant
-                    CreatedAt = DateTime.Now,
-                    IsActive = true
-                };
-
-                _context.Users.Add(user);
-                await _context.SaveChangesAsync();
-
-                // 2. Create Staff
-                var staff = new MaintenanceStaff
-                {
-                    UserId = user.UserId,
-                    AvailabilityStatus = "Available" // or whatever value you use
-                };
-
-                // 3. Add Skills (optional)
-                if (vm.SelectedSkillIds != null && vm.SelectedSkillIds.Any())
-                {
-                    var skills = await _context.Skills
-                        .Where(s => vm.SelectedSkillIds.Contains(s.SkillId))
-                        .ToListAsync();
-
-                    staff.Skills = skills;
-                }
-
-                _context.MaintenanceStaffs.Add(staff);
-                await _context.SaveChangesAsync();
-
-                return RedirectToAction(nameof(Index));
+                ViewData["Skills"] = await _context.Skills.ToListAsync();
+                return View(vm);
             }
 
-            ViewData["Skills"] = await _context.Skills.ToListAsync();
-            return View(vm);
+            var username = vm.Username.Trim().ToLower();
+            var email = vm.Email.Trim().ToLower();
+            var phone = vm.Phone.Trim();
+
+            // Validation for UNIQUE fields
+            if (_context.Users.Any(u => u.Username.ToLower() == username))
+                ModelState.AddModelError("Username", "Username already exists");
+
+            if (_context.Users.Any(u => u.Email.ToLower() == email))
+                ModelState.AddModelError("Email", "Email already exists");
+
+            if (_context.Users.Any(u => u.Phone == phone))
+                ModelState.AddModelError("Phone", "Phone already exists");
+
+            // Stop if validation failed
+            if (!ModelState.IsValid)
+            {
+                ViewData["Skills"] = await _context.Skills.ToListAsync();
+                return View(vm);
+            }
+
+            // Create User
+            var user = new User
+            {
+                Username = username,
+                Password = vm.Password,
+                FullName = vm.FullName,
+                Email = email,
+                Phone = phone,
+                Gender = vm.Gender,
+                Role = "MaintenanceStaff",
+                CreatedAt = DateTime.Now,
+                IsActive = true
+            };
+
+            try
+            {
+                _context.Users.Add(user);
+                await _context.SaveChangesAsync(); // may fail if duplicate slipped through
+            }
+            catch (DbUpdateException)
+            {
+                ModelState.AddModelError("", "Username, Email, or Phone already exists.");
+                ViewData["Skills"] = await _context.Skills.ToListAsync();
+                return View(vm);
+            }
+
+            // Create Maintenance Staff
+            var staff = new MaintenanceStaff
+            {
+                UserId = user.UserId,
+                AvailabilityStatus = "Available"
+            };
+
+            // Add Skills
+            if (vm.SelectedSkillIds != null && vm.SelectedSkillIds.Any())
+            {
+                var skills = await _context.Skills
+                    .Where(s => vm.SelectedSkillIds.Contains(s.SkillId))
+                    .ToListAsync();
+
+                staff.Skills = skills;
+            }
+
+            _context.MaintenanceStaffs.Add(staff);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
         }
+
+
+
 
         // GET: MaintenanceStaffs/Edit/5
         public async Task<IActionResult> Edit(int? id)
