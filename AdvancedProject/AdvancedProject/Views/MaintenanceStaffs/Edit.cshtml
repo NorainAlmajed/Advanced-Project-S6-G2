@@ -1,31 +1,99 @@
-﻿@model AdvancedProject.Models.MaintenanceStaff
+﻿@model MaintenanceStaffEditVM
 
 @{
     ViewData["Title"] = "Edit";
 }
 
-<h1>Edit</h1>
-
-<h4>MaintenanceStaff</h4>
+<h1>Edit Maintenance Staff</h1>
 <hr />
+
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <form asp-action="Edit" method="post">
+
             <input type="hidden" asp-for="StaffId" />
+            <input type="hidden" asp-for="UserId" />
+
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <!-- Username -->
+            <div class="form-group">
+                <label asp-for="Username" class="control-label"></label>
+                <input asp-for="Username" class="form-control" />
+                <span asp-validation-for="Username" class="text-danger"></span>
+            </div>
+
+            <!-- Password -->
+            <div class="form-group">
+                <label asp-for="Password" class="control-label"></label>
+                <input asp-for="Password" type="password" class="form-control" placeholder="Leave empty to keep current password" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+
+            <!-- Full Name -->
+            <div class="form-group">
+                <label asp-for="FullName" class="control-label"></label>
+                <input asp-for="FullName" class="form-control" />
+                <span asp-validation-for="FullName" class="text-danger"></span>
+            </div>
+
+            <!-- Email -->
+            <div class="form-group">
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+
+            <!-- Phone -->
+            <div class="form-group">
+                <label asp-for="Phone" class="control-label"></label>
+                <input asp-for="Phone" class="form-control" />
+                <span asp-validation-for="Phone" class="text-danger"></span>
+            </div>
+
+            <!-- Gender -->
+            <div class="form-group">
+                <label asp-for="Gender" class="control-label"></label><br />
+
+                <input type="radio" asp-for="Gender" value="M" /> Male
+                <input type="radio" asp-for="Gender" value="F" /> Female
+
+                <br />
+                <span asp-validation-for="Gender" class="text-danger"></span>
+            </div>
+
+            <!-- Availability -->
             <div class="form-group">
                 <label asp-for="AvailabilityStatus" class="control-label"></label>
-                <input asp-for="AvailabilityStatus" class="form-control" />
+
+                <select asp-for="AvailabilityStatus" class="form-control">
+                    <option value="Available">Available</option>
+                    <option value="Busy">Busy</option>
+                </select>
+
                 <span asp-validation-for="AvailabilityStatus" class="text-danger"></span>
             </div>
+
+            <!-- Skills -->
             <div class="form-group">
-                <label asp-for="UserId" class="control-label"></label>
-                <select asp-for="UserId" class="form-control" asp-items="ViewBag.UserId"></select>
-                <span asp-validation-for="UserId" class="text-danger"></span>
+                <label class="control-label">Skills</label><br />
+
+                @foreach (var skill in (List<Skill>)ViewData["Skills"])
+                {
+                    <div>
+                        <input type="checkbox"
+                               name="SelectedSkillIds"
+                               value="@skill.SkillId"
+                               @(Model.SelectedSkillIds != null && Model.SelectedSkillIds.Contains(skill.SkillId) ? "checked" : "") />
+                        @skill.Name
+                    </div>
+                }
             </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
+
+            <br />
+
+            <button type="submit" class="btn btn-primary">Save</button>
+
         </form>
     </div>
 </div>
@@ -35,5 +103,7 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }
