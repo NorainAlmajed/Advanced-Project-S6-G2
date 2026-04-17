@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Microsoft.EntityFrameworkCore;
 
 namespace AdvancedProject.Models;
@@ -12,11 +13,13 @@ public partial class Tenant
     [Key]
     public int TenantId { get; set; }
 
+    [Required]
     [Column("DOB")]
-    public DateOnly? Dob { get; set; }
+    public DateOnly Dob { get; set; }
 
+    [Required]
     [StringLength(20)]
-    public string? NationalId { get; set; }
+    public string NationalId { get; set; } = null!;
 
     public int UserId { get; set; }
 
@@ -28,5 +31,6 @@ public partial class Tenant
 
     [ForeignKey("UserId")]
     [InverseProperty("Tenants")]
+    [ValidateNever]
     public virtual User User { get; set; } = null!;
 }

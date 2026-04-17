@@ -1,4 +1,4 @@
-﻿@model AdvancedProject.Models.Tenant
+﻿@model TenantCreateVM
 
 @{
     ViewData["Title"] = "Create";
@@ -10,25 +10,70 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
+        <form asp-action="Create" method="post">
+
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <!-- Username -->
             <div class="form-group">
-                <label asp-for="Dob" class="control-label"></label>
-                <input asp-for="Dob" class="form-control" />
+                <label>Username</label>
+                <input asp-for="Username" class="form-control" placeholder="Enter username" />
+                <span asp-validation-for="Username" class="text-danger"></span>
+            </div>
+
+            <!-- Password -->
+            <div class="form-group">
+                <label>Password</label>
+                <input asp-for="Password" type="password" class="form-control" placeholder="Enter password" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+
+            <!-- Full Name -->
+            <div class="form-group">
+                <label>Full Name</label>
+                <input asp-for="FullName" class="form-control" placeholder="Enter full name" />
+                <span asp-validation-for="FullName" class="text-danger"></span>
+            </div>
+
+            <!-- Email -->
+            <div class="form-group">
+                <label>Email</label>
+                <input asp-for="Email" class="form-control" placeholder="Enter email" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+
+            <!-- Phone -->
+            <div class="form-group">
+                <label>Phone</label>
+                <input asp-for="Phone" class="form-control" placeholder="Enter phone number" />
+                <span asp-validation-for="Phone" class="text-danger"></span>
+            </div>
+
+            <!-- Gender -->
+            <div class="form-group">
+                <label>Gender</label><br />
+                <input type="radio" asp-for="Gender" value="M" /> Male
+                <input type="radio" asp-for="Gender" value="F" /> Female
+                <br />
+                <span asp-validation-for="Gender" class="text-danger"></span>
+            </div>
+
+            <!-- DOB -->
+            <div class="form-group">
+                <label>Date of Birth</label>
+                <input asp-for="Dob" type="date" class="form-control" />
                 <span asp-validation-for="Dob" class="text-danger"></span>
             </div>
+
+            <!-- National ID -->
             <div class="form-group">
-                <label asp-for="NationalId" class="control-label"></label>
-                <input asp-for="NationalId" class="form-control" />
+                <label>National ID</label>
+                <input asp-for="NationalId" class="form-control" placeholder="Enter national ID" />
                 <span asp-validation-for="NationalId" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="UserId" class="control-label"></label>
-                <select asp-for="UserId" class ="form-control" asp-items="ViewBag.UserId"></select>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
+
+            <br />
+            <input type="submit" value="Create" class="btn btn-primary" />
         </form>
     </div>
 </div>
@@ -38,5 +83,7 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

@@ -60,6 +60,17 @@ public partial class APContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<Tenant>(entity =>
+        {
+            entity.HasOne(d => d.User)
+                .WithMany(p => p.Tenants)
+                .OnDelete(DeleteBehavior.ClientSetNull);
+
+            entity.Property(t => t.Dob).IsRequired();
+            entity.Property(t => t.NationalId).IsRequired();
+        });
+
+
         modelBuilder.Entity<Unit>()
         .Property(u => u.IsActive)
         .HasDefaultValue(true);
@@ -72,8 +83,6 @@ public partial class APContext : DbContext
 
             entity.HasOne(d => d.Unit).WithMany(p => p.Leases).OnDelete(DeleteBehavior.ClientSetNull);
         });
-
-        base.OnModelCreating(modelBuilder);
 
         modelBuilder.Entity<Property>()
             .Property(p => p.IsActive)
@@ -146,10 +155,6 @@ public partial class APContext : DbContext
             entity.HasOne(d => d.User).WithMany(p => p.PropertyManagers).OnDelete(DeleteBehavior.ClientSetNull);
         });
 
-        modelBuilder.Entity<Tenant>(entity =>
-        {
-            entity.HasOne(d => d.User).WithMany(p => p.Tenants).OnDelete(DeleteBehavior.ClientSetNull);
-        });
 
         modelBuilder.Entity<Unit>(entity =>
         {
@@ -406,6 +411,7 @@ public partial class APContext : DbContext
     );
 
         OnModelCreatingPartial(modelBuilder);
+        base.OnModelCreating(modelBuilder);
     }
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
