@@ -79,13 +79,9 @@ namespace AdvancedProject.Controllers
         {
             if (ModelState.IsValid)
             {
-
+                // Age validation
                 var age = DateTime.Today.Year - vm.Dob.Year;
-
-                if (vm.Dob.Date > DateTime.Today.AddYears(-age))
-                {
-                    age--; // adjust if birthday hasn't happened yet this year
-                }
+                if (vm.Dob.Date > DateTime.Today.AddYears(-age)) age--;
 
                 if (age < 21)
                 {
@@ -93,23 +89,42 @@ namespace AdvancedProject.Controllers
                     return View(vm);
                 }
 
-                var username = vm.Username.ToLower();
+                var username = vm.Username.Trim().ToLower();
+                var email = vm.Email.Trim().ToLower();
+                var phone = vm.Phone.Trim();
 
+                // Username check
                 if (_context.Users.Any(u => u.Username.ToLower() == username))
                 {
                     ModelState.AddModelError("Username", "Username already exists");
-                    return View(vm);
                 }
 
+                // Email check
+                if (_context.Users.Any(u => u.Email.ToLower() == email))
+                {
+                    ModelState.AddModelError("Email", "Email already exists");
+                }
+
+                // Phone check
+                if (_context.Users.Any(u => u.Phone == phone))
+                {
+                    ModelState.AddModelError("Phone", "Phone already exists");
+                }
+
+                // Stop if any duplicate found
+                if (!ModelState.IsValid)
+                {
+                    return View(vm);
+                }
 
                 // 1. Create User
                 var user = new User
                 {
-                    Username = vm.Username.ToLower(),
+                    Username = username,
                     Password = vm.Password,
                     FullName = vm.FullName,
-                    Email = vm.Email,
-                    Phone = vm.Phone,
+                    Email = email,
+                    Phone = phone,
                     Gender = vm.Gender,
                     Role = "Tenant",
                     CreatedAt = DateTime.Now,
@@ -117,7 +132,7 @@ namespace AdvancedProject.Controllers
                 };
 
                 _context.Users.Add(user);
-                await _context.SaveChangesAsync(); // VERY IMPORTANT (to get UserId)
+                await _context.SaveChangesAsync();
 
                 // 2. Create Tenant
                 var tenant = new Tenant
@@ -170,7 +185,7 @@ namespace AdvancedProject.Controllers
         {
             if (ModelState.IsValid)
             {
-                // ✅ Age validation
+                // Age validation
                 var age = DateTime.Today.Year - vm.Dob.Year;
                 if (vm.Dob > DateTime.Today.AddYears(-age)) age--;
 
@@ -180,37 +195,65 @@ namespace AdvancedProject.Controllers
                     return View(vm);
                 }
 
-                // ✅ Username check (ignore same user)
-                var username = vm.Username.ToLower();
+                var username = vm.Username.Trim().ToLower();
+                var email = vm.Email.Trim().ToLower();
+                var phone = vm.Phone.Trim();
 
-                bool exists = _context.Users
+                // Username check (exclude current user)
+                bool usernameExists = _context.Users
                     .Any(u => u.Username.ToLower() == username && u.UserId != vm.UserId);
 
-                if (exists)
+                if (usernameExists)
                 {
                     ModelState.AddModelError("Username", "Username already exists");
+                }
+
+                // Email check
+                bool emailExists = _context.Users
+                    .Any(u => u.Email.ToLower() == email && u.UserId != vm.UserId);
+
+                if (emailExists)
+                {
+                    ModelState.AddModelError("Email", "Email already exists");
+                }
+
+                // Phone check
+                bool phoneExists = _context.Users
+                    .Any(u => u.Phone == phone && u.UserId != vm.UserId);
+
+                if (phoneExists)
+                {
+                    ModelState.AddModelError("Phone", "Phone already exists");
+                }
+
+                // Stop if any validation failed
+                if (!ModelState.IsValid)
+                {
                     return View(vm);
                 }
 
                 var tenant = await _context.Tenants.FindAsync(vm.TenantId);
                 var user = await _context.Users.FindAsync(vm.UserId);
 
-                if (tenant == null || user == null) return NotFound();
+                if (tenant == null || user == null)
+                {
+                    return NotFound();
+                }
 
-                //Update User
-                user.Username = vm.Username.ToLower();
+                // Update User
+                user.Username = username;
                 user.FullName = vm.FullName;
-                user.Email = vm.Email;
-                user.Phone = vm.Phone;
+                user.Email = email;
+                user.Phone = phone;
                 user.Gender = vm.Gender;
 
-                // password only if entered
+                // optional password update
                 if (!string.IsNullOrWhiteSpace(vm.Password))
                 {
                     user.Password = vm.Password;
                 }
 
-                //Update Tenant
+                // Update Tenant
                 tenant.Dob = DateOnly.FromDateTime(vm.Dob);
                 tenant.NationalId = vm.NationalId;
 
