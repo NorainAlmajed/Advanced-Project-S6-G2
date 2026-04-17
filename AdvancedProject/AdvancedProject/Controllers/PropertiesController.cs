@@ -20,9 +20,12 @@ namespace AdvancedProject.Controllers
         }
 
         // GET: Properties
-        public async Task<IActionResult> Index(string searchString)
+        public async Task<IActionResult> Index(string searchString, int? governorateId)
         {
-            var properties = _context.Properties.AsQueryable();
+            var properties = _context.Properties
+                .Include(p => p.Governorate)
+                .AsQueryable();
+
 
             if (!string.IsNullOrEmpty(searchString))
             {
@@ -32,8 +35,17 @@ namespace AdvancedProject.Controllers
                 );
             }
 
+            if (governorateId.HasValue && governorateId.Value > 0)
+            {
+                properties = properties.Where(p => p.GovernorateId == governorateId.Value);
+            }
 
-
+            ViewBag.Governorates = new SelectList(
+                await _context.Governorates.ToListAsync(),
+                "GovernorateId",
+                "Name",
+                governorateId
+            );
 
             return View(await properties.ToListAsync());
         }

@@ -4,6 +4,7 @@
     ViewData["Title"] = "Index";
 }
 
+<div class="properties-page">
 <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
     <div>
         <h1 class="fw-bold mb-1">Properties</h1>
@@ -21,33 +22,40 @@
     <div class="card-body p-4">
         <div class="row align-items-center g-3">
 
-            <div class="col-lg-8">
-                <h5 class="card-title mb-3">Find a Property</h5>
+                <div class="col-lg-9">
+                    <h5 class="card-title mb-3">Find a Property</h5>
 
                 <form asp-action="Index" method="get">
-                    <div class="row g-2">
+                    <div class="row g-2 align-items-stretch">
 
                         <!-- SEARCH -->
-                        <div class="col-md-8">
+                        <div class="col-md-5">
                             <input type="text"
                                    name="searchString"
-                                   class="form-control form-control-lg"
+                                   class="form-control form-control-lg property-search-input"
                                    placeholder="Search properties..."
                                    value="@Context.Request.Query["searchString"]" />
                         </div>
 
-                       
+                        <!-- GOVERNORATE FILTER -->
+                        <div class="col-md-3">
+                            <select name="governorateId"
+                                    class="form-select form-select-lg property-search-input"
+                                    asp-items="ViewBag.Governorates">
+                                <option value="">All Governorates</option>
+                            </select>
+                        </div>
 
                         <!-- SEARCH BUTTON -->
                         <div class="col-md-2 d-grid">
-                            <button type="submit" class="btn btn-primary btn-lg">
+                            <button type="submit" class="btn btn-primary btn-lg property-search-btn">
                                 Search
                             </button>
                         </div>
 
                         <!-- RESET -->
                         <div class="col-md-2 d-grid">
-                            <a asp-action="Index" class="btn btn-outline-light btn-lg">
+                            <a asp-action="Index" class="btn btn-outline-light btn-lg property-reset-btn">
                                 Reset
                             </a>
                         </div>
@@ -56,9 +64,9 @@
                 </form>
             </div>
 
-            <div class="col-lg-4">
-                <div class="rounded-3 p-3 bg-white text-dark h-100 text-center">
-                    <div class="small text-muted">TOTAL PROPERTIES</div>
+                <div class="col-lg-3">
+                    <div class="rounded-3 bg-white text-dark h-100 text-center total-box">
+                        <div class="small text-muted">TOTAL PROPERTIES</div>
                     <h3 class="fw-bold mb-0">@Model.Count()</h3>
                 </div>
             </div>
@@ -89,9 +97,10 @@ else
                                 @item.Name
                             </h4>
 
-                            <p class="text-muted mb-0">
-                                📍 @item.City
-                            </p>
+                                <p class="text-muted mb-0">
+                                    📍 @item.Governorate?.Name - @item.City
+                                </p>
+
                         </div>
 
                         <div class="mb-3">
@@ -124,4 +133,6 @@ else
             </div>
         }
     </div>
+
 }
+</div>
