@@ -22,7 +22,10 @@ namespace AdvancedProject.Controllers
         // GET: Properties
         public async Task<IActionResult> Index(string searchString, int? governorateId)
         {
-            var properties = _context.Properties.AsQueryable();
+            var properties = _context.Properties
+                .Include(p => p.Governorate)
+                .AsQueryable();
+
 
             if (!string.IsNullOrEmpty(searchString))
             {

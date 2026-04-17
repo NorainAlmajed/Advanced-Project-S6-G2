@@ -2049,3 +2049,12 @@ body {
         color: white;
         border-color: rgba(255, 255, 255, 0.7);
     }
+
+.properties-page .total-box {
+    min-height: 56px;
+    padding: 0.7rem 1rem;
+    border-radius: 14px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
