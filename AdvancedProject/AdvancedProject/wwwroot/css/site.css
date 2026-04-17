@@ -2000,3 +2000,61 @@ body {
     background-color: #dc3545;
     color: white;
 }
+
+
+/*for governerte filter in the properties*/
+.properties-page .search-card {
+    border-radius: 28px;
+}
+
+.properties-page .property-search-input {
+    min-height: 56px;
+    border-radius: 16px;
+    border: none;
+    font-size: 1rem;
+    background-color: #ffffff;
+    color: #1F2937;
+}
+
+    .properties-page .property-search-input::placeholder {
+        color: #9fb7bf;
+        opacity: 1;
+    }
+
+    .properties-page .property-search-input:focus,
+    .properties-page .form-select.property-search-input:focus {
+        box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.25);
+        outline: none;
+    }
+
+.properties-page .property-search-btn,
+.properties-page .property-reset-btn {
+    min-height: 56px;
+    border-radius: 14px;
+    font-weight: 700;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.properties-page .property-reset-btn {
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.55);
+    background: transparent;
+}
+
+    .properties-page .property-reset-btn:hover {
+        background: rgba(255, 255, 255, 0.12);
+        color: white;
+        border-color: rgba(255, 255, 255, 0.7);
+    }
+
+.properties-page .total-box {
+    min-height: 56px;
+    padding: 0.7rem 1rem;
+    border-radius: 14px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
