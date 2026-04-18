@@ -14,6 +14,7 @@
     {
         var parts = fullName.Split(' ', StringSplitOptions.RemoveEmptyEntries);
         initials = string.Concat(parts.Take(2).Select(p => char.ToUpper(p[0])));
+        initials = string.Concat(parts.Take(2).Select(p => char.ToUpper(p[0])));
     }
 
     string dobText = Model.Dob.ToString("dd MMM yyyy");
@@ -31,9 +32,6 @@
         </div>
 
         <div class="d-flex flex-wrap gap-2">
-            <a asp-controller="Users" asp-action="Edit" asp-route-id="@Model.UserId" class="btn btn-primary details-btn">
-                Edit User Account
-            </a>
             <a asp-action="Edit" asp-route-id="@Model.TenantId" class="btn btn-accent details-btn">
                 Edit Tenant Info
             </a>

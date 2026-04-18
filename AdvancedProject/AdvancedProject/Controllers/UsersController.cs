@@ -95,8 +95,6 @@ namespace AdvancedProject.Controllers
         }
 
         // POST: Users/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("UserId,Username,Password,FullName,Email,Phone,Role,CreatedAt")] User user)
@@ -114,53 +112,72 @@ namespace AdvancedProject.Controllers
         // GET: Users/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var user = await _context.Users.FindAsync(id);
-            if (user == null)
+            if (user == null) return NotFound();
+
+            var vm = new UserEditVM
             {
-                return NotFound();
-            }
-            return View(user);
+                UserId = user.UserId,
+                Username = user.Username,
+                FullName = user.FullName,
+                Email = user.Email,
+                Phone = user.Phone,
+                Gender = user.Gender
+                // password intentionally empty
+            };
+
+            return View(vm);
         }
 
         // POST: Users/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("UserId,Username,Password,FullName,Email,Phone,Role,CreatedAt,IsActive")] User user)
+        public async Task<IActionResult> Edit(UserEditVM vm)
         {
-            if (id != user.UserId)
-            {
+            var user = await _context.Users.FindAsync(vm.UserId);
+
+            if (user == null)
                 return NotFound();
+
+            var username = vm.Username.Trim().ToLower();
+            var email = vm.Email.Trim().ToLower();
+            var phone = vm.Phone.Trim();
+
+            // UNIQUE CHECKS (ignore current user)
+            if (_context.Users.Any(u => u.Username.ToLower() == username && u.UserId != vm.UserId))
+                ModelState.AddModelError("Username", "Username already exists");
+
+            if (_context.Users.Any(u => u.Email.ToLower() == email && u.UserId != vm.UserId))
+                ModelState.AddModelError("Email", "Email already exists");
+
+            if (_context.Users.Any(u => u.Phone == phone && u.UserId != vm.UserId))
+                ModelState.AddModelError("Phone", "Phone already exists");
+
+            if (!ModelState.IsValid)
+                return View(vm);
+
+            // Update fields
+            user.Username = username;
+            user.FullName = vm.FullName;
+            user.Email = email;
+            user.Phone = phone;
+            user.Gender = vm.Gender;
+
+            // OPTIONAL password
+            if (!string.IsNullOrWhiteSpace(vm.Password))
+            {
+                user.Password = vm.Password;
             }
 
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(user);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!UserExists(user.UserId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(user);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
         }
+
+
+
 
         // GET: Users/Delete/5
         public async Task<IActionResult> Delete(int? id)
