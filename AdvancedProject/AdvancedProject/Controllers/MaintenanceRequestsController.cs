@@ -19,6 +19,16 @@ namespace AdvancedProject.Controllers
             _context = context;
         }
 
+        private async Task<MaintenanceStaff?> GetAvailableStaff(int skillId)
+        {
+            return await _context.MaintenanceStaffs
+                .Include(s => s.Skills)
+                .Where(s =>
+                    s.AvailabilityStatus == "Available" &&
+                    s.Skills.Any(sk => sk.SkillId == skillId))
+                .FirstOrDefaultAsync();
+        }
+
         // GET: MaintenanceRequests
         public async Task<IActionResult> Index(string searchTerm, string priorityFilter, string statusFilter, int? typeFilter, string sortOrder)
         {
@@ -430,8 +440,21 @@ namespace AdvancedProject.Controllers
                 request.Status = form.Status;
                 request.Notes = form.Notes;
 
-                _context.MaintenanceRequests.Update(request);
+                // 🔥 AUTO REASSIGN STAFF BASED ON NEW SKILL
+                var staff = await GetAvailableStaff(request.SkillId);
+
+                if (staff == null)
+                {
+                    staff = await _context.MaintenanceStaffs
+                        .Where(s => s.AvailabilityStatus == "Available")
+                        .FirstOrDefaultAsync();
+                }
+
+                request.AssignedStaffId = staff?.StaffId;
+
+                _context.Update(request);
                 await _context.SaveChangesAsync();
+
                 return RedirectToAction(nameof(Index));
             }
 
