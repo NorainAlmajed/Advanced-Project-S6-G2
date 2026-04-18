@@ -19,6 +19,16 @@ namespace AdvancedProject.Controllers
             _context = context;
         }
 
+        private async Task<MaintenanceStaff?> GetAvailableStaff(int skillId)
+        {
+            return await _context.MaintenanceStaffs
+                .Include(s => s.Skills)
+                .Where(s =>
+                    s.AvailabilityStatus == "Available" &&
+                    s.Skills.Any(sk => sk.SkillId == skillId))
+                .FirstOrDefaultAsync();
+        }
+
         // GET: MaintenanceRequests
         public async Task<IActionResult> Index(string searchTerm, string priorityFilter, string statusFilter, int? typeFilter, string sortOrder)
         {
@@ -216,17 +226,25 @@ namespace AdvancedProject.Controllers
             if (maintenanceRequest == null)
                 return NotFound();
 
-            int tenantId = maintenanceRequest.UserId;
+            var tenant = await _context.Tenants
+                .FirstOrDefaultAsync(t => t.UserId == maintenanceRequest.UserId);
 
-            // STEP 1: get UNIT IDs from leases only (safe + stable)
+            if (tenant == null)
+            {
+                ViewData["UnitId"] = new SelectList(new List<object>(), "UnitId", "DisplayName");
+                return View(maintenanceRequest);
+            }
+
+            int tenantId = tenant.TenantId;
+
             var unitIds = await _context.Leases
                 .Where(l => l.TenantId == tenantId && l.Status == "Active")
                 .Select(l => l.UnitId)
                 .Distinct()
                 .ToListAsync();
 
-            // STEP 2: rebuild display from Units table (clean join)
             var units = await _context.Units
+                .Include(u => u.Property) // IMPORTANT FIX
                 .Where(u => unitIds.Contains(u.UnitId))
                 .Select(u => new
                 {
@@ -235,19 +253,9 @@ namespace AdvancedProject.Controllers
                 })
                 .ToListAsync();
 
-            ViewData["UnitId"] = new SelectList(
-                units,
-                "UnitId",
-                "DisplayName",
-                maintenanceRequest.UnitId
-            );
+            ViewData["UnitId"] = new SelectList(units, "UnitId", "DisplayName", maintenanceRequest.UnitId);
 
-            ViewData["SkillId"] = new SelectList(
-                _context.Skills,
-                "SkillId",
-                "Name",
-                maintenanceRequest.SkillId
-            );
+            ViewData["SkillId"] = new SelectList(_context.Skills, "SkillId", "Name", maintenanceRequest.SkillId);
 
             ViewData["AssignedStaffId"] = new SelectList(
                 _context.MaintenanceStaffs
@@ -265,6 +273,10 @@ namespace AdvancedProject.Controllers
             return View(maintenanceRequest);
         }
 
+
+
+
+
         // POST: MaintenanceRequests/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -280,6 +292,7 @@ namespace AdvancedProject.Controllers
 
             if (ModelState.IsValid)
             {
+                request.UnitId = form.UnitId;
                 request.SkillId = form.SkillId;
                 request.Priority = form.Priority;
                 request.Status = form.Status;
@@ -290,13 +303,34 @@ namespace AdvancedProject.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            // reload dropdowns if validation fails
-            ViewData["SkillId"] = new SelectList(
-                _context.Skills,
-                "SkillId",
-                "Name",
-                form.SkillId
-            );
+            // 🔥 reload Unit dropdown
+            var tenant = await _context.Tenants
+                .FirstOrDefaultAsync(t => t.UserId == request.UserId);
+
+            if (tenant != null)
+            {
+                int tenantId = tenant.TenantId;
+
+                var unitIds = await _context.Leases
+                    .Where(l => l.TenantId == tenantId && l.Status == "Active")
+                    .Select(l => l.UnitId)
+                    .Distinct()
+                    .ToListAsync();
+
+                var units = await _context.Units
+                    .Include(u => u.Property)
+                    .Where(u => unitIds.Contains(u.UnitId))
+                    .Select(u => new
+                    {
+                        u.UnitId,
+                        DisplayName = u.UnitNumber + " (" + u.Property.Name + ")"
+                    })
+                    .ToListAsync();
+
+                ViewData["UnitId"] = new SelectList(units, "UnitId", "DisplayName", form.UnitId);
+            }
+
+            ViewData["SkillId"] = new SelectList(_context.Skills, "SkillId", "Name", form.SkillId);
 
             ViewData["AssignedStaffId"] = new SelectList(
                 _context.MaintenanceStaffs
@@ -313,6 +347,163 @@ namespace AdvancedProject.Controllers
 
             return View(form);
         }
+
+
+
+
+
+        //New
+
+
+        // GET: MaintenanceRequests/Edit/5
+        public async Task<IActionResult> EditTenant(int? id)
+        {
+            if (id == null)
+                return NotFound();
+
+            var maintenanceRequest = await _context.MaintenanceRequests
+                .Include(m => m.User)
+                .FirstOrDefaultAsync(m => m.RequestId == id);
+
+            if (maintenanceRequest == null)
+                return NotFound();
+
+            var tenant = await _context.Tenants
+                .FirstOrDefaultAsync(t => t.UserId == maintenanceRequest.UserId);
+
+            if (tenant == null)
+            {
+                ViewData["UnitId"] = new SelectList(new List<object>(), "UnitId", "DisplayName");
+                return View(maintenanceRequest);
+            }
+
+            int tenantId = tenant.TenantId;
+
+            var unitIds = await _context.Leases
+                .Where(l => l.TenantId == tenantId && l.Status == "Active")
+                .Select(l => l.UnitId)
+                .Distinct()
+                .ToListAsync();
+
+            var units = await _context.Units
+                .Include(u => u.Property)
+                .Where(u => unitIds.Contains(u.UnitId))
+                .Select(u => new
+                {
+                    u.UnitId,
+                    DisplayName = u.UnitNumber + " (" + u.Property.Name + ")"
+                })
+                .ToListAsync();
+
+            ViewData["UnitId"] = new SelectList(units, "UnitId", "DisplayName", maintenanceRequest.UnitId);
+
+            ViewData["SkillId"] = new SelectList(_context.Skills, "SkillId", "Name", maintenanceRequest.SkillId);
+
+            ViewData["AssignedStaffId"] = new SelectList(
+                _context.MaintenanceStaffs
+                    .Include(s => s.User)
+                    .Select(s => new
+                    {
+                        s.StaffId,
+                        FullName = s.User.FullName
+                    }),
+                "StaffId",
+                "FullName",
+                maintenanceRequest.AssignedStaffId
+            );
+
+            return View(maintenanceRequest);
+        }
+
+
+
+
+
+        // POST: MaintenanceRequests/EditTenant/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditTenant(int id, MaintenanceRequest form)
+        {
+            if (id != form.RequestId)
+                return NotFound();
+
+            var request = await _context.MaintenanceRequests.FindAsync(id);
+
+            if (request == null)
+                return NotFound();
+
+            if (ModelState.IsValid)
+            {
+                request.UnitId = form.UnitId;
+                request.SkillId = form.SkillId;
+                request.Priority = form.Priority;
+                request.Status = form.Status;
+                request.Notes = form.Notes;
+
+                // 🔥 AUTO REASSIGN STAFF BASED ON NEW SKILL
+                var staff = await GetAvailableStaff(request.SkillId);
+
+                if (staff == null)
+                {
+                    staff = await _context.MaintenanceStaffs
+                        .Where(s => s.AvailabilityStatus == "Available")
+                        .FirstOrDefaultAsync();
+                }
+
+                request.AssignedStaffId = staff?.StaffId;
+
+                _context.Update(request);
+                await _context.SaveChangesAsync();
+
+                return RedirectToAction(nameof(Index));
+            }
+
+            // reload Unit dropdown
+            var tenant = await _context.Tenants
+                .FirstOrDefaultAsync(t => t.UserId == request.UserId);
+
+            if (tenant != null)
+            {
+                int tenantId = tenant.TenantId;
+
+                var unitIds = await _context.Leases
+                    .Where(l => l.TenantId == tenantId && l.Status == "Active")
+                    .Select(l => l.UnitId)
+                    .Distinct()
+                    .ToListAsync();
+
+                var units = await _context.Units
+                    .Include(u => u.Property)
+                    .Where(u => unitIds.Contains(u.UnitId))
+                    .Select(u => new
+                    {
+                        u.UnitId,
+                        DisplayName = u.UnitNumber + " (" + u.Property.Name + ")"
+                    })
+                    .ToListAsync();
+
+                ViewData["UnitId"] = new SelectList(units, "UnitId", "DisplayName", form.UnitId);
+            }
+
+            ViewData["SkillId"] = new SelectList(_context.Skills, "SkillId", "Name", form.SkillId);
+
+            ViewData["AssignedStaffId"] = new SelectList(
+                _context.MaintenanceStaffs
+                    .Include(s => s.User)
+                    .Select(s => new
+                    {
+                        s.StaffId,
+                        FullName = s.User.FullName
+                    }),
+                "StaffId",
+                "FullName",
+                form.AssignedStaffId
+            );
+
+            return View(form);
+        }
+
+
 
         // GET: MaintenanceRequests/Delete/5
         public async Task<IActionResult> Delete(int? id)
