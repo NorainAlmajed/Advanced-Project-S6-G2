@@ -428,9 +428,9 @@ namespace AdvancedProject.Controllers
                 request.SkillId = form.SkillId;
                 request.Priority = form.Priority;
                 request.Status = form.Status;
-                request.AssignedStaffId = form.AssignedStaffId;
                 request.Notes = form.Notes;
 
+                _context.MaintenanceRequests.Update(request);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
