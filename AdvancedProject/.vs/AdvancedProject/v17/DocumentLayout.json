@@ -88,7 +88,7 @@
               "RelativeDocumentMoniker": "AdvancedProject\\Views\\MaintenanceStaffs\\Details.cshtml",
               "ToolTip": "C:\\Users\\HP\\Desktop\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Views\\MaintenanceStaffs\\Details.cshtml",
               "RelativeToolTip": "AdvancedProject\\Views\\MaintenanceStaffs\\Details.cshtml",
-              "ViewState": "AgIAABoAAAAAAAAAAAAqwCYAAAAsAAAAAAAAAA==",
+              "ViewState": "AgIAABoAAAAAAAAAAAAqwDIAAAAhAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2026-04-18T00:22:02.975Z",
               "EditorCaption": ""
@@ -103,8 +103,7 @@
               "RelativeToolTip": "AdvancedProject\\Views\\Tenants\\Details.cshtml",
               "ViewState": "AgIAABUAAAAAAAAAAAAqwCEAAAAsAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-04-18T00:21:45.265Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-18T00:21:45.265Z"
             },
             {
               "$type": "Document",
@@ -116,8 +115,7 @@
               "RelativeToolTip": "AdvancedProject\\Views\\Tenants\\Edit.cshtml",
               "ViewState": "AgIAAEYAAAAAAAAAAAAmwFYAAAASAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-04-18T00:20:14.232Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-18T00:20:14.232Z"
             },
             {
               "$type": "Document",
@@ -129,8 +127,7 @@
               "RelativeToolTip": "AdvancedProject\\Views\\MaintenanceStaffs\\Edit.cshtml",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-04-18T00:19:58.277Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-18T00:19:58.277Z"
             },
             {
               "$type": "Document",
@@ -142,8 +139,7 @@
               "RelativeToolTip": "AdvancedProject\\Controllers\\TenantsController.cs",
               "ViewState": "AgIAACEBAAAAAAAAAAAcwDoBAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-18T00:18:16.364Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-18T00:18:16.364Z"
             },
             {
               "$type": "Document",
@@ -155,8 +151,7 @@
               "RelativeToolTip": "AdvancedProject\\Controllers\\UsersController.cs",
               "ViewState": "AgIAAMMAAAAAAAAAAAAcwNwAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-18T00:08:19.251Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-18T00:08:19.251Z"
             },
             {
               "$type": "Document",
@@ -168,8 +163,7 @@
               "RelativeToolTip": "AdvancedProject\\Models\\UserEditVM.cs",
               "ViewState": "AgIAAAUAAAAAAAAAAAAswAsAAAAWAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-18T00:07:18.813Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-18T00:07:18.813Z"
             },
             {
               "$type": "Document",
@@ -181,8 +175,7 @@
               "RelativeToolTip": "AdvancedProject\\Views\\Users\\Edit.cshtml",
               "ViewState": "AgIAADYAAAAAAAAAAAAmwFEAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-04-18T00:05:34.575Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-18T00:05:34.575Z"
             },
             {
               "$type": "Document",
@@ -194,8 +187,7 @@
               "RelativeToolTip": "AdvancedProject\\Models\\TenantEditVM.cs",
               "ViewState": "AgIAAAwAAAAAAAAAAAAswCEAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-17T23:42:35.973Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-17T23:42:35.973Z"
             },
             {
               "$type": "Document",
@@ -231,8 +223,7 @@
               "RelativeToolTip": "AdvancedProject\\Controllers\\MaintenanceStaffsController.cs",
               "ViewState": "AgIAAIIAAAAAAAAAAAAqwJcAAABaAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-17T21:10:18.016Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-17T21:10:18.016Z"
             },
             {
               "$type": "Document",
@@ -256,8 +247,7 @@
               "RelativeToolTip": "AdvancedProject\\Models\\User.cs",
               "ViewState": "AgIAACgAAAAAAAAAAAA7wDYAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-17T21:09:56.71Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-17T21:09:56.71Z"
             },
             {
               "$type": "Document",
