@@ -46,8 +46,7 @@
               "RelativeToolTip": "AdvancedProject\\Models\\MaintenanceRequest.cs",
               "ViewState": "AgIAAAUAAAAAAAAAAAAAADMAAAAxAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-20T07:51:42.116Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-20T07:51:42.116Z"
             },
             {
               "$type": "Document",
@@ -59,8 +58,7 @@
               "RelativeToolTip": "AdvancedProject\\Models\\MaintenanceStaff.cs",
               "ViewState": "AgIAAAcAAAAAAAAAAAAcwB8AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-20T07:51:03.29Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-20T07:51:03.29Z"
             },
             {
               "$type": "Document",
@@ -72,8 +70,7 @@
               "RelativeToolTip": "AdvancedProject\\Views\\MaintenanceRequests\\Create.cshtml",
               "ViewState": "AgIAAC4AAAAAAAAAAAAuwEUAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-04-20T07:48:28.602Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-20T07:48:28.602Z"
             },
             {
               "$type": "Document",
@@ -83,7 +80,7 @@
               "RelativeDocumentMoniker": "AdvancedProject\\Controllers\\MaintenanceRequestsController.cs",
               "ToolTip": "C:\\Users\\HP\\Desktop\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Controllers\\MaintenanceRequestsController.cs",
               "RelativeToolTip": "AdvancedProject\\Controllers\\MaintenanceRequestsController.cs",
-              "ViewState": "AgIAAJoAAAAAAAAAAADwv60AAAATAAAAAAAAAA==",
+              "ViewState": "AgIAAAECAAAAAAAAAAAIwBQCAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-04-20T07:44:47.527Z",
               "EditorCaption": ""
