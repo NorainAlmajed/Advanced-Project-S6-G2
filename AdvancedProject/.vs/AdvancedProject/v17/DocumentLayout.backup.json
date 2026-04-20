@@ -7,20 +7,16 @@
       "RelativeMoniker": "D:0:0:{B4100081-BB0A-41BA-A933-BD3CCDB833B9}|AdvancedProject\\AdvancedProject.csproj|solutionrelative:advancedproject\\controllers\\maintenancerequestscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{B4100081-BB0A-41BA-A933-BD3CCDB833B9}|AdvancedProject\\AdvancedProject.csproj|c:\\users\\hp\\desktop\\advanced-project-s6-g2\\advancedproject\\advancedproject\\models\\skill.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{B4100081-BB0A-41BA-A933-BD3CCDB833B9}|AdvancedProject\\AdvancedProject.csproj|solutionrelative:advancedproject\\models\\skill.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{B4100081-BB0A-41BA-A933-BD3CCDB833B9}|AdvancedProject\\AdvancedProject.csproj|c:\\users\\hp\\desktop\\advanced-project-s6-g2\\advancedproject\\advancedproject\\models\\maintenancerequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B4100081-BB0A-41BA-A933-BD3CCDB833B9}|AdvancedProject\\AdvancedProject.csproj|solutionrelative:advancedproject\\models\\maintenancerequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{B4100081-BB0A-41BA-A933-BD3CCDB833B9}|AdvancedProject\\AdvancedProject.csproj|c:\\users\\hp\\desktop\\advanced-project-s6-g2\\advancedproject\\advancedproject\\models\\maintenancestaff.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{B4100081-BB0A-41BA-A933-BD3CCDB833B9}|AdvancedProject\\AdvancedProject.csproj|solutionrelative:advancedproject\\models\\maintenancestaff.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{B4100081-BB0A-41BA-A933-BD3CCDB833B9}|AdvancedProject\\AdvancedProject.csproj|c:\\users\\hp\\desktop\\advanced-project-s6-g2\\advancedproject\\advancedproject\\models\\maintenancerequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{B4100081-BB0A-41BA-A933-BD3CCDB833B9}|AdvancedProject\\AdvancedProject.csproj|solutionrelative:advancedproject\\models\\maintenancerequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{B4100081-BB0A-41BA-A933-BD3CCDB833B9}|AdvancedProject\\AdvancedProject.csproj|c:\\users\\hp\\desktop\\advanced-project-s6-g2\\advancedproject\\advancedproject\\views\\maintenancerequests\\edittenant.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{B4100081-BB0A-41BA-A933-BD3CCDB833B9}|AdvancedProject\\AdvancedProject.csproj|solutionrelative:advancedproject\\views\\maintenancerequests\\edittenant.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{B4100081-BB0A-41BA-A933-BD3CCDB833B9}|AdvancedProject\\AdvancedProject.csproj|c:\\users\\hp\\desktop\\advanced-project-s6-g2\\advancedproject\\advancedproject\\views\\maintenancerequests\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{B4100081-BB0A-41BA-A933-BD3CCDB833B9}|AdvancedProject\\AdvancedProject.csproj|solutionrelative:advancedproject\\views\\maintenancerequests\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     }
   ],
   "DocumentGroupContainers": [
@@ -30,23 +26,27 @@
       "DocumentGroups": [
         {
           "DockedHeight": 85,
-          "SelectedChildIndex": 6,
+          "SelectedChildIndex": 5,
           "Children": [
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
             },
             {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
+            },
+            {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "Skill.cs",
-              "DocumentMoniker": "C:\\Users\\HP\\Desktop\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Models\\Skill.cs",
-              "RelativeDocumentMoniker": "AdvancedProject\\Models\\Skill.cs",
-              "ToolTip": "C:\\Users\\HP\\Desktop\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Models\\Skill.cs",
-              "RelativeToolTip": "AdvancedProject\\Models\\Skill.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABcAAAAAAAAAAAAAAA==",
+              "Title": "MaintenanceRequest.cs",
+              "DocumentMoniker": "C:\\Users\\HP\\Desktop\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Models\\MaintenanceRequest.cs",
+              "RelativeDocumentMoniker": "AdvancedProject\\Models\\MaintenanceRequest.cs",
+              "ToolTip": "C:\\Users\\HP\\Desktop\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Models\\MaintenanceRequest.cs",
+              "RelativeToolTip": "AdvancedProject\\Models\\MaintenanceRequest.cs",
+              "ViewState": "AgIAAAUAAAAAAAAAAAAAADMAAAAxAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-18T15:26:53.782Z",
+              "WhenOpened": "2026-04-20T07:51:42.116Z",
               "EditorCaption": ""
             },
             {
@@ -57,39 +57,22 @@
               "RelativeDocumentMoniker": "AdvancedProject\\Models\\MaintenanceStaff.cs",
               "ToolTip": "C:\\Users\\HP\\Desktop\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Models\\MaintenanceStaff.cs",
               "RelativeToolTip": "AdvancedProject\\Models\\MaintenanceStaff.cs",
-              "ViewState": "AgIAAAQAAAAAAAAAAAAYwBUAAABaAAAAAAAAAA==",
+              "ViewState": "AgIAAAcAAAAAAAAAAAAcwB8AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-18T15:26:45.625Z",
+              "WhenOpened": "2026-04-20T07:51:03.29Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 3,
-              "Title": "MaintenanceRequest.cs",
-              "DocumentMoniker": "C:\\Users\\HP\\Desktop\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Models\\MaintenanceRequest.cs",
-              "RelativeDocumentMoniker": "AdvancedProject\\Models\\MaintenanceRequest.cs",
-              "ToolTip": "C:\\Users\\HP\\Desktop\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Models\\MaintenanceRequest.cs",
-              "RelativeToolTip": "AdvancedProject\\Models\\MaintenanceRequest.cs",
-              "ViewState": "AgIAACsAAAAAAAAAAAAQwEUAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-18T15:26:38.605Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "EditTenant.cshtml",
-              "DocumentMoniker": "C:\\Users\\HP\\Desktop\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Views\\MaintenanceRequests\\EditTenant.cshtml",
-              "RelativeDocumentMoniker": "AdvancedProject\\Views\\MaintenanceRequests\\EditTenant.cshtml",
-              "ToolTip": "C:\\Users\\HP\\Desktop\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Views\\MaintenanceRequests\\EditTenant.cshtml",
-              "RelativeToolTip": "AdvancedProject\\Views\\MaintenanceRequests\\EditTenant.cshtml",
-              "ViewState": "AgIAAAMAAAAAAAAAAAAAABkAAAAkAAAAAAAAAA==",
+              "Title": "Create.cshtml",
+              "DocumentMoniker": "C:\\Users\\HP\\Desktop\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Views\\MaintenanceRequests\\Create.cshtml",
+              "RelativeDocumentMoniker": "AdvancedProject\\Views\\MaintenanceRequests\\Create.cshtml",
+              "ToolTip": "C:\\Users\\HP\\Desktop\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Views\\MaintenanceRequests\\Create.cshtml",
+              "RelativeToolTip": "AdvancedProject\\Views\\MaintenanceRequests\\Create.cshtml",
+              "ViewState": "AgIAAC4AAAAAAAAAAAAuwEUAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-04-18T14:43:01.135Z",
+              "WhenOpened": "2026-04-20T07:48:28.602Z",
               "EditorCaption": ""
             },
             {
@@ -100,9 +83,9 @@
               "RelativeDocumentMoniker": "AdvancedProject\\Controllers\\MaintenanceRequestsController.cs",
               "ToolTip": "C:\\Users\\HP\\Desktop\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Controllers\\MaintenanceRequestsController.cs",
               "RelativeToolTip": "AdvancedProject\\Controllers\\MaintenanceRequestsController.cs",
-              "ViewState": "AgIAAAYCAAAAAAAAAAAwwBoCAAANAAAAAAAAAA==",
+              "ViewState": "AgIAAJoAAAAAAAAAAADwv60AAAATAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-18T11:53:30.332Z",
+              "WhenOpened": "2026-04-20T07:44:47.527Z",
               "EditorCaption": ""
             }
           ]
