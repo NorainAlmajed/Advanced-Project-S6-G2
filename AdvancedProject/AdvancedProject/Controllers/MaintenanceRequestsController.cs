@@ -171,20 +171,25 @@ namespace AdvancedProject.Controllers
                 maintenanceRequest.RequestDate = DateTime.Now;
                 maintenanceRequest.Status = "Pending";
 
-                var staff = _context.MaintenanceStaffs
-                    .Include(s => s.Skills)
-                    .Where(s => s.AvailabilityStatus == "Available"
-                             && s.Skills.Any(sk => sk.SkillId == maintenanceRequest.SkillId))
-                    .FirstOrDefault();
+                // Get available staff based on skill
+                var staff = await GetAvailableStaff(maintenanceRequest.SkillId);
 
+                // fallback if no matching skill
                 if (staff == null)
                 {
-                    staff = _context.MaintenanceStaffs
+                    staff = await _context.MaintenanceStaffs
                         .Where(s => s.AvailabilityStatus == "Available")
-                        .FirstOrDefault();
+                        .FirstOrDefaultAsync();
                 }
 
+                // assign staff
                 maintenanceRequest.AssignedStaffId = staff?.StaffId;
+
+                // UPDATE STAFF STATUS TO BUSY
+                if (staff != null)
+                {
+                    staff.AvailabilityStatus = "Busy";
+                }
 
                 _context.Add(maintenanceRequest);
                 await _context.SaveChangesAsync();
@@ -192,6 +197,7 @@ namespace AdvancedProject.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
+            // reload dropdowns if validation fails
             int tenantId = 1;
 
             var units = _context.Leases
@@ -434,31 +440,53 @@ namespace AdvancedProject.Controllers
 
             if (ModelState.IsValid)
             {
+                // 🔥 1. GET OLD STAFF BEFORE CHANGING
+                MaintenanceStaff? oldStaff = null;
+
+                if (request.AssignedStaffId != null)
+                {
+                    oldStaff = await _context.MaintenanceStaffs
+                        .FirstOrDefaultAsync(s => s.StaffId == request.AssignedStaffId);
+                }
+
+                // update request fields
                 request.UnitId = form.UnitId;
                 request.SkillId = form.SkillId;
                 request.Priority = form.Priority;
                 request.Status = form.Status;
                 request.Notes = form.Notes;
 
-                // 🔥 AUTO REASSIGN STAFF BASED ON NEW SKILL
-                var staff = await GetAvailableStaff(request.SkillId);
+                // 🔥 2. GET NEW STAFF
+                var newStaff = await GetAvailableStaff(request.SkillId);
 
-                if (staff == null)
+                if (newStaff == null)
                 {
-                    staff = await _context.MaintenanceStaffs
+                    newStaff = await _context.MaintenanceStaffs
                         .Where(s => s.AvailabilityStatus == "Available")
                         .FirstOrDefaultAsync();
                 }
 
-                request.AssignedStaffId = staff?.StaffId;
+                // 🔥 3. FREE OLD STAFF (ONLY IF DIFFERENT)
+                if (oldStaff != null && oldStaff.StaffId != newStaff?.StaffId)
+                {
+                    oldStaff.AvailabilityStatus = "Available";
+                }
 
-                _context.Update(request);
+                // 🔥 4. ASSIGN NEW STAFF
+                request.AssignedStaffId = newStaff?.StaffId;
+
+                // 🔥 5. SET NEW STAFF TO BUSY
+                if (newStaff != null)
+                {
+                    newStaff.AvailabilityStatus = "Busy";
+                }
+
                 await _context.SaveChangesAsync();
 
                 return RedirectToAction(nameof(Index));
             }
 
-            // reload Unit dropdown
+            // reload dropdowns (same as your code)
             var tenant = await _context.Tenants
                 .FirstOrDefaultAsync(t => t.UserId == request.UserId);
 
@@ -502,6 +530,7 @@ namespace AdvancedProject.Controllers
 
             return View(form);
         }
+
 
 
 
