@@ -16,27 +16,28 @@
         </div>
 
         <div class="d-flex gap-2 flex-wrap">
-            @if (Model.Status != "Approved")
-            {
-                <form asp-action="Approve" asp-route-id="@Model.ApplicationId" method="post">
-                    <button type="submit" class="btn btn-success lease-action-btn">
-                        Approve Application
-                    </button>
-                </form>
-            }
 
-            @if (Model.Status != "Rejected")
+            @if (Model.Status == "Pending")
             {
-                <form asp-action="Reject" asp-route-id="@Model.ApplicationId" method="post">
-                    <button type="submit" class="btn btn-danger lease-action-btn">
-                        Reject Application
-                    </button>
-                </form>
+                <button type="button"
+                        class="btn btn-success lease-action-btn"
+                        data-bs-toggle="modal"
+                        data-bs-target="#approveModal">
+                    Approve Application
+                </button>
+
+                <button type="button"
+                        class="btn btn-danger lease-action-btn"
+                        data-bs-toggle="modal"
+                        data-bs-target="#rejectModal">
+                    Reject Application
+                </button>
             }
 
             <a asp-action="Index" class="btn btn-light-custom lease-action-btn">
                 Back to List
             </a>
+
         </div>
     </div>
 
@@ -201,3 +202,72 @@
 
     </div>
 </div>
+
+@if (Model.Status == "Pending")
+{
+    <div class="modal fade" id="approveModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 rounded-4 shadow">
+
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title fw-bold">Approve Application</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body pt-2">
+                    Are you sure you want to approve this lease application?
+                </div>
+
+                <div class="modal-footer border-0">
+                    <button type="button"
+                            class="btn btn-light-custom"
+                            data-bs-dismiss="modal">
+                        Cancel
+                    </button>
+
+                    <form asp-action="Approve"
+                          asp-route-id="@Model.ApplicationId"
+                          method="post">
+                        <button type="submit" class="btn btn-success lease-action-btn">
+                            Confirm Approval
+                        </button>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="rejectModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 rounded-4 shadow">
+
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title fw-bold">Reject Application</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body pt-2">
+                    Are you sure you want to reject this lease application?
+                </div>
+
+                <div class="modal-footer border-0">
+                    <button type="button"
+                            class="btn btn-light-custom"
+                            data-bs-dismiss="modal">
+                        Cancel
+                    </button>
+
+                    <form asp-action="Reject"
+                          asp-route-id="@Model.ApplicationId"
+                          method="post">
+                        <button type="submit" class="btn btn-danger lease-action-btn">
+                            Confirm Rejection
+                        </button>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+}

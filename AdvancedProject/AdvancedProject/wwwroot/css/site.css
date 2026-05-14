@@ -2277,13 +2277,14 @@ body {
     }
 
 .lease-application-details-page .btn-light-custom {
-    background: #e8f1f3;
-    color: #005B71;
-    border: 1px solid rgba(0, 91, 113, 0.12);
+    background: #005B71;
+    color: white;
+    border: 1px solid #005B71;
 }
 
     .lease-application-details-page .btn-light-custom:hover {
-        background: #005B71;
+        background: #00485a;
+        border-color: #00485a;
         color: white;
     }
 
@@ -2291,4 +2292,12 @@ body {
     font-size: 2rem;
     font-weight: 800;
     color: #0d2235;
+}
+
+.lease-application-details-page.details-page {
+    max-width: 100%;
+}
+
+.lease-application-details-page .details-section-card {
+    width: 100%;
 }
