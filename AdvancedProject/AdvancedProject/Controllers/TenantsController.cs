@@ -139,7 +139,11 @@ namespace AdvancedProject.Controllers
                 {
                     Dob = DateOnly.FromDateTime(vm.Dob),
                     NationalId = vm.NationalId,
-                    UserId = user.UserId
+                    UserId = user.UserId,
+                    Salary = vm.Salary,
+                    MaritalStatus = vm.MaritalStatus,
+                    EmploymentStatus = vm.EmploymentStatus,
+                    FinancialStability = "Undetermined"   // always forced on create
                 };
 
                 _context.Tenants.Add(tenant);
@@ -162,6 +166,7 @@ namespace AdvancedProject.Controllers
 
             if (tenant == null) return NotFound();
 
+            // GET: Tenants/Edit/5 — populate the VM
             var vm = new TenantEditVM
             {
                 TenantId = tenant.TenantId,
@@ -172,7 +177,11 @@ namespace AdvancedProject.Controllers
                 Phone = tenant.User.Phone,
                 Gender = tenant.User.Gender,
                 Dob = tenant.Dob.ToDateTime(TimeOnly.MinValue),
-                NationalId = tenant.NationalId
+                NationalId = tenant.NationalId,
+                Salary = tenant.Salary,
+                FinancialStability = tenant.FinancialStability,
+                MaritalStatus = tenant.MaritalStatus,
+                EmploymentStatus = tenant.EmploymentStatus
             };
 
             return View(vm);
@@ -254,9 +263,13 @@ namespace AdvancedProject.Controllers
                 }
 
                 // Update Tenant
+                // POST: Tenants/Edit/5 — replace the tenant update block
                 tenant.Dob = DateOnly.FromDateTime(vm.Dob);
                 tenant.NationalId = vm.NationalId;
-
+                tenant.Salary = vm.Salary;
+                tenant.FinancialStability = vm.FinancialStability;
+                tenant.MaritalStatus = vm.MaritalStatus;
+                tenant.EmploymentStatus = vm.EmploymentStatus;
                 await _context.SaveChangesAsync();
 
                 return RedirectToAction(nameof(Index));
