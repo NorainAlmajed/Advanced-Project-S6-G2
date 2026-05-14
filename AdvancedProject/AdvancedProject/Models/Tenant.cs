@@ -23,6 +23,18 @@ public partial class Tenant
 
     public int UserId { get; set; }
 
+    [Column(TypeName = "decimal(18,2)")]
+    public decimal? Salary { get; set; }
+
+    [StringLength(50)]
+    public string FinancialStability { get; set; } = "Undetermined";
+
+    [StringLength(20)]
+    public string? MaritalStatus { get; set; }
+
+    [StringLength(20)]
+    public string? EmploymentStatus { get; set; }
+
     [InverseProperty("Tenant")]
     public virtual ICollection<LeaseApplication> LeaseApplications { get; set; } = new List<LeaseApplication>();
 

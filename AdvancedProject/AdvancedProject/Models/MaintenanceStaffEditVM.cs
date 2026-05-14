@@ -1,24 +1,46 @@
 ﻿using System.ComponentModel.DataAnnotations;
-
 namespace AdvancedProject.Models
 {
-    public class MaintenanceStaffEditVM
+    public class MaintenanceStaffEditVM : IValidatableObject
     {
         public int StaffId { get; set; }
         public int UserId { get; set; }
 
-        // User fields
         public string Username { get; set; }
+
         public string? Password { get; set; }
+
+        public string? ConfirmPassword { get; set; }
+
         public string FullName { get; set; }
+
         public string Email { get; set; }
+
         public string Phone { get; set; }
+
         public string Gender { get; set; }
 
-        // Staff fields
         public string AvailabilityStatus { get; set; }
 
-        // Skills
         public List<int> SelectedSkillIds { get; set; } = new();
+
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            if (!string.IsNullOrWhiteSpace(Password))
+            {
+                if (string.IsNullOrWhiteSpace(ConfirmPassword))
+                {
+                    yield return new ValidationResult(
+                        "Please confirm your new password.",
+                        new[] { nameof(ConfirmPassword) });
+                }
+                else if (Password != ConfirmPassword)
+                {
+                    yield return new ValidationResult(
+                        "Passwords do not match.",
+                        new[] { nameof(ConfirmPassword) });
+                }
+            }
+        }
     }
 }
