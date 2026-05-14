@@ -1,66 +1,93 @@
 ﻿@model AdvancedProject.Models.Property
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Edit Property";
 }
 
-<h1>Edit</h1>
+<div class="property-form-page">
+    <div class="lease-form-wrapper">
+        <div class="lease-form-card shadow-soft">
 
-<h4>Property</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="PropertyId" />
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
+            <div class="lease-form-header">
+                <p class="lease-form-eyebrow mb-2">Property</p>
+                <h1 class="lease-form-title mb-2">Edit Property</h1>
+                <p class="lease-form-subtitle mb-0">
+                    Update property details, location, and description.
+                </p>
             </div>
-            <div class="form-group">
-                <label asp-for="GovernorateId" class="control-label"></label>
-                <select asp-for="GovernorateId" class="form-control" asp-items="ViewBag.GovernorateId">
-                    <option value="">-- Select Governorate --</option>
-                </select>
-                <span asp-validation-for="GovernorateId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="City" class="control-label"></label>
-                <input asp-for="City" class="form-control" />
-                <span asp-validation-for="City" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Block" class="control-label"></label>
-                <input asp-for="Block" class="form-control" />
-                <span asp-validation-for="Block" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Building" class="control-label"></label>
-                <input asp-for="Building" class="form-control" />
-                <span asp-validation-for="Building" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Road" class="control-label"></label>
-                <input asp-for="Road" class="form-control" />
-                <span asp-validation-for="Road" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+
+            <form asp-action="Edit" method="post" class="lease-form-body">
+
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                <input type="hidden" asp-for="PropertyId" />
+
+                <div class="row g-3">
+
+                    <div class="col-md-6 lease-form-group">
+                        <label asp-for="Name" class="lease-form-label"></label>
+                        <input asp-for="Name" class="form-control lease-form-input" />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6 lease-form-group">
+                        <label asp-for="GovernorateId" class="lease-form-label">Governorate</label>
+                        <select asp-for="GovernorateId" class="form-control lease-form-input" asp-items="ViewBag.GovernorateId">
+                            <option value="">-- Select Governorate --</option>
+                        </select>
+                        <span asp-validation-for="GovernorateId" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6 lease-form-group">
+                        <label asp-for="City" class="lease-form-label"></label>
+                        <input asp-for="City" class="form-control lease-form-input" />
+                        <span asp-validation-for="City" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6 lease-form-group">
+                        <label asp-for="Block" class="lease-form-label"></label>
+                        <input asp-for="Block" class="form-control lease-form-input" />
+                        <span asp-validation-for="Block" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6 lease-form-group">
+                        <label asp-for="Building" class="lease-form-label"></label>
+                        <input asp-for="Building" class="form-control lease-form-input" />
+                        <span asp-validation-for="Building" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6 lease-form-group">
+                        <label asp-for="Road" class="lease-form-label"></label>
+                        <input asp-for="Road" class="form-control lease-form-input" />
+                        <span asp-validation-for="Road" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-12 lease-form-group">
+                        <label asp-for="Description" class="lease-form-label"></label>
+                        <textarea asp-for="Description"
+                                  class="form-control lease-form-input property-description-input"></textarea>
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+
+                </div>
+
+                <div class="lease-form-actions">
+                    <button type="submit" class="btn btn-primary lease-submit-btn">
+                        Save Changes
+                    </button>
+
+                    <a asp-action="Index" class="lease-back-link">
+                        Back to List
+                    </a>
+                </div>
+
+            </form>
+        </div>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

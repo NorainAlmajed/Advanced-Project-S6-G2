@@ -2301,3 +2301,63 @@ body {
 .lease-application-details-page .details-section-card {
     width: 100%;
 }
+
+
+
+/* ============================= */
+/*        Tenant Form            */
+/* ============================= */
+
+.tenant-form-page {
+    padding: 1.5rem 0 0.5rem;
+}
+
+.tenant-radio-group {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+}
+
+.tenant-radio-card {
+    background: #f8fbfb;
+    border: 1px solid rgba(0, 91, 113, 0.12);
+    border-radius: 16px;
+    padding: 0.9rem 1rem;
+    min-height: 58px;
+    font-weight: 700;
+    color: var(--text-main);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+    .tenant-radio-card:hover {
+        background: #e8f1f3;
+        border-color: var(--primary);
+    }
+
+    .tenant-radio-card input {
+        accent-color: var(--primary);
+    }
+
+@media (max-width: 768px) {
+    .tenant-radio-group {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+/* ============================= */
+/*        Property Form          */
+/* ============================= */
+
+.property-form-page {
+    padding: 1.5rem 0 0.5rem;
+}
+
+.property-description-input {
+    min-height: 120px;
+    resize: vertical;
+}
