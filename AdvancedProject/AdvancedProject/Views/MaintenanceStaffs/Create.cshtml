@@ -1,87 +1,108 @@
 ﻿@model MaintenanceStaffCreateVM
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Create Maintenance Staff";
 }
 
-<h1>Create</h1>
+<div class="staff-form-page">
+    <div class="lease-form-wrapper">
+        <div class="lease-form-card shadow-soft">
 
-<h4>Maintenance Staff</h4>
-<hr />
-
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create" method="post">
-
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
-            <!-- Username -->
-            <div class="form-group">
-                <label>Username</label>
-                <input asp-for="Username" class="form-control" placeholder="Enter username" />
-                <span asp-validation-for="Username" class="text-danger"></span>
+            <div class="lease-form-header">
+                <p class="lease-form-eyebrow mb-2">Maintenance Staff</p>
+                <h1 class="lease-form-title mb-2">Create Maintenance Staff</h1>
+                <p class="lease-form-subtitle mb-0">
+                    Add a new staff account and assign their maintenance skills.
+                </p>
             </div>
 
-            <!-- Password -->
-            <div class="form-group">
-                <label>Password</label>
-                <input asp-for="Password" type="password" class="form-control" placeholder="Enter password" />
-                <span asp-validation-for="Password" class="text-danger"></span>
-            </div>
+            <form asp-action="Create" method="post" class="lease-form-body">
 
-            <!-- Full Name -->
-            <div class="form-group">
-                <label>Full Name</label>
-                <input asp-for="FullName" class="form-control" placeholder="Enter full name" />
-                <span asp-validation-for="FullName" class="text-danger"></span>
-            </div>
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
-            <!-- Email -->
-            <div class="form-group">
-                <label>Email</label>
-                <input asp-for="Email" class="form-control" placeholder="Enter email" />
-                <span asp-validation-for="Email" class="text-danger"></span>
-            </div>
+                <div class="row g-3">
+                    <div class="col-md-6 lease-form-group">
+                        <label asp-for="Username" class="lease-form-label"></label>
+                        <input asp-for="Username" class="form-control lease-form-input" placeholder="Enter username" />
+                        <span asp-validation-for="Username" class="text-danger"></span>
+                    </div>
 
-            <!-- Phone -->
-            <div class="form-group">
-                <label>Phone</label>
-                <input asp-for="Phone" class="form-control" placeholder="Enter phone number" />
-                <span asp-validation-for="Phone" class="text-danger"></span>
-            </div>
+                    <div class="col-md-6 lease-form-group">
+                        <label asp-for="Password" class="lease-form-label"></label>
+                        <input asp-for="Password" type="password" class="form-control lease-form-input" placeholder="Enter password" />
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
 
-            <!-- Gender -->
-            <div class="form-group">
-                <label>Gender</label><br />
-                <input type="radio" asp-for="Gender" value="M" /> Male
-                <input type="radio" asp-for="Gender" value="F" /> Female
-                <br />
-                <span asp-validation-for="Gender" class="text-danger"></span>
-            </div>
+                    <div class="col-md-6 lease-form-group">
+                        <label asp-for="FullName" class="lease-form-label">Full Name</label>
+                        <input asp-for="FullName" class="form-control lease-form-input" placeholder="Enter full name" />
+                        <span asp-validation-for="FullName" class="text-danger"></span>
+                    </div>
 
-            <!-- Skills -->
-            <div class="form-group">
-                <label>Skills</label><br />
+                    <div class="col-md-6 lease-form-group">
+                        <label asp-for="Email" class="lease-form-label"></label>
+                        <input asp-for="Email" class="form-control lease-form-input" placeholder="Enter email" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
 
-                @foreach (var skill in (List<AdvancedProject.Models.Skill>)ViewData["Skills"])
-                {
-                    <input type="checkbox"
-                           name="SelectedSkillIds"
-                           value="@skill.SkillId" /> @skill.Name <br />
-                }
-            </div>
+                    <div class="col-md-6 lease-form-group">
+                        <label asp-for="Phone" class="lease-form-label"></label>
+                        <input asp-for="Phone" class="form-control lease-form-input" placeholder="Enter phone number" />
+                        <span asp-validation-for="Phone" class="text-danger"></span>
+                    </div>
 
-            <br />
-            <input type="submit" value="Create" class="btn btn-primary" />
+                    <div class="col-md-6 lease-form-group">
+                        <label class="lease-form-label">Gender</label>
 
-        </form>
+                        <div class="staff-radio-group">
+                            <label class="staff-radio-card">
+                                <input type="radio" asp-for="Gender" value="M" />
+                                <span>Male</span>
+                            </label>
+
+                            <label class="staff-radio-card">
+                                <input type="radio" asp-for="Gender" value="F" />
+                                <span>Female</span>
+                            </label>
+                        </div>
+
+                        <span asp-validation-for="Gender" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="lease-form-group mt-2">
+                    <label class="lease-form-label">Skills</label>
+
+                    <div class="staff-skills-grid">
+                        @foreach (var skill in (List<AdvancedProject.Models.Skill>)ViewData["Skills"])
+                        {
+                            <label class="staff-skill-card">
+                                <input type="checkbox"
+                                       name="SelectedSkillIds"
+                                       value="@skill.SkillId" />
+                                <span>@skill.Name</span>
+                            </label>
+                        }
+                    </div>
+                </div>
+
+                <div class="lease-form-actions">
+                    <button type="submit" class="btn btn-primary lease-submit-btn">
+                        Create Staff
+                    </button>
+
+                    <a asp-action="Index" class="lease-back-link">
+                        Back to List
+                    </a>
+                </div>
+
+            </form>
+        </div>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
 @section Scripts {
-    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }
