@@ -2066,3 +2066,92 @@ body {
     flex-direction: column;
     justify-content: center;
 }
+
+
+/* ============================= */
+/*   Maintenance Staff Form      */
+/* ============================= */
+
+.staff-form-page {
+    padding: 1.5rem 0 0.5rem;
+}
+
+.staff-radio-group {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+}
+
+.staff-radio-card,
+.staff-skill-card {
+    background: #f8fbfb;
+    border: 1px solid rgba(0, 91, 113, 0.12);
+    border-radius: 16px;
+    padding: 0.9rem 1rem;
+    font-weight: 700;
+    color: var(--text-main);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.staff-radio-card {
+    min-height: 58px;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.staff-skill-card {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+    .staff-radio-card:hover,
+    .staff-skill-card:hover {
+        background: #e8f1f3;
+        border-color: var(--primary);
+    }
+
+    .staff-radio-card input,
+    .staff-skill-card input {
+        accent-color: var(--primary);
+    }
+
+.staff-skills-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.85rem;
+}
+
+@media (max-width: 768px) {
+    .staff-skills-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .staff-radio-group {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+
+/* ============================= */
+/*  Maintenance Request Form     */
+/* ============================= */
+
+.maintenance-request-form-page {
+    padding: 1.5rem 0 0.5rem;
+}
+
+.maintenance-notes-input {
+    min-height: 120px;
+    resize: vertical;
+}
+
+.maintenance-request-warning {
+    border-radius: 16px;
+    border: none;
+    padding: 1rem 1.2rem;
+    font-weight: 600;
+}
