@@ -28,6 +28,16 @@ namespace AdvancedProject.Models
         public DateTime Dob { get; set; } = DateTime.Today;
 
         [Required]
-        public string NationalId { get; set; }
+        public string NationalId { get; set; } = null!;
+
+        [Required(ErrorMessage = "Salary is required.")]
+        [Range(0.01, double.MaxValue, ErrorMessage = "Salary must be a valid positive number.")]
+        public decimal? Salary { get; set; }
+
+        [Required(ErrorMessage = "Marital Status is required.")]
+        public string? MaritalStatus { get; set; }
+
+        [Required(ErrorMessage = "Employment Status is required.")]
+        public string? EmploymentStatus { get; set; }
     }
 }

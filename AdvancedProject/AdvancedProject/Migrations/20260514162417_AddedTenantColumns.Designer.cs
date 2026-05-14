@@ -4,6 +4,7 @@ using AdvancedProject.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AdvancedProject.Migrations
 {
     [DbContext(typeof(APContext))]
-    partial class APContextModelSnapshot : ModelSnapshot
+    [Migration("20260514162417_AddedTenantColumns")]
+    partial class AddedTenantColumns
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1170,56 +1173,41 @@ namespace AdvancedProject.Migrations
                         new
                         {
                             TenantId = 1,
-                            Dob = new DateOnly(2005, 10, 18),
-                            EmploymentStatus = "Employed",
-                            FinancialStability = "Stable",
-                            MaritalStatus = "Single",
+                            Dob = new DateOnly(2004, 10, 18),
+                            FinancialStability = "Undetermined",
                             NationalId = "041081254",
-                            Salary = 2000m,
                             UserId = 2
                         },
                         new
                         {
                             TenantId = 2,
                             Dob = new DateOnly(1995, 3, 26),
-                            EmploymentStatus = "Self-Employed",
-                            FinancialStability = "Moderately Stable",
-                            MaritalStatus = "Married",
+                            FinancialStability = "Undetermined",
                             NationalId = "950306321",
-                            Salary = 1500m,
                             UserId = 3
                         },
                         new
                         {
                             TenantId = 3,
                             Dob = new DateOnly(1977, 9, 9),
-                            EmploymentStatus = "Unemployed",
-                            FinancialStability = "Unstable",
-                            MaritalStatus = "Divorced",
+                            FinancialStability = "Undetermined",
                             NationalId = "770907721",
-                            Salary = 800m,
                             UserId = 4
                         },
                         new
                         {
                             TenantId = 4,
                             Dob = new DateOnly(1989, 11, 25),
-                            EmploymentStatus = "Employed",
                             FinancialStability = "Undetermined",
-                            MaritalStatus = "Married",
                             NationalId = "891106213",
-                            Salary = 3200m,
                             UserId = 5
                         },
                         new
                         {
                             TenantId = 5,
                             Dob = new DateOnly(1982, 7, 18),
-                            EmploymentStatus = "Retired",
                             FinancialStability = "Undetermined",
-                            MaritalStatus = "Widowed",
                             NationalId = "820752231",
-                            Salary = 1100m,
                             UserId = 6
                         });
                 });
