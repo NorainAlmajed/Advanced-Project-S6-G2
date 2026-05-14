@@ -279,7 +279,6 @@ namespace AdvancedProject.Controllers
 
 
 
-
         //raghad added this on 14May2026
 
         [HttpPost]
@@ -350,6 +349,11 @@ namespace AdvancedProject.Controllers
 
             return RedirectToAction(nameof(Details), new { id });
         }
+
+
+
+
+
 
 
         private bool LeaseApplicationExists(int id)
