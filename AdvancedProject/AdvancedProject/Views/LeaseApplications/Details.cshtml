@@ -1,66 +1,203 @@
 ﻿@model AdvancedProject.Models.LeaseApplication
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Lease Application Details";
 }
 
-<h1>Details</h1>
+<div class="details-page lease-application-details-page">
 
-<div>
-    <h4>LeaseApplication</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ApplicationDate)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ApplicationDate)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Status)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Status)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ApproveTime)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ApproveTime)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.RejectTime)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.RejectTime)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.StartDate)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.StartDate)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Duration)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Duration.Months)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Tenant)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Tenant.TenantId)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Unit)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Unit.UnitId)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.ApplicationId">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+        <div>
+            <p class="details-eyebrow">Lease Application</p>
+            <h1 class="details-title mb-1">Application #@Model.ApplicationId</h1>
+            <p class="users-subtitle mb-0">
+                Review tenant screening information and approve or reject the application.
+            </p>
+        </div>
+
+        <div class="d-flex gap-2 flex-wrap">
+            @if (Model.Status != "Approved")
+            {
+                <form asp-action="Approve" asp-route-id="@Model.ApplicationId" method="post">
+                    <button type="submit" class="btn btn-success lease-action-btn">
+                        Approve Application
+                    </button>
+                </form>
+            }
+
+            @if (Model.Status != "Rejected")
+            {
+                <form asp-action="Reject" asp-route-id="@Model.ApplicationId" method="post">
+                    <button type="submit" class="btn btn-danger lease-action-btn">
+                        Reject Application
+                    </button>
+                </form>
+            }
+
+            <a asp-action="Index" class="btn btn-light-custom lease-action-btn">
+                Back to List
+            </a>
+        </div>
+    </div>
+
+    <div class="lease-details-stack">
+
+        <div class="details-section-card shadow-soft">
+            <div class="section-header">
+                <h3>Application Information</h3>
+                <p>Main lease application details.</p>
+            </div>
+
+            <div class="info-grid">
+                <div class="info-box">
+                    <span class="info-label">Status</span>
+
+                    @if (Model.Status == "Approved")
+                    {
+                        <span class="custom-pill lease-status-approved">@Model.Status</span>
+                    }
+                    else if (Model.Status == "Rejected")
+                    {
+                        <span class="custom-pill lease-status-rejected">@Model.Status</span>
+                    }
+                    else
+                    {
+                        <span class="custom-pill lease-status-pending">@Model.Status</span>
+                    }
+                </div>
+
+                <div class="info-box">
+                    <span class="info-label">Application Date</span>
+                    <span class="info-value">@Model.ApplicationDate.ToString("dd MMM yyyy")</span>
+                </div>
+
+                <div class="info-box">
+                    <span class="info-label">Start Date</span>
+                    <span class="info-value">@Model.StartDate.ToString("dd MMM yyyy")</span>
+                </div>
+
+                <div class="info-box">
+                    <span class="info-label">Duration</span>
+                    <span class="info-value">@Model.Duration.Months Months</span>
+                </div>
+
+                @if (Model.ApproveTime != null)
+                {
+                    <div class="info-box">
+                        <span class="info-label">Approved Time</span>
+                        <span class="info-value">@Model.ApproveTime</span>
+                    </div>
+                }
+
+                @if (Model.RejectTime != null)
+                {
+                    <div class="info-box">
+                        <span class="info-label">Rejected Time</span>
+                        <span class="info-value">@Model.RejectTime</span>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="details-section-card shadow-soft">
+            <div class="section-header">
+                <h3>Tenant Screening</h3>
+                <p>Important tenant information for approval review.</p>
+            </div>
+
+            <div class="info-grid">
+                <div class="info-box">
+                    <span class="info-label">Full Name</span>
+                    <span class="info-value">@Model.Tenant.User.FullName</span>
+                </div>
+
+                <div class="info-box">
+                    <span class="info-label">Email</span>
+                    <span class="info-value">@Model.Tenant.User.Email</span>
+                </div>
+
+                <div class="info-box">
+                    <span class="info-label">Phone</span>
+                    <span class="info-value">@Model.Tenant.User.Phone</span>
+                </div>
+
+                <div class="info-box">
+                    <span class="info-label">Gender</span>
+                    <span class="info-value">@Model.Tenant.User.Gender</span>
+                </div>
+
+                <div class="info-box">
+                    <span class="info-label">National ID</span>
+                    <span class="info-value">@Model.Tenant.NationalId</span>
+                </div>
+
+                <div class="info-box">
+                    <span class="info-label">Date of Birth</span>
+                    <span class="info-value">@Model.Tenant.Dob</span>
+                </div>
+
+                <div class="info-box">
+                    <span class="info-label">Employment Status</span>
+                    <span class="info-value">@Model.Tenant.EmploymentStatus</span>
+                </div>
+
+                <div class="info-box">
+                    <span class="info-label">Marital Status</span>
+                    <span class="info-value">@Model.Tenant.MaritalStatus</span>
+                </div>
+
+                <div class="info-box">
+                    <span class="info-label">Salary</span>
+                    <span class="info-value">BD @Model.Tenant.Salary</span>
+                </div>
+
+                <div class="info-box">
+                    <span class="info-label">Financial Stability</span>
+                    <span class="custom-pill badge-soft-active">
+                        @Model.Tenant.FinancialStability
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="details-section-card shadow-soft">
+            <div class="section-header">
+                <h3>Requested Unit</h3>
+                <p>Property and unit information.</p>
+            </div>
+
+            <div class="info-grid">
+                <div class="info-box">
+                    <span class="info-label">Property</span>
+                    <span class="info-value">@Model.Unit.Property.Name</span>
+                </div>
+
+                <div class="info-box">
+                    <span class="info-label">Unit Number</span>
+                    <span class="info-value">@Model.Unit.UnitNumber</span>
+                </div>
+
+                <div class="info-box">
+                    <span class="info-label">Unit Type</span>
+                    <span class="info-value">@Model.Unit.UnitType?.Name</span>
+                </div>
+
+                <div class="info-box">
+                    <span class="info-label">Monthly Rent</span>
+                    <span class="info-value">BD @Model.Unit.RentAmount</span>
+                </div>
+
+                <div class="info-box">
+                    <span class="info-label">Size</span>
+                    <span class="info-value">@Model.Unit.SizeSqFt Sq Ft</span>
+                </div>
+
+                <div class="info-box">
+                    <span class="info-label">City</span>
+                    <span class="info-value">@Model.Unit.Property.City</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
 </div>
