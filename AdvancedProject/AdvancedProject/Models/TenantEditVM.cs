@@ -1,8 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
-
 namespace AdvancedProject.Models
 {
-    public class TenantEditVM
+    public class TenantEditVM : IValidatableObject
     {
         public int TenantId { get; set; }
         public int UserId { get; set; }
@@ -10,7 +9,9 @@ namespace AdvancedProject.Models
         [Required]
         public string Username { get; set; } = null!;
 
-        public string? Password { get; set; } // optional
+        public string? Password { get; set; }
+
+        public string? ConfirmPassword { get; set; }
 
         [Required]
         public string FullName { get; set; } = null!;
@@ -34,7 +35,6 @@ namespace AdvancedProject.Models
         [Range(0.01, double.MaxValue, ErrorMessage = "Salary must be a valid positive number.")]
         public decimal? Salary { get; set; }
 
-        // No [Required] — always has a value (defaults to "Undetermined")
         public string FinancialStability { get; set; } = "Undetermined";
 
         [Required(ErrorMessage = "Marital Status is required.")]
@@ -42,5 +42,24 @@ namespace AdvancedProject.Models
 
         [Required(ErrorMessage = "Employment Status is required.")]
         public string? EmploymentStatus { get; set; }
+
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            if (!string.IsNullOrWhiteSpace(Password))
+            {
+                if (string.IsNullOrWhiteSpace(ConfirmPassword))
+                {
+                    yield return new ValidationResult(
+                        "Please confirm your new password.",
+                        new[] { nameof(ConfirmPassword) });
+                }
+                else if (Password != ConfirmPassword)
+                {
+                    yield return new ValidationResult(
+                        "Passwords do not match.",
+                        new[] { nameof(ConfirmPassword) });
+                }
+            }
+        }
     }
 }

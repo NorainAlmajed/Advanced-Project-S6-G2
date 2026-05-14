@@ -1,15 +1,17 @@
 ﻿using System.ComponentModel.DataAnnotations;
-
 namespace AdvancedProject.Models
 {
     public class MaintenanceStaffCreateVM
     {
-        // User fields
         [Required]
         public string Username { get; set; }
 
         [Required]
         public string Password { get; set; }
+
+        [Required(ErrorMessage = "Please confirm your password.")]
+        [Compare("Password", ErrorMessage = "Passwords do not match.")]
+        public string ConfirmPassword { get; set; }
 
         [Required]
         public string FullName { get; set; }
@@ -23,7 +25,6 @@ namespace AdvancedProject.Models
         [Required]
         public string Gender { get; set; }
 
-        // Staff fields
         public List<int> SelectedSkillIds { get; set; } = new List<int>();
     }
 }
