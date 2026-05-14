@@ -1,70 +1,82 @@
-﻿@model AdvancedProject.Models.User
+﻿@model AdvancedProject.Models.UserEditVM
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Edit User";
 }
 
-<h1>Edit</h1>
-
-<h4>User</h4>
+<h1>Edit User</h1>
 <hr />
+
 <div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="col-md-5">
+
+        <form asp-action="Edit" method="post">
+
             <input type="hidden" asp-for="UserId" />
-            <div class="form-group">
+
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <!-- Username -->
+            <div class="form-group mb-3">
                 <label asp-for="Username" class="control-label"></label>
-                <input asp-for="Username" class="form-control" />
+                <input asp-for="Username" class="form-control" placeholder="Enter username" />
                 <span asp-validation-for="Username" class="text-danger"></span>
             </div>
-            <div class="form-group">
+
+            <!-- Password -->
+            <div class="form-group mb-3">
                 <label asp-for="Password" class="control-label"></label>
-                <input asp-for="Password" class="form-control" />
+                <input asp-for="Password"
+                       type="password"
+                       class="form-control"
+                       placeholder="Leave empty to keep current password" />
                 <span asp-validation-for="Password" class="text-danger"></span>
             </div>
-            <div class="form-group">
+
+            <!-- Full Name -->
+            <div class="form-group mb-3">
                 <label asp-for="FullName" class="control-label"></label>
-                <input asp-for="FullName" class="form-control" />
+                <input asp-for="FullName" class="form-control" placeholder="Enter full name" />
                 <span asp-validation-for="FullName" class="text-danger"></span>
             </div>
-            <div class="form-group">
+
+            <!-- Email -->
+            <div class="form-group mb-3">
                 <label asp-for="Email" class="control-label"></label>
-                <input asp-for="Email" class="form-control" />
+                <input asp-for="Email" class="form-control" placeholder="Enter email" />
                 <span asp-validation-for="Email" class="text-danger"></span>
             </div>
-            <div class="form-group">
+
+            <!-- Phone -->
+            <div class="form-group mb-3">
                 <label asp-for="Phone" class="control-label"></label>
-                <input asp-for="Phone" class="form-control" />
+                <input asp-for="Phone" class="form-control" placeholder="Enter phone number" />
                 <span asp-validation-for="Phone" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Role" class="control-label"></label>
-                <input asp-for="Role" class="form-control" />
-                <span asp-validation-for="Role" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CreatedAt" class="control-label"></label>
-                <input asp-for="CreatedAt" class="form-control" />
-                <span asp-validation-for="CreatedAt" class="text-danger"></span>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="IsActive" /> @Html.DisplayNameFor(model => model.IsActive)
-                </label>
 
+            <!-- Gender -->
+            <div class="form-group mb-3">
+                <label asp-for="Gender" class="control-label"></label>
+                <br />
+
+                <input type="radio" asp-for="Gender" value="M" /> Male
+                <input type="radio" asp-for="Gender" value="F" /> Female
+
+                <br />
+                <span asp-validation-for="Gender" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
+
+            <button type="submit" class="btn btn-primary">
+                Save Changes
+            </button>
+
         </form>
+
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

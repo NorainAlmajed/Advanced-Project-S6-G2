@@ -137,7 +137,7 @@ namespace AdvancedProject.Controllers
                 Email = email,
                 Phone = phone,
                 Gender = vm.Gender,
-                Role = "MaintenanceStaff",
+                Role = "Staff",
                 CreatedAt = DateTime.Now,
                 IsActive = true
             };
@@ -183,56 +183,109 @@ namespace AdvancedProject.Controllers
         // GET: MaintenanceStaffs/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
-            var maintenanceStaff = await _context.MaintenanceStaffs.FindAsync(id);
-            if (maintenanceStaff == null)
-            {
-                return NotFound();
-            }
+            var staff = await _context.MaintenanceStaffs
+                .Include(s => s.User)
+                .Include(s => s.Skills)
+                .FirstOrDefaultAsync(s => s.StaffId == id);
 
-            ViewData["UserId"] = new SelectList(_context.Users, "UserId", "UserId", maintenanceStaff.UserId);
-            return View(maintenanceStaff);
+            if (staff == null) return NotFound();
+
+            var vm = new MaintenanceStaffEditVM
+            {
+                StaffId = staff.StaffId,
+                UserId = staff.UserId,
+
+                Username = staff.User.Username,
+                FullName = staff.User.FullName,
+                Email = staff.User.Email,
+                Phone = staff.User.Phone,
+                Gender = staff.User.Gender,
+                Password = staff.User.Password,
+
+                AvailabilityStatus = staff.AvailabilityStatus,
+                SelectedSkillIds = staff.Skills.Select(s => s.SkillId).ToList()
+            };
+
+            ViewData["Skills"] = await _context.Skills.ToListAsync();
+
+            return View(vm);
         }
+
 
         // POST: MaintenanceStaffs/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("StaffId,AvailabilityStatus,UserId")] MaintenanceStaff maintenanceStaff)
+        public async Task<IActionResult> Edit(MaintenanceStaffEditVM vm)
         {
-            if (id != maintenanceStaff.StaffId)
+            ModelState.Remove("Password");
+
+            if (!ModelState.IsValid)
             {
+                ViewData["Skills"] = await _context.Skills.ToListAsync();
+                return View(vm);
+            }
+
+            var user = await _context.Users.FindAsync(vm.UserId);
+            var staff = await _context.MaintenanceStaffs
+                .Include(s => s.Skills)
+                .FirstOrDefaultAsync(s => s.StaffId == vm.StaffId);
+
+            if (user == null || staff == null)
                 return NotFound();
-            }
 
-            if (ModelState.IsValid)
+            var username = vm.Username.Trim().ToLower();
+            var email = vm.Email.Trim().ToLower();
+            var phone = vm.Phone.Trim();
+
+            // UNIQUE CHECKS (IGNORE CURRENT USER)
+            if (_context.Users.Any(u => u.Username.ToLower() == username && u.UserId != vm.UserId))
+                ModelState.AddModelError("Username", "Username already exists");
+
+            if (_context.Users.Any(u => u.Email.ToLower() == email && u.UserId != vm.UserId))
+                ModelState.AddModelError("Email", "Email already exists");
+
+            if (_context.Users.Any(u => u.Phone == phone && u.UserId != vm.UserId))
+                ModelState.AddModelError("Phone", "Phone already exists");
+
+            if (!ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(maintenanceStaff);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!MaintenanceStaffExists(maintenanceStaff.StaffId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-
-                return RedirectToAction(nameof(Index));
+                ViewData["Skills"] = await _context.Skills.ToListAsync();
+                return View(vm);
             }
 
-            ViewData["UserId"] = new SelectList(_context.Users, "UserId", "UserId", maintenanceStaff.UserId);
-            return View(maintenanceStaff);
+            // UPDATE USER TABLE
+            user.Username = username;
+            user.FullName = vm.FullName;
+            user.Email = email;
+            user.Phone = phone;
+            user.Gender = vm.Gender;
+
+            if (!string.IsNullOrWhiteSpace(vm.Password))
+                user.Password = vm.Password;
+
+            // UPDATE STAFF TABLE
+            staff.AvailabilityStatus = vm.AvailabilityStatus;
+
+            // UPDATE SKILLS (replace all)
+            staff.Skills.Clear();
+
+            if (vm.SelectedSkillIds != null && vm.SelectedSkillIds.Any())
+            {
+                var skills = await _context.Skills
+                    .Where(s => vm.SelectedSkillIds.Contains(s.SkillId))
+                    .ToListAsync();
+
+                staff.Skills = skills;
+            }
+
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
         }
+
+
 
         // GET: MaintenanceStaffs/Delete/5
         public async Task<IActionResult> Delete(int? id)
