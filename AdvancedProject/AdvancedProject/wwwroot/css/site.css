@@ -2155,3 +2155,140 @@ body {
     padding: 1rem 1.2rem;
     font-weight: 600;
 }
+
+
+
+
+
+/* ============================= */
+/* Simple Lease Details UI       */
+/* ============================= */
+
+.lease-application-details-page {
+    padding: 1.5rem;
+    border-radius: 28px;
+    background: linear-gradient(135deg, rgba(0, 91, 113, 0.06), rgba(30, 142, 110, 0.06));
+}
+
+.lease-details-stack {
+    display: grid;
+    gap: 1.5rem;
+}
+
+.lease-application-details-page .details-section-card {
+    background: #ffffff;
+    border-radius: 24px;
+    border: 1px solid rgba(0, 91, 113, 0.08);
+    box-shadow: 0 10px 24px rgba(0, 91, 113, 0.05);
+    overflow: hidden;
+}
+
+    .lease-application-details-page .details-section-card::before {
+        content: "";
+        display: block;
+        height: 5px;
+        background: linear-gradient(90deg, #005B71, #1E8E6E);
+    }
+
+.lease-application-details-page .section-header {
+    padding: 1.3rem 1.5rem 0.7rem;
+}
+
+    .lease-application-details-page .section-header h3 {
+        font-size: 1.55rem;
+        font-weight: 800;
+        color: #0f2940;
+        margin-bottom: 0.25rem;
+    }
+
+    .lease-application-details-page .section-header p {
+        color: #6b7b88;
+        font-size: 0.95rem;
+        margin-bottom: 0;
+    }
+
+.lease-application-details-page .info-grid {
+    padding: 0 1.5rem 1.5rem;
+}
+
+.lease-application-details-page .info-box {
+    background: #edf6f8;
+    border-radius: 16px;
+    border: 1px solid rgba(0, 91, 113, 0.07);
+    padding: 1rem 1.1rem;
+    transition: background-color 0.2s ease;
+}
+
+    .lease-application-details-page .info-box:hover {
+        background: #e2f0f3;
+    }
+
+.lease-application-details-page .info-label {
+    color: #5f6f78;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    margin-bottom: 0.45rem;
+}
+
+.lease-application-details-page .info-value {
+    color: #102a43;
+    font-size: 1.02rem;
+    font-weight: 500;
+}
+
+.lease-application-details-page .custom-pill {
+    border-radius: 999px;
+    padding: 0.45rem 0.85rem;
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+.lease-status-approved {
+    background: rgba(30, 142, 110, 0.14);
+    color: #1E8E6E;
+}
+
+.lease-status-rejected {
+    background: rgba(220, 53, 69, 0.14);
+    color: #b42318;
+}
+
+.lease-status-pending {
+    background: rgba(245, 158, 11, 0.18);
+    color: #b45309;
+}
+
+.lease-application-details-page .lease-action-btn {
+    border-radius: 14px;
+    padding: 0.75rem 1.15rem;
+    font-weight: 700;
+    min-height: 48px;
+}
+
+.lease-application-details-page .btn-success {
+    background-color: var(--accent);
+    border-color: var(--accent);
+}
+
+    .lease-application-details-page .btn-success:hover {
+        background-color: #16795e;
+        border-color: #16795e;
+    }
+
+.lease-application-details-page .btn-light-custom {
+    background: #e8f1f3;
+    color: #005B71;
+    border: 1px solid rgba(0, 91, 113, 0.12);
+}
+
+    .lease-application-details-page .btn-light-custom:hover {
+        background: #005B71;
+        color: white;
+    }
+
+.lease-application-details-page .details-title {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #0d2235;
+}

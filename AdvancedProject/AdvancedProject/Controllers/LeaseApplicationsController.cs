@@ -85,13 +85,14 @@ namespace AdvancedProject.Controllers
             }
 
             var leaseApplication = await _context.LeaseApplications
-       .Include(l => l.Tenant)
-           .ThenInclude(e => e.User)
-       .Include(l => l.Unit)
-           .ThenInclude(u => u.Property)
-       .Include(l => l.Duration)
-       .FirstOrDefaultAsync(m => m.ApplicationId == id);
-
+         .Include(l => l.Tenant)
+             .ThenInclude(t => t.User)
+         .Include(l => l.Unit)
+             .ThenInclude(u => u.Property)
+         .Include(l => l.Unit)
+             .ThenInclude(u => u.UnitType)
+         .Include(l => l.Duration)
+         .FirstOrDefaultAsync(m => m.ApplicationId == id);
 
             if (leaseApplication == null)
             {
@@ -275,6 +276,81 @@ namespace AdvancedProject.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+
+
+
+
+        //raghad added this on 14May2026
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Approve(int id)
+        {
+            var application = await _context.LeaseApplications
+                .Include(a => a.Unit)
+                .Include(a => a.Duration)
+                .FirstOrDefaultAsync(a => a.ApplicationId == id);
+
+            if (application == null)
+            {
+                return NotFound();
+            }
+
+            if (application.Status == "Approved")
+            {
+                return RedirectToAction(nameof(Details), new { id });
+            }
+
+            application.Status = "Approved";
+            application.ApproveTime = DateTime.Now;
+            application.RejectTime = null;
+
+            var lease = new Lease
+            {
+                TenantId = application.TenantId,
+                UnitId = application.UnitId,
+                StartDate = application.StartDate,
+                EndDate = application.StartDate.AddMonths(application.Duration.Months),
+                DurationId = application.DurationId,
+                MonthlyRent = application.Unit.RentAmount,
+                Status = "Active",
+                CreatedAt = DateTime.Now
+            };
+
+            application.Unit.AvailabilityStatus = "Occupied";
+
+            _context.Leases.Add(lease);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Details), new { id });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Reject(int id)
+        {
+            var application = await _context.LeaseApplications
+                .FirstOrDefaultAsync(a => a.ApplicationId == id);
+
+            if (application == null)
+            {
+                return NotFound();
+            }
+
+            if (application.Status == "Rejected")
+            {
+                return RedirectToAction(nameof(Details), new { id });
+            }
+
+            application.Status = "Rejected";
+            application.RejectTime = DateTime.Now;
+            application.ApproveTime = null;
+
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Details), new { id });
+        }
+
 
         private bool LeaseApplicationExists(int id)
         {
