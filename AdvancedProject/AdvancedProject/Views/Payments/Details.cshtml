@@ -1,60 +1,106 @@
 ﻿@model AdvancedProject.Models.Payment
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Payment Details";
 }
 
-<h1>Details</h1>
+<div class="lease-details-page">
 
-<div>
-    <h4>Payment</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Amount)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Amount)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.StartDate)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.StartDate)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.EndDate)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.EndDate)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Status)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Status)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Lease)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Lease.LeaseId)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.PaymentMethod)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.PaymentMethod.Name)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.PaymentFrequency)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.PaymentFrequency.Name)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.PaymentId">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <div class="lease-details-header mb-4">
+        <p class="lease-eyebrow mb-2">PAYMENT DETAILS</p>
+        <h1 class="lease-title mb-2">Payment #@Model.PaymentId</h1>
+        <p class="lease-subtitle mb-0">
+            View payment amount, status, lease, property, unit, method, and frequency.
+        </p>
+    </div>
+
+    <div class="lease-details-card">
+
+        <div class="section-header">
+            <h3>Payment Information</h3>
+            <p>Main payment details and payment status.</p>
+        </div>
+
+        <div class="row g-4">
+
+            <div class="col-md-6">
+                <div class="info-box">
+                    <div class="info-label">AMOUNT</div>
+                    <div class="info-value">BD @Model.Amount.ToString("0.00")</div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="info-box">
+                    <div class="info-label">STATUS</div>
+                    <div class="info-value">@Model.Status</div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="info-box">
+                    <div class="info-label">START DATE</div>
+                    <div class="info-value">@Model.StartDate.ToString("dd MMM yyyy")</div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="info-box">
+                    <div class="info-label">END DATE</div>
+                    <div class="info-value">@Model.EndDate.ToString("dd MMM yyyy")</div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="info-box">
+                    <div class="info-label">LEASE ID</div>
+                    <div class="info-value">#@Model.Lease.LeaseId</div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="info-box">
+                    <div class="info-label">PROPERTY</div>
+                    <div class="info-value">@Model.Lease.Unit.Property.Name</div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="info-box">
+                    <div class="info-label">UNIT NUMBER</div>
+                    <div class="info-value">@Model.Lease.Unit.UnitNumber</div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="info-box">
+                    <div class="info-label">PAYMENT METHOD</div>
+                    <div class="info-value">@Model.PaymentMethod.Name</div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="info-box">
+                    <div class="info-label">PAYMENT FREQUENCY</div>
+                    <div class="info-value">@Model.PaymentFrequency.Name</div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="mt-4 d-flex gap-3 flex-wrap">
+            <a asp-action="Edit"
+               asp-route-id="@Model.PaymentId"
+               class="btn btn-success lease-action-btn">
+                Edit Payment
+            </a>
+
+            <a asp-action="Index"
+               class="btn btn-light-custom lease-action-btn">
+                Back to List
+            </a>
+        </div>
+
+    </div>
+
 </div>

@@ -545,11 +545,13 @@ namespace AdvancedProject.Controllers
             }
 
             var maintenanceRequest = await _context.MaintenanceRequests
-                .Include(m => m.AssignedStaff)
-                .Include(m => m.Skill)
-                .Include(m => m.User)
-                .Include(m => m.Unit)
-                .FirstOrDefaultAsync(m => m.RequestId == id);
+      .Include(m => m.AssignedStaff)
+          .ThenInclude(s => s.User)
+      .Include(m => m.Skill)
+      .Include(m => m.User)
+      .Include(m => m.Unit)
+          .ThenInclude(u => u.Property)
+      .FirstOrDefaultAsync(m => m.RequestId == id);
             if (maintenanceRequest == null)
             {
                 return NotFound();
