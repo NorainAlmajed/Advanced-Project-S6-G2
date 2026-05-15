@@ -5515,23 +5515,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\fatima\\.nuget\\packages\\": {},
+    "C:\\Users\\HP\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\fatima\\OneDrive\\Desktop\\Documents\\GitHub\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProjectAPI\\AdvancedProjectAPI.csproj",
+      "projectUniqueName": "D:\\year3 sem2\\advanced programming project\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProjectAPI\\AdvancedProjectAPI.csproj",
       "projectName": "AdvancedProjectAPI",
-      "projectPath": "C:\\Users\\fatima\\OneDrive\\Desktop\\Documents\\GitHub\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProjectAPI\\AdvancedProjectAPI.csproj",
-      "packagesPath": "C:\\Users\\fatima\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\fatima\\OneDrive\\Desktop\\Documents\\GitHub\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProjectAPI\\obj\\",
+      "projectPath": "D:\\year3 sem2\\advanced programming project\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProjectAPI\\AdvancedProjectAPI.csproj",
+      "packagesPath": "C:\\Users\\HP\\.nuget\\packages\\",
+      "outputPath": "D:\\year3 sem2\\advanced programming project\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProjectAPI\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\fatima\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\HP\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
