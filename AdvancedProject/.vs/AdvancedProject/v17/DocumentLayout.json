@@ -3,68 +3,24 @@
   "WorkspaceRootPath": "C:\\Users\\HP\\Desktop\\Advanced-Project-S6-G2\\AdvancedProject\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{CBD3E4CB-62F8-401D-859C-F21E916AEA32}|AdvancedProjectAPI\\AdvancedProjectAPI.csproj|c:\\users\\hp\\desktop\\advanced-project-s6-g2\\advancedproject\\advancedprojectapi\\controllers\\paymentscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CBD3E4CB-62F8-401D-859C-F21E916AEA32}|AdvancedProjectAPI\\AdvancedProjectAPI.csproj|solutionrelative:advancedprojectapi\\controllers\\paymentscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CBD3E4CB-62F8-401D-859C-F21E916AEA32}|AdvancedProjectAPI\\AdvancedProjectAPI.csproj|c:\\users\\hp\\desktop\\advanced-project-s6-g2\\advancedproject\\advancedprojectapi\\controllers\\leaseapplicationscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CBD3E4CB-62F8-401D-859C-F21E916AEA32}|AdvancedProjectAPI\\AdvancedProjectAPI.csproj|solutionrelative:advancedprojectapi\\controllers\\leaseapplicationscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CBD3E4CB-62F8-401D-859C-F21E916AEA32}|AdvancedProjectAPI\\AdvancedProjectAPI.csproj|c:\\users\\hp\\desktop\\advanced-project-s6-g2\\advancedproject\\advancedprojectapi\\controllers\\leasescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CBD3E4CB-62F8-401D-859C-F21E916AEA32}|AdvancedProjectAPI\\AdvancedProjectAPI.csproj|solutionrelative:advancedprojectapi\\controllers\\leasescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{CBD3E4CB-62F8-401D-859C-F21E916AEA32}|AdvancedProjectAPI\\AdvancedProjectAPI.csproj|c:\\users\\hp\\desktop\\advanced-project-s6-g2\\advancedproject\\advancedprojectapi\\models\\property.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{CBD3E4CB-62F8-401D-859C-F21E916AEA32}|AdvancedProjectAPI\\AdvancedProjectAPI.csproj|solutionrelative:advancedprojectapi\\models\\property.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{CBD3E4CB-62F8-401D-859C-F21E916AEA32}|AdvancedProjectAPI\\AdvancedProjectAPI.csproj|c:\\users\\hp\\desktop\\advanced-project-s6-g2\\advancedproject\\advancedprojectapi\\models\\payment.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{CBD3E4CB-62F8-401D-859C-F21E916AEA32}|AdvancedProjectAPI\\AdvancedProjectAPI.csproj|solutionrelative:advancedprojectapi\\models\\payment.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CBD3E4CB-62F8-401D-859C-F21E916AEA32}|AdvancedProjectAPI\\AdvancedProjectAPI.csproj|c:\\users\\hp\\desktop\\advanced-project-s6-g2\\advancedproject\\advancedprojectapi\\models\\notification.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CBD3E4CB-62F8-401D-859C-F21E916AEA32}|AdvancedProjectAPI\\AdvancedProjectAPI.csproj|solutionrelative:advancedprojectapi\\models\\notification.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CBD3E4CB-62F8-401D-859C-F21E916AEA32}|AdvancedProjectAPI\\AdvancedProjectAPI.csproj|c:\\users\\hp\\desktop\\advanced-project-s6-g2\\advancedproject\\advancedprojectapi\\models\\maintenancestaff.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CBD3E4CB-62F8-401D-859C-F21E916AEA32}|AdvancedProjectAPI\\AdvancedProjectAPI.csproj|solutionrelative:advancedprojectapi\\models\\maintenancestaff.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CBD3E4CB-62F8-401D-859C-F21E916AEA32}|AdvancedProjectAPI\\AdvancedProjectAPI.csproj|c:\\users\\hp\\desktop\\advanced-project-s6-g2\\advancedproject\\advancedprojectapi\\models\\maintenancerequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CBD3E4CB-62F8-401D-859C-F21E916AEA32}|AdvancedProjectAPI\\AdvancedProjectAPI.csproj|solutionrelative:advancedprojectapi\\models\\maintenancerequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CBD3E4CB-62F8-401D-859C-F21E916AEA32}|AdvancedProjectAPI\\AdvancedProjectAPI.csproj|c:\\users\\hp\\desktop\\advanced-project-s6-g2\\advancedproject\\advancedprojectapi\\models\\leaseapplication.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CBD3E4CB-62F8-401D-859C-F21E916AEA32}|AdvancedProjectAPI\\AdvancedProjectAPI.csproj|solutionrelative:advancedprojectapi\\models\\leaseapplication.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CBD3E4CB-62F8-401D-859C-F21E916AEA32}|AdvancedProjectAPI\\AdvancedProjectAPI.csproj|c:\\users\\hp\\desktop\\advanced-project-s6-g2\\advancedproject\\advancedprojectapi\\models\\lease.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CBD3E4CB-62F8-401D-859C-F21E916AEA32}|AdvancedProjectAPI\\AdvancedProjectAPI.csproj|solutionrelative:advancedprojectapi\\models\\lease.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CBD3E4CB-62F8-401D-859C-F21E916AEA32}|AdvancedProjectAPI\\AdvancedProjectAPI.csproj|c:\\users\\hp\\desktop\\advanced-project-s6-g2\\advancedproject\\advancedprojectapi\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
-      "RelativeMoniker": "D:0:0:{CBD3E4CB-62F8-401D-859C-F21E916AEA32}|AdvancedProjectAPI\\AdvancedProjectAPI.csproj|solutionrelative:advancedprojectapi\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CBD3E4CB-62F8-401D-859C-F21E916AEA32}|AdvancedProjectAPI\\AdvancedProjectAPI.csproj|c:\\users\\hp\\desktop\\advanced-project-s6-g2\\advancedproject\\advancedprojectapi\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
-      "RelativeMoniker": "D:0:0:{CBD3E4CB-62F8-401D-859C-F21E916AEA32}|AdvancedProjectAPI\\AdvancedProjectAPI.csproj|solutionrelative:advancedprojectapi\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CBD3E4CB-62F8-401D-859C-F21E916AEA32}|AdvancedProjectAPI\\AdvancedProjectAPI.csproj|c:\\users\\hp\\desktop\\advanced-project-s6-g2\\advancedproject\\advancedprojectapi\\controllers\\tenantscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CBD3E4CB-62F8-401D-859C-F21E916AEA32}|AdvancedProjectAPI\\AdvancedProjectAPI.csproj|solutionrelative:advancedprojectapi\\controllers\\tenantscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CBD3E4CB-62F8-401D-859C-F21E916AEA32}|AdvancedProjectAPI\\AdvancedProjectAPI.csproj|c:\\users\\hp\\desktop\\advanced-project-s6-g2\\advancedproject\\advancedprojectapi\\controllers\\unitscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CBD3E4CB-62F8-401D-859C-F21E916AEA32}|AdvancedProjectAPI\\AdvancedProjectAPI.csproj|solutionrelative:advancedprojectapi\\controllers\\unitscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CBD3E4CB-62F8-401D-859C-F21E916AEA32}|AdvancedProjectAPI\\AdvancedProjectAPI.csproj|c:\\users\\hp\\desktop\\advanced-project-s6-g2\\advancedproject\\advancedprojectapi\\controllers\\propertiescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CBD3E4CB-62F8-401D-859C-F21E916AEA32}|AdvancedProjectAPI\\AdvancedProjectAPI.csproj|solutionrelative:advancedprojectapi\\controllers\\propertiescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CBD3E4CB-62F8-401D-859C-F21E916AEA32}|AdvancedProjectAPI\\AdvancedProjectAPI.csproj|c:\\users\\hp\\desktop\\advanced-project-s6-g2\\advancedproject\\advancedprojectapi\\controllers\\maintenancecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CBD3E4CB-62F8-401D-859C-F21E916AEA32}|AdvancedProjectAPI\\AdvancedProjectAPI.csproj|solutionrelative:advancedprojectapi\\controllers\\maintenancecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CBD3E4CB-62F8-401D-859C-F21E916AEA32}|AdvancedProjectAPI\\AdvancedProjectAPI.csproj|c:\\users\\hp\\desktop\\advanced-project-s6-g2\\advancedproject\\advancedprojectapi\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CBD3E4CB-62F8-401D-859C-F21E916AEA32}|AdvancedProjectAPI\\AdvancedProjectAPI.csproj|solutionrelative:advancedprojectapi\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CBD3E4CB-62F8-401D-859C-F21E916AEA32}|AdvancedProjectAPI\\AdvancedProjectAPI.csproj|c:\\users\\hp\\desktop\\advanced-project-s6-g2\\advancedproject\\advancedprojectapi\\models\\applicationuser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CBD3E4CB-62F8-401D-859C-F21E916AEA32}|AdvancedProjectAPI\\AdvancedProjectAPI.csproj|solutionrelative:advancedprojectapi\\models\\applicationuser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CBD3E4CB-62F8-401D-859C-F21E916AEA32}|AdvancedProjectAPI\\AdvancedProjectAPI.csproj|c:\\users\\hp\\desktop\\advanced-project-s6-g2\\advancedproject\\advancedprojectapi\\data\\apcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CBD3E4CB-62F8-401D-859C-F21E916AEA32}|AdvancedProjectAPI\\AdvancedProjectAPI.csproj|solutionrelative:advancedprojectapi\\data\\apcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -87,19 +43,58 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
+              "Title": "PaymentsController.cs",
+              "DocumentMoniker": "C:\\Users\\HP\\Desktop\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProjectAPI\\Controllers\\PaymentsController.cs",
+              "RelativeDocumentMoniker": "AdvancedProjectAPI\\Controllers\\PaymentsController.cs",
+              "ToolTip": "C:\\Users\\HP\\Desktop\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProjectAPI\\Controllers\\PaymentsController.cs",
+              "RelativeToolTip": "AdvancedProjectAPI\\Controllers\\PaymentsController.cs",
+              "ViewState": "AgIAABkAAAAAAAAAAAAYwC0AAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-15T02:06:50.75Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "LeaseApplicationsController.cs",
+              "DocumentMoniker": "C:\\Users\\HP\\Desktop\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProjectAPI\\Controllers\\LeaseApplicationsController.cs",
+              "RelativeDocumentMoniker": "AdvancedProjectAPI\\Controllers\\LeaseApplicationsController.cs",
+              "ToolTip": "C:\\Users\\HP\\Desktop\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProjectAPI\\Controllers\\LeaseApplicationsController.cs",
+              "RelativeToolTip": "AdvancedProjectAPI\\Controllers\\LeaseApplicationsController.cs",
+              "ViewState": "AgIAABMAAAAAAAAAAAAUwC0AAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-15T02:06:33.677Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "LeasesController.cs",
+              "DocumentMoniker": "C:\\Users\\HP\\Desktop\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProjectAPI\\Controllers\\LeasesController.cs",
+              "RelativeDocumentMoniker": "AdvancedProjectAPI\\Controllers\\LeasesController.cs",
+              "ToolTip": "C:\\Users\\HP\\Desktop\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProjectAPI\\Controllers\\LeasesController.cs",
+              "RelativeToolTip": "AdvancedProjectAPI\\Controllers\\LeasesController.cs",
+              "ViewState": "AgIAABMAAAAAAAAAAAAUwC0AAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-15T02:06:15.544Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
               "Title": "Property.cs",
               "DocumentMoniker": "C:\\Users\\HP\\Desktop\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProjectAPI\\Models\\Property.cs",
               "RelativeDocumentMoniker": "AdvancedProjectAPI\\Models\\Property.cs",
               "ToolTip": "C:\\Users\\HP\\Desktop\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProjectAPI\\Models\\Property.cs",
               "RelativeToolTip": "AdvancedProjectAPI\\Models\\Property.cs",
-              "ViewState": "AgIAAB0AAAAAAAAAAAAswCMAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAB0AAAAAAAAAAAA9wCMAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-05-15T01:44:17.618Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 4,
               "Title": "Payment.cs",
               "DocumentMoniker": "C:\\Users\\HP\\Desktop\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProjectAPI\\Models\\Payment.cs",
               "RelativeDocumentMoniker": "AdvancedProjectAPI\\Models\\Payment.cs",
@@ -107,184 +102,7 @@
               "RelativeToolTip": "AdvancedProjectAPI\\Models\\Payment.cs",
               "ViewState": "AgIAAB0AAAAAAAAAAAAswAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-15T01:44:08.399Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "Notification.cs",
-              "DocumentMoniker": "C:\\Users\\HP\\Desktop\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProjectAPI\\Models\\Notification.cs",
-              "RelativeDocumentMoniker": "AdvancedProjectAPI\\Models\\Notification.cs",
-              "ToolTip": "C:\\Users\\HP\\Desktop\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProjectAPI\\Models\\Notification.cs",
-              "RelativeToolTip": "AdvancedProjectAPI\\Models\\Notification.cs",
-              "ViewState": "AgIAAA8AAAAAAAAAAAAYwAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-15T01:44:03.702Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "MaintenanceStaff.cs",
-              "DocumentMoniker": "C:\\Users\\HP\\Desktop\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProjectAPI\\Models\\MaintenanceStaff.cs",
-              "RelativeDocumentMoniker": "AdvancedProjectAPI\\Models\\MaintenanceStaff.cs",
-              "ToolTip": "C:\\Users\\HP\\Desktop\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProjectAPI\\Models\\MaintenanceStaff.cs",
-              "RelativeToolTip": "AdvancedProjectAPI\\Models\\MaintenanceStaff.cs",
-              "ViewState": "AgIAAA0AAAAAAAAAAAAzwAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-15T01:44:00.236Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "MaintenanceRequest.cs",
-              "DocumentMoniker": "C:\\Users\\HP\\Desktop\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProjectAPI\\Models\\MaintenanceRequest.cs",
-              "RelativeDocumentMoniker": "AdvancedProjectAPI\\Models\\MaintenanceRequest.cs",
-              "ToolTip": "C:\\Users\\HP\\Desktop\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProjectAPI\\Models\\MaintenanceRequest.cs",
-              "RelativeToolTip": "AdvancedProjectAPI\\Models\\MaintenanceRequest.cs",
-              "ViewState": "AgIAADYAAAAAAAAAAAAuwDMAAAAjAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-15T01:42:43.203Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "LeaseApplication.cs",
-              "DocumentMoniker": "C:\\Users\\HP\\Desktop\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProjectAPI\\Models\\LeaseApplication.cs",
-              "RelativeDocumentMoniker": "AdvancedProjectAPI\\Models\\LeaseApplication.cs",
-              "ToolTip": "C:\\Users\\HP\\Desktop\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProjectAPI\\Models\\LeaseApplication.cs",
-              "RelativeToolTip": "AdvancedProjectAPI\\Models\\LeaseApplication.cs",
-              "ViewState": "AgIAAB8AAAAAAAAAAADwvx0AAAAdAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-15T01:42:08.189Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "Lease.cs",
-              "DocumentMoniker": "C:\\Users\\HP\\Desktop\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProjectAPI\\Models\\Lease.cs",
-              "RelativeDocumentMoniker": "AdvancedProjectAPI\\Models\\Lease.cs",
-              "ToolTip": "C:\\Users\\HP\\Desktop\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProjectAPI\\Models\\Lease.cs",
-              "RelativeToolTip": "AdvancedProjectAPI\\Models\\Lease.cs",
-              "ViewState": "AgIAACQAAAAAAAAAAAAIwCMAAAAkAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-15T01:39:55.36Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "launchSettings.json",
-              "DocumentMoniker": "C:\\Users\\HP\\Desktop\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProjectAPI\\Properties\\launchSettings.json",
-              "RelativeDocumentMoniker": "AdvancedProjectAPI\\Properties\\launchSettings.json",
-              "ToolTip": "C:\\Users\\HP\\Desktop\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProjectAPI\\Properties\\launchSettings.json",
-              "RelativeToolTip": "AdvancedProjectAPI\\Properties\\launchSettings.json",
-              "ViewState": "AgIAAAUAAAAAAAAAAAAcwBgAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2026-05-15T01:06:17.858Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 8,
-              "Title": "appsettings.json",
-              "DocumentMoniker": "C:\\Users\\HP\\Desktop\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProjectAPI\\appsettings.json",
-              "RelativeDocumentMoniker": "AdvancedProjectAPI\\appsettings.json",
-              "ToolTip": "C:\\Users\\HP\\Desktop\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProjectAPI\\appsettings.json",
-              "RelativeToolTip": "AdvancedProjectAPI\\appsettings.json",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2026-05-15T01:04:42.592Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 9,
-              "Title": "TenantsController.cs",
-              "DocumentMoniker": "C:\\Users\\HP\\Desktop\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProjectAPI\\Controllers\\TenantsController.cs",
-              "RelativeDocumentMoniker": "AdvancedProjectAPI\\Controllers\\TenantsController.cs",
-              "ToolTip": "C:\\Users\\HP\\Desktop\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProjectAPI\\Controllers\\TenantsController.cs",
-              "RelativeToolTip": "AdvancedProjectAPI\\Controllers\\TenantsController.cs",
-              "ViewState": "AgIAABcAAAAAAAAAAAAiwCAAAAAJAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-15T00:54:59.305Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 10,
-              "Title": "UnitsController.cs",
-              "DocumentMoniker": "C:\\Users\\HP\\Desktop\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProjectAPI\\Controllers\\UnitsController.cs",
-              "RelativeDocumentMoniker": "AdvancedProjectAPI\\Controllers\\UnitsController.cs",
-              "ToolTip": "C:\\Users\\HP\\Desktop\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProjectAPI\\Controllers\\UnitsController.cs",
-              "RelativeToolTip": "AdvancedProjectAPI\\Controllers\\UnitsController.cs",
-              "ViewState": "AgIAABkAAAAAAAAAAAAiwC0AAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-15T00:54:19.39Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 11,
-              "Title": "PropertiesController.cs",
-              "DocumentMoniker": "C:\\Users\\HP\\Desktop\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProjectAPI\\Controllers\\PropertiesController.cs",
-              "RelativeDocumentMoniker": "AdvancedProjectAPI\\Controllers\\PropertiesController.cs",
-              "ToolTip": "C:\\Users\\HP\\Desktop\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProjectAPI\\Controllers\\PropertiesController.cs",
-              "RelativeToolTip": "AdvancedProjectAPI\\Controllers\\PropertiesController.cs",
-              "ViewState": "AgIAABcAAAAAAAAAAAAgwC0AAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-15T00:53:45.711Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 12,
-              "Title": "MaintenanceController.cs",
-              "DocumentMoniker": "C:\\Users\\HP\\Desktop\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProjectAPI\\Controllers\\MaintenanceController.cs",
-              "RelativeDocumentMoniker": "AdvancedProjectAPI\\Controllers\\MaintenanceController.cs",
-              "ToolTip": "C:\\Users\\HP\\Desktop\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProjectAPI\\Controllers\\MaintenanceController.cs",
-              "RelativeToolTip": "AdvancedProjectAPI\\Controllers\\MaintenanceController.cs",
-              "ViewState": "AgIAADEAAAAAAAAAAAAgwEcAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-15T00:52:26.608Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 13,
-              "Title": "Program.cs",
-              "DocumentMoniker": "C:\\Users\\HP\\Desktop\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProjectAPI\\Program.cs",
-              "RelativeDocumentMoniker": "AdvancedProjectAPI\\Program.cs",
-              "ToolTip": "C:\\Users\\HP\\Desktop\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProjectAPI\\Program.cs",
-              "RelativeToolTip": "AdvancedProjectAPI\\Program.cs",
-              "ViewState": "AgIAAAUAAAAAAAAAAAAgwBEAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-15T00:36:18.074Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 14,
-              "Title": "ApplicationUser.cs",
-              "DocumentMoniker": "C:\\Users\\HP\\Desktop\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProjectAPI\\Models\\ApplicationUser.cs",
-              "RelativeDocumentMoniker": "AdvancedProjectAPI\\Models\\ApplicationUser.cs",
-              "ToolTip": "C:\\Users\\HP\\Desktop\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProjectAPI\\Models\\ApplicationUser.cs",
-              "RelativeToolTip": "AdvancedProjectAPI\\Models\\ApplicationUser.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAVAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-15T00:34:54.118Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 15,
-              "Title": "APContext.cs",
-              "DocumentMoniker": "C:\\Users\\HP\\Desktop\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProjectAPI\\Data\\APContext.cs",
-              "RelativeDocumentMoniker": "AdvancedProjectAPI\\Data\\APContext.cs",
-              "ToolTip": "C:\\Users\\HP\\Desktop\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProjectAPI\\Data\\APContext.cs",
-              "RelativeToolTip": "AdvancedProjectAPI\\Data\\APContext.cs",
-              "ViewState": "AgIAAI8BAAAAAAAAAAAYwKQBAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-15T00:30:51.815Z"
+              "WhenOpened": "2026-05-15T01:44:08.399Z"
             }
           ]
         },
