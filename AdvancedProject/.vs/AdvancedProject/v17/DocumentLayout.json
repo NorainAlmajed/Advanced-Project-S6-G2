@@ -63,8 +63,7 @@
               "RelativeToolTip": "AdvancedProject\\Controllers\\TenantsController.cs",
               "ViewState": "AgIAALMAAAAAAAAAAAAswJEAAAA4AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-15T01:37:23.642Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-05-15T01:37:23.642Z"
             },
             {
               "$type": "Document",
@@ -76,8 +75,7 @@
               "RelativeToolTip": "AdvancedProject\\Views\\Account\\Register.cshtml",
               "ViewState": "AgIAAFAAAAAAAAAAAAAgwE4AAAA6AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-05-15T01:30:25.021Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-05-15T01:30:25.021Z"
             },
             {
               "$type": "Document",
@@ -89,8 +87,7 @@
               "RelativeToolTip": "AdvancedProject\\Controllers\\AccountController.cs",
               "ViewState": "AgIAAB0AAAAAAAAAAAAYwKIAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-15T01:28:32.502Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-05-15T01:28:32.502Z"
             },
             {
               "$type": "Document",
@@ -102,8 +99,7 @@
               "RelativeToolTip": "AdvancedProject\\Models\\RegisterViewModel.cs",
               "ViewState": "AgIAAB0AAAAAAAAAAAA9wCgAAAAVAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-15T01:25:20.372Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-05-15T01:25:20.372Z"
             }
           ]
         }
