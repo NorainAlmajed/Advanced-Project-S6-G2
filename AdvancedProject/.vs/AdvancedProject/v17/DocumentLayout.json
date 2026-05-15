@@ -3,6 +3,10 @@
   "WorkspaceRootPath": "C:\\Users\\fatima\\OneDrive\\Desktop\\Documents\\GitHub\\Advanced-Project-S6-G2\\AdvancedProject\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{B4100081-BB0A-41BA-A933-BD3CCDB833B9}|AdvancedProject\\AdvancedProject.csproj|c:\\users\\fatima\\onedrive\\desktop\\documents\\github\\advanced-project-s6-g2\\advancedproject\\advancedproject\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B4100081-BB0A-41BA-A933-BD3CCDB833B9}|AdvancedProject\\AdvancedProject.csproj|solutionrelative:advancedproject\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{B4100081-BB0A-41BA-A933-BD3CCDB833B9}|AdvancedProject\\AdvancedProject.csproj|c:\\users\\fatima\\onedrive\\desktop\\documents\\github\\advanced-project-s6-g2\\advancedproject\\advancedproject\\controllers\\userscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{B4100081-BB0A-41BA-A933-BD3CCDB833B9}|AdvancedProject\\AdvancedProject.csproj|solutionrelative:advancedproject\\controllers\\userscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -43,6 +47,19 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\fatima\\OneDrive\\Desktop\\Documents\\GitHub\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Program.cs",
+              "RelativeDocumentMoniker": "AdvancedProject\\Program.cs",
+              "ToolTip": "C:\\Users\\fatima\\OneDrive\\Desktop\\Documents\\GitHub\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Program.cs",
+              "RelativeToolTip": "AdvancedProject\\Program.cs",
+              "ViewState": "AgIAABsAAAAAAAAAAAAAADAAAAAIAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-15T02:07:45.019Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
               "Title": "UsersController.cs",
               "DocumentMoniker": "C:\\Users\\fatima\\OneDrive\\Desktop\\Documents\\GitHub\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Controllers\\UsersController.cs",
               "RelativeDocumentMoniker": "AdvancedProject\\Controllers\\UsersController.cs",
@@ -55,7 +72,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "TenantsController.cs",
               "DocumentMoniker": "C:\\Users\\fatima\\OneDrive\\Desktop\\Documents\\GitHub\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Controllers\\TenantsController.cs",
               "RelativeDocumentMoniker": "AdvancedProject\\Controllers\\TenantsController.cs",
@@ -67,7 +84,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 4,
               "Title": "Register.cshtml",
               "DocumentMoniker": "C:\\Users\\fatima\\OneDrive\\Desktop\\Documents\\GitHub\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Views\\Account\\Register.cshtml",
               "RelativeDocumentMoniker": "AdvancedProject\\Views\\Account\\Register.cshtml",
@@ -79,7 +96,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 5,
               "Title": "AccountController.cs",
               "DocumentMoniker": "C:\\Users\\fatima\\OneDrive\\Desktop\\Documents\\GitHub\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Controllers\\AccountController.cs",
               "RelativeDocumentMoniker": "AdvancedProject\\Controllers\\AccountController.cs",
@@ -91,7 +108,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "RegisterViewModel.cs",
               "DocumentMoniker": "C:\\Users\\fatima\\OneDrive\\Desktop\\Documents\\GitHub\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Models\\RegisterViewModel.cs",
               "RelativeDocumentMoniker": "AdvancedProject\\Models\\RegisterViewModel.cs",
