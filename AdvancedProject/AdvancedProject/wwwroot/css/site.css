@@ -2526,3 +2526,189 @@ body {
         background: #00485a;
         color: white;
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* ============================= */
+/*        Unit Details Page      */
+/* ============================= */
+
+.unit-details-page {
+    padding: 1.5rem;
+    border-radius: 28px;
+    background: linear-gradient( 135deg, rgba(0, 91, 113, 0.06), rgba(30, 142, 110, 0.06) );
+}
+
+.unit-details-hero {
+    background: linear-gradient(135deg, #005B71, #1E8E6E);
+    border-radius: 28px;
+    padding: 2.3rem;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.unit-details-eyebrow {
+    font-size: 0.82rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 0.6rem;
+    opacity: 0.9;
+}
+
+.unit-details-title {
+    font-size: 3.2rem;
+    font-weight: 900;
+    margin-bottom: 0.4rem;
+    line-height: 1;
+}
+
+.unit-details-subtitle {
+    font-size: 1.15rem;
+    margin-bottom: 0.5rem;
+    opacity: 0.92;
+}
+
+.unit-details-actions {
+    display: flex;
+    gap: 0.85rem;
+    flex-wrap: wrap;
+}
+
+.unit-details-edit-btn,
+.unit-details-back-btn {
+    min-height: 48px;
+    border-radius: 14px;
+    padding: 0.75rem 1.35rem;
+    font-weight: 800;
+}
+
+.unit-details-edit-btn {
+    background: #E8F1F3;
+    color: #005B71;
+    border: none;
+}
+
+    .unit-details-edit-btn:hover {
+        background: #d7e8ec;
+        color: #005B71;
+    }
+
+.unit-details-back-btn {
+    background: transparent;
+    color: white;
+    border: 1px solid rgba(255,255,255,0.5);
+}
+
+    .unit-details-back-btn:hover {
+        background: rgba(255,255,255,0.12);
+        color: white;
+    }
+
+.unit-details-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+}
+
+.unit-info-card {
+    background: #d7e8ec;
+    border-radius: 20px;
+    padding: 1.35rem;
+    border: 1px solid rgba(0, 91, 113, 0.08);
+}
+
+    .unit-info-card .info-label {
+        display: block;
+        font-size: 0.78rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        margin-bottom: 0.55rem;
+        color: #5f7280;
+    }
+
+    .unit-info-card .info-value {
+        font-size: 1.22rem;
+        font-weight: 800;
+        color: var(--text-main);
+    }
+
+.unit-amenities-display-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.9rem;
+}
+
+.unit-amenity-display-card {
+    background: #d7e8ec;
+    border-radius: 16px;
+    padding: 1rem;
+    font-weight: 700;
+    border: 1px solid rgba(0, 91, 113, 0.08);
+}
+
+.unit-empty-box {
+    background: #edf6f8;
+    border-radius: 16px;
+    padding: 1rem;
+    font-weight: 600;
+    color: var(--text-muted);
+}
+
+.unit-status-available {
+    background: #198754;
+    color: white;
+    box-shadow: 0 6px 16px rgba(25, 135, 84, 0.25);
+}
+
+.unit-status-occupied {
+    background: #dc3545;
+    color: white;
+    box-shadow: 0 6px 16px rgba(220, 53, 69, 0.25);
+}
+
+.custom-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.55rem 1rem;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+}
+
+.unit-status-default {
+    background: rgba(107, 114, 128, 0.14);
+    color: #4b5563;
+}
+
+@media (max-width: 992px) {
+
+    .unit-details-grid,
+    .unit-amenities-display-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .unit-details-title {
+        font-size: 2.3rem;
+    }
+}

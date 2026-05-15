@@ -72,7 +72,7 @@
               "RelativeDocumentMoniker": "AdvancedProject\\wwwroot\\css\\site.css",
               "ToolTip": "D:\\year3 sem2\\advanced programming project\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\wwwroot\\css\\site.css",
               "RelativeToolTip": "AdvancedProject\\wwwroot\\css\\site.css",
-              "ViewState": "AgIAAMIJAAAAAAAAAAAkwN8JAAAFAAAAAAAAAA==",
+              "ViewState": "AgIAAIEKAAAAAAAAAAAkwIgKAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
               "WhenOpened": "2026-05-15T22:00:32.303Z",
               "EditorCaption": ""
@@ -85,7 +85,7 @@
               "RelativeDocumentMoniker": "AdvancedProject\\Views\\Units\\Details.cshtml",
               "ToolTip": "D:\\year3 sem2\\advanced programming project\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Views\\Units\\Details.cshtml",
               "RelativeToolTip": "AdvancedProject\\Views\\Units\\Details.cshtml",
-              "ViewState": "AgIAAJUAAAAAAAAAAADwv7AAAAAGAAAAAAAAAA==",
+              "ViewState": "AgIAAGYAAAAAAAAAAADwv4EAAAAGAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2026-05-15T22:00:17.576Z",
               "EditorCaption": ""
@@ -100,8 +100,7 @@
               "RelativeToolTip": "AdvancedProject\\Views\\Units\\Create.cshtml",
               "ViewState": "AgIAAGsAAAAAAAAAAADwv3wAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-05-15T21:45:34.101Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-05-15T21:45:34.101Z"
             },
             {
               "$type": "Document",
@@ -123,7 +122,7 @@
               "RelativeDocumentMoniker": "AdvancedProject\\Controllers\\UnitsController.cs",
               "ToolTip": "D:\\year3 sem2\\advanced programming project\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Controllers\\UnitsController.cs",
               "RelativeToolTip": "AdvancedProject\\Controllers\\UnitsController.cs",
-              "ViewState": "AgIAAGABAAAAAAAAAAAswHkBAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAFYBAAAAAAAAAAAswHUAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-05-15T21:33:15.522Z",
               "EditorCaption": ""
