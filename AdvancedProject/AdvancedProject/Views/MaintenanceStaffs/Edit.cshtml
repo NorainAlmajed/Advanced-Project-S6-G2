@@ -1,112 +1,154 @@
 ﻿@model MaintenanceStaffEditVM
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Edit Maintenance Staff";
 }
 
-<h1>Edit Maintenance Staff</h1>
-<hr />
+<div class="staff-form-page">
+    <div class="lease-form-wrapper">
+        <div class="lease-form-card shadow-soft">
 
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit" method="post">
-
-            <input type="hidden" asp-for="StaffId" />
-            <input type="hidden" asp-for="UserId" />
-
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
-            <!-- Username -->
-            <div class="form-group">
-                <label asp-for="Username" class="control-label"></label>
-                <input asp-for="Username" class="form-control" />
-                <span asp-validation-for="Username" class="text-danger"></span>
+            <div class="lease-form-header">
+                <p class="lease-form-eyebrow mb-2">Maintenance Staff</p>
+                <h1 class="lease-form-title mb-2">Edit Staff</h1>
+                <p class="lease-form-subtitle mb-0">
+                    Update staff account details, availability, and skills.
+                </p>
             </div>
 
-            <!-- Password -->
-            <div class="form-group">
-                <label asp-for="Password" class="control-label"></label>
-                <input asp-for="Password" type="password" class="form-control" placeholder="Leave empty to keep current password" />
-                <span asp-validation-for="Password" class="text-danger"></span>
-            </div>
+            <div class="lease-form-body">
+                <form asp-action="Edit" method="post">
 
-            <!-- Confirm Password -->
-            <div class="form-group">
-                <label>Confirm Password</label>
-                <input asp-for="ConfirmPassword" type="password" class="form-control" placeholder="Confirm new password" />
-                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
-            </div>
+                    <input type="hidden" asp-for="StaffId" />
+                    <input type="hidden" asp-for="UserId" />
 
-            <!-- Full Name -->
-            <div class="form-group">
-                <label asp-for="FullName" class="control-label"></label>
-                <input asp-for="FullName" class="form-control" />
-                <span asp-validation-for="FullName" class="text-danger"></span>
-            </div>
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-4"></div>
 
-            <!-- Email -->
-            <div class="form-group">
-                <label asp-for="Email" class="control-label"></label>
-                <input asp-for="Email" type="email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
-            </div>
+                    <div class="row g-4">
 
-            <!-- Phone -->
-            <div class="form-group">
-                <label asp-for="Phone" class="control-label"></label>
-                <input asp-for="Phone" class="form-control" />
-                <span asp-validation-for="Phone" class="text-danger"></span>
-            </div>
+                        <div class="col-md-6">
+                            <div class="lease-form-group">
+                                <label class="lease-form-label">Username</label>
+                                <input asp-for="Username" class="form-control lease-form-input" />
+                                <span asp-validation-for="Username" class="text-danger"></span>
+                            </div>
+                        </div>
 
-            <!-- Gender -->
-            <div class="form-group">
-                <label asp-for="Gender" class="control-label"></label><br />
+                        <div class="col-md-6">
+                            <div class="lease-form-group">
+                                <label class="lease-form-label">Full Name</label>
+                                <input asp-for="FullName" class="form-control lease-form-input" />
+                                <span asp-validation-for="FullName" class="text-danger"></span>
+                            </div>
+                        </div>
 
-                <input type="radio" asp-for="Gender" value="M" /> Male
-                <input type="radio" asp-for="Gender" value="F" /> Female
+                        <div class="col-md-6">
+                            <div class="lease-form-group">
+                                <label class="lease-form-label">Email</label>
+                                <input asp-for="Email" type="email" class="form-control lease-form-input" />
+                                <span asp-validation-for="Email" class="text-danger"></span>
+                            </div>
+                        </div>
 
-                <br />
-                <span asp-validation-for="Gender" class="text-danger"></span>
-            </div>
+                        <div class="col-md-6">
+                            <div class="lease-form-group">
+                                <label class="lease-form-label">Phone</label>
+                                <input asp-for="Phone" class="form-control lease-form-input" />
+                                <span asp-validation-for="Phone" class="text-danger"></span>
+                            </div>
+                        </div>
 
-            <!-- Availability -->
-            <div class="form-group">
-                <label asp-for="AvailabilityStatus" class="control-label"></label>
+                        <div class="col-md-6">
+                            <div class="lease-form-group">
+                                <label class="lease-form-label">Password</label>
+                                <input asp-for="Password"
+                                       type="password"
+                                       class="form-control lease-form-input"
+                                       placeholder="Leave empty to keep current password" />
+                                <span asp-validation-for="Password" class="text-danger"></span>
+                            </div>
+                        </div>
 
-                <select asp-for="AvailabilityStatus" class="form-control">
-                    <option value="Available">Available</option>
-                    <option value="Busy">Busy</option>
-                </select>
+                        <div class="col-md-6">
+                            <div class="lease-form-group">
+                                <label class="lease-form-label">Confirm Password</label>
+                                <input asp-for="ConfirmPassword"
+                                       type="password"
+                                       class="form-control lease-form-input"
+                                       placeholder="Confirm new password" />
+                                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                            </div>
+                        </div>
 
-                <span asp-validation-for="AvailabilityStatus" class="text-danger"></span>
-            </div>
+                        <div class="col-12">
+                            <div class="lease-form-group">
+                                <label class="lease-form-label d-block mb-3">Gender</label>
 
-            <!-- Skills -->
-            <div class="form-group">
-                <label class="control-label">Skills</label><br />
+                                <div class="staff-radio-group">
+                                    <label class="staff-radio-card">
+                                        <input type="radio" asp-for="Gender" value="M" />
+                                        Male
+                                    </label>
 
-                @foreach (var skill in (List<Skill>)ViewData["Skills"])
-                {
-                    <div>
-                        <input type="checkbox"
-                               name="SelectedSkillIds"
-                               value="@skill.SkillId"
-                               @(Model.SelectedSkillIds != null && Model.SelectedSkillIds.Contains(skill.SkillId) ? "checked" : "") />
-                        @skill.Name
+                                    <label class="staff-radio-card">
+                                        <input type="radio" asp-for="Gender" value="F" />
+                                        Female
+                                    </label>
+                                </div>
+
+                                <span asp-validation-for="Gender" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <div class="lease-form-group">
+                                <label class="lease-form-label">Availability Status</label>
+
+                                <select asp-for="AvailabilityStatus" class="form-select lease-form-input">
+                                    <option value="Available">Available</option>
+                                    <option value="Busy">Busy</option>
+                                </select>
+
+                                <span asp-validation-for="AvailabilityStatus" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <div class="lease-form-group">
+                                <label class="lease-form-label d-block mb-3">Skills</label>
+
+                                <div class="staff-skills-grid">
+                                    @foreach (var skill in (List<Skill>)ViewData["Skills"])
+                                    {
+                                        <label class="staff-skill-card">
+                                            <input type="checkbox"
+                                                   name="SelectedSkillIds"
+                                                   value="@skill.SkillId"
+                                                   @(Model.SelectedSkillIds != null && Model.SelectedSkillIds.Contains(skill.SkillId) ? "checked" : "") />
+                                            @skill.Name
+                                        </label>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
-                }
+
+                    <div class="lease-form-actions">
+                        <button type="submit" class="btn btn-primary lease-submit-btn">
+                            Save Changes
+                        </button>
+
+                        <a asp-action="Index" class="lease-back-link">
+                            Back to Staff
+                        </a>
+                    </div>
+
+                </form>
             </div>
 
-            <br />
-
-            <button type="submit" class="btn btn-primary">Save</button>
-
-        </form>
+        </div>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {

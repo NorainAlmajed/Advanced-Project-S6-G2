@@ -10,99 +10,145 @@
 
             <div class="lease-form-header">
                 <p class="lease-form-eyebrow mb-2">Unit</p>
-                <h1 class="lease-form-title mb-2">Edit Unit</h1>
+
+                <h1 class="lease-form-title mb-2">
+                    Edit Unit
+                </h1>
+
                 <p class="lease-form-subtitle mb-0">
-                    Update unit details, rent, status, and amenities.
+                    Update unit details, rent, and amenities.
                 </p>
             </div>
 
             <form asp-action="Edit" method="post" class="lease-form-body">
+
                 <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
                 <input type="hidden" asp-for="UnitId" />
                 <input type="hidden" asp-for="CreatedAt" />
+                <input type="hidden" asp-for="PropertyId" />
+                <input type="hidden" asp-for="AvailabilityStatus" />
 
                 <div class="row g-3">
 
+                    <!-- Unit Number -->
                     <div class="col-md-6 lease-form-group">
-                        <label asp-for="PropertyId" class="lease-form-label">Property</label>
-                        <select asp-for="PropertyId" class="form-control lease-form-input" asp-items="ViewBag.PropertyId"></select>
-                        <span asp-validation-for="PropertyId" class="text-danger"></span>
+                        <label asp-for="UnitNumber" class="lease-form-label">
+                            Unit Number
+                        </label>
+
+                        <input asp-for="UnitNumber"
+                               class="form-control lease-form-input" />
+
+                        <span asp-validation-for="UnitNumber"
+                              class="text-danger"></span>
                     </div>
 
+                    <!-- Unit Type -->
                     <div class="col-md-6 lease-form-group">
-                        <label asp-for="UnitNumber" class="lease-form-label">Unit Number</label>
-                        <input asp-for="UnitNumber" class="form-control lease-form-input" />
-                        <span asp-validation-for="UnitNumber" class="text-danger"></span>
-                    </div>
+                        <label asp-for="UnitTypeId" class="lease-form-label">
+                            Unit Type
+                        </label>
 
-                    <div class="col-md-6 lease-form-group">
-                        <label asp-for="UnitTypeId" class="lease-form-label">Unit Type</label>
-                        <select asp-for="UnitTypeId" class="form-control lease-form-input" asp-items="ViewBag.UnitTypeId"></select>
-                        <span asp-validation-for="UnitTypeId" class="text-danger"></span>
-                    </div>
-
-                    <div class="col-md-6 lease-form-group">
-                        <label asp-for="AvailabilityStatus" class="lease-form-label">Availability Status</label>
-                        <select asp-for="AvailabilityStatus" class="form-control lease-form-input">
-                            <option value="Available">Available</option>
-                            <option value="Occupied">Occupied</option>
-                            <option value="Pending">Pending</option>
-                            <option value="Maintenance">Maintenance</option>
+                        <select asp-for="UnitTypeId"
+                                class="form-control lease-form-input"
+                                asp-items="ViewBag.UnitTypeId">
                         </select>
-                        <span asp-validation-for="AvailabilityStatus" class="text-danger"></span>
+
+                        <span asp-validation-for="UnitTypeId"
+                              class="text-danger"></span>
                     </div>
 
+                    <!-- Size -->
                     <div class="col-md-6 lease-form-group">
-                        <label asp-for="SizeSqFt" class="lease-form-label">Size Sq Ft</label>
-                        <input asp-for="SizeSqFt" type="text" class="form-control lease-form-input" />
-                        <span asp-validation-for="SizeSqFt" class="text-danger"></span>
+                        <label asp-for="SizeSqFt" class="lease-form-label">
+                            Size Sq Ft
+                        </label>
+
+                        <input asp-for="SizeSqFt"
+                               type="text"
+                               class="form-control lease-form-input" />
+
+                        <span asp-validation-for="SizeSqFt"
+                              class="text-danger"></span>
                     </div>
 
+                    <!-- Rent -->
                     <div class="col-md-6 lease-form-group">
-                        <label asp-for="RentAmount" class="lease-form-label">Rent Amount</label>
-                        <input asp-for="RentAmount" type="text" class="form-control lease-form-input" />
-                        <span asp-validation-for="RentAmount" class="text-danger"></span>
+                        <label asp-for="RentAmount" class="lease-form-label">
+                            Rent Amount
+                        </label>
+
+                        <input asp-for="RentAmount"
+                               type="text"
+                               class="form-control lease-form-input" />
+
+                        <span asp-validation-for="RentAmount"
+                              class="text-danger"></span>
                     </div>
 
                 </div>
 
+                <!-- Amenities -->
                 <div class="lease-form-group mt-3">
-                    <label class="lease-form-label">Amenities</label>
+
+                    <label class="lease-form-label">
+                        Amenities
+                    </label>
 
                     <div class="unit-amenities-grid">
+
                         @{
                             var selectedAmenities = ViewBag.SelectedAmenities as int[] ?? Array.Empty<int>();
-                            var amenityList = ViewBag.AmenityList as List<AdvancedProject.Models.Amenity>;
+
+                            var amenityList =
+                            ViewBag.AmenityList as List<AdvancedProject.Models.Amenity>;
                         }
 
                         @if (amenityList != null)
                         {
                             foreach (var amenity in amenityList)
                             {
-                                bool isChecked = selectedAmenities.Contains(amenity.AmenityId);
+                                bool isChecked =
+                                selectedAmenities.Contains(amenity.AmenityId);
 
                                 <label class="unit-amenity-card">
+
                                     <input type="checkbox"
                                            name="selectedAmenities"
                                            value="@amenity.AmenityId"
                                            checked="@isChecked" />
+
                                     <span>@amenity.Name</span>
+
                                 </label>
                             }
                         }
+
                     </div>
+
                 </div>
 
+                <!-- Buttons -->
                 <div class="lease-form-actions">
-                    <button type="submit" class="btn btn-primary lease-submit-btn">
+
+                    <button type="submit"
+                            class="btn btn-primary lease-submit-btn">
+
                         Save Changes
+
                     </button>
 
-                    <a asp-action="Index" asp-route-id="@Model.PropertyId" class="lease-back-link">
+                    <a asp-action="Index"
+                       asp-route-id="@Model.PropertyId"
+                       class="lease-back-link">
+
                         Back to List
+
                     </a>
+
                 </div>
+
             </form>
 
         </div>
