@@ -1,49 +1,68 @@
 ﻿@model AdvancedProject.Models.Payment
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Edit Payment";
 }
 
-<h1>Edit</h1>
+<div class="lease-form-page">
+    <div class="lease-form-wrapper">
+        <div class="lease-form-card shadow-soft">
 
-<h4>Payment</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="PaymentId" />
-            <div class="form-group">
-                <label asp-for="StartDate" class="control-label"></label>
-                <input asp-for="StartDate" class="form-control" />
-                <span asp-validation-for="StartDate" class="text-danger"></span>
+            <div class="lease-form-header">
+                <p class="lease-form-eyebrow mb-2">Payment</p>
+                <h1 class="lease-form-title mb-2">Edit Payment</h1>
+                <p class="lease-form-subtitle mb-0">
+                    Update the payment date, status, method, and frequency.
+                </p>
             </div>
-            <div class="form-group">
-                <label asp-for="Status" class="control-label"></label>
-                <select asp-for="Status" class="form-control" asp-items="ViewBag.StatusList"></select>
-                <span asp-validation-for="Status" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="PaymentMethodId" class="control-label"></label>
-                <select asp-for="PaymentMethodId" class="form-control" asp-items="ViewBag.PaymentMethodId"></select>
-                <span asp-validation-for="PaymentMethodId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="PaymentFrequencyId" class="control-label"></label>
-                <select asp-for="PaymentFrequencyId" class="form-control" asp-items="ViewBag.PaymentFrequencyId"></select>
-                <span asp-validation-for="PaymentFrequencyId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+
+            <form asp-action="Edit" method="post" class="lease-form-body">
+
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                <input type="hidden" asp-for="PaymentId" />
+
+                <div class="lease-form-group">
+                    <label asp-for="StartDate" class="lease-form-label">Start Date</label>
+                    <input asp-for="StartDate" type="date" class="form-control lease-form-input" />
+                    <span asp-validation-for="StartDate" class="text-danger"></span>
+                </div>
+
+                <div class="lease-form-group">
+                    <label asp-for="Status" class="lease-form-label"></label>
+                    <select asp-for="Status" class="form-control lease-form-input" asp-items="ViewBag.StatusList"></select>
+                    <span asp-validation-for="Status" class="text-danger"></span>
+                </div>
+
+                <div class="lease-form-group">
+                    <label asp-for="PaymentMethodId" class="lease-form-label">Payment Method</label>
+                    <select asp-for="PaymentMethodId" class="form-control lease-form-input" asp-items="ViewBag.PaymentMethodId"></select>
+                    <span asp-validation-for="PaymentMethodId" class="text-danger"></span>
+                </div>
+
+                <div class="lease-form-group">
+                    <label asp-for="PaymentFrequencyId" class="lease-form-label">Payment Frequency</label>
+                    <select asp-for="PaymentFrequencyId" class="form-control lease-form-input" asp-items="ViewBag.PaymentFrequencyId"></select>
+                    <span asp-validation-for="PaymentFrequencyId" class="text-danger"></span>
+                </div>
+
+                <div class="lease-form-actions">
+                    <button type="submit" class="btn btn-primary lease-submit-btn">
+                        Save Changes
+                    </button>
+
+                    <a asp-action="Index" class="lease-back-link">
+                        Back to List
+                    </a>
+                </div>
+
+            </form>
+        </div>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }
