@@ -1,58 +1,99 @@
 ﻿@model AdvancedProject.Models.MaintenanceRequest
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Edit Maintenance Request";
 }
 
-<h1>Edit</h1>
+<div class="maintenance-request-form-page">
+    <div class="lease-form-wrapper">
+        <div class="lease-form-card shadow-soft">
 
-<h4>MaintenanceRequest</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="RequestId" />
-            <div class="form-group">
-                <label asp-for="UnitId" class="control-label"></label>
-                <select asp-for="UnitId" class="form-control" asp-items="ViewBag.UnitId"></select>
-                <span asp-validation-for="UnitId" class="text-danger"></span>
+            <div class="lease-form-header">
+                <p class="lease-form-eyebrow mb-2">Maintenance Request</p>
+                <h1 class="lease-form-title mb-2">Edit Request</h1>
+                <p class="lease-form-subtitle mb-0">
+                    Update request details, priority, assigned staff, and description.
+                </p>
             </div>
-            <div class="form-group">
-                <label asp-for="SkillId" class="control-label"></label>
-                <select asp-for="SkillId" class="form-control" asp-items="ViewBag.SkillId"></select>
-                <span asp-validation-for="SkillId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Priority" class="control-label"></label>
-                <select asp-for="Priority" class="form-control">
-                    <option value="Low">Low</option>
-                    <option value="Medium">Medium</option>
-                    <option value="High">High</option>
-                </select>
-                <span asp-validation-for="Priority" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="AssignedStaffId" class="control-label"></label>
-                <select asp-for="AssignedStaffId" class="form-control" asp-items="ViewBag.AssignedStaffId"></select>
-                <span asp-validation-for="AssignedStaffId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Notes" class="control-label"></label>
-                <input asp-for="Notes" class="form-control" />
-                <span asp-validation-for="Notes" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+
+            <form asp-action="Edit" method="post" class="lease-form-body">
+
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                <input type="hidden" asp-for="RequestId" />
+
+                <div class="lease-form-group">
+                    <label asp-for="UnitId" class="lease-form-label">Unit Number</label>
+                    <select asp-for="UnitId" class="form-control lease-form-input" asp-items="ViewBag.UnitId"></select>
+                    <span asp-validation-for="UnitId" class="text-danger"></span>
+                </div>
+
+                <div class="lease-form-group">
+                    <label asp-for="SkillId" class="lease-form-label">Maintenance Type</label>
+                    <select asp-for="SkillId" class="form-control lease-form-input" asp-items="ViewBag.SkillId"></select>
+                    <span asp-validation-for="SkillId" class="text-danger"></span>
+                </div>
+
+                <div class="lease-form-group">
+                    <label asp-for="Priority" class="lease-form-label"></label>
+                    <select asp-for="Priority" class="form-control lease-form-input">
+                        <option value="Low">Low</option>
+                        <option value="Medium">Medium</option>
+                        <option value="High">High</option>
+                    </select>
+                    <span asp-validation-for="Priority" class="text-danger"></span>
+                </div>
+
+                <div class="lease-form-group">
+                    <label asp-for="AssignedStaffId" class="lease-form-label">Assigned Staff</label>
+                    <select asp-for="AssignedStaffId"
+                            class="form-control lease-form-input searchable-dropdown"
+                            asp-items="ViewBag.AssignedStaffId">
+                    </select>
+                    <span asp-validation-for="AssignedStaffId" class="text-danger"></span>
+                </div>
+
+                <div class="lease-form-group">
+                    <label asp-for="Notes" class="lease-form-label">Description</label>
+                    <textarea asp-for="Notes"
+                              class="form-control lease-form-input maintenance-notes-input"
+                              placeholder="Describe the issue..."></textarea>
+                    <span asp-validation-for="Notes" class="text-danger"></span>
+                </div>
+
+                <div class="lease-form-actions">
+                    <button type="submit" class="btn btn-primary lease-submit-btn">
+                        Save Changes
+                    </button>
+
+                    <a asp-action="Index" class="lease-back-link">
+                        Back to List
+                    </a>
+                </div>
+
+            </form>
+        </div>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const staffDropdown = document.querySelector('.searchable-dropdown');
+
+            if (staffDropdown) {
+                new Choices(staffDropdown, {
+                    searchEnabled: true,
+                    itemSelectText: '',
+                    shouldSort: false,
+                    placeholder: true,
+                    searchPlaceholderValue: 'Search staff name...'
+                });
+            }
+        });
+    </script>
 }
