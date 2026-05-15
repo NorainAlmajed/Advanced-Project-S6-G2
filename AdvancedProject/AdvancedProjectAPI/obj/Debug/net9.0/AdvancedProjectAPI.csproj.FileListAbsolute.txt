@@ -160,3 +160,4 @@ C:\Users\HP\Desktop\Advanced-Project-S6-G2\AdvancedProject\AdvancedProjectAPI\ob
 C:\Users\HP\Desktop\Advanced-Project-S6-G2\AdvancedProject\AdvancedProjectAPI\obj\Debug\net9.0\AdvancedProjectAPI.pdb
 C:\Users\HP\Desktop\Advanced-Project-S6-G2\AdvancedProject\AdvancedProjectAPI\obj\Debug\net9.0\AdvancedProjectAPI.genruntimeconfig.cache
 C:\Users\HP\Desktop\Advanced-Project-S6-G2\AdvancedProject\AdvancedProjectAPI\obj\Debug\net9.0\ref\AdvancedProjectAPI.dll
+C:\Users\HP\Desktop\Advanced-Project-S6-G2\AdvancedProject\AdvancedProjectAPI\bin\Debug\net9.0\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
