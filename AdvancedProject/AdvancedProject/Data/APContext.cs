@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using AdvancedProject.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace AdvancedProject.Data;
 
-public partial class APContext : DbContext
+public partial class APContext : IdentityDbContext<ApplicationUser>
 {
     public APContext()
     {
@@ -60,6 +61,8 @@ public partial class APContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        base.OnModelCreating(modelBuilder);
+
         modelBuilder.Entity<Tenant>(entity =>
         {
             entity.HasOne(d => d.User)
@@ -411,7 +414,6 @@ public partial class APContext : DbContext
     );
 
         OnModelCreatingPartial(modelBuilder);
-        base.OnModelCreating(modelBuilder);
     }
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
