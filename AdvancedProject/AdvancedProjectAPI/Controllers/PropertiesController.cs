@@ -24,7 +24,6 @@ namespace AdvancedProjectAPI.Controllers
                 .Include(p => p.Governorate)
                 .Include(p => p.Units)
                 .ToListAsync();
-
             return Ok(properties);
         }
 
@@ -39,8 +38,48 @@ namespace AdvancedProjectAPI.Controllers
 
             if (property == null)
                 return NotFound(new { message = "Property not found." });
-
             return Ok(property);
+        }
+
+        // POST: api/properties
+        [HttpPost]
+        public async Task<ActionResult<Property>> Create(Property property)
+        {
+            _context.Properties.Add(property);
+            await _context.SaveChangesAsync();
+            return CreatedAtAction(nameof(GetById), new { id = property.PropertyId }, property);
+        }
+
+        // PUT: api/properties/{id}
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(int id, Property updated)
+        {
+            var existing = await _context.Properties.FindAsync(id);
+            if (existing == null) return NotFound(new { message = "Property not found." });
+
+            existing.Name = updated.Name;
+            existing.Building = updated.Building;
+            existing.Road = updated.Road;
+            existing.Block = updated.Block;
+            existing.City = updated.City;
+            existing.Description = updated.Description;
+            existing.IsActive = updated.IsActive;
+            existing.GovernorateId = updated.GovernorateId;
+
+            await _context.SaveChangesAsync();
+            return NoContent();
+        }
+
+        // DELETE: api/properties/{id}
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var property = await _context.Properties.FindAsync(id);
+            if (property == null) return NotFound(new { message = "Property not found." });
+
+            _context.Properties.Remove(property);
+            await _context.SaveChangesAsync();
+            return NoContent();
         }
     }
 }

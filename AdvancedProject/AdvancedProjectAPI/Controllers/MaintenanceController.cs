@@ -1,5 +1,6 @@
 ﻿using AdvancedProjectAPI.Data;
 using AdvancedProjectAPI.Dtos;
+using AdvancedProjectAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -67,6 +68,61 @@ namespace AdvancedProjectAPI.Controllers
                 return NotFound(new { message = "No maintenance request found with this ticket number and phone." });
 
             return Ok(request);
+        }
+
+        // GET: api/maintenance/{id}
+        [HttpGet("{id}")]
+        public async Task<ActionResult<MaintenanceRequest>> GetById(int id)
+        {
+            var request = await _context.MaintenanceRequests
+                .Include(m => m.Unit)
+                .Include(m => m.Skill)
+                .Include(m => m.AssignedStaff).ThenInclude(s => s.User)
+                .FirstOrDefaultAsync(m => m.RequestId == id);
+
+            if (request == null)
+                return NotFound(new { message = "Maintenance request not found." });
+
+            return Ok(request);
+        }
+
+        // POST: api/maintenance
+        [HttpPost]
+        public async Task<ActionResult<MaintenanceRequest>> Create(MaintenanceRequest request)
+        {
+            _context.MaintenanceRequests.Add(request);
+            await _context.SaveChangesAsync();
+            return CreatedAtAction(nameof(GetById), new { id = request.RequestId }, request);
+        }
+
+        // PUT: api/maintenance/{id}
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(int id, MaintenanceRequest updated)
+        {
+            var existing = await _context.MaintenanceRequests.FindAsync(id);
+            if (existing == null) return NotFound(new { message = "Maintenance request not found." });
+
+            existing.Status = updated.Status;
+            existing.Priority = updated.Priority;
+            existing.Notes = updated.Notes;
+            existing.AssignedStaffId = updated.AssignedStaffId;
+            existing.SkillId = updated.SkillId;
+            existing.UnitId = updated.UnitId;
+
+            await _context.SaveChangesAsync();
+            return NoContent();
+        }
+
+        // DELETE: api/maintenance/{id}
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var request = await _context.MaintenanceRequests.FindAsync(id);
+            if (request == null) return NotFound(new { message = "Maintenance request not found." });
+
+            _context.MaintenanceRequests.Remove(request);
+            await _context.SaveChangesAsync();
+            return NoContent();
         }
     }
 }

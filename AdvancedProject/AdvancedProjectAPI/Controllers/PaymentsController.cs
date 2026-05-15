@@ -24,7 +24,6 @@ namespace AdvancedProjectAPI.Controllers
                 .Include(p => p.Lease).ThenInclude(l => l.Tenant).ThenInclude(t => t.User)
                 .Include(p => p.PaymentMethod)
                 .ToListAsync();
-
             return Ok(payments);
         }
 
@@ -39,8 +38,47 @@ namespace AdvancedProjectAPI.Controllers
 
             if (payment == null)
                 return NotFound(new { message = "Payment not found." });
-
             return Ok(payment);
+        }
+
+        // POST: api/payments
+        [HttpPost]
+        public async Task<ActionResult<Payment>> Create(Payment payment)
+        {
+            _context.Payments.Add(payment);
+            await _context.SaveChangesAsync();
+            return CreatedAtAction(nameof(GetById), new { id = payment.PaymentId }, payment);
+        }
+
+        // PUT: api/payments/{id}
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(int id, Payment updated)
+        {
+            var existing = await _context.Payments.FindAsync(id);
+            if (existing == null) return NotFound(new { message = "Payment not found." });
+
+            existing.Amount = updated.Amount;
+            existing.Status = updated.Status;
+            existing.StartDate = updated.StartDate;
+            existing.EndDate = updated.EndDate;
+            existing.PaymentMethodId = updated.PaymentMethodId;
+            existing.PaymentFrequencyId = updated.PaymentFrequencyId;
+            existing.LeaseId = updated.LeaseId;
+
+            await _context.SaveChangesAsync();
+            return NoContent();
+        }
+
+        // DELETE: api/payments/{id}
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var payment = await _context.Payments.FindAsync(id);
+            if (payment == null) return NotFound(new { message = "Payment not found." });
+
+            _context.Payments.Remove(payment);
+            await _context.SaveChangesAsync();
+            return NoContent();
         }
     }
 }

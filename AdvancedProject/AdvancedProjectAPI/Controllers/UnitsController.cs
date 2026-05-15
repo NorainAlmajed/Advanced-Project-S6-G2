@@ -24,7 +24,6 @@ namespace AdvancedProjectAPI.Controllers
                 .Include(u => u.Property)
                 .Include(u => u.UnitType)
                 .ToListAsync();
-
             return Ok(units);
         }
 
@@ -39,8 +38,47 @@ namespace AdvancedProjectAPI.Controllers
 
             if (unit == null)
                 return NotFound(new { message = "Unit not found." });
-
             return Ok(unit);
+        }
+
+        // POST: api/units
+        [HttpPost]
+        public async Task<ActionResult<Unit>> Create(Unit unit)
+        {
+            _context.Units.Add(unit);
+            await _context.SaveChangesAsync();
+            return CreatedAtAction(nameof(GetById), new { id = unit.UnitId }, unit);
+        }
+
+        // PUT: api/units/{id}
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(int id, Unit updated)
+        {
+            var existing = await _context.Units.FindAsync(id);
+            if (existing == null) return NotFound(new { message = "Unit not found." });
+
+            existing.UnitNumber = updated.UnitNumber;
+            existing.UnitTypeId = updated.UnitTypeId;
+            existing.SizeSqFt = updated.SizeSqFt;
+            existing.RentAmount = updated.RentAmount;
+            existing.AvailabilityStatus = updated.AvailabilityStatus;
+            existing.IsActive = updated.IsActive;
+            existing.PropertyId = updated.PropertyId;
+
+            await _context.SaveChangesAsync();
+            return NoContent();
+        }
+
+        // DELETE: api/units/{id}
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var unit = await _context.Units.FindAsync(id);
+            if (unit == null) return NotFound(new { message = "Unit not found." });
+
+            _context.Units.Remove(unit);
+            await _context.SaveChangesAsync();
+            return NoContent();
         }
     }
 }
