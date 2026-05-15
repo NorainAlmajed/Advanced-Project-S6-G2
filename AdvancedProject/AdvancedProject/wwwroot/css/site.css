@@ -2361,3 +2361,47 @@ body {
     min-height: 120px;
     resize: vertical;
 }
+
+
+/* ============================= */
+/*          Unit Form            */
+/* ============================= */
+
+.unit-form-page {
+    padding: 1.5rem 0 0.5rem;
+}
+
+.unit-amenities-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.85rem;
+}
+
+.unit-amenity-card {
+    background: #f8fbfb;
+    border: 1px solid rgba(0, 91, 113, 0.12);
+    border-radius: 16px;
+    padding: 0.9rem 1rem;
+    font-weight: 700;
+    color: var(--text-main);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+    .unit-amenity-card:hover {
+        background: #e8f1f3;
+        border-color: var(--primary);
+    }
+
+    .unit-amenity-card input {
+        accent-color: var(--primary);
+    }
+
+@media (max-width: 768px) {
+    .unit-amenities-grid {
+        grid-template-columns: 1fr;
+    }
+}

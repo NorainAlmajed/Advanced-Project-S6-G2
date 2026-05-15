@@ -1,109 +1,116 @@
 ﻿@model AdvancedProject.Models.Unit
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Edit Unit";
 }
 
-<h1>Edit</h1>
+<div class="unit-form-page">
+    <div class="lease-form-wrapper">
+        <div class="lease-form-card shadow-soft">
 
-<h4>Unit</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit" method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="UnitId" />
-            <div class="form-group">
-                <label asp-for="PropertyId" class="control-label"></label>
-                <select asp-for="PropertyId" class="form-control" asp-items="ViewBag.PropertyId"></select>
-                <span asp-validation-for="PropertyId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="UnitNumber" class="control-label"></label>
-                <input asp-for="UnitNumber" class="form-control" />
-                <span asp-validation-for="UnitNumber" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="UnitTypeId" class="control-label"></label>
-                <select asp-for="UnitTypeId" class="form-control" asp-items="ViewBag.UnitTypeId"></select>
-                <span asp-validation-for="UnitTypeId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="SizeSqFt" class="control-label"></label>
-                <input asp-for="SizeSqFt" class="form-control" />
-                <span asp-validation-for="SizeSqFt" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="RentAmount" class="control-label"></label>
-                <input asp-for="RentAmount" class="form-control" />
-                <span asp-validation-for="RentAmount" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="AvailabilityStatus" class="control-label"></label>
-                <input asp-for="AvailabilityStatus" class="form-control" />
-                <span asp-validation-for="AvailabilityStatus" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CreatedAt" class="control-label"></label>
-                <input asp-for="CreatedAt" class="form-control" />
-                <span asp-validation-for="CreatedAt" class="text-danger"></span>
+            <div class="lease-form-header">
+                <p class="lease-form-eyebrow mb-2">Unit</p>
+                <h1 class="lease-form-title mb-2">Edit Unit</h1>
+                <p class="lease-form-subtitle mb-0">
+                    Update unit details, rent, status, and amenities.
+                </p>
             </div>
 
+            <form asp-action="Edit" method="post" class="lease-form-body">
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
-            <div class="form-group mt-3">
-                <label class="control-label">Amenities</label>
-                <div>
-                    @{
-                        var selectedAmenities = ViewBag.SelectedAmenities as int[] ?? Array.Empty<int>();
-                        var amenityList = ViewBag.AmenityList as List<AdvancedProject.Models.Amenity>;
-                    }
+                <input type="hidden" asp-for="UnitId" />
+                <input type="hidden" asp-for="CreatedAt" />
 
-                    @if (amenityList != null)
-                    {
-                        foreach (var amenity in amenityList)
-                        {
-                            bool isChecked = selectedAmenities.Contains(amenity.AmenityId);
+                <div class="row g-3">
 
-                            <div class="form-check">
-                                @if (isChecked)
-                                {
-                                    <input class="form-check-input"
-                                           type="checkbox"
-                                           name="selectedAmenities"
-                                           value="@amenity.AmenityId"
-                                           id="amenity_@amenity.AmenityId"
-                                           checked />
-                                }
-                                else
-                                {
-                                    <input class="form-check-input"
-                                           type="checkbox"
-                                           name="selectedAmenities"
-                                           value="@amenity.AmenityId"
-                                           id="amenity_@amenity.AmenityId" />
-                                }
+                    <div class="col-md-6 lease-form-group">
+                        <label asp-for="PropertyId" class="lease-form-label">Property</label>
+                        <select asp-for="PropertyId" class="form-control lease-form-input" asp-items="ViewBag.PropertyId"></select>
+                        <span asp-validation-for="PropertyId" class="text-danger"></span>
+                    </div>
 
-                                <label class="form-check-label" for="amenity_@amenity.AmenityId">
-                                    @amenity.Name
-                                </label>
-                            </div>
-                        }
-                    }
+                    <div class="col-md-6 lease-form-group">
+                        <label asp-for="UnitNumber" class="lease-form-label">Unit Number</label>
+                        <input asp-for="UnitNumber" class="form-control lease-form-input" />
+                        <span asp-validation-for="UnitNumber" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6 lease-form-group">
+                        <label asp-for="UnitTypeId" class="lease-form-label">Unit Type</label>
+                        <select asp-for="UnitTypeId" class="form-control lease-form-input" asp-items="ViewBag.UnitTypeId"></select>
+                        <span asp-validation-for="UnitTypeId" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6 lease-form-group">
+                        <label asp-for="AvailabilityStatus" class="lease-form-label">Availability Status</label>
+                        <select asp-for="AvailabilityStatus" class="form-control lease-form-input">
+                            <option value="Available">Available</option>
+                            <option value="Occupied">Occupied</option>
+                            <option value="Pending">Pending</option>
+                            <option value="Maintenance">Maintenance</option>
+                        </select>
+                        <span asp-validation-for="AvailabilityStatus" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6 lease-form-group">
+                        <label asp-for="SizeSqFt" class="lease-form-label">Size Sq Ft</label>
+                        <input asp-for="SizeSqFt" type="text" class="form-control lease-form-input" />
+                        <span asp-validation-for="SizeSqFt" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6 lease-form-group">
+                        <label asp-for="RentAmount" class="lease-form-label">Rent Amount</label>
+                        <input asp-for="RentAmount" type="text" class="form-control lease-form-input" />
+                        <span asp-validation-for="RentAmount" class="text-danger"></span>
+                    </div>
+
                 </div>
-            </div>
 
+                <div class="lease-form-group mt-3">
+                    <label class="lease-form-label">Amenities</label>
 
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+                    <div class="unit-amenities-grid">
+                        @{
+                            var selectedAmenities = ViewBag.SelectedAmenities as int[] ?? Array.Empty<int>();
+                            var amenityList = ViewBag.AmenityList as List<AdvancedProject.Models.Amenity>;
+                        }
+
+                        @if (amenityList != null)
+                        {
+                            foreach (var amenity in amenityList)
+                            {
+                                bool isChecked = selectedAmenities.Contains(amenity.AmenityId);
+
+                                <label class="unit-amenity-card">
+                                    <input type="checkbox"
+                                           name="selectedAmenities"
+                                           value="@amenity.AmenityId"
+                                           checked="@isChecked" />
+                                    <span>@amenity.Name</span>
+                                </label>
+                            }
+                        }
+                    </div>
+                </div>
+
+                <div class="lease-form-actions">
+                    <button type="submit" class="btn btn-primary lease-submit-btn">
+                        Save Changes
+                    </button>
+
+                    <a asp-action="Index" asp-route-id="@Model.PropertyId" class="lease-back-link">
+                        Back to List
+                    </a>
+                </div>
+            </form>
+
+        </div>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }
