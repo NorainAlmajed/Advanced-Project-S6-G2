@@ -101,12 +101,10 @@ namespace AdvancedProject.Controllers
                 typeQuery = typeQuery.Where(u => u.PropertyId == id);
             }
 
-            var unitTypes = await typeQuery
-            .Where(u => u.UnitType != null)
-            .Select(u => u.UnitType!.Name)
-            .Distinct()
-            .OrderBy(t => t)
-            .ToListAsync();
+            var unitTypes = await _context.UnitTypes
+     .OrderBy(t => t.Name)
+     .Select(t => t.Name)
+     .ToListAsync();
 
             var amenityQuery = _context.Amenities.AsQueryable();
 
