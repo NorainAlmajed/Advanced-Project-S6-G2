@@ -1,3 +1,4 @@
+using AdvancedProjectAPI.Data;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -7,10 +8,11 @@ builder.Services.AddControllers()
         options.SerializerSettings.ReferenceLoopHandling =
             Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
+builder.Services.AddDbContext<APContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
-// DbContext will be added here after APContext is ready
 
 var app = builder.Build();
 
