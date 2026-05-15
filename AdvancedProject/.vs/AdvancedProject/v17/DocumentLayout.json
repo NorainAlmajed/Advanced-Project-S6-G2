@@ -1,7 +1,20 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\fatima\\OneDrive\\Desktop\\Documents\\GitHub\\Advanced-Project-S6-G2\\AdvancedProject\\",
-  "Documents": [],
+  "WorkspaceRootPath": "C:\\Users\\HP\\Desktop\\Advanced-Project-S6-G2\\AdvancedProject\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{CBD3E4CB-62F8-401D-859C-F21E916AEA32}|AdvancedProjectAPI\\AdvancedProjectAPI.csproj|c:\\users\\hp\\desktop\\advanced-project-s6-g2\\advancedproject\\advancedprojectapi\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CBD3E4CB-62F8-401D-859C-F21E916AEA32}|AdvancedProjectAPI\\AdvancedProjectAPI.csproj|solutionrelative:advancedprojectapi\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CBD3E4CB-62F8-401D-859C-F21E916AEA32}|AdvancedProjectAPI\\AdvancedProjectAPI.csproj|c:\\users\\hp\\desktop\\advanced-project-s6-g2\\advancedproject\\advancedprojectapi\\models\\applicationuser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CBD3E4CB-62F8-401D-859C-F21E916AEA32}|AdvancedProjectAPI\\AdvancedProjectAPI.csproj|solutionrelative:advancedprojectapi\\models\\applicationuser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CBD3E4CB-62F8-401D-859C-F21E916AEA32}|AdvancedProjectAPI\\AdvancedProjectAPI.csproj|c:\\users\\hp\\desktop\\advanced-project-s6-g2\\advancedproject\\advancedprojectapi\\data\\apcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CBD3E4CB-62F8-401D-859C-F21E916AEA32}|AdvancedProjectAPI\\AdvancedProjectAPI.csproj|solutionrelative:advancedprojectapi\\data\\apcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
   "DocumentGroupContainers": [
     {
       "Orientation": 1,
@@ -9,15 +22,72 @@
       "DocumentGroups": [
         {
           "DockedHeight": 85,
-          "SelectedChildIndex": -1,
+          "SelectedChildIndex": 2,
           "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
+            },
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{b1e99781-ab81-11d0-b683-00aa00a3ee26}"
             },
             {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\HP\\Desktop\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProjectAPI\\Program.cs",
+              "RelativeDocumentMoniker": "AdvancedProjectAPI\\Program.cs",
+              "ToolTip": "C:\\Users\\HP\\Desktop\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProjectAPI\\Program.cs",
+              "RelativeToolTip": "AdvancedProjectAPI\\Program.cs",
+              "ViewState": "AgIAAAUAAAAAAAAAAAAgwBEAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-15T00:36:18.074Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "ApplicationUser.cs",
+              "DocumentMoniker": "C:\\Users\\HP\\Desktop\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProjectAPI\\Models\\ApplicationUser.cs",
+              "RelativeDocumentMoniker": "AdvancedProjectAPI\\Models\\ApplicationUser.cs",
+              "ToolTip": "C:\\Users\\HP\\Desktop\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProjectAPI\\Models\\ApplicationUser.cs",
+              "RelativeToolTip": "AdvancedProjectAPI\\Models\\ApplicationUser.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAVAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-15T00:34:54.118Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "APContext.cs",
+              "DocumentMoniker": "C:\\Users\\HP\\Desktop\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProjectAPI\\Data\\APContext.cs",
+              "RelativeDocumentMoniker": "AdvancedProjectAPI\\Data\\APContext.cs",
+              "ToolTip": "C:\\Users\\HP\\Desktop\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProjectAPI\\Data\\APContext.cs",
+              "RelativeToolTip": "AdvancedProjectAPI\\Data\\APContext.cs",
+              "ViewState": "AgIAAI8BAAAAAAAAAAAYwKQBAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-15T00:30:51.815Z",
+              "EditorCaption": ""
+            }
+          ]
+        },
+        {
+          "DockedHeight": 166,
+          "SelectedChildIndex": -1,
+          "Children": [
+            {
               "$type": "Bookmark",
-              "Name": "ST:0:0:{cce594b6-0c39-4442-ba28-10c64ac7e89f}"
+              "Name": "ST:0:0:{0ad07096-bba9-4900-a651-0598d26f6d24}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{d78612c7-9962-4b83-95d9-268046dad23a}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
             }
           ]
         }
