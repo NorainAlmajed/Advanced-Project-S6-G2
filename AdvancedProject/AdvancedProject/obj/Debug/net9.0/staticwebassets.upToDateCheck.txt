@@ -62,7 +62,6 @@ wwwroot\lib\jquery\dist\jquery.slim.js
 wwwroot\lib\jquery\dist\jquery.slim.min.js
 wwwroot\lib\jquery\dist\jquery.slim.min.map
 wwwroot\lib\jquery\LICENSE.txt
-wwwroot\css\site.css
 C:\Users\fatima\OneDrive\Desktop\Documents\GitHub\Advanced-Project-S6-G2\AdvancedProject\AdvancedProject\wwwroot\favicon.ico
 C:\Users\fatima\OneDrive\Desktop\Documents\GitHub\Advanced-Project-S6-G2\AdvancedProject\AdvancedProject\wwwroot\js\site.js
 C:\Users\fatima\OneDrive\Desktop\Documents\GitHub\Advanced-Project-S6-G2\AdvancedProject\AdvancedProject\wwwroot\lib\bootstrap\dist\css\bootstrap-grid.css

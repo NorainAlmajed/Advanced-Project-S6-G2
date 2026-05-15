@@ -1,24 +1,7 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "C:\\Users\\fatima\\OneDrive\\Desktop\\Documents\\GitHub\\Advanced-Project-S6-G2\\AdvancedProject\\",
-  "Documents": [
-    {
-      "AbsoluteMoniker": "D:0:0:{B4100081-BB0A-41BA-A933-BD3CCDB833B9}|AdvancedProject\\AdvancedProject.csproj|c:\\users\\fatima\\onedrive\\desktop\\documents\\github\\advanced-project-s6-g2\\advancedproject\\advancedproject\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{B4100081-BB0A-41BA-A933-BD3CCDB833B9}|AdvancedProject\\AdvancedProject.csproj|solutionrelative:advancedproject\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{B4100081-BB0A-41BA-A933-BD3CCDB833B9}|AdvancedProject\\AdvancedProject.csproj|c:\\users\\fatima\\onedrive\\desktop\\documents\\github\\advanced-project-s6-g2\\advancedproject\\advancedproject\\data\\apcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{B4100081-BB0A-41BA-A933-BD3CCDB833B9}|AdvancedProject\\AdvancedProject.csproj|solutionrelative:advancedproject\\data\\apcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{B4100081-BB0A-41BA-A933-BD3CCDB833B9}|AdvancedProject\\AdvancedProject.csproj|c:\\users\\fatima\\onedrive\\desktop\\documents\\github\\advanced-project-s6-g2\\advancedproject\\advancedproject\\migrations\\20260514233636_addidentity.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{B4100081-BB0A-41BA-A933-BD3CCDB833B9}|AdvancedProject\\AdvancedProject.csproj|solutionrelative:advancedproject\\migrations\\20260514233636_addidentity.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{B4100081-BB0A-41BA-A933-BD3CCDB833B9}|AdvancedProject\\AdvancedProject.csproj|c:\\users\\fatima\\onedrive\\desktop\\documents\\github\\advanced-project-s6-g2\\advancedproject\\advancedproject\\models\\applicationuser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{B4100081-BB0A-41BA-A933-BD3CCDB833B9}|AdvancedProject\\AdvancedProject.csproj|solutionrelative:advancedproject\\models\\applicationuser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    }
-  ],
+  "Documents": [],
   "DocumentGroupContainers": [
     {
       "Orientation": 1,
@@ -26,7 +9,7 @@
       "DocumentGroups": [
         {
           "DockedHeight": 85,
-          "SelectedChildIndex": 4,
+          "SelectedChildIndex": -1,
           "Children": [
             {
               "$type": "Bookmark",
@@ -35,57 +18,6 @@
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{cce594b6-0c39-4442-ba28-10c64ac7e89f}"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "APContext.cs",
-              "DocumentMoniker": "C:\\Users\\fatima\\OneDrive\\Desktop\\Documents\\GitHub\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Data\\APContext.cs",
-              "RelativeDocumentMoniker": "AdvancedProject\\Data\\APContext.cs",
-              "ToolTip": "C:\\Users\\fatima\\OneDrive\\Desktop\\Documents\\GitHub\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Data\\APContext.cs",
-              "RelativeToolTip": "AdvancedProject\\Data\\APContext.cs",
-              "ViewState": "AgIAAAgAAAAAAAAAAAAxwAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-15T00:10:12.828Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "20260514233636_AddIdentity.cs",
-              "DocumentMoniker": "C:\\Users\\fatima\\OneDrive\\Desktop\\Documents\\GitHub\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Migrations\\20260514233636_AddIdentity.cs",
-              "RelativeDocumentMoniker": "AdvancedProject\\Migrations\\20260514233636_AddIdentity.cs",
-              "ToolTip": "C:\\Users\\fatima\\OneDrive\\Desktop\\Documents\\GitHub\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Migrations\\20260514233636_AddIdentity.cs",
-              "RelativeToolTip": "AdvancedProject\\Migrations\\20260514233636_AddIdentity.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAaAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-14T23:36:37.266Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "Program.cs",
-              "DocumentMoniker": "C:\\Users\\fatima\\OneDrive\\Desktop\\Documents\\GitHub\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Program.cs",
-              "RelativeDocumentMoniker": "AdvancedProject\\Program.cs",
-              "ToolTip": "C:\\Users\\fatima\\OneDrive\\Desktop\\Documents\\GitHub\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Program.cs",
-              "RelativeToolTip": "AdvancedProject\\Program.cs",
-              "ViewState": "AgIAAAcAAAAAAAAAAAAAAD0AAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-14T22:57:39.958Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "ApplicationUser.cs",
-              "DocumentMoniker": "C:\\Users\\fatima\\OneDrive\\Desktop\\Documents\\GitHub\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Models\\ApplicationUser.cs",
-              "RelativeDocumentMoniker": "AdvancedProject\\Models\\ApplicationUser.cs",
-              "ToolTip": "C:\\Users\\fatima\\OneDrive\\Desktop\\Documents\\GitHub\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Models\\ApplicationUser.cs",
-              "RelativeToolTip": "AdvancedProject\\Models\\ApplicationUser.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAZAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-14T22:34:12.977Z"
             }
           ]
         }
