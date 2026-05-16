@@ -44,20 +44,39 @@ using (var scope = app.Services.CreateScope())
     }
 
     var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-    var pmEmail = "manager@mail.com";
-    var pmUser = await userManager.FindByEmailAsync(pmEmail);
-    if (pmUser == null)
+
+    var seedUsers = new[]
     {
-        pmUser = new ApplicationUser
+        new { UserId = 1, Email = "manager@mail.com",           FullName = "System Manager",    Password = "Manager@123",   Role = "PropertyManager" },
+        new { UserId = 2, Email = "zahraa.hubail8@gmail.com",   FullName = "Zahraa Hubail",     Password = "Zahraa.123",    Role = "Tenant" },
+        new { UserId = 3, Email = "raghad@gmail.com",           FullName = "Raghad Aleskafi",   Password = "Raghad.123",    Role = "Tenant" },
+        new { UserId = 4, Email = "fatima@gmail.com",           FullName = "Fatima Alaiwi",     Password = "Fatima.123",    Role = "Tenant" },
+        new { UserId = 5, Email = "norain@mail.com",            FullName = "Norain Almajed",    Password = "Norain.123",    Role = "Tenant" },
+        new { UserId = 6, Email = "ahmed.ali@gmail.com",        FullName = "Ahmed Ali",         Password = "Ahmed.999",     Role = "Tenant" },
+        new { UserId = 7, Email = "alihassan@mail.com",         FullName = "Ali Hassan",        Password = "Ali.1234",      Role = "MaintenanceStaff" },
+        new { UserId = 8, Email = "sara.mohamed@gmail.com",     FullName = "Sara Mohamed",      Password = "Sara.888",      Role = "MaintenanceStaff" },
+        new { UserId = 9, Email = "abbas@gmail.com",            FullName = "Abbas Hadi",        Password = "Abbas.123",     Role = "MaintenanceStaff" },
+        new { UserId = 10, Email = "layla@gmail.com",           FullName = "Layla Yaser",       Password = "Layla.999",     Role = "MaintenanceStaff" },
+        new { UserId = 11, Email = "mohammed@gmail.com",        FullName = "Mohammed Karim",    Password = "Mohammed.123",  Role = "MaintenanceStaff" },
+    };
+
+    foreach (var seed in seedUsers)
+    {
+        var existing = await userManager.FindByEmailAsync(seed.Email);
+        if (existing == null)
         {
-            UserName = pmEmail,
-            Email = pmEmail,
-            FullName = "System Manager",
-            EmailConfirmed = true,
-            UserId = 1
-        };
-        await userManager.CreateAsync(pmUser, "Manager@123");
-        await userManager.AddToRoleAsync(pmUser, "PropertyManager");
+            var identityUser = new ApplicationUser
+            {
+                UserName = seed.Email,
+                Email = seed.Email,
+                FullName = seed.FullName,
+                EmailConfirmed = true,
+                UserId = seed.UserId
+            };
+            var result = await userManager.CreateAsync(identityUser, seed.Password);
+            if (result.Succeeded)
+                await userManager.AddToRoleAsync(identityUser, seed.Role);
+        }
     }
 }
 
