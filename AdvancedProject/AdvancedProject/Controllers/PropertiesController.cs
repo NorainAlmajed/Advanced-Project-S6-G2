@@ -2,14 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AdvancedProject.Data;
 using AdvancedProject.Models;
 
+
 namespace AdvancedProject.Controllers
 {
+    [Authorize]
     public class PropertiesController : Controller
     {
         private readonly APContext _context;
@@ -69,6 +72,7 @@ namespace AdvancedProject.Controllers
         }
 
         // GET: Properties/Create
+        [Authorize(Roles = "PropertyManager")]
         public IActionResult Create()
         {
             ViewData["GovernorateId"] = new SelectList(
@@ -82,9 +86,9 @@ namespace AdvancedProject.Controllers
 
 
         // POST: Properties/Create
-        // POST: Properties/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "PropertyManager")]
         public async Task<IActionResult> Create([Bind("PropertyId,Name,City,Description,Block,Building,Road,GovernorateId")] Property property)
         {
             if (property.GovernorateId == 0)
@@ -113,6 +117,7 @@ namespace AdvancedProject.Controllers
         }
 
         // GET: Properties/Edit/5
+        [Authorize(Roles = "PropertyManager")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -135,6 +140,7 @@ namespace AdvancedProject.Controllers
         // POST: Properties/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "PropertyManager")]
         public async Task<IActionResult> Edit(int id, [Bind("PropertyId,Name,City,Description,Block,Building,Road,GovernorateId")] Property property)
         {
             if (id != property.PropertyId)
@@ -170,6 +176,7 @@ namespace AdvancedProject.Controllers
 
 
         // GET: Properties/Delete/5
+        [Authorize(Roles = "PropertyManager")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -190,6 +197,7 @@ namespace AdvancedProject.Controllers
         // POST: Properties/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "PropertyManager")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var @property = await _context.Properties.FindAsync(id);

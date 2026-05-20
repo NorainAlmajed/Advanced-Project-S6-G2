@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +11,7 @@ using AdvancedProject.Models;
 
 namespace AdvancedProject.Controllers
 {
+    [Authorize]
     public class TenantsController : Controller
     {
         private readonly APContext _context;
@@ -20,6 +22,7 @@ namespace AdvancedProject.Controllers
         }
 
         // GET: Tenants
+        [Authorize(Roles = "PropertyManager")]
         public async Task<IActionResult> Index(string searchTerm)
         {
             var tenantsQuery = _context.Users
@@ -49,16 +52,22 @@ namespace AdvancedProject.Controllers
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
-            {
                 return NotFound();
-            }
 
             var tenant = await _context.Tenants
                 .Include(t => t.User)
                 .FirstOrDefaultAsync(m => m.TenantId == id);
+
             if (tenant == null)
-            {
                 return NotFound();
+
+            // Tenants can only view their own details
+            if (!User.IsInRole("PropertyManager"))
+            {
+                var currentUserEmail = User.Identity!.Name;
+                var currentUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == currentUserEmail);
+                if (currentUser == null || tenant.UserId != currentUser.UserId)
+                    return Forbid();
             }
 
             return View(tenant);

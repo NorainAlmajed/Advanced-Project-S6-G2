@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +11,7 @@ using AdvancedProject.Models;
 
 namespace AdvancedProject.Controllers
 {
+    [Authorize]
     public class PaymentsController : Controller
     {
         private readonly APContext _context;
@@ -49,9 +51,25 @@ namespace AdvancedProject.Controllers
         {
             var paymentsQuery = _context.Payments
                 .Include(p => p.Lease)
+                    .ThenInclude(l => l.Tenant)
                 .Include(p => p.PaymentFrequency)
                 .Include(p => p.PaymentMethod)
                 .AsQueryable();
+
+            // Tenants only see their own payments
+            if (!User.IsInRole("PropertyManager"))
+            {
+                var currentUserEmail = User.Identity!.Name;
+                var currentUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == currentUserEmail);
+                if (currentUser != null)
+                {
+                    var tenant = await _context.Tenants.FirstOrDefaultAsync(t => t.UserId == currentUser.UserId);
+                    if (tenant != null)
+                        paymentsQuery = paymentsQuery.Where(p => p.Lease.TenantId == tenant.TenantId);
+                    else
+                        paymentsQuery = paymentsQuery.Where(p => false);
+                }
+            }
 
             if (!string.IsNullOrWhiteSpace(searchTerm))
             {
@@ -118,6 +136,7 @@ namespace AdvancedProject.Controllers
         }
 
         // GET: Payments/Create
+        [Authorize(Roles = "PropertyManager")]
         public IActionResult Create()
         {
             PopulateDropdowns();
@@ -127,6 +146,7 @@ namespace AdvancedProject.Controllers
         // POST: Payments/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "PropertyManager")]
         public async Task<IActionResult> Create([Bind("LeaseId,Status,PaymentMethodId,PaymentFrequencyId, StartDate,GovernorateId")] Payment payment)
         {
             if (ModelState.IsValid)
@@ -166,6 +186,7 @@ namespace AdvancedProject.Controllers
         }
 
         // GET: Payments/Edit/5
+        [Authorize(Roles = "PropertyManager")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -184,6 +205,7 @@ namespace AdvancedProject.Controllers
         // POST: Payments/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "PropertyManager")]
         public async Task<IActionResult> Edit(int id, [Bind("PaymentId,StartDate,Status,PaymentMethodId,PaymentFrequencyId")] Payment payment)
         {
             if (id != payment.PaymentId)
@@ -237,6 +259,7 @@ namespace AdvancedProject.Controllers
             return RedirectToAction(nameof(Index));
         }
         // GET: Payments/Delete/5
+        [Authorize(Roles = "PropertyManager")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -260,6 +283,7 @@ namespace AdvancedProject.Controllers
         // POST: Payments/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "PropertyManager")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var payment = await _context.Payments.FindAsync(id);
