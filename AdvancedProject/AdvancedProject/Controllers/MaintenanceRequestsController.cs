@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +11,7 @@ using AdvancedProject.Models;
 
 namespace AdvancedProject.Controllers
 {
+    [Authorize]
     public class MaintenanceRequestsController : Controller
     {
         private readonly APContext _context;
@@ -40,6 +42,28 @@ namespace AdvancedProject.Controllers
             .Include(m => m.Unit)
                 .ThenInclude(u => u.Property)
             .AsQueryable();
+
+            // Tenants only see their own requests; staff only see assigned requests
+            if (!User.IsInRole("PropertyManager"))
+            {
+                var currentUserEmail = User.Identity!.Name;
+                var currentUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == currentUserEmail);
+                if (currentUser != null)
+                {
+                    if (User.IsInRole("MaintenanceStaff"))
+                    {
+                        var staff = await _context.MaintenanceStaffs.FirstOrDefaultAsync(s => s.UserId == currentUser.UserId);
+                        if (staff != null)
+                            query = query.Where(m => m.AssignedStaffId == staff.StaffId);
+                        else
+                            query = query.Where(m => false);
+                    }
+                    else // Tenant
+                    {
+                        query = query.Where(m => m.UserId == currentUser.UserId);
+                    }
+                }
+            }
 
             if (!string.IsNullOrWhiteSpace(searchTerm))
             {

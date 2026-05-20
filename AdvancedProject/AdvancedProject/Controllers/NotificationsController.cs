@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +11,7 @@ using AdvancedProject.Models;
 
 namespace AdvancedProject.Controllers
 {
+    [Authorize]
     public class NotificationsController : Controller
     {
         private readonly APContext _context;
@@ -20,18 +22,22 @@ namespace AdvancedProject.Controllers
         }
 
         // GET: Notifications
-        // GET: Notifications
         public async Task<IActionResult> Index(string typeFilter = "All")
         {
+            var currentUserEmail = User.Identity!.Name;
+            var currentUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == currentUserEmail);
+
             var query = _context.Notifications
                 .Include(n => n.NotificationType)
                 .Include(n => n.User)
                 .AsQueryable();
 
+            // Every user only sees their own notifications
+            if (currentUser != null)
+                query = query.Where(n => n.UserId == currentUser.UserId);
+
             if (!string.IsNullOrEmpty(typeFilter) && typeFilter != "All")
-            {
                 query = query.Where(n => n.NotificationType.Name == typeFilter);
-            }
 
             ViewBag.SelectedType = typeFilter;
 
