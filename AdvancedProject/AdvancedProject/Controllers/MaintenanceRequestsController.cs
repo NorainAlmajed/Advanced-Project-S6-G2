@@ -673,6 +673,57 @@ namespace AdvancedProject.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> MarkInProgress(int id)
+        {
+            var request = await _context.MaintenanceRequests.FindAsync(id);
+            if (request == null) return NotFound();
+
+            request.Status = "In Progress";
+            request.InProgressTime = DateTime.Now;
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Details), new { id });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> MarkCancelled(int id)
+        {
+            var request = await _context.MaintenanceRequests.FindAsync(id);
+            if (request == null) return NotFound();
+
+            request.Status = "Cancelled";
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Details), new { id });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> MarkResolved(int id)
+        {
+            var request = await _context.MaintenanceRequests.FindAsync(id);
+            if (request == null) return NotFound();
+
+            request.Status = "Resolved";
+            request.ResolvedTime = DateTime.Now;
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Details), new { id });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> MarkClosed(int id)
+        {
+            var request = await _context.MaintenanceRequests.FindAsync(id);
+            if (request == null) return NotFound();
+
+            request.Status = "Closed";
+            request.ClosedTime = DateTime.Now;
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Details), new { id });
+        }
+
         private bool MaintenanceRequestExists(int id)
         {
             return _context.MaintenanceRequests.Any(e => e.RequestId == id);

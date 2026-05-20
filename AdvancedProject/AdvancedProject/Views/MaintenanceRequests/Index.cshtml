@@ -54,6 +54,7 @@
                             <option value="In Progress">In Progress</option>
                             <option value="Resolved">Resolved</option>
                             <option value="Closed">Closed</option>
+                            <option value="Cancelled">Cancelled</option>
                         </select>
                     </div>
 
@@ -119,6 +120,7 @@
                     "In Progress" => "request-pill-status-progress",
                     "Resolved" => "request-pill-status-resolved",
                     "Closed" => "request-pill-status-closed",
+                    "Cancelled" => "request-pill-status-cancelled",
                     _ => "badge-soft-default"
                 };
 
@@ -157,17 +159,10 @@
                             </div>
 
                             <div class="mt-auto">
-                                <div class="row g-2">
-                                    <div class="col-6 d-grid">
-                                        <a asp-action="Details" asp-route-id="@item.RequestId" class="btn btn-primary request-action-btn">
-                                            View Details
-                                        </a>
-                                    </div>
-                                    <div class="col-6 d-grid">
-                                        <a asp-action="Delete" asp-route-id="@item.RequestId" class="btn btn-outline-danger request-action-btn">
-                                            Delete
-                                        </a>
-                                    </div>
+                                <div class="d-grid">
+                                    <a asp-action="Details" asp-route-id="@item.RequestId" class="btn btn-primary request-action-btn">
+                                        View Details
+                                    </a>
                                 </div>
                             </div>
                         </div>
