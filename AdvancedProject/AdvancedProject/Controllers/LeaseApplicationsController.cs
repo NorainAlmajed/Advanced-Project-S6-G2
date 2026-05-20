@@ -83,6 +83,21 @@ namespace AdvancedProject.Controllers
         .OrderByDescending(l => l.ApplicationDate);
             }
 
+            // Auto-reject pending applications whose start date has already passed
+            var today = DateTime.Today;
+            var overdue = await _context.LeaseApplications
+                .Where(a => a.Status == "Pending" && a.StartDate.Date <= today)
+                .ToListAsync();
+
+            foreach (var app in overdue)
+            {
+                app.Status = "Rejected";
+                app.RejectTime = DateTime.Now;
+            }
+
+            if (overdue.Any())
+                await _context.SaveChangesAsync();
+
             var applications = await applicationsQuery.ToListAsync();
 
             ViewData["CurrentSearchTerm"] = searchTerm;
@@ -127,9 +142,10 @@ namespace AdvancedProject.Controllers
                 .FirstOrDefault(u => u.UnitId == unitId);
 
             if (unit == null)
-            {
                 return NotFound();
-            }
+
+            if (unit.AvailabilityStatus == "Occupied")
+                return RedirectToAction("Index", "Units");
 
             var model = new LeaseApplication
             {
@@ -145,13 +161,16 @@ namespace AdvancedProject.Controllers
         }
 
         // POST: LeaseApplications/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(LeaseApplication leaseApplication)
         {
-            leaseApplication.TenantId = 1;
+            var currentUserEmail = User.Identity!.Name;
+            var currentUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == currentUserEmail);
+            var tenant = currentUser == null ? null
+                : await _context.Tenants.FirstOrDefaultAsync(t => t.UserId == currentUser.UserId);
+
+            leaseApplication.TenantId = tenant?.TenantId ?? 0;
             leaseApplication.Status = "Pending";
             leaseApplication.ApplicationDate = DateTime.Now;
 

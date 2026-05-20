@@ -144,38 +144,68 @@ namespace AdvancedProject.Controllers
         }
 
         // GET: MaintenanceRequests/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            int tenantId = 1; // temporary logged-in user
+            var currentUserEmail = User.Identity!.Name;
+            var currentUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == currentUserEmail);
 
-            var activeLeases = _context.Leases
-            .Include(l => l.Unit)
-            .ThenInclude(u => u.Property)
-                .Where(l => l.TenantId == tenantId && l.Status == "Active")
-                .ToList();
+            if (currentUser == null) return Unauthorized();
 
-            if (!activeLeases.Any())
+            if (User.IsInRole("PropertyManager"))
             {
-                ViewBag.HasActiveLease = false;
+                // Manager: list every unit in the system
+                var allUnits = await _context.Units
+                    .Include(u => u.Property)
+                    .Select(u => new
+                    {
+                        u.UnitId,
+                        DisplayName = u.UnitNumber + " (" + u.Property.Name + ")"
+                    })
+                    .ToListAsync();
+
+                ViewBag.HasActiveLease = true;
+                ViewData["UnitId"] = new SelectList(allUnits, "UnitId", "DisplayName");
+                ViewData["SkillId"] = new SelectList(_context.Skills, "SkillId", "Name");
                 return View();
             }
+            else
+            {
+                // Tenant: only units from their active leases
+                var tenant = await _context.Tenants.FirstOrDefaultAsync(t => t.UserId == currentUser.UserId);
 
-            ViewBag.HasActiveLease = true;
-
-            var units = activeLeases
-                .Select(l => new
+                if (tenant == null)
                 {
-                    l.Unit.UnitId,
-                    DisplayName = l.Unit.UnitNumber + " (" + l.Unit.Property.Name + ")"
-                })
-                .GroupBy(x => x.UnitId)
-                .Select(g => g.First())
-                .ToList();
+                    ViewBag.HasActiveLease = false;
+                    return View();
+                }
 
-            ViewData["UnitId"] = new SelectList(units, "UnitId", "DisplayName");
-            ViewData["SkillId"] = new SelectList(_context.Skills, "SkillId", "Name");
+                var activeLeases = await _context.Leases
+                    .Include(l => l.Unit).ThenInclude(u => u.Property)
+                    .Where(l => l.TenantId == tenant.TenantId && l.Status == "Active")
+                    .ToListAsync();
 
-            return View();
+                if (!activeLeases.Any())
+                {
+                    ViewBag.HasActiveLease = false;
+                    return View();
+                }
+
+                ViewBag.HasActiveLease = true;
+
+                var units = activeLeases
+                    .Select(l => new
+                    {
+                        l.Unit.UnitId,
+                        DisplayName = l.Unit.UnitNumber + " (" + l.Unit.Property.Name + ")"
+                    })
+                    .GroupBy(x => x.UnitId)
+                    .Select(g => g.First())
+                    .ToList();
+
+                ViewData["UnitId"] = new SelectList(units, "UnitId", "DisplayName");
+                ViewData["SkillId"] = new SelectList(_context.Skills, "SkillId", "Name");
+                return View();
+            }
         }
 
         // POST: MaintenanceRequests/Create
@@ -183,17 +213,14 @@ namespace AdvancedProject.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("UnitId,SkillId,Priority,Notes")] MaintenanceRequest maintenanceRequest)
         {
-            if (!ModelState.IsValid)
-            {
-                foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
-                {
-                    Console.WriteLine(error.ErrorMessage);
-                }
-            }
+            var currentUserEmail = User.Identity!.Name;
+            var currentUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == currentUserEmail);
+
+            if (currentUser == null) return Unauthorized();
 
             if (ModelState.IsValid)
             {
-                maintenanceRequest.UserId = 2;
+                maintenanceRequest.UserId = currentUser.UserId;
                 maintenanceRequest.RequestDate = DateTime.Now;
                 maintenanceRequest.Status = "Pending";
 
@@ -211,11 +238,8 @@ namespace AdvancedProject.Controllers
                 // assign staff
                 maintenanceRequest.AssignedStaffId = staff?.StaffId;
 
-                // UPDATE STAFF STATUS TO BUSY
                 if (staff != null)
-                {
                     staff.AvailabilityStatus = "Busy";
-                }
 
                 _context.Add(maintenanceRequest);
                 await _context.SaveChangesAsync();
@@ -224,21 +248,33 @@ namespace AdvancedProject.Controllers
             }
 
             // reload dropdowns if validation fails
-            int tenantId = 1;
+            if (User.IsInRole("PropertyManager"))
+            {
+                var allUnits = await _context.Units
+                    .Include(u => u.Property)
+                    .Select(u => new
+                    {
+                        u.UnitId,
+                        DisplayName = u.UnitNumber + " (" + u.Property.Name + ")"
+                    })
+                    .ToListAsync();
 
-            var units = _context.Leases
-                .Where(l => l.TenantId == tenantId && l.Status == "Active")
-                .Select(l => new
-                {
-                    l.Unit.UnitId,
-                    DisplayName = l.Unit.UnitNumber + " (" + l.Unit.Property.Name + ")"
-                })
-                .ToList()
-                .GroupBy(x => x.UnitId)
-                .Select(g => g.First())
-                .ToList();
+                ViewData["UnitId"] = new SelectList(allUnits, "UnitId", "DisplayName", maintenanceRequest.UnitId);
+            }
+            else
+            {
+                var tenant = await _context.Tenants.FirstOrDefaultAsync(t => t.UserId == currentUser.UserId);
+                var units = tenant == null
+                    ? new List<object>()
+                    : (await _context.Leases
+                        .Where(l => l.TenantId == tenant.TenantId && l.Status == "Active")
+                        .Select(l => new { l.Unit.UnitId, DisplayName = l.Unit.UnitNumber + " (" + l.Unit.Property.Name + ")" })
+                        .ToListAsync())
+                        .GroupBy(x => x.UnitId).Select(g => g.First())
+                        .Cast<object>().ToList();
 
-            ViewData["UnitId"] = new SelectList(units, "UnitId", "DisplayName", maintenanceRequest.UnitId);
+                ViewData["UnitId"] = new SelectList(units, "UnitId", "DisplayName", maintenanceRequest.UnitId);
+            }
 
             ViewData["SkillId"] = new SelectList(_context.Skills, "SkillId", "Name", maintenanceRequest.SkillId);
 
