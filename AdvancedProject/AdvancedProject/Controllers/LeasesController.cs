@@ -289,7 +289,7 @@ namespace AdvancedProject.Controllers
             .ToList();
 
             ViewData["TenantId"] = new SelectList(tenants, "TenantId", "Username", lease.TenantId);
-            ViewData["UnitId"] = new SelectList(_context.Units, "UnitId", "UnitNumber", lease.UnitId);
+            ViewData["UnitId"] = new SelectList(_context.Units.Where(u => u.IsActive), "UnitId", "UnitNumber", lease.UnitId);
             ViewData["DurationId"] = new SelectList(_context.Durations, "DurationId", "Months", lease.DurationId);
             return View(lease);
         }

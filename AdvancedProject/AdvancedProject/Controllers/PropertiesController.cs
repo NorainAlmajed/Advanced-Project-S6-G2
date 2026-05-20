@@ -27,6 +27,7 @@ namespace AdvancedProject.Controllers
         {
             var properties = _context.Properties
                 .Include(p => p.Governorate)
+                .Where(p => p.IsActive)
                 .AsQueryable();
 
 
@@ -205,6 +206,26 @@ namespace AdvancedProject.Controllers
             {
                 _context.Properties.Remove(@property);
             }
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "PropertyManager")]
+        public async Task<IActionResult> SoftDelete(int id)
+        {
+            var property = await _context.Properties
+                .Include(p => p.Units)
+                .FirstOrDefaultAsync(p => p.PropertyId == id);
+
+            if (property == null) return NotFound();
+
+            property.IsActive = false;
+
+            foreach (var unit in property.Units)
+                unit.IsActive = false;
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));

@@ -153,9 +153,10 @@ namespace AdvancedProject.Controllers
 
             if (User.IsInRole("PropertyManager"))
             {
-                // Manager: list every unit in the system
+                // Manager: list every active unit in the system
                 var allUnits = await _context.Units
                     .Include(u => u.Property)
+                    .Where(u => u.IsActive)
                     .Select(u => new
                     {
                         u.UnitId,
@@ -252,6 +253,7 @@ namespace AdvancedProject.Controllers
             {
                 var allUnits = await _context.Units
                     .Include(u => u.Property)
+                    .Where(u => u.IsActive)
                     .Select(u => new
                     {
                         u.UnitId,

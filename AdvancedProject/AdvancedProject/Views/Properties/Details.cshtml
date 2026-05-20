@@ -25,6 +25,13 @@
                     <a asp-action="Edit" asp-route-id="@Model?.PropertyId" class="btn btn-light fw-semibold px-3">
                         ✏️ Edit
                     </a>
+                    @if (User.IsInRole("PropertyManager"))
+                    {
+                        <button type="button" class="btn btn-danger fw-semibold px-3"
+                                data-bs-toggle="modal" data-bs-target="#deletePropertyModal">
+                            🗑 Delete
+                        </button>
+                    }
                     <a asp-action="Index" class="btn btn-outline-light px-3">
                         ← Back
                     </a>
@@ -100,6 +107,14 @@
                                 View Units
                             </a>
 
+                            @if (User.IsInRole("PropertyManager"))
+                            {
+                                <button type="button" class="btn btn-danger"
+                                        data-bs-toggle="modal" data-bs-target="#deletePropertyModal">
+                                    Delete Property
+                                </button>
+                            }
+
                             <a asp-action="Index" class="btn btn-outline-secondary">
                                 Back to Properties
                             </a>
@@ -141,3 +156,27 @@
         </div>
     </div>
 </div>
+
+@if (User.IsInRole("PropertyManager"))
+{
+    <div class="modal fade" id="deletePropertyModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 rounded-4 shadow">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title fw-bold">Delete Property</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body pt-2">
+                    Are you sure you want to delete <strong>@Model.Name</strong>? All units under this property will also be deactivated.
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-light-custom" data-bs-dismiss="modal">Cancel</button>
+                    <form asp-action="SoftDelete" asp-route-id="@Model.PropertyId" method="post">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-danger lease-action-btn">Confirm Delete</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+}
