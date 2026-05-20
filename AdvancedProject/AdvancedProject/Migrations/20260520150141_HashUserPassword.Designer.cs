@@ -4,6 +4,7 @@ using AdvancedProject.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AdvancedProject.Migrations
 {
     [DbContext(typeof(APContext))]
-    partial class APContextModelSnapshot : ModelSnapshot
+    [Migration("20260520150141_HashUserPassword")]
+    partial class HashUserPassword
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -37,7 +40,7 @@ namespace AdvancedProject.Migrations
 
                     b.HasKey("AmenityId");
 
-                    b.ToTable("Amenities", (string)null);
+                    b.ToTable("Amenities");
 
                     b.HasData(
                         new
@@ -162,7 +165,7 @@ namespace AdvancedProject.Migrations
 
                     b.HasKey("DurationId");
 
-                    b.ToTable("Durations", (string)null);
+                    b.ToTable("Durations");
 
                     b.HasData(
                         new
@@ -197,7 +200,7 @@ namespace AdvancedProject.Migrations
 
                     b.HasKey("GovernorateId");
 
-                    b.ToTable("Governorates", (string)null);
+                    b.ToTable("Governorates");
 
                     b.HasData(
                         new
@@ -269,7 +272,7 @@ namespace AdvancedProject.Migrations
 
                     b.HasIndex(new[] { "UnitId" }, "IX_Leases_UnitId");
 
-                    b.ToTable("Leases", (string)null);
+                    b.ToTable("Leases");
 
                     b.HasData(
                         new
@@ -378,7 +381,7 @@ namespace AdvancedProject.Migrations
 
                     b.HasIndex(new[] { "UnitId" }, "IX_LeaseApplications_UnitId");
 
-                    b.ToTable("LeaseApplications", (string)null);
+                    b.ToTable("LeaseApplications");
 
                     b.HasData(
                         new
@@ -533,7 +536,7 @@ namespace AdvancedProject.Migrations
 
                     b.HasIndex(new[] { "UnitId" }, "IX_MaintenanceRequests_UnitId");
 
-                    b.ToTable("MaintenanceRequests", (string)null);
+                    b.ToTable("MaintenanceRequests");
 
                     b.HasData(
                         new
@@ -618,7 +621,7 @@ namespace AdvancedProject.Migrations
 
                     b.HasIndex(new[] { "UserId" }, "IX_MaintenanceStaff_UserId");
 
-                    b.ToTable("MaintenanceStaff", (string)null);
+                    b.ToTable("MaintenanceStaff");
 
                     b.HasData(
                         new
@@ -688,7 +691,7 @@ namespace AdvancedProject.Migrations
 
                     b.HasIndex(new[] { "UserId" }, "IX_Notifications_UserId");
 
-                    b.ToTable("Notifications", (string)null);
+                    b.ToTable("Notifications");
 
                     b.HasData(
                         new
@@ -807,7 +810,7 @@ namespace AdvancedProject.Migrations
 
                     b.HasKey("NotificationTypeId");
 
-                    b.ToTable("NotificationTypes", (string)null);
+                    b.ToTable("NotificationTypes");
 
                     b.HasData(
                         new
@@ -866,7 +869,7 @@ namespace AdvancedProject.Migrations
 
                     b.HasIndex(new[] { "LeaseId" }, "IX_Payments_LeaseId");
 
-                    b.ToTable("Payments", (string)null);
+                    b.ToTable("Payments");
 
                     b.HasData(
                         new
@@ -944,7 +947,7 @@ namespace AdvancedProject.Migrations
 
                     b.HasKey("PaymentFrequencyId");
 
-                    b.ToTable("PaymentFrequencies", (string)null);
+                    b.ToTable("PaymentFrequencies");
 
                     b.HasData(
                         new
@@ -988,7 +991,7 @@ namespace AdvancedProject.Migrations
 
                     b.HasKey("PaymentMethodId");
 
-                    b.ToTable("PaymentMethods", (string)null);
+                    b.ToTable("PaymentMethods");
 
                     b.HasData(
                         new
@@ -1078,7 +1081,7 @@ namespace AdvancedProject.Migrations
 
                     b.HasIndex("GovernorateId");
 
-                    b.ToTable("Properties", (string)null);
+                    b.ToTable("Properties");
 
                     b.HasData(
                         new
@@ -1140,7 +1143,7 @@ namespace AdvancedProject.Migrations
 
                     b.HasIndex(new[] { "UserId" }, "IX_PropertyManagers_UserId");
 
-                    b.ToTable("PropertyManagers", (string)null);
+                    b.ToTable("PropertyManagers");
 
                     b.HasData(
                         new
@@ -1166,7 +1169,7 @@ namespace AdvancedProject.Migrations
 
                     b.HasKey("SkillId");
 
-                    b.ToTable("Skills", (string)null);
+                    b.ToTable("Skills");
 
                     b.HasData(
                         new
@@ -1236,7 +1239,7 @@ namespace AdvancedProject.Migrations
 
                     b.HasIndex(new[] { "UserId" }, "IX_Tenants_UserId");
 
-                    b.ToTable("Tenants", (string)null);
+                    b.ToTable("Tenants");
 
                     b.HasData(
                         new
@@ -1342,7 +1345,7 @@ namespace AdvancedProject.Migrations
 
                     b.HasIndex(new[] { "PropertyId" }, "IX_Units_PropertyId");
 
-                    b.ToTable("Units", (string)null);
+                    b.ToTable("Units");
 
                     b.HasData(
                         new
@@ -1434,7 +1437,7 @@ namespace AdvancedProject.Migrations
 
                     b.HasKey("UnitTypeId");
 
-                    b.ToTable("UnitTypes", (string)null);
+                    b.ToTable("UnitTypes");
 
                     b.HasData(
                         new
@@ -1515,7 +1518,7 @@ namespace AdvancedProject.Migrations
                     b.HasIndex(new[] { "Username" }, "Unique_Username_Users")
                         .IsUnique();
 
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("Users");
 
                     b.HasData(
                         new
