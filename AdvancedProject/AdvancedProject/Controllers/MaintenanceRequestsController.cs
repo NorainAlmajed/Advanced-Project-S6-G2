@@ -300,12 +300,79 @@ namespace AdvancedProject.Controllers
 
             if (ModelState.IsValid)
             {
+                var oldAssignedStaffId = request.AssignedStaffId;
+                bool managerChangedStaff = (form.AssignedStaffId != oldAssignedStaffId);
+
+                MaintenanceStaff? oldStaff = null;
+                if (oldAssignedStaffId != null)
+                {
+                    oldStaff = await _context.MaintenanceStaffs
+                        .FirstOrDefaultAsync(s => s.StaffId == oldAssignedStaffId);
+                }
+
                 request.UnitId = form.UnitId;
                 request.SkillId = form.SkillId;
                 request.Priority = form.Priority;
                 request.Status = form.Status;
-                request.AssignedStaffId = form.AssignedStaffId;
                 request.Notes = form.Notes;
+
+                if (!managerChangedStaff)
+                {
+                    // Manager didn't change staff — free old staff first so the search can re-select them
+                    if (oldStaff != null)
+                    {
+                        oldStaff.AvailabilityStatus = "Available";
+                    }
+
+                    // Load all staff into memory — EF returns tracked entities so in-memory availability changes are visible
+                    var allStaff = await _context.MaintenanceStaffs
+                        .Include(s => s.Skills)
+                        .ToListAsync();
+
+                    // First choice: available staff with matching skill
+                    var newStaff = allStaff.FirstOrDefault(s =>
+                        s.AvailabilityStatus == "Available" &&
+                        s.Skills.Any(sk => sk.SkillId == request.SkillId));
+
+                    // Fallback 1: any available staff regardless of skill
+                    if (newStaff == null)
+                    {
+                        newStaff = allStaff.FirstOrDefault(s => s.AvailabilityStatus == "Available");
+                    }
+
+                    // Fallback 2: any staff at all, even if busy
+                    if (newStaff == null)
+                    {
+                        newStaff = allStaff.FirstOrDefault();
+                    }
+
+                    request.AssignedStaffId = newStaff?.StaffId;
+
+                    if (newStaff != null)
+                    {
+                        newStaff.AvailabilityStatus = "Busy";
+                    }
+                }
+                else
+                {
+                    // Manager manually picked a staff — save as-is, manage availability
+                    if (oldStaff != null)
+                    {
+                        oldStaff.AvailabilityStatus = "Available";
+                    }
+
+                    request.AssignedStaffId = form.AssignedStaffId;
+
+                    if (form.AssignedStaffId != null)
+                    {
+                        var newStaff = await _context.MaintenanceStaffs
+                            .FirstOrDefaultAsync(s => s.StaffId == form.AssignedStaffId);
+                        if (newStaff != null)
+                        {
+                            newStaff.AvailabilityStatus = "Busy";
+                        }
+                    }
+                }
 
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -442,42 +509,49 @@ namespace AdvancedProject.Controllers
 
             if (ModelState.IsValid)
             {
-                // 🔥 1. GET OLD STAFF BEFORE CHANGING
+                // 1. Get old staff and immediately mark Available so the search below can re-select them
                 MaintenanceStaff? oldStaff = null;
-
                 if (request.AssignedStaffId != null)
                 {
                     oldStaff = await _context.MaintenanceStaffs
                         .FirstOrDefaultAsync(s => s.StaffId == request.AssignedStaffId);
                 }
+                if (oldStaff != null)
+                {
+                    oldStaff.AvailabilityStatus = "Available";
+                }
 
-                // update request fields
+                // 2. Update request fields
                 request.UnitId = form.UnitId;
                 request.SkillId = form.SkillId;
                 request.Priority = form.Priority;
                 request.Status = form.Status;
                 request.Notes = form.Notes;
 
-                // 🔥 2. GET NEW STAFF
-                var newStaff = await GetAvailableStaff(request.SkillId);
+                // 3. Load all staff into memory — EF returns tracked entities so in-memory availability changes are visible
+                var allStaff = await _context.MaintenanceStaffs
+                    .Include(s => s.Skills)
+                    .ToListAsync();
 
+                // First choice: available staff with matching skill
+                var newStaff = allStaff.FirstOrDefault(s =>
+                    s.AvailabilityStatus == "Available" &&
+                    s.Skills.Any(sk => sk.SkillId == request.SkillId));
+
+                // Fallback 1: any available staff regardless of skill
                 if (newStaff == null)
                 {
-                    newStaff = await _context.MaintenanceStaffs
-                        .Where(s => s.AvailabilityStatus == "Available")
-                        .FirstOrDefaultAsync();
+                    newStaff = allStaff.FirstOrDefault(s => s.AvailabilityStatus == "Available");
                 }
 
-                // 🔥 3. FREE OLD STAFF (ONLY IF DIFFERENT)
-                if (oldStaff != null && oldStaff.StaffId != newStaff?.StaffId)
+                // Fallback 2: any staff at all, even if busy
+                if (newStaff == null)
                 {
-                    oldStaff.AvailabilityStatus = "Available";
+                    newStaff = allStaff.FirstOrDefault();
                 }
 
-                // 🔥 4. ASSIGN NEW STAFF
+                // 4. Assign new staff and mark Busy
                 request.AssignedStaffId = newStaff?.StaffId;
-
-                // 🔥 5. SET NEW STAFF TO BUSY
                 if (newStaff != null)
                 {
                     newStaff.AvailabilityStatus = "Busy";
