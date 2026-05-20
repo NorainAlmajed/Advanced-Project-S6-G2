@@ -7,10 +7,12 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AdvancedProject.Data;
 using AdvancedProject.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace AdvancedProject.Controllers
 {
+    [Authorize]
     public class LeaseApplicationsController : Controller
     {
         private readonly APContext _context;
@@ -30,6 +32,21 @@ namespace AdvancedProject.Controllers
          .ThenInclude(u => u.Property)
      .Include(l => l.Duration)
      .AsQueryable();
+
+            // Tenants only see their own applications
+            if (!User.IsInRole("PropertyManager"))
+            {
+                var currentUserEmail = User.Identity!.Name;
+                var currentUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == currentUserEmail);
+                if (currentUser != null)
+                {
+                    var tenant = await _context.Tenants.FirstOrDefaultAsync(t => t.UserId == currentUser.UserId);
+                    if (tenant != null)
+                        applicationsQuery = applicationsQuery.Where(l => l.TenantId == tenant.TenantId);
+                    else
+                        applicationsQuery = applicationsQuery.Where(l => false);
+                }
+            }
 
             if (!string.IsNullOrWhiteSpace(searchTerm))
             {
