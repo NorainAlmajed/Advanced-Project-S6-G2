@@ -193,7 +193,7 @@ public partial class APContext : IdentityDbContext<ApplicationUser>
         });
 
         modelBuilder.Entity<User>().HasData(
-      new User { UserId = 1, Username = "manager", Password = "Manager123", FullName = "System Manager", Email = "manager@mail.com", Phone = "33338876", Role = "Manager", IsActive = true, CreatedAt = new DateTime(2026, 1, 1), Gender = "M" },
+      new User { UserId = 1, Username = "manager", Password = "Manager@123", FullName = "System Manager", Email = "manager@mail.com", Phone = "33338876", Role = "Manager", IsActive = true, CreatedAt = new DateTime(2026, 1, 1), Gender = "M" },
 
       new User { UserId = 2, Username = "zahraa.hubail", Password = "Zahraa.123", FullName = "Zahraa Hubail", Email = "zahraa.hubail8@gmail.com", Phone = "33735771", Role = "Tenant", IsActive = true, CreatedAt = new DateTime(2026, 2, 12, 2, 3, 4), Gender = "F" },
       new User { UserId = 3, Username = "raghad.aleskafi", Password = "Raghad.123", FullName = "Raghad Aleskafi", Email = "raghad@gmail.com", Phone = "39004266", Role = "Tenant", IsActive = true, CreatedAt = new DateTime(2026, 3, 15, 15, 12, 55), Gender = "F" },

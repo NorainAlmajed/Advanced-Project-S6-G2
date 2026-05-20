@@ -30,6 +30,8 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.AccessDeniedPath = "/Account/AccessDenied";
 });
 
+builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
+
 var app = builder.Build();
 //  this makes sure the roles and the manager always exist in the db
 using (var scope = app.Services.CreateScope())
@@ -78,6 +80,19 @@ using (var scope = app.Services.CreateScope())
                 await userManager.AddToRoleAsync(identityUser, seed.Role);
         }
     }
+
+    // Hash any plain-text passwords in the custom Users table (all users)
+    var dbContext = scope.ServiceProvider.GetRequiredService<APContext>();
+    var hasher = new PasswordHasher<User>();
+    var allUsers = dbContext.Users.ToList();
+    foreach (var user in allUsers)
+    {
+        if (user.Password.Length <= 50) // plain text is short; hashes are 84 chars
+        {
+            user.Password = hasher.HashPassword(null!, user.Password);
+        }
+    }
+    await dbContext.SaveChangesAsync();
 }
 
 if (!app.Environment.IsDevelopment())
