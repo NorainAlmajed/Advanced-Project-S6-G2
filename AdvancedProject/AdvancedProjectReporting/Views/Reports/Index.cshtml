@@ -1,0 +1,116 @@
+@model AdvancedProjectReporting.Dtos.DashboardViewModel
+@{
+    ViewData["Title"] = "Dashboard";
+    var totalUnits    = Model.Occupancy.Sum(p => p.TotalUnits);
+    var occupiedUnits = Model.Occupancy.Sum(p => p.OccupiedUnits);
+    var overallRate   = totalUnits == 0 ? 0 : (double)occupiedUnits / totalUnits * 100;
+}
+
+<h2 class="mb-4">Property Manager Dashboard</h2>
+<p class="text-muted mb-4">Generated @DateTime.Now.ToString("dd MMM yyyy, HH:mm")</p>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-3">
+        <div class="card text-white bg-primary h-100">
+            <div class="card-body">
+                <h6 class="card-title">Overall Occupancy</h6>
+                <p class="card-text fs-2 fw-bold">@overallRate.ToString("F1")%</p>
+                <small>@occupiedUnits / @totalUnits units occupied</small>
+            </div>
+            <div class="card-footer">
+                <a asp-action="Occupancy" class="text-white small">View full report &rarr;</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-warning h-100">
+            <div class="card-body">
+                <h6 class="card-title">Pending Maintenance</h6>
+                <p class="card-text fs-2 fw-bold">@(Model.Maintenance?.PendingRequests ?? 0)</p>
+                <small>of @(Model.Maintenance?.TotalRequests ?? 0) total requests</small>
+            </div>
+            <div class="card-footer">
+                <a asp-action="Maintenance" class="text-white small">View full report &rarr;</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-success h-100">
+            <div class="card-body">
+                <h6 class="card-title">Revenue Collected</h6>
+                <p class="card-text fs-2 fw-bold">BD @(Model.Payments?.TotalCollected.ToString("N0") ?? "0")</p>
+                <small>BD @(Model.Payments?.TotalOutstanding.ToString("N0") ?? "0") outstanding</small>
+            </div>
+            <div class="card-footer">
+                <a asp-action="Payments" class="text-white small">View full report &rarr;</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-danger h-100">
+            <div class="card-body">
+                <h6 class="card-title">Overdue Payments</h6>
+                <p class="card-text fs-2 fw-bold">@(Model.Payments?.OverdueCount ?? 0)</p>
+                <small>require immediate attention</small>
+            </div>
+            <div class="card-footer">
+                <a asp-action="Payments" class="text-white small">View full report &rarr;</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3">
+    <div class="col-md-6">
+        <div class="card h-100">
+            <div class="card-header fw-semibold">Occupancy by Building</div>
+            <div class="card-body p-0">
+                <table class="table table-sm table-striped mb-0">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Building</th>
+                            <th class="text-center">Occupied</th>
+                            <th class="text-center">Total</th>
+                            <th class="text-center">Rate</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var row in Model.Occupancy)
+                        {
+                            <tr>
+                                <td>@row.BuildingName</td>
+                                <td class="text-center">@row.OccupiedUnits</td>
+                                <td class="text-center">@row.TotalUnits</td>
+                                <td class="text-center">@row.OccupancyRate.ToString("F1")%</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card h-100">
+            <div class="card-header fw-semibold">Maintenance by Skill Type</div>
+            <div class="card-body p-0">
+                <table class="table table-sm table-striped mb-0">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Skill Type</th>
+                            <th class="text-center">Requests</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var t in Model.Maintenance?.ByType ?? new())
+                        {
+                            <tr>
+                                <td>@t.Type</td>
+                                <td class="text-center">@t.Count</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
