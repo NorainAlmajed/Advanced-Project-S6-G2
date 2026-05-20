@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +11,7 @@ using AdvancedProject.Models;
 
 namespace AdvancedProject.Controllers
 {
+    [Authorize]
     public class LeasesController : Controller
     {
         private readonly APContext _context;
@@ -48,6 +50,21 @@ namespace AdvancedProject.Controllers
                     .ThenInclude(u => u.Property)
                 .Include(l => l.Duration)
                 .AsQueryable();
+
+            // Tenants only see their own leases
+            if (!User.IsInRole("PropertyManager"))
+            {
+                var currentUserEmail = User.Identity!.Name;
+                var currentUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == currentUserEmail);
+                if (currentUser != null)
+                {
+                    var tenant = await _context.Tenants.FirstOrDefaultAsync(t => t.UserId == currentUser.UserId);
+                    if (tenant != null)
+                        leasesQuery = leasesQuery.Where(l => l.TenantId == tenant.TenantId);
+                    else
+                        leasesQuery = leasesQuery.Where(l => false);
+                }
+            }
 
             if (!string.IsNullOrWhiteSpace(searchTerm))
             {
@@ -113,6 +130,7 @@ namespace AdvancedProject.Controllers
         }
 
         // GET: Leases/Create
+        [Authorize(Roles = "PropertyManager")]
         public async Task<IActionResult> Create(int unitId)
         {
             var unit = await _context.Units
@@ -144,6 +162,7 @@ namespace AdvancedProject.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "PropertyManager")]
         public async Task<IActionResult> Create(Lease lease)
         {
             ModelState.Remove("MonthlyRent");
@@ -216,6 +235,7 @@ namespace AdvancedProject.Controllers
 
 
         // GET: Leases/Edit/5
+        [Authorize(Roles = "PropertyManager")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -246,6 +266,7 @@ namespace AdvancedProject.Controllers
         // POST: Leases/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "PropertyManager")]
         public async Task<IActionResult> Edit(int id, [Bind("LeaseId,StartDate,DurationId")] Lease lease)
         {
             if (id != lease.LeaseId)
@@ -326,6 +347,7 @@ namespace AdvancedProject.Controllers
         }
 
         // GET: Leases/Delete/5
+        [Authorize(Roles = "PropertyManager")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -348,6 +370,7 @@ namespace AdvancedProject.Controllers
         // POST: Leases/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "PropertyManager")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var lease = await _context.Leases.FindAsync(id);
