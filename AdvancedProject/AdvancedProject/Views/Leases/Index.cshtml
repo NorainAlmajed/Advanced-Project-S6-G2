@@ -38,6 +38,7 @@
                             <option value="">All Statuses</option>
                             <option value="Active" selected="@(currentStatusFilter == "Active")">Active</option>
                             <option value="Terminated" selected="@(currentStatusFilter == "Terminated")">Terminated</option>
+                            <option value="Renewed" selected="@(currentStatusFilter == "Renewed")">Renewed</option>
                         </select>
                     </div>
 
@@ -113,6 +114,10 @@
                                     else if (item.Status == "Terminated")
                                     {
                                         <span class="custom-pill lease-status-terminated">Terminated</span>
+                                    }
+                                    else if (item.Status == "Renewed")
+                                    {
+                                        <span class="custom-pill lease-status-renewed">Renewed</span>
                                     }
                                     else
                                     {

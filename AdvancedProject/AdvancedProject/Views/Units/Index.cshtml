@@ -121,11 +121,14 @@
     </div>
 </form>
 
-<p>
-    <a asp-action="Create" asp-route-propertyId="@propertyId" class="btn btn-primary">
-        Create New
-    </a>
-</p>
+@if (User.IsInRole("PropertyManager"))
+{
+    <p>
+        <a asp-action="Create" asp-route-propertyId="@propertyId" class="btn btn-primary">
+            Create New
+        </a>
+    </p>
+}
 
 @if (!Model.Any())
 {
@@ -203,18 +206,27 @@ else
                             Details
                         </a>
 
-                        <a asp-controller="LeaseApplications"
-                           asp-action="Create"
-                           asp-route-unitId="@item.UnitId"
-                           class="btn btn-outline-success btn-sm ms-2">
-                            Apply
-                        </a>
-                        <a asp-controller="Leases"
-                           asp-action="Create"
-                           asp-route-unitId="@item.UnitId"
-                           class="btn btn-outline-success btn-sm ms-2">
-                            Apply
-                        </a>
+                        @if (item.AvailabilityStatus != "Occupied")
+                        {
+                            @if (User.IsInRole("Tenant"))
+                            {
+                                <a asp-controller="LeaseApplications"
+                                   asp-action="Create"
+                                   asp-route-unitId="@item.UnitId"
+                                   class="btn btn-outline-success btn-sm ms-2">
+                                    Apply
+                                </a>
+                            }
+                            else if (User.IsInRole("PropertyManager"))
+                            {
+                                <a asp-controller="Leases"
+                                   asp-action="Create"
+                                   asp-route-unitId="@item.UnitId"
+                                   class="btn btn-outline-success btn-sm ms-2">
+                                    Create Lease
+                                </a>
+                            }
+                        }
                     </div>
 
                 </div>

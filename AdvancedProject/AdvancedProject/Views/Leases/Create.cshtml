@@ -35,7 +35,8 @@
 
                 <div class="lease-form-group">
                     <label asp-for="StartDate" class="lease-form-label">Start Date</label>
-                    <input asp-for="StartDate" type="date" class="form-control lease-form-input" />
+                    <input asp-for="StartDate" type="date" class="form-control lease-form-input"
+                           min="@DateTime.Today.AddDays(1).ToString("yyyy-MM-dd")" />
                     <span asp-validation-for="StartDate" class="text-danger small"></span>
                 </div>
 

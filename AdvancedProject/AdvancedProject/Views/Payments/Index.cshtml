@@ -17,6 +17,13 @@
                 Browse and manage payments by payment ID, lease ID, amount, and status.
             </p>
         </div>
+
+        @if (User.IsInRole("PropertyManager"))
+        {
+            <a asp-action="Create" class="btn btn-light-custom users-create-btn">
+                + Create New Payment
+            </a>
+        }
     </div>
 
     <div class="card search-card users-search-card shadow-soft border-0 mb-4">

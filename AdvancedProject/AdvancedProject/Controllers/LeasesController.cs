@@ -21,6 +21,27 @@ namespace AdvancedProject.Controllers
             _context = context;
         }
 
+        // Auto-terminates any Active leases whose EndDate has passed and sets unit back to Available
+        private async Task AutoTerminateExpiredLeasesAsync()
+        {
+            var today = DateTime.Today;
+            var expired = await _context.Leases
+                .Include(l => l.Unit)
+                .Where(l => l.Status == "Active" && l.EndDate.Date <= today)
+                .ToListAsync();
+
+            foreach (var lease in expired)
+            {
+                lease.Status = "Terminated";
+                lease.TerminationDate = lease.EndDate;
+                if (lease.Unit != null)
+                    lease.Unit.AvailabilityStatus = "Available";
+            }
+
+            if (expired.Any())
+                await _context.SaveChangesAsync();
+        }
+
         private void LoadDropdowns()
         {
             var tenants = _context.Tenants
@@ -43,6 +64,7 @@ namespace AdvancedProject.Controllers
         // GET: Leases
         public async Task<IActionResult> Index(string searchTerm, string statusFilter, string dateFilter)
         {
+            await AutoTerminateExpiredLeasesAsync();
             var leasesQuery = _context.Leases
                 .Include(l => l.Tenant)
                     .ThenInclude(t => t.User)
@@ -111,6 +133,7 @@ namespace AdvancedProject.Controllers
         // GET: Leases/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            await AutoTerminateExpiredLeasesAsync();
             if (id == null)
             {
                 return NotFound();
@@ -139,6 +162,9 @@ namespace AdvancedProject.Controllers
 
             if (unit == null)
                 return NotFound();
+
+            if (unit.AvailabilityStatus == "Occupied")
+                return RedirectToAction("Index", "Units");
 
             var model = new Lease
             {
@@ -173,6 +199,9 @@ namespace AdvancedProject.Controllers
             ModelState.Remove("Tenant");
             ModelState.Remove("Unit");
             ModelState.Remove("Duration");
+
+            if (lease.StartDate.Date <= DateTime.Today)
+                ModelState.AddModelError("StartDate", "Start date must be a future date.");
 
             if (!ModelState.IsValid)
             {
@@ -227,6 +256,8 @@ namespace AdvancedProject.Controllers
 
             lease.EndDate = lease.StartDate.AddMonths(duration.Months).AddDays(-1);
 
+            unit.AvailabilityStatus = "Occupied";
+
             _context.Leases.Add(lease);
             await _context.SaveChangesAsync();
 
@@ -258,7 +289,7 @@ namespace AdvancedProject.Controllers
             .ToList();
 
             ViewData["TenantId"] = new SelectList(tenants, "TenantId", "Username", lease.TenantId);
-            ViewData["UnitId"] = new SelectList(_context.Units, "UnitId", "UnitNumber", lease.UnitId);
+            ViewData["UnitId"] = new SelectList(_context.Units.Where(u => u.IsActive), "UnitId", "UnitNumber", lease.UnitId);
             ViewData["DurationId"] = new SelectList(_context.Durations, "DurationId", "Months", lease.DurationId);
             return View(lease);
         }
@@ -381,6 +412,50 @@ namespace AdvancedProject.Controllers
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Terminate(int id)
+        {
+            var lease = await _context.Leases
+                .Include(l => l.Unit)
+                .FirstOrDefaultAsync(l => l.LeaseId == id);
+
+            if (lease == null) return NotFound();
+
+            lease.Status = "Terminated";
+            lease.TerminationDate = DateTime.Now;
+
+            if (lease.Unit != null)
+                lease.Unit.AvailabilityStatus = "Available";
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Details), new { id });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Renew(int id)
+        {
+            var lease = await _context.Leases.FindAsync(id);
+            if (lease == null) return NotFound();
+
+            lease.Status = "Renewed";
+
+            var application = new LeaseApplication
+            {
+                TenantId = lease.TenantId,
+                UnitId = lease.UnitId,
+                ApplicationDate = DateTime.Now,
+                Status = "Pending",
+                StartDate = lease.EndDate.AddDays(1),
+                DurationId = lease.DurationId
+            };
+
+            _context.LeaseApplications.Add(application);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Details), new { id });
         }
 
         private bool LeaseExists(int id)

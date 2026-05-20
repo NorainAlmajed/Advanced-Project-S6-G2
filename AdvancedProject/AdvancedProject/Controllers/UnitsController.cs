@@ -34,6 +34,7 @@ namespace AdvancedProject.Controllers
             .Include(u => u.Property)
             .Include(u => u.UnitType)
             .Include(u => u.Amenities)
+            .Where(u => u.IsActive)
             .AsQueryable();
 
             if (id != null)
@@ -372,6 +373,19 @@ namespace AdvancedProject.Controllers
                 _context.Units.Remove(unit);
             }
 
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "PropertyManager")]
+        public async Task<IActionResult> SoftDelete(int id)
+        {
+            var unit = await _context.Units.FindAsync(id);
+            if (unit == null) return NotFound();
+
+            unit.IsActive = false;
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
