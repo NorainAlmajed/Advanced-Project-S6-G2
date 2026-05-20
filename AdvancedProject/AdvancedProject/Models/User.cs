@@ -17,7 +17,7 @@ public partial class User
     [StringLength(50)]
     public string Username { get; set; } = null!;
 
-    [StringLength(50)]
+    [StringLength(200)]
     public string Password { get; set; } = null!;
 
     [StringLength(100)]

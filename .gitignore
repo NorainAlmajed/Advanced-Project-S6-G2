@@ -1,0 +1,28 @@
+# Claude Code settings
+.claude/
+
+# Visual Studio folders
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Build output
+bin/
+obj/
+
+# NuGet
+*.nupkg
+**/packages/*
+!**/packages/build/
+
+# Rider
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# ASP.NET Core
+**/appsettings.Development.json
