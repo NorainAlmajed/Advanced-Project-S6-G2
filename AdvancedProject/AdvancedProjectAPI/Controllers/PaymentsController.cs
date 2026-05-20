@@ -1,5 +1,6 @@
 ﻿using AdvancedProjectAPI.Data;
 using AdvancedProjectAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,6 +19,7 @@ namespace AdvancedProjectAPI.Controllers
 
         // GET: api/payments
         [HttpGet]
+        [Authorize(Roles = "PropertyManager")]
         public async Task<ActionResult<IEnumerable<Payment>>> GetAll()
         {
             var payments = await _context.Payments
@@ -29,6 +31,7 @@ namespace AdvancedProjectAPI.Controllers
 
         // GET: api/payments/{id}
         [HttpGet("{id}")]
+        [Authorize]
         public async Task<ActionResult<Payment>> GetById(int id)
         {
             var payment = await _context.Payments
@@ -43,6 +46,7 @@ namespace AdvancedProjectAPI.Controllers
 
         // POST: api/payments
         [HttpPost]
+        [Authorize(Roles = "PropertyManager")]
         public async Task<ActionResult<Payment>> Create(Payment payment)
         {
             _context.Payments.Add(payment);
@@ -52,6 +56,7 @@ namespace AdvancedProjectAPI.Controllers
 
         // PUT: api/payments/{id}
         [HttpPut("{id}")]
+        [Authorize(Roles = "PropertyManager")]
         public async Task<IActionResult> Update(int id, Payment updated)
         {
             var existing = await _context.Payments.FindAsync(id);
@@ -71,6 +76,7 @@ namespace AdvancedProjectAPI.Controllers
 
         // DELETE: api/payments/{id}
         [HttpDelete("{id}")]
+        [Authorize(Roles = "PropertyManager")]
         public async Task<IActionResult> Delete(int id)
         {
             var payment = await _context.Payments.FindAsync(id);
