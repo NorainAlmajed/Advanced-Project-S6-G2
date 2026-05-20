@@ -1,3 +1,6 @@
+# Claude Code settings
+.claude/
+
 # Visual Studio folders
 .vs/
 *.suo
