@@ -1,96 +1,66 @@
-﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity;
 using AdvancedProjectAPI.Models;
 
 namespace AdvancedProjectAPI.Data;
 
 public static class IdentitySeeder
 {
-    // Define your roles for Brief B
     public const string PropertyManagerRole = "PropertyManager";
     public const string TenantRole = "Tenant";
     public const string MaintenanceStaffRole = "MaintenanceStaff";
 
     public static async Task InitializeAsync(IServiceProvider services)
     {
-        var roleManager = services
-            .GetRequiredService<RoleManager<IdentityRole>>();
-        var userManager = services
-            .GetRequiredService<UserManager<ApplicationUser>>();
+        var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+        var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
 
-        // Seed all roles
-        foreach (var roleName in new[]
-        {
-            PropertyManagerRole,
-            TenantRole,
-            MaintenanceStaffRole
-        })
+        // Seed roles
+        foreach (var roleName in new[] { PropertyManagerRole, TenantRole, MaintenanceStaffRole })
         {
             if (!await roleManager.RoleExistsAsync(roleName))
             {
-                await roleManager.CreateAsync(new IdentityRole(roleName));
+                var roleResult = await roleManager.CreateAsync(new IdentityRole(roleName));
+                if (!roleResult.Succeeded)
+                    throw new Exception($"Failed to create role '{roleName}': " +
+                        string.Join(", ", roleResult.Errors.Select(e => e.Description)));
             }
         }
 
-        // Seed default Property Manager (senior role)
-        const string managerEmail = "manager@propertyleasing.local";
-        var manager = await userManager.FindByEmailAsync(managerEmail);
-        if (manager == null)
+        // Seed users
+        await EnsureUserAsync(userManager, "manager@mail.com",  "Manager@123",  "System Manager",    PropertyManagerRole);
+        await EnsureUserAsync(userManager, "tenant@propertyleasing.local",  "Tenant#12345", "Test Tenant",       TenantRole);
+        await EnsureUserAsync(userManager, "staff@propertyleasing.local",   "Staff#12345",  "Maintenance Staff", MaintenanceStaffRole);
+    }
+
+    private static async Task EnsureUserAsync(
+        UserManager<ApplicationUser> userManager,
+        string email, string password, string fullName, string role)
+    {
+        var user = await userManager.FindByEmailAsync(email);
+
+        if (user == null)
         {
-            manager = new ApplicationUser
+            user = new ApplicationUser
             {
-                UserName = managerEmail,
-                Email = managerEmail,
+                UserName = email,
+                Email = email,
                 EmailConfirmed = true,
-                FullName = "Property Manager"  // Changed from DisplayName
+                FullName = fullName
             };
-            var result = await userManager
-                .CreateAsync(manager, "Manager#12345");
-            if (result.Succeeded)
-            {
-                await userManager
-                    .AddToRoleAsync(manager, PropertyManagerRole);
-            }
+
+            var result = await userManager.CreateAsync(user, password);
+            if (!result.Succeeded)
+                throw new Exception($"Failed to create user '{email}': " +
+                    string.Join(", ", result.Errors.Select(e => e.Description)));
         }
 
-        // Seed a test Tenant
-        const string tenantEmail = "tenant@propertyleasing.local";
-        var tenant = await userManager.FindByEmailAsync(tenantEmail);
-        if (tenant == null)
+        // Ensure role is assigned even if user already existed
+        if (!await userManager.IsInRoleAsync(user, role))
         {
-            tenant = new ApplicationUser
-            {
-                UserName = tenantEmail,
-                Email = tenantEmail,
-                EmailConfirmed = true,
-                FullName = "Test Tenant"  // Changed from DisplayName
-            };
-            var result = await userManager
-                .CreateAsync(tenant, "Tenant#12345");
-            if (result.Succeeded)
-            {
-                await userManager.AddToRoleAsync(tenant, TenantRole);
-            }
-        }
-
-        // Seed a test Maintenance Staff
-        const string staffEmail = "staff@propertyleasing.local";
-        var staff = await userManager.FindByEmailAsync(staffEmail);
-        if (staff == null)
-        {
-            staff = new ApplicationUser
-            {
-                UserName = staffEmail,
-                Email = staffEmail,
-                EmailConfirmed = true,
-                FullName = "Maintenance Staff"  // Changed from DisplayName
-            };
-            var result = await userManager
-                .CreateAsync(staff, "Staff#12345");
-            if (result.Succeeded)
-            {
-                await userManager
-                    .AddToRoleAsync(staff, MaintenanceStaffRole);
-            }
+            var roleResult = await userManager.AddToRoleAsync(user, role);
+            if (!roleResult.Succeeded)
+                throw new Exception($"Failed to assign role '{role}' to '{email}': " +
+                    string.Join(", ", roleResult.Errors.Select(e => e.Description)));
         }
     }
 }

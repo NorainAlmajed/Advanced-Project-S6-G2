@@ -1,4 +1,5 @@
 using AdvancedProjectReporting.Services;
+using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,7 +9,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddHttpClient<ApiClient>(client =>
 {
     client.BaseAddress = new Uri(
-        builder.Configuration["ApiSettings:BaseUrl"]!);
+        "https://localhost:7211/");
 });
 
 var app = builder.Build();

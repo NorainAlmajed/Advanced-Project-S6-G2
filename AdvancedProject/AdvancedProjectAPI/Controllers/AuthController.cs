@@ -8,7 +8,7 @@ using AdvancedProjectAPI.Services;
 namespace AdvancedProjectAPI.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/auth")]
 public class AuthController : ControllerBase
 {
     private readonly UserManager<ApplicationUser> _userManager;
