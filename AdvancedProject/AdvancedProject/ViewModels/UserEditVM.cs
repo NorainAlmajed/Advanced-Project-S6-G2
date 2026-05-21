@@ -1,6 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
-namespace AdvancedProject.Models
+namespace AdvancedProject.ViewModels
 {
     public class UserEditVM
     {
@@ -9,7 +9,7 @@ namespace AdvancedProject.Models
         [Required(ErrorMessage = "Username is required")]
         public string Username { get; set; }
 
-        public string? Password { get; set; } // optional ✔
+        public string? Password { get; set; } // optional ?
 
         [Required(ErrorMessage = "Full name is required")]
         public string FullName { get; set; }

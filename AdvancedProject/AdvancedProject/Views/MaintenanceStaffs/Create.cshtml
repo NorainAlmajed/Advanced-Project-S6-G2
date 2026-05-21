@@ -1,4 +1,4 @@
-﻿@model MaintenanceStaffCreateVM
+@model MaintenanceStaffCreateVM
 
 @{
     ViewData["Title"] = "Create Maintenance Staff";
@@ -16,26 +16,26 @@
                 </p>
             </div>
 
-            <form asp-action="Create" method="post" class="lease-form-body">
+            <form asp-action="Create" method="post" class="lease-form-body" autocomplete="off">
 
                 <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
                 <div class="row g-3">
                     <div class="col-md-6 lease-form-group">
                         <label asp-for="Username" class="lease-form-label"></label>
-                        <input asp-for="Username" class="form-control lease-form-input" placeholder="Enter username" />
+                        <input asp-for="Username" class="form-control lease-form-input" placeholder="Enter username" autocomplete="off" />
                         <span asp-validation-for="Username" class="text-danger"></span>
                     </div>
 
                     <div class="col-md-6 lease-form-group">
                         <label asp-for="Password" class="lease-form-label"></label>
-                        <input asp-for="Password" type="password" class="form-control lease-form-input" placeholder="Enter password" />
+                        <input asp-for="Password" type="password" class="form-control lease-form-input" autocomplete="new-password" placeholder="Enter password" />
                         <span asp-validation-for="Password" class="text-danger"></span>
                     </div>
 
                     <div class="col-md-6 lease-form-group">
                         <label asp-for="ConfirmPassword" class="lease-form-label">Confirm Password</label>
-                        <input asp-for="ConfirmPassword" type="password" class="form-control lease-form-input" placeholder="Confirm password" />
+                        <input asp-for="ConfirmPassword" type="password" class="form-control lease-form-input" autocomplete="new-password" placeholder="Confirm password" />
                         <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
                     </div>
 
@@ -80,7 +80,7 @@
                     <label class="lease-form-label">Skills</label>
 
                     <div class="staff-skills-grid">
-                        @foreach (var skill in (List<AdvancedProject.Models.Skill>)ViewData["Skills"])
+                        @foreach (var skill in (List<AdvancedProjectAPI.Models.Skill>)ViewData["Skills"])
                         {
                             <label class="staff-skill-card">
                                 <input type="checkbox"

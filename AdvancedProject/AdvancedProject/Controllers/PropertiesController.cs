@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -6,8 +6,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using AdvancedProject.Data;
-using AdvancedProject.Models;
+using AdvancedProjectAPI.Data;
+using AdvancedProjectAPI.Models;
 
 
 namespace AdvancedProject.Controllers

@@ -22,4 +22,8 @@
     <Folder Include="wwwroot\images\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\AdvancedProjectAPI\AdvancedProjectAPI.csproj" />
+  </ItemGroup>
+
 </Project>

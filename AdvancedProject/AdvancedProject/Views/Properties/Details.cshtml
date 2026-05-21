@@ -1,4 +1,4 @@
-﻿@model AdvancedProject.Models.Property
+@model AdvancedProjectAPI.Models.Property
 
 @{
     ViewData["Title"] = "Details";
@@ -13,7 +13,7 @@
                 <div>
                     <div class="mb-2">
                         <span class="badge rounded-pill px-3 py-2 bg-light text-dark fw-semibold">
-                            📍 @Model.City
+                            ?? @Model.City
                         </span>
                     </div>
 
@@ -23,17 +23,17 @@
 
                 <div class="d-flex gap-2">
                     <a asp-action="Edit" asp-route-id="@Model?.PropertyId" class="btn btn-light fw-semibold px-3">
-                        ✏️ Edit
+                        ?? Edit
                     </a>
                     @if (User.IsInRole("PropertyManager"))
                     {
                         <button type="button" class="btn btn-danger fw-semibold px-3"
                                 data-bs-toggle="modal" data-bs-target="#deletePropertyModal">
-                            🗑 Delete
+                            ?? Delete
                         </button>
                     }
                     <a asp-action="Index" class="btn btn-outline-light px-3">
-                        ← Back
+                        ? Back
                     </a>
                 </div>
             </div>
@@ -45,21 +45,21 @@
             <div class="row g-3 mb-4">
                 <div class="col-md-4">
                     <div class="border rounded-3 p-3 h-100 bg-light summary-card">
-                        <div class="text-muted small mb-1">🏙 CITY</div>
+                        <div class="text-muted small mb-1">?? CITY</div>
                         <h4 class="mb-0">@Model.City</h4>
                     </div>
                 </div>
 
                 <div class="col-md-4">
                     <div class="border rounded-3 p-3 h-100 bg-light summary-card">
-                        <div class="text-muted small mb-1">🏢 BUILDING</div>
+                        <div class="text-muted small mb-1">?? BUILDING</div>
                         <h4 class="mb-0">@Model.Building</h4>
                     </div>
                 </div>
 
                 <div class="col-md-4">
                     <div class="border rounded-3 p-3 h-100 bg-light summary-card">
-                        <div class="text-muted small mb-1">🛣 ROAD</div>
+                        <div class="text-muted small mb-1">?? ROAD</div>
                         <h4 class="mb-0">@Model.Road</h4>
                     </div>
                 </div>
@@ -69,7 +69,7 @@
                 <!-- Left Section -->
                 <div class="col-lg-8">
                     <div class="border rounded-3 p-4 h-100">
-                        <h5 class="mb-3">🏢 Property Overview</h5>
+                        <h5 class="mb-3">?? Property Overview</h5>
 
                         <div class="row mb-2">
                             <div class="col-sm-4 fw-semibold">Name</div>
@@ -96,7 +96,7 @@
                 <!-- Right Section -->
                 <div class="col-lg-4">
                     <div class="border rounded-3 p-4 h-100">
-                        <h5 class="mb-3">⚙️ Management Actions</h5>
+                        <h5 class="mb-3">?? Management Actions</h5>
 
                         <div class="d-grid gap-2">
                             <a asp-action="Edit" asp-route-id="@Model?.PropertyId" class="btn btn-primary">
@@ -125,7 +125,7 @@
                 <!-- Location Details -->
                 <div class="col-12">
                     <div class="border rounded-3 p-4">
-                        <h5 class="mb-3">📍 Location Details</h5>
+                        <h5 class="mb-3">?? Location Details</h5>
 
                         <div class="row g-3">
                             <div class="col-md-4">

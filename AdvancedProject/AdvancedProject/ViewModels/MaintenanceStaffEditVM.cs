@@ -1,5 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
-namespace AdvancedProject.Models
+using System.ComponentModel.DataAnnotations;
+namespace AdvancedProject.ViewModels
 {
     public class MaintenanceStaffEditVM : IValidatableObject
     {

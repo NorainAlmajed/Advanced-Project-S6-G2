@@ -41,7 +41,7 @@ public partial class APContext : IdentityDbContext<ApplicationUser>
 
     public virtual DbSet<Unit> Units { get; set; }
 
-    public virtual DbSet<User> Users { get; set; }
+    public new virtual DbSet<User> Users { get; set; }
 
     public DbSet<Duration> Durations { get; set; }
 

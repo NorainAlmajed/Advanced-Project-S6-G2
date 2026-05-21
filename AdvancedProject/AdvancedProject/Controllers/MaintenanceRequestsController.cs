@@ -1,4 +1,4 @@
-ï»¿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -6,8 +6,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using AdvancedProject.Data;
-using AdvancedProject.Models;
+using AdvancedProjectAPI.Data;
+using AdvancedProjectAPI.Models;
 
 namespace AdvancedProject.Controllers
 {
@@ -407,13 +407,13 @@ namespace AdvancedProject.Controllers
 
                 if (!managerChangedStaff)
                 {
-                    // Manager didn't change staff â€” free old staff first so the search can re-select them
+                    // Manager didn't change staff — free old staff first so the search can re-select them
                     if (oldStaff != null)
                     {
                         oldStaff.AvailabilityStatus = "Available";
                     }
 
-                    // Load all staff into memory â€” EF returns tracked entities so in-memory availability changes are visible
+                    // Load all staff into memory — EF returns tracked entities so in-memory availability changes are visible
                     var allStaff = await _context.MaintenanceStaffs
                         .Include(s => s.Skills)
                         .ToListAsync();
@@ -444,7 +444,7 @@ namespace AdvancedProject.Controllers
                 }
                 else
                 {
-                    // Manager manually picked a staff â€” save as-is, manage availability
+                    // Manager manually picked a staff — save as-is, manage availability
                     if (oldStaff != null)
                     {
                         oldStaff.AvailabilityStatus = "Available";
@@ -495,7 +495,7 @@ namespace AdvancedProject.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            // ðŸ”¥ reload Unit dropdown
+            // ?? reload Unit dropdown
             var tenant = await _context.Tenants
                 .FirstOrDefaultAsync(t => t.UserId == request.UserId);
 
@@ -645,7 +645,7 @@ namespace AdvancedProject.Controllers
                 request.Status = form.Status;
                 request.Notes = form.Notes;
 
-                // 3. Load all staff into memory â€” EF returns tracked entities so in-memory availability changes are visible
+                // 3. Load all staff into memory — EF returns tracked entities so in-memory availability changes are visible
                 var allStaff = await _context.MaintenanceStaffs
                     .Include(s => s.Skills)
                     .ToListAsync();

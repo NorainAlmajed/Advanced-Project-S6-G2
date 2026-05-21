@@ -1,4 +1,4 @@
-﻿@model IEnumerable<AdvancedProject.Models.Notification>
+@model IEnumerable<AdvancedProjectAPI.Models.Notification>
 
 @{
     ViewData["Title"] = "Notifications";
@@ -76,7 +76,7 @@
                             <div class="notification-meta">
                                 <span class="@badgeClass">@typeName</span>
                                 <span class="notification-time">
-                                    @item.CreatedAt.ToString("dd MMM yyyy • hh:mm tt")
+                                    @item.CreatedAt.ToString("dd MMM yyyy � hh:mm tt")
                                 </span>
                             </div>
 

@@ -1,11 +1,28 @@
 using Microsoft.EntityFrameworkCore;
-using AdvancedProject.Data;
-using AdvancedProject.Models;
+using AdvancedProjectAPI.Data;
+using AdvancedProjectAPI.Models;
 using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler =
+            System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+        options.JsonSerializerOptions.DefaultIgnoreCondition =
+            System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull;
+    })
+    .ConfigureApplicationPartManager(apm =>
+    {
+        // Prevent the API project's controllers from being loaded into the MVC app.
+        // The project reference is needed only for models and DbContext.
+        var apiParts = apm.ApplicationParts
+            .Where(ap => ap.Name == "AdvancedProjectAPI")
+            .ToList();
+        foreach (var part in apiParts)
+            apm.ApplicationParts.Remove(part);
+    });
 
 builder.Services.AddDbContext<APContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));

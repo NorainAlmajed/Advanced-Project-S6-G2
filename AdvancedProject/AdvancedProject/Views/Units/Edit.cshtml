@@ -1,4 +1,4 @@
-﻿@model AdvancedProject.Models.Unit
+@model AdvancedProjectAPI.Models.Unit
 
 @{
     ViewData["Title"] = "Edit Unit";
@@ -102,7 +102,7 @@
                             var selectedAmenities = ViewBag.SelectedAmenities as int[] ?? Array.Empty<int>();
 
                             var amenityList =
-                            ViewBag.AmenityList as List<AdvancedProject.Models.Amenity>;
+                            ViewBag.AmenityList as List<AdvancedProjectAPI.Models.Amenity>;
                         }
 
                         @if (amenityList != null)
