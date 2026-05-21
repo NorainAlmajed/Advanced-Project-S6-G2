@@ -120,12 +120,15 @@ namespace AdvancedProject.Controllers
             }
 
             var payment = await _context.Payments
-     .Include(p => p.Lease)
-         .ThenInclude(l => l.Unit)
-             .ThenInclude(u => u.Property)
-     .Include(p => p.PaymentFrequency)
-     .Include(p => p.PaymentMethod)
-     .FirstOrDefaultAsync(m => m.PaymentId == id);
+                .Include(p => p.Lease)
+                    .ThenInclude(l => l.Unit)
+                        .ThenInclude(u => u.Property)
+                .Include(p => p.Lease)
+                    .ThenInclude(l => l.Tenant)
+                        .ThenInclude(t => t.User)
+                .Include(p => p.PaymentFrequency)
+                .Include(p => p.PaymentMethod)
+                .FirstOrDefaultAsync(m => m.PaymentId == id);
             if (payment == null)
             {
                 return NotFound();

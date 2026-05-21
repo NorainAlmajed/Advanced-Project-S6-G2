@@ -15,7 +15,7 @@
         </div>
     </div>
 
-    <div class="ux-filter-tabs mb-4" style="background:transparent;padding:0;gap:0.5rem;">
+    <div class="ux-filter-tabs mb-4">
         <a asp-action="Index" asp-route-typeFilter="All"
            class="ux-filter-tab @(selectedType == "All" ? "active" : "")">All</a>
         <a asp-action="Index" asp-route-typeFilter="Maintenance"
@@ -66,7 +66,9 @@
                             </div>
                             <form asp-action="Delete" asp-route-id="@item.NotificationId" method="post" class="delete-form m-0">
                                 @Html.AntiForgeryToken()
-                                <button type="submit" class="delete-btn" title="Delete">Delete</button>
+                                <button type="submit" class="delete-btn" title="Delete">
+                                    <i class="bi bi-trash-fill"></i>
+                                </button>
                             </form>
                         </div>
                         <h5 class="notification-title">@item.Title</h5>

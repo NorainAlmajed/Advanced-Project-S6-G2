@@ -8,179 +8,178 @@
     string status  = Model.Status ?? "";
 }
 
-<div class="ux-page lease-details-page">
+<div class="ux-page">
 
-    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+    <div class="ux-page-header">
         <div>
-            <p class="ux-eyebrow mb-2">MAINTENANCE REQUEST</p>
-            <h1 class="ux-title mb-2">Request #@Model.RequestId</h1>
-            <p class="ux-subtitle mb-0">
-                View request details, tenant information, assigned staff, and unit information.
+            <p class="ux-eyebrow">Maintenance Requests</p>
+            <h1 class="ux-title">Request #@Model.RequestId</h1>
+            <p class="ux-subtitle">
+                <i class="bi bi-calendar-event-fill" style="color:var(--accent);margin-right:0.3rem;"></i>
+                @Model.RequestDate.ToString("dd MMM yyyy")
+                <span style="margin:0 0.4rem;color:var(--text-muted);">&middot;</span>
+                @Model.Priority Priority
             </p>
         </div>
-
         <div class="d-flex gap-2 flex-wrap">
 
-            @* ── PENDING ── *@
             @if (status == "Pending")
             {
+                @if (isManager)
+                {
+                    <a asp-action="Edit" asp-route-id="@Model.RequestId" class="ux-btn-outline">
+                        <i class="bi bi-pencil-fill"></i> Edit
+                    </a>
+                }
+                else if (isTenant)
+                {
+                    <a asp-action="EditTenant" asp-route-id="@Model.RequestId" class="ux-btn-outline">
+                        <i class="bi bi-pencil-fill"></i> Edit
+                    </a>
+                }
+
                 @if (isManager || isTenant)
                 {
-                    @if (isManager)
-                    {
-                        <a asp-action="Edit" asp-route-id="@Model.RequestId"
-                           class="ux-btn-primary">
-                            Edit
-                        </a>
-                    }
-                    else
-                    {
-                        <a asp-action="EditTenant" asp-route-id="@Model.RequestId"
-                           class="ux-btn-primary">
-                            Edit
-                        </a>
-                    }
-
-                    <button type="button" class="ux-btn-danger"
-                            data-bs-toggle="modal" data-bs-target="#cancelModal">
-                        Cancel Request
+                    <button type="button" class="ux-btn-danger" data-bs-toggle="modal" data-bs-target="#cancelModal">
+                        <i class="bi bi-x-circle-fill"></i> Cancel Request
                     </button>
                 }
 
                 @if (isManager || isStaff)
                 {
-                    <button type="button" class="ux-btn-primary"
-                            data-bs-toggle="modal" data-bs-target="#inProgressModal">
-                        Mark In Progress
+                    <button type="button" class="ux-btn-primary" data-bs-toggle="modal" data-bs-target="#inProgressModal">
+                        <i class="bi bi-play-circle-fill"></i> Mark In Progress
                     </button>
                 }
             }
 
-            @* ── IN PROGRESS ── *@
             @if (status == "In Progress")
             {
                 @if (isManager)
                 {
-                    <a asp-action="Edit" asp-route-id="@Model.RequestId"
-                       class="ux-btn-primary">
-                        Edit
+                    <a asp-action="Edit" asp-route-id="@Model.RequestId" class="ux-btn-outline">
+                        <i class="bi bi-pencil-fill"></i> Edit
                     </a>
                 }
-
                 @if (isManager || isStaff)
                 {
-                    <button type="button" class="ux-btn-primary"
-                            data-bs-toggle="modal" data-bs-target="#resolvedModal">
-                        Mark as Resolved
+                    <button type="button" class="ux-btn-primary" data-bs-toggle="modal" data-bs-target="#resolvedModal">
+                        <i class="bi bi-check-circle-fill"></i> Mark as Resolved
                     </button>
                 }
             }
 
-            @* ── RESOLVED ── *@
             @if (status == "Resolved")
             {
                 @if (isManager || isStaff)
                 {
-                    <button type="button" class="ux-btn-outline"
-                            data-bs-toggle="modal" data-bs-target="#closedModal">
-                        Mark as Closed
+                    <button type="button" class="ux-btn-outline" data-bs-toggle="modal" data-bs-target="#closedModal">
+                        <i class="bi bi-lock-fill"></i> Mark as Closed
                     </button>
                 }
             }
 
             <a asp-action="Index" class="ux-btn-ghost">
-                Back to List
+                <i class="bi bi-arrow-left"></i> Back
             </a>
 
         </div>
     </div>
 
-    <div class="lease-details-card">
+    <div class="ux-details-main" style="display:flex;flex-direction:column;gap:1.25rem;">
 
-        <div class="section-header">
-            <h3>Request Information</h3>
-            <p>Main maintenance request details and assignment information.</p>
+        <div class="ux-form-card">
+            <div class="ux-form-section-header">
+                <div class="ux-form-section-icon" style="background:rgba(0,91,113,0.1);color:#005B71;">
+                    <i class="bi bi-tools"></i>
+                </div>
+                <div>
+                    <h3 class="ux-form-section-title">Request Information</h3>
+                    <p class="ux-form-section-sub">Main maintenance request details.</p>
+                </div>
+            </div>
+            <div class="ux-details-grid">
+                <div class="ux-detail-item">
+                    <span class="ux-detail-label">Status</span>
+                    <span class="ux-detail-value">
+                        @if (status == "Pending")
+                        {
+                            <span class="custom-pill lease-status-pending">Pending</span>
+                        }
+                        else if (status == "In Progress")
+                        {
+                            <span class="custom-pill badge-soft-active">In Progress</span>
+                        }
+                        else if (status == "Resolved")
+                        {
+                            <span class="custom-pill lease-status-approved">Resolved</span>
+                        }
+                        else if (status == "Cancelled")
+                        {
+                            <span class="custom-pill lease-status-rejected">Cancelled</span>
+                        }
+                        else if (status == "Closed")
+                        {
+                            <span class="custom-pill badge-soft-default">Closed</span>
+                        }
+                        else
+                        {
+                            <span class="custom-pill badge-soft-default">@status</span>
+                        }
+                    </span>
+                </div>
+                <div class="ux-detail-item">
+                    <span class="ux-detail-label">Request Date</span>
+                    <span class="ux-detail-value">@Model.RequestDate.ToString("dd MMM yyyy")</span>
+                </div>
+                <div class="ux-detail-item">
+                    <span class="ux-detail-label">Priority</span>
+                    <span class="ux-detail-value">@Model.Priority</span>
+                </div>
+                <div class="ux-detail-item">
+                    <span class="ux-detail-label">Skill Required</span>
+                    <span class="ux-detail-value">@(Model.Skill?.Name ?? "—")</span>
+                </div>
+                <div class="ux-detail-item" style="grid-column:1/-1;">
+                    <span class="ux-detail-label">Description</span>
+                    <span class="ux-detail-value">@Model.Notes</span>
+                </div>
+            </div>
         </div>
 
-        <div class="row g-4">
-
-            <div class="col-md-6">
-                <div class="info-box">
-                    <div class="info-label">REQUEST DATE</div>
-                    <div class="info-value">@Model.RequestDate.ToString("dd MMM yyyy")</div>
+        <div class="ux-form-card">
+            <div class="ux-form-section-header">
+                <div class="ux-form-section-icon" style="background:rgba(30,142,110,0.1);color:#1E8E6E;">
+                    <i class="bi bi-person-gear-fill"></i>
+                </div>
+                <div>
+                    <h3 class="ux-form-section-title">Assignment & Location</h3>
+                    <p class="ux-form-section-sub">Submitter, assigned staff, unit, and property details.</p>
                 </div>
             </div>
-
-            <div class="col-md-6">
-                <div class="info-box">
-                    <div class="info-label">PRIORITY</div>
-                    <div class="info-value">@Model.Priority</div>
+            <div class="ux-details-grid">
+                <div class="ux-detail-item">
+                    <span class="ux-detail-label">Submitted By</span>
+                    <span class="ux-detail-value">@(Model.User?.Username ?? "—")</span>
+                </div>
+                <div class="ux-detail-item">
+                    <span class="ux-detail-label">Assigned Staff</span>
+                    <span class="ux-detail-value">@(Model.AssignedStaff?.User?.FullName ?? "Not assigned")</span>
+                </div>
+                <div class="ux-detail-item">
+                    <span class="ux-detail-label">Unit Number</span>
+                    <span class="ux-detail-value">@(Model.Unit?.UnitNumber ?? "—")</span>
+                </div>
+                <div class="ux-detail-item">
+                    <span class="ux-detail-label">Property</span>
+                    <span class="ux-detail-value">@(Model.Unit?.Property?.Name ?? "—")</span>
                 </div>
             </div>
-
-            <div class="col-md-6">
-                <div class="info-box">
-                    <div class="info-label">STATUS</div>
-                    <div class="info-value">@Model.Status</div>
-                </div>
-            </div>
-
-            <div class="col-md-6">
-                <div class="info-box">
-                    <div class="info-label">SKILL</div>
-                    <div class="info-value">@Model.Skill?.Name</div>
-                </div>
-            </div>
-
-            <div class="col-12">
-                <div class="info-box">
-                    <div class="info-label">DESCRIPTION</div>
-                    <div class="info-value">@Model.Notes</div>
-                </div>
-            </div>
-
-            <div class="col-md-6">
-                <div class="info-box">
-                    <div class="info-label">USERNAME</div>
-                    <div class="info-value">@Model.User?.Username</div>
-                </div>
-            </div>
-
-            <div class="col-md-6">
-                <div class="info-box">
-                    <div class="info-label">USER ID</div>
-                    <div class="info-value">@Model.UserId</div>
-                </div>
-            </div>
-
-            <div class="col-md-6">
-                <div class="info-box">
-                    <div class="info-label">ASSIGNED STAFF</div>
-                    <div class="info-value">@(Model.AssignedStaff?.User?.FullName ?? "Not assigned")</div>
-                </div>
-            </div>
-
-            <div class="col-md-6">
-                <div class="info-box">
-                    <div class="info-label">UNIT NUMBER</div>
-                    <div class="info-value">@Model.Unit?.UnitNumber</div>
-                </div>
-            </div>
-
-            <div class="col-md-6">
-                <div class="info-box">
-                    <div class="info-label">PROPERTY</div>
-                    <div class="info-value">@Model.Unit?.Property?.Name</div>
-                </div>
-            </div>
-
         </div>
 
     </div>
 
 </div>
-
-@* ── MODALS ── *@
 
 @if (status == "Pending" && (isManager || isTenant))
 {
