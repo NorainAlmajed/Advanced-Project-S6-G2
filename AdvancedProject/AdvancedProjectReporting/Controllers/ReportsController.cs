@@ -13,41 +13,51 @@ public class ReportsController : Controller
         _api = api;
     }
 
-    // GET /Reports  →  Dashboard
+    private IActionResult? RequireAuth()
+    {
+        if (string.IsNullOrEmpty(HttpContext.Session.GetString("JwtToken")))
+            return RedirectToAction("Index", "Login");
+        return null;
+    }
+
     public async Task<IActionResult> Index()
     {
-        var occupancy    = await _api.GetOccupancyReportAsync();
-        var maintenance  = await _api.GetMaintenanceReportAsync();
-        var payments     = await _api.GetPaymentReportAsync();
+        var auth = RequireAuth();
+        if (auth != null) return auth;
 
-        var model = new DashboardViewModel
+        var occupancy   = await _api.GetOccupancyReportAsync();
+        var maintenance = await _api.GetMaintenanceReportAsync();
+        var payments    = await _api.GetPaymentReportAsync();
+
+        return View(new DashboardViewModel
         {
             Occupancy   = occupancy,
             Maintenance = maintenance,
             Payments    = payments
-        };
-
-        return View(model);
+        });
     }
 
-    // GET /Reports/Occupancy
     public async Task<IActionResult> Occupancy()
     {
-        var data = await _api.GetOccupancyReportAsync();
-        return View(data);
+        var auth = RequireAuth();
+        if (auth != null) return auth;
+
+        return View(await _api.GetOccupancyReportAsync());
     }
 
-    // GET /Reports/Maintenance
     public async Task<IActionResult> Maintenance()
     {
-        var data = await _api.GetMaintenanceReportAsync();
-        return View(data);
+        var auth = RequireAuth();
+        if (auth != null) return auth;
+
+        return View(await _api.GetMaintenanceReportAsync());
     }
 
-    // GET /Reports/Payments
     public async Task<IActionResult> Payments()
     {
-        var data = await _api.GetPaymentReportAsync();
-        return View(data);
+        var auth = RequireAuth();
+        if (auth != null) return auth;
+
+        return View(await _api.GetPaymentReportAsync());
     }
 }
