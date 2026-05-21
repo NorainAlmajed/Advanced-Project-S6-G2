@@ -3381,7 +3381,11 @@ select.ux-input option {
 }
 
 .ux-radio-card input[type="radio"] {
-    display: none;
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+    pointer-events: none;
 }
 
 .ux-radio-card:has(input:checked) {
@@ -3393,6 +3397,76 @@ select.ux-input option {
 
 .ux-radio-card i {
     font-size: 1rem;
+}
+
+/* ── Choices.js custom styling ── */
+.ux-choices.choices {
+    margin: 0;
+}
+
+.ux-choices .choices__inner {
+    background: #f9fafb;
+    border: 1.5px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 0.5rem 0.9rem;
+    font-size: 0.875rem;
+    min-height: unset;
+    transition: border-color 0.18s, background 0.18s;
+}
+
+.ux-choices.is-open .choices__inner,
+.ux-choices .choices__inner:focus-within {
+    background: #ffffff;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(0,91,113,0.08);
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.ux-choices .choices__list--single {
+    padding: 0;
+}
+
+.ux-choices .choices__list--single .choices__item {
+    color: var(--text-main);
+    font-size: 0.875rem;
+    padding: 0;
+}
+
+.ux-choices .choices__list--single .choices__item--selectable[data-value=""] {
+    color: #b0b7c3;
+}
+
+.ux-choices .choices__list--dropdown {
+    border: 1.5px solid var(--primary);
+    border-top: none;
+    border-radius: 0 0 8px 8px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+
+.ux-choices .choices__list--dropdown .choices__item {
+    font-size: 0.875rem;
+    color: var(--text-main);
+    padding: 0.6rem 0.9rem;
+    transition: background 0.14s;
+}
+
+.ux-choices .choices__list--dropdown .choices__item--selectable.is-highlighted {
+    background: #e8f0f5;
+    color: var(--primary);
+}
+
+.ux-choices .choices__list--dropdown .choices__item--selectable[data-value=""] {
+    color: #b0b7c3;
+}
+
+.ux-choices .choices__arrow {
+    border-color: #9ca3af transparent transparent;
+}
+
+.ux-choices.is-open .choices__arrow {
+    border-color: transparent transparent var(--primary);
 }
 
 /* Form error summary */

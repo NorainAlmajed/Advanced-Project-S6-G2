@@ -133,7 +133,7 @@
                 </div>
                 <div class="ux-field">
                     <label asp-for="EmploymentStatus" class="ux-label">Employment Status</label>
-                    <select asp-for="EmploymentStatus" class="ux-input">
+                    <select asp-for="EmploymentStatus" class="ux-input" id="employmentSelect">
                         <option value="">-- Select --</option>
                         <option value="Employed">Employed</option>
                         <option value="Unemployed">Unemployed</option>
@@ -145,7 +145,7 @@
                 </div>
                 <div class="ux-field">
                     <label asp-for="MaritalStatus" class="ux-label">Marital Status</label>
-                    <select asp-for="MaritalStatus" class="ux-input">
+                    <select asp-for="MaritalStatus" class="ux-input" id="maritalSelect">
                         <option value="">-- Select --</option>
                         <option value="Single">Single</option>
                         <option value="Married">Married</option>
@@ -174,4 +174,21 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const opts = {
+                searchEnabled: false,
+                itemSelectText: '',
+                shouldSort: false,
+                classNames: { containerOuter: 'choices ux-choices' }
+            };
+            new Choices(document.getElementById('employmentSelect'), opts);
+            new Choices(document.getElementById('maritalSelect'), opts);
+
+            // Force jQuery Validation to check radio group on form submit
+            $("form").on("submit", function () {
+                $(this).validate().element("input[name='Gender']");
+            });
+        });
+    </script>
 }

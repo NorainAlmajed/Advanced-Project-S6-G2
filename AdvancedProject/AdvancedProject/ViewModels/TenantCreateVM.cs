@@ -22,7 +22,7 @@ namespace AdvancedProject.ViewModels
         [Required]
         public string Phone { get; set; } = null!;
 
-        [Required]
+        [Required(ErrorMessage = "Please select a gender.")]
         public string? Gender { get; set; }
 
         [Required(ErrorMessage = "Date of birth is required.")]
