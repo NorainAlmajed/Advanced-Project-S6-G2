@@ -2813,6 +2813,28 @@ body {
     color: #fff;
 }
 
+.ux-btn-danger {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5rem 1.1rem;
+    background: rgba(220,53,69,0.1);
+    color: #b42318;
+    border: 1.5px solid rgba(220,53,69,0.2);
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.18s;
+}
+
+.ux-btn-danger:hover {
+    background: #dc3545;
+    color: #fff;
+    border-color: #dc3545;
+}
+
 .ux-btn-ghost {
     display: inline-flex;
     align-items: center;
@@ -3113,6 +3135,89 @@ body {
     margin: 0;
 }
 
+/* Property card grid */
+.ux-property-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.1rem;
+}
+
+.ux-property-card {
+    background: #ffffff;
+    border: 1px solid #f0f0f0;
+    border-radius: 14px;
+    padding: 1.25rem;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.05);
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    transition: box-shadow 0.18s, transform 0.18s;
+}
+
+.ux-property-card:hover {
+    box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+    transform: translateY(-2px);
+}
+
+.ux-property-card-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.85rem;
+}
+
+.ux-property-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: rgba(0,91,113,0.1);
+    color: #005B71;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+}
+
+.ux-property-name {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text-main);
+    margin: 0 0 0.2rem;
+}
+
+.ux-property-location {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.ux-property-location i {
+    color: var(--accent);
+    font-size: 0.75rem;
+}
+
+.ux-property-desc {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    margin: 0;
+    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.ux-property-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: auto;
+    padding-top: 0.5rem;
+    border-top: 1px solid #f3f4f6;
+}
+
 @media (max-width: 767px) {
     .ux-stats-row {
         grid-template-columns: repeat(2, 1fr);
@@ -3123,6 +3228,194 @@ body {
     }
     .ux-search-form {
         flex-wrap: wrap;
+    }
+}
+
+/* ══════════════════════════════════════════
+   UX FORM SYSTEM
+   ══════════════════════════════════════════ */
+
+.ux-form-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    max-width: 860px;
+}
+
+.ux-form-card {
+    background: #ffffff;
+    border: 1px solid #f0f0f0;
+    border-radius: 14px;
+    padding: 1.5rem;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.05);
+}
+
+.ux-form-section-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.9rem;
+    margin-bottom: 1.25rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #f3f4f6;
+}
+
+.ux-form-section-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    flex-shrink: 0;
+}
+
+.ux-form-section-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text-main);
+    margin: 0 0 0.15rem;
+}
+
+.ux-form-section-sub {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin: 0;
+}
+
+.ux-form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem 1.25rem;
+}
+
+.ux-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.ux-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-main);
+    letter-spacing: 0.01em;
+}
+
+.ux-input {
+    width: 100%;
+    padding: 0.6rem 0.9rem;
+    background: #f9fafb;
+    border: 1.5px solid #e5e7eb;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    color: var(--text-main);
+    transition: border-color 0.18s, background 0.18s;
+    outline: none;
+}
+
+.ux-input:focus {
+    background: #ffffff;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(0,91,113,0.08);
+}
+
+.ux-input::placeholder { color: #b0b7c3; }
+
+select.ux-input {
+    cursor: pointer;
+}
+
+select.ux-input option {
+    background: #ffffff;
+    color: var(--text-main);
+    padding: 0.4rem;
+}
+
+.ux-field-error {
+    font-size: 0.75rem;
+    color: #dc3545;
+}
+
+/* Salary prefix input */
+.ux-input-prefix-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.ux-input-prefix {
+    position: absolute;
+    left: 0.9rem;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    pointer-events: none;
+}
+
+.ux-input-prefixed {
+    padding-left: 2.2rem;
+}
+
+/* Radio cards */
+.ux-radio-group {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.ux-radio-card {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.55rem 1.1rem;
+    background: #f9fafb;
+    border: 1.5px solid #e5e7eb;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    transition: all 0.18s;
+    flex: 1;
+    justify-content: center;
+}
+
+.ux-radio-card input[type="radio"] {
+    display: none;
+}
+
+.ux-radio-card:has(input:checked) {
+    background: rgba(0,91,113,0.07);
+    border-color: var(--primary);
+    color: var(--primary);
+    font-weight: 600;
+}
+
+.ux-radio-card i {
+    font-size: 1rem;
+}
+
+/* Form error summary */
+.ux-form-error {
+    background: rgba(220,53,69,0.06);
+    border: 1px solid rgba(220,53,69,0.2);
+    border-radius: 10px;
+    padding: 0.85rem 1rem;
+    font-size: 0.85rem;
+    color: #b42318;
+}
+
+/* Form actions row */
+.ux-form-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding-top: 0.25rem;
+}
+
+@media (max-width: 640px) {
+    .ux-form-grid {
+        grid-template-columns: 1fr;
     }
 }
 

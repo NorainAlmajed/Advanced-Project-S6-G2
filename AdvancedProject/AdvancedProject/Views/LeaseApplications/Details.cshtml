@@ -22,14 +22,14 @@
                 @if (!User.IsInRole("Tenant"))
                 {
                     <button type="button"
-                            class="btn btn-success lease-action-btn"
+                            class="ux-btn-primary"
                             data-bs-toggle="modal"
                             data-bs-target="#approveModal">
                         Approve Application
                     </button>
 
                     <button type="button"
-                            class="btn btn-danger lease-action-btn"
+                            class="ux-btn-danger"
                             data-bs-toggle="modal"
                             data-bs-target="#rejectModal">
                         Reject Application
@@ -39,7 +39,7 @@
                 @if (User.IsInRole("Tenant"))
                 {
                     <button type="button"
-                            class="btn btn-secondary lease-action-btn"
+                            class="ux-btn-outline"
                             data-bs-toggle="modal"
                             data-bs-target="#cancelApplicationModal">
                         Cancel Application
@@ -47,7 +47,7 @@
                 }
             }
 
-            <a asp-action="Index" class="btn btn-light-custom lease-action-btn">
+            <a asp-action="Index" class="ux-btn-ghost">
                 Back to List
             </a>
 
@@ -232,7 +232,7 @@
                     <button type="button" class="btn btn-light-custom" data-bs-dismiss="modal">Back</button>
                     <form asp-action="CancelApplication" asp-route-id="@Model.ApplicationId" method="post">
                         @Html.AntiForgeryToken()
-                        <button type="submit" class="btn btn-secondary lease-action-btn">Confirm Cancellation</button>
+                        <button type="submit" class="ux-btn-outline">Confirm Cancellation</button>
                     </form>
                 </div>
             </div>
@@ -265,7 +265,7 @@
                     <form asp-action="Approve"
                           asp-route-id="@Model.ApplicationId"
                           method="post">
-                        <button type="submit" class="btn btn-success lease-action-btn">
+                        <button type="submit" class="ux-btn-primary">
                             Confirm Approval
                         </button>
                     </form>
@@ -298,7 +298,7 @@
                     <form asp-action="Reject"
                           asp-route-id="@Model.ApplicationId"
                           method="post">
-                        <button type="submit" class="btn btn-danger lease-action-btn">
+                        <button type="submit" class="ux-btn-danger">
                             Confirm Rejection
                         </button>
                     </form>

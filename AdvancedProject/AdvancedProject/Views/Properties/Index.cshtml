@@ -1,138 +1,83 @@
 @model IEnumerable<AdvancedProjectAPI.Models.Property>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Properties";
 }
 
-<div class="properties-page">
-<div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
-    <div>
-        <h1 class="fw-bold mb-1">Properties</h1>
-        <p class="text-muted mb-0">Browse and manage all available properties.</p>
-    </div>
+<div class="ux-page">
 
-    <div>
-        <a asp-action="Create" class="btn btn-light-custom px-4">
-            + Create
-        </a>
-    </div>
-</div>
-
-<div class="card shadow-soft border-0 mb-4 search-card">
-    <div class="card-body p-4">
-        <div class="row align-items-center g-3">
-
-                <div class="col-lg-10">
-                    <h5 class="card-title mb-3">Find a Property</h5>
-
-                <form asp-action="Index" method="get">
-                    <div class="row g-2 align-items-stretch">
-
-                        <!-- SEARCH -->
-                        <div class="col-md-5">
-                            <input type="text"
-                                   name="searchString"
-                                   class="form-control form-control-lg property-search-input"
-                                   placeholder="Search properties..."
-                                   value="@Context.Request.Query["searchString"]" />
-                        </div>
-
-                        <!-- GOVERNORATE FILTER -->
-                        <div class="col-md-3">
-                            <select name="governorateId"
-                                    class="form-select form-select-lg property-search-input"
-                                    asp-items="ViewBag.Governorates">
-                                <option value="">All Governorates</option>
-                            </select>
-                        </div>
-
-                        <!-- SEARCH BUTTON -->
-                        <div class="col-md-2 d-grid">
-                            <button type="submit" class="btn btn-primary btn-lg property-search-btn">
-                                Search
-                            </button>
-                        </div>
-
-                        <!-- RESET -->
-                        <div class="col-md-2 d-grid">
-                            <a asp-action="Index" class="btn btn-outline-light btn-lg property-reset-btn">
-                                Reset
-                            </a>
-                        </div>
-
-                    </div>
-                </form>
-            </div>
-
-                <div class="col-lg-2">
-                    <div class="rounded-3 bg-white text-dark h-100 text-center total-box">
-                        <div class="small text-muted">TOTAL PROPERTIES</div>
-                    <h3 class="fw-bold mb-0">@Model.Count()</h3>
-                </div>
-            </div>
-
+    <div class="ux-page-header">
+        <div>
+            <p class="ux-eyebrow">Property Management</p>
+            <h1 class="ux-title">Properties</h1>
+            <p class="ux-subtitle">Browse and manage all available properties.</p>
         </div>
-    </div>
-</div>
-
-@if (!Model.Any())
-{
-    <div class="alert alert-light border">
-        No properties found matching your search.
-    </div>
-}
-else
-{
-    <div class="row">
-        @foreach (var item in Model)
+        @if (User.IsInRole("PropertyManager"))
         {
-            <div class="col-md-6 col-lg-4 mb-4">
-                <div class="card h-100 shadow-soft border-0 property-card">
-                    <div class="card-body p-4 d-flex flex-column">
-
-                        <div class="mb-3">
-                            <div class="small-label mb-1">PROPERTY</div>
-
-                            <h4 class="fw-bold mb-1">
-                                @item.Name
-                            </h4>
-
-                                <p class="text-muted mb-0">
-                                    ?? @item.Governorate?.Name - @item.City
-                                </p>
-
-                        </div>
-
-                        <div class="mb-3">
-                            <div class="small-label mb-1">DESCRIPTION</div>
-
-                            <p class="mb-0 text-muted property-description-text">
-                                @item.Description
-                            </p>
-                        </div>
-
-                        <div class="mt-auto pt-4">
-                            <div class="d-flex gap-2">
-                                <a asp-action="Details"
-                                   asp-route-id="@item.PropertyId"
-                                   class="btn property-details-btn w-50">
-                                    Details
-                                </a>
-
-                                <a asp-controller="Units"
-                                   asp-action="Index"
-                                   asp-route-id="@item.PropertyId"
-                                   class="btn property-units-btn w-50">
-                                    View Units
-                                </a>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
+            <a asp-action="Create" class="ux-btn-primary">
+                <i class="bi bi-plus-lg"></i> Add Property
+            </a>
         }
     </div>
 
-}
+    <div class="ux-toolbar">
+        <form asp-action="Index" method="get" class="ux-search-form">
+            <div class="ux-search-wrap">
+                <i class="bi bi-search ux-search-icon"></i>
+                <input type="text" name="searchString"
+                       value="@Context.Request.Query["searchString"]"
+                       class="ux-search-input" placeholder="Search by name or city..." />
+            </div>
+            <select name="governorateId" asp-items="ViewBag.Governorates"
+                    class="ux-search-input" style="width:180px;padding:0.55rem 0.85rem;border:1.5px solid #e5e7eb;border-radius:8px;font-size:0.875rem;outline:none;">
+                <option value="">All Governorates</option>
+            </select>
+            <button type="submit" class="ux-btn-primary">Search</button>
+            <a asp-action="Index" class="ux-btn-ghost">Reset</a>
+        </form>
+        <div class="ux-stat-label" style="color:var(--text-muted);font-size:0.8rem;white-space:nowrap;">@Model.Count() propert@(Model.Count()==1?"y":"ies")</div>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="ux-table-card">
+            <div class="ux-empty">
+                <i class="bi bi-building-x"></i>
+                <p>No properties found.</p>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="ux-property-grid">
+            @foreach (var item in Model)
+            {
+                <div class="ux-property-card">
+                    <div class="ux-property-card-header">
+                        <div class="ux-property-icon"><i class="bi bi-building-fill"></i></div>
+                        <div>
+                            <h3 class="ux-property-name">@item.Name</h3>
+                            <p class="ux-property-location">
+                                <i class="bi bi-geo-alt-fill"></i>
+                                @item.Governorate?.Name — @item.City
+                            </p>
+                        </div>
+                    </div>
+                    @if (!string.IsNullOrEmpty(item.Description))
+                    {
+                        <p class="ux-property-desc">@item.Description</p>
+                    }
+                    <div class="ux-property-actions">
+                        <a asp-action="Details" asp-route-id="@item.PropertyId" class="ux-details-btn">
+                            Details <i class="bi bi-arrow-right"></i>
+                        </a>
+                        <a asp-controller="Units" asp-action="Index" asp-route-id="@item.PropertyId" class="ux-btn-outline" style="font-size:0.8rem;padding:0.38rem 0.85rem;">
+                            <i class="bi bi-grid-fill"></i> Units
+                        </a>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+
 </div>

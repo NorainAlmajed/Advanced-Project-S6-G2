@@ -8,13 +8,13 @@
     string status  = Model.Status ?? "";
 }
 
-<div class="lease-details-page">
+<div class="ux-page lease-details-page">
 
     <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
         <div>
-            <p class="lease-eyebrow mb-2">MAINTENANCE REQUEST</p>
-            <h1 class="lease-title mb-2">Request #@Model.RequestId</h1>
-            <p class="lease-subtitle mb-0">
+            <p class="ux-eyebrow mb-2">MAINTENANCE REQUEST</p>
+            <h1 class="ux-title mb-2">Request #@Model.RequestId</h1>
+            <p class="ux-subtitle mb-0">
                 View request details, tenant information, assigned staff, and unit information.
             </p>
         </div>
@@ -29,19 +29,19 @@
                     @if (isManager)
                     {
                         <a asp-action="Edit" asp-route-id="@Model.RequestId"
-                           class="btn btn-success lease-action-btn">
+                           class="ux-btn-primary">
                             Edit
                         </a>
                     }
                     else
                     {
                         <a asp-action="EditTenant" asp-route-id="@Model.RequestId"
-                           class="btn btn-success lease-action-btn">
+                           class="ux-btn-primary">
                             Edit
                         </a>
                     }
 
-                    <button type="button" class="btn btn-danger lease-action-btn"
+                    <button type="button" class="ux-btn-danger"
                             data-bs-toggle="modal" data-bs-target="#cancelModal">
                         Cancel Request
                     </button>
@@ -49,7 +49,7 @@
 
                 @if (isManager || isStaff)
                 {
-                    <button type="button" class="btn btn-primary lease-action-btn"
+                    <button type="button" class="ux-btn-primary"
                             data-bs-toggle="modal" data-bs-target="#inProgressModal">
                         Mark In Progress
                     </button>
@@ -62,14 +62,14 @@
                 @if (isManager)
                 {
                     <a asp-action="Edit" asp-route-id="@Model.RequestId"
-                       class="btn btn-success lease-action-btn">
+                       class="ux-btn-primary">
                         Edit
                     </a>
                 }
 
                 @if (isManager || isStaff)
                 {
-                    <button type="button" class="btn btn-primary lease-action-btn"
+                    <button type="button" class="ux-btn-primary"
                             data-bs-toggle="modal" data-bs-target="#resolvedModal">
                         Mark as Resolved
                     </button>
@@ -81,14 +81,14 @@
             {
                 @if (isManager || isStaff)
                 {
-                    <button type="button" class="btn btn-secondary lease-action-btn"
+                    <button type="button" class="ux-btn-outline"
                             data-bs-toggle="modal" data-bs-target="#closedModal">
                         Mark as Closed
                     </button>
                 }
             }
 
-            <a asp-action="Index" class="btn btn-light-custom lease-action-btn">
+            <a asp-action="Index" class="ux-btn-ghost">
                 Back to List
             </a>
 
@@ -198,7 +198,7 @@
                     <button type="button" class="btn btn-light-custom" data-bs-dismiss="modal">Cancel</button>
                     <form asp-action="MarkCancelled" asp-route-id="@Model.RequestId" method="post">
                         @Html.AntiForgeryToken()
-                        <button type="submit" class="btn btn-danger lease-action-btn">Confirm Cancellation</button>
+                        <button type="submit" class="ux-btn-danger">Confirm Cancellation</button>
                     </form>
                 </div>
             </div>
@@ -222,7 +222,7 @@
                     <button type="button" class="btn btn-light-custom" data-bs-dismiss="modal">Cancel</button>
                     <form asp-action="MarkInProgress" asp-route-id="@Model.RequestId" method="post">
                         @Html.AntiForgeryToken()
-                        <button type="submit" class="btn btn-primary lease-action-btn">Confirm</button>
+                        <button type="submit" class="ux-btn-primary">Confirm</button>
                     </form>
                 </div>
             </div>
@@ -246,7 +246,7 @@
                     <button type="button" class="btn btn-light-custom" data-bs-dismiss="modal">Cancel</button>
                     <form asp-action="MarkResolved" asp-route-id="@Model.RequestId" method="post">
                         @Html.AntiForgeryToken()
-                        <button type="submit" class="btn btn-primary lease-action-btn">Confirm</button>
+                        <button type="submit" class="ux-btn-primary">Confirm</button>
                     </form>
                 </div>
             </div>
@@ -270,7 +270,7 @@
                     <button type="button" class="btn btn-light-custom" data-bs-dismiss="modal">Cancel</button>
                     <form asp-action="MarkClosed" asp-route-id="@Model.RequestId" method="post">
                         @Html.AntiForgeryToken()
-                        <button type="submit" class="btn btn-secondary lease-action-btn">Confirm</button>
+                        <button type="submit" class="ux-btn-outline">Confirm</button>
                     </form>
                 </div>
             </div>

@@ -6,16 +6,15 @@
     var totalRequests = Model?.Count() ?? 0;
 }
 
-<div class="requests-page">
-    <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-start gap-3 mb-4">
+<div class="ux-page requests-page">
+    <div class="ux-page-header">
         <div>
-            <p class="details-eyebrow mb-2">MAINTENANCE BOARD</p>
-            <h1 class="details-title mb-2">Maintenance Requests</h1>
-            <p class="users-subtitle mb-0">Browse and manage submitted maintenance requests by type, priority, and status.</p>
+            <p class="ux-eyebrow">Maintenance Board</p>
+            <h1 class="ux-title">Maintenance Requests</h1>
+            <p class="ux-subtitle">Browse and manage submitted maintenance requests by type, priority, and status.</p>
         </div>
-
-        <a asp-action="Create" class="btn btn-light-custom users-create-btn">
-            + Create New Request
+        <a asp-action="Create" class="ux-btn-primary">
+            <i class="bi bi-plus-lg"></i> New Request
         </a>
     </div>
 

@@ -8,16 +8,19 @@
     var amenityList = ViewBag.AmenityList as List<AdvancedProjectAPI.Models.Amenity> ?? new List<AdvancedProjectAPI.Models.Amenity>();
 }
 
-<h1 class="mb-4">
-    @if (ViewBag.PropertyName != null)
+<div class="ux-page-header mb-3">
+    <div>
+        <p class="ux-eyebrow">Property Management</p>
+        <h1 class="ux-title">@(ViewBag.PropertyName != null ? ViewBag.PropertyName + " — Units" : "Units")</h1>
+        <p class="ux-subtitle">Browse available and occupied units.</p>
+    </div>
+    @if (User.IsInRole("PropertyManager"))
     {
-        <span>@ViewBag.PropertyName Units</span>
+        <a asp-action="Create" asp-route-propertyId="@ViewBag.PropertyId" class="ux-btn-primary">
+            <i class="bi bi-plus-lg"></i> Add Unit
+        </a>
     }
-    else
-    {
-        <span>Units</span>
-    }
-</h1>
+</div>
 
 
 <form asp-action="Index" method="get" class="mb-4 units-page">
@@ -121,14 +124,6 @@
     </div>
 </form>
 
-@if (User.IsInRole("PropertyManager"))
-{
-    <p>
-        <a asp-action="Create" asp-route-propertyId="@propertyId" class="btn btn-primary">
-            Create New
-        </a>
-    </p>
-}
 
 @if (!Model.Any())
 {

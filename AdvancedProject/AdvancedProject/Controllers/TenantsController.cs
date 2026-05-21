@@ -90,8 +90,8 @@ namespace AdvancedProject.Controllers
             if (ModelState.IsValid)
             {
                 // Age validation
-                var age = DateTime.Today.Year - vm.Dob.Year;
-                if (vm.Dob.Date > DateTime.Today.AddYears(-age)) age--;
+                var age = DateTime.Today.Year - vm.Dob!.Value.Year;
+                if (vm.Dob.Value.Date > DateTime.Today.AddYears(-age)) age--;
 
                 if (age < 21)
                 {
@@ -147,7 +147,7 @@ namespace AdvancedProject.Controllers
                 // 2. Create Tenant
                 var tenant = new Tenant
                 {
-                    Dob = DateOnly.FromDateTime(vm.Dob),
+                    Dob = DateOnly.FromDateTime(vm.Dob!.Value),
                     NationalId = vm.NationalId,
                     UserId = user.UserId,
                     Salary = vm.Salary,
@@ -176,7 +176,7 @@ namespace AdvancedProject.Controllers
 
             if (tenant == null) return NotFound();
 
-            // GET: Tenants/Edit/5 — populate the VM
+            // GET: Tenants/Edit/5 ï¿½ populate the VM
             var vm = new TenantEditVM
             {
                 TenantId = tenant.TenantId,
@@ -273,7 +273,7 @@ namespace AdvancedProject.Controllers
                 }
 
                 // Update Tenant
-                // POST: Tenants/Edit/5 — replace the tenant update block
+                // POST: Tenants/Edit/5 ï¿½ replace the tenant update block
                 tenant.Dob = DateOnly.FromDateTime(vm.Dob);
                 tenant.NationalId = vm.NationalId;
                 tenant.Salary = vm.Salary;

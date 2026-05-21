@@ -173,7 +173,7 @@
                     <button type="button" class="btn btn-light-custom" data-bs-dismiss="modal">Cancel</button>
                     <form asp-action="SoftDelete" asp-route-id="@Model.PropertyId" method="post">
                         @Html.AntiForgeryToken()
-                        <button type="submit" class="btn btn-danger lease-action-btn">Confirm Delete</button>
+                        <button type="submit" class="ux-btn-danger">Confirm Delete</button>
                     </form>
                 </div>
             </div>
