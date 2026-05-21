@@ -1,22 +1,97 @@
-﻿@model AdvancedProject.Models.MaintenanceRequest
+@model AdvancedProject.Models.MaintenanceRequest
 
 @{
     ViewData["Title"] = "Maintenance Request Details";
+    bool isManager = User.IsInRole("PropertyManager");
+    bool isStaff   = User.IsInRole("MaintenanceStaff");
+    bool isTenant  = !isManager && !isStaff;
+    string status  = Model.Status ?? "";
 }
 
 <div class="lease-details-page">
 
-    <div class="lease-details-header mb-4">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
         <div>
             <p class="lease-eyebrow mb-2">MAINTENANCE REQUEST</p>
-
-            <h1 class="lease-title mb-2">
-                Request #@Model.RequestId
-            </h1>
-
+            <h1 class="lease-title mb-2">Request #@Model.RequestId</h1>
             <p class="lease-subtitle mb-0">
                 View request details, tenant information, assigned staff, and unit information.
             </p>
+        </div>
+
+        <div class="d-flex gap-2 flex-wrap">
+
+            @* ── PENDING ── *@
+            @if (status == "Pending")
+            {
+                @if (isManager || isTenant)
+                {
+                    @if (isManager)
+                    {
+                        <a asp-action="Edit" asp-route-id="@Model.RequestId"
+                           class="btn btn-success lease-action-btn">
+                            Edit
+                        </a>
+                    }
+                    else
+                    {
+                        <a asp-action="EditTenant" asp-route-id="@Model.RequestId"
+                           class="btn btn-success lease-action-btn">
+                            Edit
+                        </a>
+                    }
+
+                    <button type="button" class="btn btn-danger lease-action-btn"
+                            data-bs-toggle="modal" data-bs-target="#cancelModal">
+                        Cancel Request
+                    </button>
+                }
+
+                @if (isManager || isStaff)
+                {
+                    <button type="button" class="btn btn-primary lease-action-btn"
+                            data-bs-toggle="modal" data-bs-target="#inProgressModal">
+                        Mark In Progress
+                    </button>
+                }
+            }
+
+            @* ── IN PROGRESS ── *@
+            @if (status == "In Progress")
+            {
+                @if (isManager)
+                {
+                    <a asp-action="Edit" asp-route-id="@Model.RequestId"
+                       class="btn btn-success lease-action-btn">
+                        Edit
+                    </a>
+                }
+
+                @if (isManager || isStaff)
+                {
+                    <button type="button" class="btn btn-primary lease-action-btn"
+                            data-bs-toggle="modal" data-bs-target="#resolvedModal">
+                        Mark as Resolved
+                    </button>
+                }
+            }
+
+            @* ── RESOLVED ── *@
+            @if (status == "Resolved")
+            {
+                @if (isManager || isStaff)
+                {
+                    <button type="button" class="btn btn-secondary lease-action-btn"
+                            data-bs-toggle="modal" data-bs-target="#closedModal">
+                        Mark as Closed
+                    </button>
+                }
+            }
+
+            <a asp-action="Index" class="btn btn-light-custom lease-action-btn">
+                Back to List
+            </a>
+
         </div>
     </div>
 
@@ -32,110 +107,173 @@
             <div class="col-md-6">
                 <div class="info-box">
                     <div class="info-label">REQUEST DATE</div>
-                    <div class="info-value">
-                        @Model.RequestDate.ToString("dd MMM yyyy")
-                    </div>
+                    <div class="info-value">@Model.RequestDate.ToString("dd MMM yyyy")</div>
                 </div>
             </div>
 
             <div class="col-md-6">
                 <div class="info-box">
                     <div class="info-label">PRIORITY</div>
-                    <div class="info-value">
-                        @Model.Priority
-                    </div>
+                    <div class="info-value">@Model.Priority</div>
                 </div>
             </div>
 
             <div class="col-md-6">
                 <div class="info-box">
                     <div class="info-label">STATUS</div>
-                    <div class="info-value">
-                        @Model.Status
-                    </div>
+                    <div class="info-value">@Model.Status</div>
                 </div>
             </div>
 
             <div class="col-md-6">
                 <div class="info-box">
                     <div class="info-label">SKILL</div>
-                    <div class="info-value">
-                        @Model.Skill?.Name
-                    </div>
+                    <div class="info-value">@Model.Skill?.Name</div>
                 </div>
             </div>
 
             <div class="col-12">
                 <div class="info-box">
                     <div class="info-label">DESCRIPTION</div>
-                    <div class="info-value">
-                        @Model.Notes
-                    </div>
+                    <div class="info-value">@Model.Notes</div>
                 </div>
             </div>
 
             <div class="col-md-6">
                 <div class="info-box">
                     <div class="info-label">USERNAME</div>
-                    <div class="info-value">
-                        @Model.User?.Username
-                    </div>
+                    <div class="info-value">@Model.User?.Username</div>
                 </div>
             </div>
 
             <div class="col-md-6">
                 <div class="info-box">
                     <div class="info-label">USER ID</div>
-                    <div class="info-value">
-                        @Model.UserId
-                    </div>
+                    <div class="info-value">@Model.UserId</div>
                 </div>
             </div>
 
             <div class="col-md-6">
                 <div class="info-box">
                     <div class="info-label">ASSIGNED STAFF</div>
-                    <div class="info-value">
-                        @(Model.AssignedStaff?.User?.FullName ?? "Not assigned")
-                    </div>
+                    <div class="info-value">@(Model.AssignedStaff?.User?.FullName ?? "Not assigned")</div>
                 </div>
             </div>
 
             <div class="col-md-6">
                 <div class="info-box">
                     <div class="info-label">UNIT NUMBER</div>
-                    <div class="info-value">
-                        @Model.Unit?.UnitNumber
-                    </div>
+                    <div class="info-value">@Model.Unit?.UnitNumber</div>
                 </div>
             </div>
 
             <div class="col-md-6">
                 <div class="info-box">
                     <div class="info-label">PROPERTY</div>
-                    <div class="info-value">
-                        @Model.Unit?.Property?.Name
-                    </div>
+                    <div class="info-value">@Model.Unit?.Property?.Name</div>
                 </div>
             </div>
-
-        </div>
-
-        <div class="mt-4 d-flex gap-3 flex-wrap">
-
-            <a asp-action="Edit"
-               asp-route-id="@Model.RequestId"
-               class="btn btn-success lease-action-btn">
-                Edit Request
-            </a>
-
-            <a asp-action="Index"
-               class="btn btn-light-custom lease-action-btn">
-                Back to List
-            </a>
 
         </div>
 
     </div>
 
 </div>
+
+@* ── MODALS ── *@
+
+@if (status == "Pending" && (isManager || isTenant))
+{
+    <div class="modal fade" id="cancelModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 rounded-4 shadow">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title fw-bold">Cancel Request</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body pt-2">
+                    Are you sure you want to cancel this maintenance request?
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-light-custom" data-bs-dismiss="modal">Cancel</button>
+                    <form asp-action="MarkCancelled" asp-route-id="@Model.RequestId" method="post">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-danger lease-action-btn">Confirm Cancellation</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@if (status == "Pending" && (isManager || isStaff))
+{
+    <div class="modal fade" id="inProgressModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 rounded-4 shadow">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title fw-bold">Mark as In Progress</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body pt-2">
+                    Are you sure you want to mark this request as in progress?
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-light-custom" data-bs-dismiss="modal">Cancel</button>
+                    <form asp-action="MarkInProgress" asp-route-id="@Model.RequestId" method="post">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-primary lease-action-btn">Confirm</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@if (status == "In Progress" && (isManager || isStaff))
+{
+    <div class="modal fade" id="resolvedModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 rounded-4 shadow">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title fw-bold">Mark as Resolved</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body pt-2">
+                    Are you sure you want to mark this request as resolved?
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-light-custom" data-bs-dismiss="modal">Cancel</button>
+                    <form asp-action="MarkResolved" asp-route-id="@Model.RequestId" method="post">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-primary lease-action-btn">Confirm</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@if (status == "Resolved" && (isManager || isStaff))
+{
+    <div class="modal fade" id="closedModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 rounded-4 shadow">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title fw-bold">Mark as Closed</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body pt-2">
+                    Are you sure you want to close this maintenance request?
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-light-custom" data-bs-dismiss="modal">Cancel</button>
+                    <form asp-action="MarkClosed" asp-route-id="@Model.RequestId" method="post">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-secondary lease-action-btn">Confirm</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+}

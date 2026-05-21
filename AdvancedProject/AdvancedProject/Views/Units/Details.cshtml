@@ -47,17 +47,21 @@
             <a asp-action="Edit"
                asp-route-id="@Model.UnitId"
                class="btn unit-details-edit-btn">
-
                 Edit Unit
-
             </a>
+
+            @if (User.IsInRole("PropertyManager"))
+            {
+                <button type="button" class="btn btn-danger"
+                        data-bs-toggle="modal" data-bs-target="#deleteUnitModal">
+                    Delete Unit
+                </button>
+            }
 
             <a asp-action="Index"
                asp-route-id="@ViewBag.PropertyId"
                class="btn unit-details-back-btn">
-
                 Back to Units
-
             </a>
 
         </div>
@@ -128,3 +132,27 @@
     </div>
 
 </div>
+
+@if (User.IsInRole("PropertyManager"))
+{
+    <div class="modal fade" id="deleteUnitModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 rounded-4 shadow">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title fw-bold">Delete Unit</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body pt-2">
+                    Are you sure you want to delete <strong>Unit @Model.UnitNumber</strong>? This action will deactivate the unit and it will no longer appear in the system.
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-light-custom" data-bs-dismiss="modal">Cancel</button>
+                    <form asp-action="SoftDelete" asp-controller="Units" asp-route-id="@Model.UnitId" method="post">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-danger lease-action-btn">Confirm Delete</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+}
