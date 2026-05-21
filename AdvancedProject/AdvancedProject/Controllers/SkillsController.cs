@@ -62,6 +62,7 @@ namespace AdvancedProject.Controllers
             {
                 _context.Add(skill);
                 await _context.SaveChangesAsync();
+                TempData["SuccessMessage"] = "Skill was created successfully.";
                 return RedirectToAction(nameof(Index));
             }
             return View(skill);
@@ -113,7 +114,8 @@ namespace AdvancedProject.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                TempData["SuccessMessage"] = "Skill was edited successfully.";
+                return RedirectToAction(nameof(Details), new { id = skill.SkillId });
             }
             return View(skill);
         }
@@ -148,6 +150,7 @@ namespace AdvancedProject.Controllers
             }
 
             await _context.SaveChangesAsync();
+            TempData["SuccessMessage"] = "Skill was deleted successfully.";
             return RedirectToAction(nameof(Index));
         }
 

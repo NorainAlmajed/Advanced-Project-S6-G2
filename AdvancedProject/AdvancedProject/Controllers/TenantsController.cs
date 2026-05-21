@@ -159,6 +159,7 @@ namespace AdvancedProject.Controllers
                 _context.Tenants.Add(tenant);
                 await _context.SaveChangesAsync();
 
+                TempData["SuccessMessage"] = "Tenant was created successfully.";
                 return RedirectToAction(nameof(Index));
             }
 
@@ -282,7 +283,8 @@ namespace AdvancedProject.Controllers
                 tenant.EmploymentStatus = vm.EmploymentStatus;
                 await _context.SaveChangesAsync();
 
-                return RedirectToAction(nameof(Index));
+                TempData["SuccessMessage"] = "Tenant was edited successfully.";
+                return RedirectToAction(nameof(Details), new { id = vm.TenantId });
             }
 
             return View(vm);
@@ -326,6 +328,7 @@ namespace AdvancedProject.Controllers
             }
 
             await _context.SaveChangesAsync();
+            TempData["SuccessMessage"] = "Tenant was deleted successfully.";
             return RedirectToAction(nameof(Index));
         }
 

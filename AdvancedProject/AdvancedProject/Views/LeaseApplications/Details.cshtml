@@ -21,6 +21,9 @@
         <div class="d-flex gap-2 flex-wrap">
             @if (Model.Status == "Pending")
             {
+                <a asp-action="Edit" asp-route-id="@Model.ApplicationId" class="ux-btn-outline">
+                    <i class="bi bi-pencil-fill"></i> Edit
+                </a>
                 @if (!User.IsInRole("Tenant"))
                 {
                     <button type="button" class="ux-btn-primary" data-bs-toggle="modal" data-bs-target="#approveModal">

@@ -177,6 +177,7 @@ namespace AdvancedProject.Controllers
             _context.MaintenanceStaffs.Add(staff);
             await _context.SaveChangesAsync();
 
+            TempData["SuccessMessage"] = "Maintenance Staff was created successfully.";
             return RedirectToAction(nameof(Index));
         }
 
@@ -285,7 +286,8 @@ namespace AdvancedProject.Controllers
 
             await _context.SaveChangesAsync();
 
-            return RedirectToAction(nameof(Index));
+            TempData["SuccessMessage"] = "Maintenance Staff was edited successfully.";
+            return RedirectToAction(nameof(Details), new { id = vm.StaffId });
         }
 
 
@@ -322,6 +324,7 @@ namespace AdvancedProject.Controllers
             }
 
             await _context.SaveChangesAsync();
+            TempData["SuccessMessage"] = "Maintenance Staff was deleted successfully.";
             return RedirectToAction(nameof(Index));
         }
 

@@ -105,6 +105,7 @@ namespace AdvancedProject.Controllers
                 _context.Add(property);
                 await _context.SaveChangesAsync();
 
+                TempData["SuccessMessage"] = "Property was created successfully.";
                 return RedirectToAction(nameof(Index));
             }
 
@@ -163,7 +164,8 @@ namespace AdvancedProject.Controllers
                         throw;
                 }
 
-                return RedirectToAction(nameof(Index));
+                TempData["SuccessMessage"] = "Property was edited successfully.";
+                return RedirectToAction(nameof(Details), new { id = property.PropertyId });
             }
 
             ViewData["GovernorateId"] = new SelectList(
@@ -209,6 +211,7 @@ namespace AdvancedProject.Controllers
             }
 
             await _context.SaveChangesAsync();
+            TempData["SuccessMessage"] = "Property was deleted successfully.";
             return RedirectToAction(nameof(Index));
         }
 

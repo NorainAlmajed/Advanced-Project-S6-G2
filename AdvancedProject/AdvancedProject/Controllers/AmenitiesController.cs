@@ -62,6 +62,7 @@ namespace AdvancedProject.Controllers
             {
                 _context.Add(amenity);
                 await _context.SaveChangesAsync();
+                TempData["SuccessMessage"] = "Amenity was created successfully.";
                 return RedirectToAction(nameof(Index));
             }
             return View(amenity);
@@ -113,7 +114,8 @@ namespace AdvancedProject.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                TempData["SuccessMessage"] = "Amenity was edited successfully.";
+                return RedirectToAction(nameof(Details), new { id = amenity.AmenityId });
             }
             return View(amenity);
         }
@@ -148,6 +150,7 @@ namespace AdvancedProject.Controllers
             }
 
             await _context.SaveChangesAsync();
+            TempData["SuccessMessage"] = "Amenity was deleted successfully.";
             return RedirectToAction(nameof(Index));
         }
 

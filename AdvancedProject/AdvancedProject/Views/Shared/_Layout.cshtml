@@ -196,6 +196,16 @@
 
         <!-- ── PAGE CONTENT ── -->
         <div class="sidebar-main-content">
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="ux-success-toast" id="uxSuccessToast">
+                    <i class="bi bi-check-circle-fill"></i>
+                    <span>@TempData["SuccessMessage"]</span>
+                    <button class="ux-toast-close" type="button" onclick="this.parentElement.remove()" title="Dismiss">
+                        <i class="bi bi-x-lg"></i>
+                    </button>
+                </div>
+            }
             @RenderBody()
         </div>
 
@@ -263,5 +273,19 @@
     </script>
 
     @await RenderSectionAsync("Scripts", required: false)
+
+    <script>
+        // Auto-dismiss success toast after 4 seconds
+        (function () {
+            var toast = document.getElementById('uxSuccessToast');
+            if (toast) {
+                setTimeout(function () {
+                    toast.style.transition = 'opacity 0.4s ease';
+                    toast.style.opacity = '0';
+                    setTimeout(function () { toast.remove(); }, 400);
+                }, 4000);
+            }
+        })();
+    </script>
 </body>
 </html>

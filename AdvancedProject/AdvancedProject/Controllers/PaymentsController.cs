@@ -195,6 +195,7 @@ namespace AdvancedProject.Controllers
                 });
 
                 await _context.SaveChangesAsync();
+                TempData["SuccessMessage"] = "Payment was created successfully.";
                 return RedirectToAction(nameof(Index));
             }
 
@@ -281,7 +282,8 @@ namespace AdvancedProject.Controllers
 
             await _context.SaveChangesAsync();
 
-            return RedirectToAction(nameof(Index));
+            TempData["SuccessMessage"] = "Payment was edited successfully.";
+            return RedirectToAction(nameof(Details), new { id = id });
         }
         // GET: Payments/Delete/5
         [Authorize(Roles = "PropertyManager")]
@@ -318,6 +320,7 @@ namespace AdvancedProject.Controllers
             }
 
             await _context.SaveChangesAsync();
+            TempData["SuccessMessage"] = "Payment was deleted successfully.";
             return RedirectToAction(nameof(Index));
         }
 

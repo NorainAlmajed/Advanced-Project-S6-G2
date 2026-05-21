@@ -203,6 +203,7 @@ namespace AdvancedProject.Controllers
             });
             await _context.SaveChangesAsync();
 
+            TempData["SuccessMessage"] = "Lease Application was created successfully.";
             return RedirectToAction(nameof(Index));
         }
 
@@ -282,7 +283,8 @@ namespace AdvancedProject.Controllers
 
             await _context.SaveChangesAsync();
 
-            return RedirectToAction(nameof(Index));
+            TempData["SuccessMessage"] = "Lease Application was edited successfully.";
+            return RedirectToAction(nameof(Details), new { id = id });
         }
 
         // GET: LeaseApplications/Delete/5
@@ -320,6 +322,7 @@ namespace AdvancedProject.Controllers
             }
 
             await _context.SaveChangesAsync();
+            TempData["SuccessMessage"] = "Lease Application was deleted successfully.";
             return RedirectToAction(nameof(Index));
         }
 
@@ -378,6 +381,7 @@ namespace AdvancedProject.Controllers
 
             await _context.SaveChangesAsync();
 
+            TempData["SuccessMessage"] = "Application was approved successfully.";
             return RedirectToAction(nameof(Details), new { id });
         }
 
@@ -414,6 +418,7 @@ namespace AdvancedProject.Controllers
 
             await _context.SaveChangesAsync();
 
+            TempData["SuccessMessage"] = "Application was rejected successfully.";
             return RedirectToAction(nameof(Details), new { id });
         }
 
@@ -434,6 +439,7 @@ namespace AdvancedProject.Controllers
             {
                 application.Status = "Cancelled";
                 await _context.SaveChangesAsync();
+                TempData["SuccessMessage"] = "Application was cancelled successfully.";
             }
 
             return RedirectToAction(nameof(Details), new { id });
