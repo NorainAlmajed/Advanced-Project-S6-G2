@@ -1,5 +1,6 @@
 ﻿using AdvancedProjectAPI.Data;
 using AdvancedProjectAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,6 +19,7 @@ namespace AdvancedProjectAPI.Controllers
 
         // GET: api/units
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<Unit>>> GetAll()
         {
             var units = await _context.Units
@@ -29,6 +31,7 @@ namespace AdvancedProjectAPI.Controllers
 
         // GET: api/units/{id}
         [HttpGet("{id}")]
+        [Authorize]
         public async Task<ActionResult<Unit>> GetById(int id)
         {
             var unit = await _context.Units
@@ -43,6 +46,7 @@ namespace AdvancedProjectAPI.Controllers
 
         // POST: api/units
         [HttpPost]
+        [Authorize(Roles = "PropertyManager")]
         public async Task<ActionResult<Unit>> Create(Unit unit)
         {
             _context.Units.Add(unit);
@@ -52,6 +56,7 @@ namespace AdvancedProjectAPI.Controllers
 
         // PUT: api/units/{id}
         [HttpPut("{id}")]
+        [Authorize(Roles = "PropertyManager")]
         public async Task<IActionResult> Update(int id, Unit updated)
         {
             var existing = await _context.Units.FindAsync(id);
@@ -71,6 +76,7 @@ namespace AdvancedProjectAPI.Controllers
 
         // DELETE: api/units/{id}
         [HttpDelete("{id}")]
+        [Authorize(Roles = "PropertyManager")]
         public async Task<IActionResult> Delete(int id)
         {
             var unit = await _context.Units.FindAsync(id);

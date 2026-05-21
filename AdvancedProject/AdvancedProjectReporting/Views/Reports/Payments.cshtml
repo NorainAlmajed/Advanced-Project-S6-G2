@@ -1,0 +1,89 @@
+@model AdvancedProjectReporting.Dtos.PaymentReportDto
+@{
+    ViewData["Title"] = "Payment Report";
+}
+
+<div class="d-flex justify-content-between align-items-start mb-4">
+    <div>
+        <p class="page-eyebrow mb-1">Reports</p>
+        <h2 class="page-title">Payment Report</h2>
+        <p class="page-subtitle mt-1">Generated @DateTime.Now.ToString("dd MMM yyyy, HH:mm")</p>
+    </div>
+    <a asp-action="Index" class="btn btn-sm mt-2" style="background:#E8F1F3;color:#005B71;border-radius:12px;font-weight:700;padding:0.6rem 1.1rem;">
+        &larr; Dashboard
+    </a>
+</div>
+
+@if (Model == null)
+{
+    <div class="alert alert-info rounded-4">No payment data available.</div>
+}
+else
+{
+    <div class="row g-3 mb-4">
+        <div class="col-md-4">
+            <div class="card report-stat-card text-white h-100" style="background:linear-gradient(135deg,#1E8E6E,#16795e);">
+                <div class="card-body p-4">
+                    <div class="stat-value">BD @Model.TotalCollected.ToString("N2")</div>
+                    <div class="stat-label">Total Collected</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card report-stat-card text-white h-100" style="background:linear-gradient(135deg,#b45309,#f59e0b);">
+                <div class="card-body p-4">
+                    <div class="stat-value">BD @Model.TotalOutstanding.ToString("N2")</div>
+                    <div class="stat-label">Total Outstanding</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card report-stat-card text-white h-100" style="background:linear-gradient(135deg,#b42318,#dc3545);">
+                <div class="card-body p-4">
+                    <div class="stat-value">@Model.OverdueCount</div>
+                    <div class="stat-label">Overdue Payments</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (Model.OverduePayments.Any())
+    {
+        <div class="section-card">
+            <div class="section-card-header" style="color:#b42318;">
+                Overdue Payment Details
+            </div>
+            <div class="report-table-card" style="border-radius:0 0 20px 20px;border:none;">
+                <table class="table report-table mb-0">
+                    <thead>
+                        <tr>
+                            <th>Tenant</th>
+                            <th>Unit</th>
+                            <th class="text-end">Amount Due (BD)</th>
+                            <th class="text-center">Due Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var p in Model.OverduePayments)
+                        {
+                            <tr>
+                                <td>@p.TenantName</td>
+                                <td>@p.UnitNumber</td>
+                                <td class="text-end fw-bold">@p.AmountDue.ToString("N2")</td>
+                                <td class="text-center">
+                                    <span class="custom-pill pill-danger">@p.DueDate.ToString("dd MMM yyyy")</span>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="alert rounded-4 fw-semibold" style="background:rgba(30,142,110,0.12);color:#1E8E6E;border:none;">
+            No overdue payments.
+        </div>
+    }
+}
