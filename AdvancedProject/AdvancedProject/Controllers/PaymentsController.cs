@@ -151,7 +151,10 @@ namespace AdvancedProject.Controllers
         {
             if (ModelState.IsValid)
             {
-                var lease = await _context.Leases.Include(l => l.Duration).FirstOrDefaultAsync(l => l.LeaseId == payment.LeaseId);
+                var lease = await _context.Leases
+                    .Include(l => l.Duration)
+                    .Include(l => l.Tenant)
+                    .FirstOrDefaultAsync(l => l.LeaseId == payment.LeaseId);
 
                 var frequency = await _context.PaymentFrequencies.FirstOrDefaultAsync(f => f.PaymentFrequencyId == payment.PaymentFrequencyId);
 
@@ -178,6 +181,16 @@ namespace AdvancedProject.Controllers
                 payment.Amount = lease.MonthlyRent * frequency.Frequency;
 
                 _context.Add(payment);
+
+                _context.Notifications.Add(new Notification
+                {
+                    UserId = lease.Tenant.UserId,
+                    Title = "Payment Update",
+                    Message = "A new payment record has been added.",
+                    NotificationTypeId = 3,
+                    CreatedAt = DateTime.Now
+                });
+
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
@@ -212,8 +225,8 @@ namespace AdvancedProject.Controllers
                 return NotFound();
 
             var existing = await _context.Payments
-                .Include(p => p.Lease)
-                .ThenInclude(l => l.Duration)
+                .Include(p => p.Lease).ThenInclude(l => l.Duration)
+                .Include(p => p.Lease).ThenInclude(l => l.Tenant)
                 .FirstOrDefaultAsync(p => p.PaymentId == id);
 
             if (existing == null)
@@ -253,6 +266,15 @@ namespace AdvancedProject.Controllers
 
             existing.EndDate = payment.StartDate.AddDays(7);
             existing.Amount = existing.Lease.MonthlyRent * frequency.Frequency;
+
+            _context.Notifications.Add(new Notification
+            {
+                UserId = existing.Lease.Tenant.UserId,
+                Title = "Payment Update",
+                Message = $"Payment record #{existing.PaymentId} has been edited.",
+                NotificationTypeId = 3,
+                CreatedAt = DateTime.Now
+            });
 
             await _context.SaveChangesAsync();
 

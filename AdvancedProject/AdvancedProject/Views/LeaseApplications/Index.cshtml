@@ -39,6 +39,7 @@
                             <option value="Pending" selected="@(currentStatusFilter == "Pending")">Pending</option>
                             <option value="Approved" selected="@(currentStatusFilter == "Approved")">Approved</option>
                             <option value="Rejected" selected="@(currentStatusFilter == "Rejected")">Rejected</option>
+                            <option value="Cancelled" selected="@(currentStatusFilter == "Cancelled")">Cancelled</option>
                         </select>
                     </div>
 
@@ -122,6 +123,10 @@
                                     else if (item.Status == "Rejected")
                                     {
                                         <span class="custom-pill lease-status-rejected">Rejected</span>
+                                    }
+                                    else if (item.Status == "Cancelled")
+                                    {
+                                        <span class="custom-pill lease-status-cancelled">Cancelled</span>
                                     }
                                     else
                                     {

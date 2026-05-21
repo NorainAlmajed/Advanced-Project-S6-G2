@@ -385,9 +385,10 @@ namespace AdvancedProject.Controllers
             var unit = await _context.Units.FindAsync(id);
             if (unit == null) return NotFound();
 
+            int propertyId = unit.PropertyId;
             unit.IsActive = false;
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Index), new { id = propertyId });
         }
 
         private bool UnitExists(int id)
