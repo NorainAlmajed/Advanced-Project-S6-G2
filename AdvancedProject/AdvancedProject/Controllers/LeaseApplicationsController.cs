@@ -193,6 +193,16 @@ namespace AdvancedProject.Controllers
             _context.Add(leaseApplication);
             await _context.SaveChangesAsync();
 
+            _context.Notifications.Add(new Notification
+            {
+                UserId = 1,
+                Title = "New Lease Application",
+                Message = "A new lease application has been submitted.",
+                NotificationTypeId = 1,
+                CreatedAt = DateTime.Now
+            });
+            await _context.SaveChangesAsync();
+
             return RedirectToAction(nameof(Index));
         }
 
@@ -324,6 +334,7 @@ namespace AdvancedProject.Controllers
             var application = await _context.LeaseApplications
                 .Include(a => a.Unit)
                 .Include(a => a.Duration)
+                .Include(a => a.Tenant)
                 .FirstOrDefaultAsync(a => a.ApplicationId == id);
 
             if (application == null)
@@ -355,6 +366,16 @@ namespace AdvancedProject.Controllers
             application.Unit.AvailabilityStatus = "Occupied";
 
             _context.Leases.Add(lease);
+
+            _context.Notifications.Add(new Notification
+            {
+                UserId = application.Tenant.UserId,
+                Title = "Application Approved",
+                Message = $"Your lease application #{application.ApplicationId} has been approved.",
+                NotificationTypeId = 1,
+                CreatedAt = DateTime.Now
+            });
+
             await _context.SaveChangesAsync();
 
             return RedirectToAction(nameof(Details), new { id });
@@ -365,6 +386,7 @@ namespace AdvancedProject.Controllers
         public async Task<IActionResult> Reject(int id)
         {
             var application = await _context.LeaseApplications
+                .Include(a => a.Tenant)
                 .FirstOrDefaultAsync(a => a.ApplicationId == id);
 
             if (application == null)
@@ -381,6 +403,15 @@ namespace AdvancedProject.Controllers
             application.RejectTime = DateTime.Now;
             application.ApproveTime = null;
 
+            _context.Notifications.Add(new Notification
+            {
+                UserId = application.Tenant.UserId,
+                Title = "Application Rejected",
+                Message = $"Your lease application #{application.ApplicationId} has been rejected.",
+                NotificationTypeId = 1,
+                CreatedAt = DateTime.Now
+            });
+
             await _context.SaveChangesAsync();
 
             return RedirectToAction(nameof(Details), new { id });
@@ -391,6 +422,22 @@ namespace AdvancedProject.Controllers
 
 
 
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CancelApplication(int id)
+        {
+            var application = await _context.LeaseApplications.FindAsync(id);
+            if (application == null) return NotFound();
+
+            if (application.Status == "Pending")
+            {
+                application.Status = "Cancelled";
+                await _context.SaveChangesAsync();
+            }
+
+            return RedirectToAction(nameof(Details), new { id });
+        }
 
         private bool LeaseApplicationExists(int id)
         {

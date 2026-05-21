@@ -19,19 +19,32 @@
 
             @if (Model.Status == "Pending")
             {
-                <button type="button"
-                        class="btn btn-success lease-action-btn"
-                        data-bs-toggle="modal"
-                        data-bs-target="#approveModal">
-                    Approve Application
-                </button>
+                @if (!User.IsInRole("Tenant"))
+                {
+                    <button type="button"
+                            class="btn btn-success lease-action-btn"
+                            data-bs-toggle="modal"
+                            data-bs-target="#approveModal">
+                        Approve Application
+                    </button>
 
-                <button type="button"
-                        class="btn btn-danger lease-action-btn"
-                        data-bs-toggle="modal"
-                        data-bs-target="#rejectModal">
-                    Reject Application
-                </button>
+                    <button type="button"
+                            class="btn btn-danger lease-action-btn"
+                            data-bs-toggle="modal"
+                            data-bs-target="#rejectModal">
+                        Reject Application
+                    </button>
+                }
+
+                @if (User.IsInRole("Tenant"))
+                {
+                    <button type="button"
+                            class="btn btn-secondary lease-action-btn"
+                            data-bs-toggle="modal"
+                            data-bs-target="#cancelApplicationModal">
+                        Cancel Application
+                    </button>
+                }
             }
 
             <a asp-action="Index" class="btn btn-light-custom lease-action-btn">
@@ -202,6 +215,30 @@
 
     </div>
 </div>
+
+@if (Model.Status == "Pending" && User.IsInRole("Tenant"))
+{
+    <div class="modal fade" id="cancelApplicationModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 rounded-4 shadow">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title fw-bold">Cancel Application</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body pt-2">
+                    Are you sure you want to cancel this lease application?
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-light-custom" data-bs-dismiss="modal">Back</button>
+                    <form asp-action="CancelApplication" asp-route-id="@Model.ApplicationId" method="post">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-secondary lease-action-btn">Confirm Cancellation</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+}
 
 @if (Model.Status == "Pending")
 {

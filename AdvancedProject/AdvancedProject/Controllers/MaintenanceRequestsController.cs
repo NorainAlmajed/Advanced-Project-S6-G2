@@ -245,6 +245,19 @@ namespace AdvancedProject.Controllers
                 _context.Add(maintenanceRequest);
                 await _context.SaveChangesAsync();
 
+                if (!User.IsInRole("PropertyManager"))
+                {
+                    _context.Notifications.Add(new Notification
+                    {
+                        UserId = 1,
+                        Title = "New Maintenance Request",
+                        Message = "A new maintenance request has been submitted.",
+                        NotificationTypeId = 2,
+                        CreatedAt = DateTime.Now
+                    });
+                    await _context.SaveChangesAsync();
+                }
+
                 return RedirectToAction(nameof(Index));
             }
 
@@ -436,6 +449,15 @@ namespace AdvancedProject.Controllers
                     }
                 }
 
+                _context.Notifications.Add(new Notification
+                {
+                    UserId = request.UserId,
+                    Title = "Maintenance Update",
+                    Message = $"Your maintenance request #{request.RequestId} has been edited.",
+                    NotificationTypeId = 2,
+                    CreatedAt = DateTime.Now
+                });
+
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
@@ -619,6 +641,15 @@ namespace AdvancedProject.Controllers
                     newStaff.AvailabilityStatus = "Busy";
                 }
 
+                _context.Notifications.Add(new Notification
+                {
+                    UserId = request.UserId,
+                    Title = "Maintenance Update",
+                    Message = $"Your maintenance request #{request.RequestId} has been edited.",
+                    NotificationTypeId = 2,
+                    CreatedAt = DateTime.Now
+                });
+
                 await _context.SaveChangesAsync();
 
                 return RedirectToAction(nameof(Index));
@@ -720,6 +751,16 @@ namespace AdvancedProject.Controllers
 
             request.Status = "In Progress";
             request.InProgressTime = DateTime.Now;
+
+            _context.Notifications.Add(new Notification
+            {
+                UserId = request.UserId,
+                Title = "Maintenance Update",
+                Message = $"Your maintenance request #{request.RequestId} has been marked as In Progress.",
+                NotificationTypeId = 2,
+                CreatedAt = DateTime.Now
+            });
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Details), new { id });
         }
@@ -732,6 +773,16 @@ namespace AdvancedProject.Controllers
             if (request == null) return NotFound();
 
             request.Status = "Cancelled";
+
+            _context.Notifications.Add(new Notification
+            {
+                UserId = request.UserId,
+                Title = "Maintenance Update",
+                Message = $"Your maintenance request #{request.RequestId} has been cancelled.",
+                NotificationTypeId = 2,
+                CreatedAt = DateTime.Now
+            });
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Details), new { id });
         }
@@ -745,6 +796,16 @@ namespace AdvancedProject.Controllers
 
             request.Status = "Resolved";
             request.ResolvedTime = DateTime.Now;
+
+            _context.Notifications.Add(new Notification
+            {
+                UserId = request.UserId,
+                Title = "Maintenance Update",
+                Message = $"Your maintenance request #{request.RequestId} has been marked as resolved.",
+                NotificationTypeId = 2,
+                CreatedAt = DateTime.Now
+            });
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Details), new { id });
         }
@@ -758,6 +819,16 @@ namespace AdvancedProject.Controllers
 
             request.Status = "Closed";
             request.ClosedTime = DateTime.Now;
+
+            _context.Notifications.Add(new Notification
+            {
+                UserId = request.UserId,
+                Title = "Maintenance Update",
+                Message = $"Your maintenance request #{request.RequestId} has been closed.",
+                NotificationTypeId = 2,
+                CreatedAt = DateTime.Now
+            });
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Details), new { id });
         }

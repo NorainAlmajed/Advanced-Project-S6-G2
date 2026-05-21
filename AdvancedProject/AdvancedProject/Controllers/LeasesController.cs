@@ -420,6 +420,7 @@ namespace AdvancedProject.Controllers
         {
             var lease = await _context.Leases
                 .Include(l => l.Unit)
+                .Include(l => l.Tenant)
                 .FirstOrDefaultAsync(l => l.LeaseId == id);
 
             if (lease == null) return NotFound();
@@ -430,6 +431,15 @@ namespace AdvancedProject.Controllers
             if (lease.Unit != null)
                 lease.Unit.AvailabilityStatus = "Available";
 
+            _context.Notifications.Add(new Notification
+            {
+                UserId = lease.Tenant.UserId,
+                Title = "Lease Update",
+                Message = $"Lease #{lease.LeaseId} has been terminated.",
+                NotificationTypeId = 1,
+                CreatedAt = DateTime.Now
+            });
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Details), new { id });
         }
@@ -438,7 +448,9 @@ namespace AdvancedProject.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Renew(int id)
         {
-            var lease = await _context.Leases.FindAsync(id);
+            var lease = await _context.Leases
+                .Include(l => l.Tenant)
+                .FirstOrDefaultAsync(l => l.LeaseId == id);
             if (lease == null) return NotFound();
 
             lease.Status = "Renewed";
@@ -454,6 +466,16 @@ namespace AdvancedProject.Controllers
             };
 
             _context.LeaseApplications.Add(application);
+
+            _context.Notifications.Add(new Notification
+            {
+                UserId = lease.Tenant.UserId,
+                Title = "Lease Update",
+                Message = $"Lease #{lease.LeaseId} has been renewed.",
+                NotificationTypeId = 1,
+                CreatedAt = DateTime.Now
+            });
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Details), new { id });
         }
