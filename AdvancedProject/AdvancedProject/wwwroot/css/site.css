@@ -3135,6 +3135,57 @@ body {
     margin: 0;
 }
 
+/* ── Details page layout ── */
+.ux-details-layout {
+    display: grid;
+    grid-template-columns: 1fr 280px;
+    gap: 1.25rem;
+    align-items: start;
+}
+
+.ux-details-main {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.ux-details-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.85rem 1.5rem;
+}
+
+.ux-detail-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    padding: 0.6rem 0;
+    border-bottom: 1px solid #f3f4f6;
+}
+
+.ux-detail-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--text-muted);
+}
+
+.ux-detail-value {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-main);
+}
+
+@media (max-width: 900px) {
+    .ux-details-layout {
+        grid-template-columns: 1fr;
+    }
+    .ux-details-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
 /* Property card grid */
 .ux-property-grid {
     display: grid;
@@ -3335,6 +3386,48 @@ select.ux-input option {
 .ux-field-error {
     font-size: 0.75rem;
     color: #dc3545;
+}
+
+textarea.ux-input {
+    resize: vertical;
+    min-height: 100px;
+}
+
+/* Checkbox/skill grid */
+.ux-check-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 0.6rem;
+}
+
+.ux-check-card {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.55rem 0.85rem;
+    background: #f9fafb;
+    border: 1.5px solid #e5e7eb;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    transition: all 0.18s;
+}
+
+.ux-check-card:has(input:checked) {
+    background: rgba(0,91,113,0.07);
+    border-color: var(--primary);
+    color: var(--primary);
+    font-weight: 600;
+}
+
+.ux-check-card input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+    pointer-events: none;
 }
 
 /* Salary prefix input */
@@ -3726,17 +3819,20 @@ body.sidebar-layout {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    background: var(--bg-main);
 }
 
 .sidebar-main-content {
     flex: 1;
     padding: 1.75rem 2rem;
+    background: var(--bg-main);
+    width: 100%;
+    box-sizing: border-box;
 }
 
 /* ── Footer ── */
 .sidebar-layout .app-footer {
     margin: 0;
+    margin-left: 225px;
     background: #0d1b2a;
     color: rgba(255,255,255,0.55);
     font-size: 0.875rem;
@@ -3746,7 +3842,8 @@ body.sidebar-layout {
     display: grid;
     grid-template-columns: 2fr 1fr 1fr;
     gap: 2.5rem;
-    padding: 2.5rem 2rem 2rem;
+    padding: 2.5rem 3rem 2rem;
+    max-width: 1200px;
 }
 
 .footer-brand-name {
@@ -3819,10 +3916,11 @@ body.sidebar-layout {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 1rem 2rem;
+    padding: 1rem 3rem;
     border-top: 1px solid rgba(255,255,255,0.07);
     font-size: 0.8rem;
     color: rgba(255,255,255,0.3);
+    max-width: 1200px;
 }
 
 .footer-bottom a {
@@ -3874,6 +3972,9 @@ body.sidebar-layout {
         transform: translateX(0);
     }
     .sidebar-main-wrapper {
+        margin-left: 0;
+    }
+    .sidebar-layout .app-footer {
         margin-left: 0;
     }
     .sidebar-mobile-toggle {

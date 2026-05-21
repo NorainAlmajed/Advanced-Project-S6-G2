@@ -2,161 +2,90 @@
 
 @{
     ViewData["Title"] = "Edit Unit";
+    var selectedAmenities = ViewBag.SelectedAmenities as int[] ?? Array.Empty<int>();
+    var amenityList = ViewBag.AmenityList as List<AdvancedProjectAPI.Models.Amenity>;
 }
 
-<div class="unit-form-page">
-    <div class="lease-form-wrapper">
-        <div class="lease-form-card shadow-soft">
+<div class="ux-page">
 
-            <div class="lease-form-header">
-                <p class="lease-form-eyebrow mb-2">Unit</p>
-
-                <h1 class="lease-form-title mb-2">
-                    Edit Unit
-                </h1>
-
-                <p class="lease-form-subtitle mb-0">
-                    Update unit details, rent, and amenities.
-                </p>
-            </div>
-
-            <form asp-action="Edit" method="post" class="lease-form-body">
-
-                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
-
-                <input type="hidden" asp-for="UnitId" />
-                <input type="hidden" asp-for="CreatedAt" />
-                <input type="hidden" asp-for="PropertyId" />
-                <input type="hidden" asp-for="AvailabilityStatus" />
-
-                <div class="row g-3">
-
-                    <!-- Unit Number -->
-                    <div class="col-md-6 lease-form-group">
-                        <label asp-for="UnitNumber" class="lease-form-label">
-                            Unit Number
-                        </label>
-
-                        <input asp-for="UnitNumber"
-                               class="form-control lease-form-input" />
-
-                        <span asp-validation-for="UnitNumber"
-                              class="text-danger"></span>
-                    </div>
-
-                    <!-- Unit Type -->
-                    <div class="col-md-6 lease-form-group">
-                        <label asp-for="UnitTypeId" class="lease-form-label">
-                            Unit Type
-                        </label>
-
-                        <select asp-for="UnitTypeId"
-                                class="form-control lease-form-input"
-                                asp-items="ViewBag.UnitTypeId">
-                        </select>
-
-                        <span asp-validation-for="UnitTypeId"
-                              class="text-danger"></span>
-                    </div>
-
-                    <!-- Size -->
-                    <div class="col-md-6 lease-form-group">
-                        <label asp-for="SizeSqFt" class="lease-form-label">
-                            Size Sq Ft
-                        </label>
-
-                        <input asp-for="SizeSqFt"
-                               type="text"
-                               class="form-control lease-form-input" />
-
-                        <span asp-validation-for="SizeSqFt"
-                              class="text-danger"></span>
-                    </div>
-
-                    <!-- Rent -->
-                    <div class="col-md-6 lease-form-group">
-                        <label asp-for="RentAmount" class="lease-form-label">
-                            Rent Amount
-                        </label>
-
-                        <input asp-for="RentAmount"
-                               type="text"
-                               class="form-control lease-form-input" />
-
-                        <span asp-validation-for="RentAmount"
-                              class="text-danger"></span>
-                    </div>
-
-                </div>
-
-                <!-- Amenities -->
-                <div class="lease-form-group mt-3">
-
-                    <label class="lease-form-label">
-                        Amenities
-                    </label>
-
-                    <div class="unit-amenities-grid">
-
-                        @{
-                            var selectedAmenities = ViewBag.SelectedAmenities as int[] ?? Array.Empty<int>();
-
-                            var amenityList =
-                            ViewBag.AmenityList as List<AdvancedProjectAPI.Models.Amenity>;
-                        }
-
-                        @if (amenityList != null)
-                        {
-                            foreach (var amenity in amenityList)
-                            {
-                                bool isChecked =
-                                selectedAmenities.Contains(amenity.AmenityId);
-
-                                <label class="unit-amenity-card">
-
-                                    <input type="checkbox"
-                                           name="selectedAmenities"
-                                           value="@amenity.AmenityId"
-                                           checked="@isChecked" />
-
-                                    <span>@amenity.Name</span>
-
-                                </label>
-                            }
-                        }
-
-                    </div>
-
-                </div>
-
-                <!-- Buttons -->
-                <div class="lease-form-actions">
-
-                    <button type="submit"
-                            class="ux-btn-primary">
-
-                        Save Changes
-
-                    </button>
-
-                    <a asp-action="Index"
-                       asp-route-id="@Model.PropertyId"
-                       class="ux-btn-ghost">
-
-                        Back to List
-
-                    </a>
-
-                </div>
-
-            </form>
-
+    <div class="ux-page-header">
+        <div>
+            <p class="ux-eyebrow">Property Management</p>
+            <h1 class="ux-title">Edit Unit</h1>
+            <p class="ux-subtitle">Update unit details, rent, and amenities.</p>
         </div>
+        <a asp-action="Index" asp-route-id="@Model.PropertyId" class="ux-btn-ghost"><i class="bi bi-arrow-left"></i> Back</a>
     </div>
+
+    <form asp-action="Edit" method="post" class="ux-form-layout">
+        <input type="hidden" asp-for="UnitId" />
+        <input type="hidden" asp-for="CreatedAt" />
+        <input type="hidden" asp-for="PropertyId" />
+        <input type="hidden" asp-for="AvailabilityStatus" />
+        <div asp-validation-summary="ModelOnly" class="ux-form-error"></div>
+
+        <div class="ux-form-card">
+            <div class="ux-form-section-header">
+                <div class="ux-form-section-icon" style="background:rgba(0,91,113,0.1);color:#005B71;"><i class="bi bi-door-open-fill"></i></div>
+                <div><h3 class="ux-form-section-title">Unit Details</h3><p class="ux-form-section-sub">Unit number, type, size, and rent.</p></div>
+            </div>
+            <div class="ux-form-grid">
+                <div class="ux-field">
+                    <label asp-for="UnitNumber" class="ux-label">Unit Number</label>
+                    <input asp-for="UnitNumber" class="ux-input" />
+                    <span asp-validation-for="UnitNumber" class="ux-field-error"></span>
+                </div>
+                <div class="ux-field">
+                    <label asp-for="UnitTypeId" class="ux-label">Unit Type</label>
+                    <select asp-for="UnitTypeId" class="ux-input" asp-items="ViewBag.UnitTypeId"></select>
+                    <span asp-validation-for="UnitTypeId" class="ux-field-error"></span>
+                </div>
+                <div class="ux-field">
+                    <label asp-for="SizeSqFt" class="ux-label">Size (Sq Ft)</label>
+                    <input asp-for="SizeSqFt" type="text" class="ux-input" />
+                    <span asp-validation-for="SizeSqFt" class="ux-field-error"></span>
+                </div>
+                <div class="ux-field">
+                    <label asp-for="RentAmount" class="ux-label">Rent Amount</label>
+                    <div class="ux-input-prefix-wrap">
+                        <span class="ux-input-prefix">BD</span>
+                        <input asp-for="RentAmount" type="text" class="ux-input ux-input-prefixed" />
+                    </div>
+                    <span asp-validation-for="RentAmount" class="ux-field-error"></span>
+                </div>
+            </div>
+        </div>
+
+        @if (amenityList != null)
+        {
+            <div class="ux-form-card">
+                <div class="ux-form-section-header">
+                    <div class="ux-form-section-icon" style="background:rgba(30,142,110,0.1);color:#1E8E6E;"><i class="bi bi-stars"></i></div>
+                    <div><h3 class="ux-form-section-title">Amenities</h3><p class="ux-form-section-sub">Select all amenities included with this unit.</p></div>
+                </div>
+                <div class="ux-check-grid">
+                    @foreach (var amenity in amenityList)
+                    {
+                        <label class="ux-check-card">
+                            <input type="checkbox" name="selectedAmenities" value="@amenity.AmenityId"
+                                   @(selectedAmenities.Contains(amenity.AmenityId) ? "checked" : "") />
+                            @amenity.Name
+                        </label>
+                    }
+                </div>
+            </div>
+        }
+
+        <div class="ux-form-actions">
+            <button type="submit" class="ux-btn-primary" style="padding:0.65rem 2rem;">
+                <i class="bi bi-check-lg"></i> Save Changes
+            </button>
+            <a asp-action="Index" asp-route-id="@Model.PropertyId" class="ux-btn-ghost" style="padding:0.65rem 1.5rem;">Cancel</a>
+        </div>
+    </form>
+
 </div>
 
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
 }

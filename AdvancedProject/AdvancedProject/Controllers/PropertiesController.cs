@@ -63,6 +63,7 @@ namespace AdvancedProject.Controllers
             }
 
             var @property = await _context.Properties
+                .Include(p => p.Governorate)
                 .FirstOrDefaultAsync(m => m.PropertyId == id);
             if (@property == null)
             {

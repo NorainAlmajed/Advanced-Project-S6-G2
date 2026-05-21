@@ -1,92 +1,88 @@
 @model AdvancedProjectAPI.Models.Property
 
 @{
-    ViewData["Title"] = "Create Property";
+    ViewData["Title"] = "Add Property";
 }
 
-<div class="property-form-page">
-    <div class="lease-form-wrapper">
-        <div class="lease-form-card shadow-soft">
+<div class="ux-page">
 
-            <div class="lease-form-header">
-                <p class="lease-form-eyebrow mb-2">Property</p>
-                <h1 class="lease-form-title mb-2">Create Property</h1>
-                <p class="lease-form-subtitle mb-0">
-                    Add property details, location, and description.
-                </p>
-            </div>
-
-            <form asp-action="Create" method="post" class="lease-form-body">
-
-                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
-
-                <div class="row g-3">
-
-                    <div class="col-md-6 lease-form-group">
-                        <label asp-for="Name" class="lease-form-label"></label>
-                        <input asp-for="Name" class="form-control lease-form-input" placeholder="Enter property name" />
-                        <span asp-validation-for="Name" class="text-danger"></span>
-                    </div>
-
-                    <div class="col-md-6 lease-form-group">
-                        <label asp-for="GovernorateId" class="lease-form-label">Governorate</label>
-                        <select asp-for="GovernorateId" class="form-control lease-form-input" asp-items="ViewBag.GovernorateId">
-                            <option value="">-- Select Governorate --</option>
-                        </select>
-                        <span asp-validation-for="GovernorateId" class="text-danger"></span>
-                    </div>
-
-                    <div class="col-md-6 lease-form-group">
-                        <label asp-for="City" class="lease-form-label"></label>
-                        <input asp-for="City" class="form-control lease-form-input" placeholder="Enter city" />
-                        <span asp-validation-for="City" class="text-danger"></span>
-                    </div>
-
-                    <div class="col-md-6 lease-form-group">
-                        <label asp-for="Block" class="lease-form-label"></label>
-                        <input asp-for="Block" class="form-control lease-form-input" placeholder="Enter block" />
-                        <span asp-validation-for="Block" class="text-danger"></span>
-                    </div>
-
-                    <div class="col-md-6 lease-form-group">
-                        <label asp-for="Building" class="lease-form-label"></label>
-                        <input asp-for="Building" class="form-control lease-form-input" placeholder="Enter building" />
-                        <span asp-validation-for="Building" class="text-danger"></span>
-                    </div>
-
-                    <div class="col-md-6 lease-form-group">
-                        <label asp-for="Road" class="lease-form-label"></label>
-                        <input asp-for="Road" class="form-control lease-form-input" placeholder="Enter road" />
-                        <span asp-validation-for="Road" class="text-danger"></span>
-                    </div>
-
-                    <div class="col-12 lease-form-group">
-                        <label asp-for="Description" class="lease-form-label"></label>
-                        <textarea asp-for="Description"
-                                  class="form-control lease-form-input property-description-input"
-                                  placeholder="Enter description"></textarea>
-                        <span asp-validation-for="Description" class="text-danger"></span>
-                    </div>
-
-                </div>
-
-                <div class="lease-form-actions">
-                    <button type="submit" class="ux-btn-primary">
-                        Create Property
-                    </button>
-
-                    <a asp-action="Index" class="ux-btn-ghost">
-                        Back to List
-                    </a>
-                </div>
-
-            </form>
+    <div class="ux-page-header">
+        <div>
+            <p class="ux-eyebrow">Property Management</p>
+            <h1 class="ux-title">Add Property</h1>
+            <p class="ux-subtitle">Add property details, location, and description.</p>
         </div>
+        <a asp-action="Index" class="ux-btn-ghost"><i class="bi bi-arrow-left"></i> Back</a>
     </div>
+
+    <form asp-action="Create" method="post" class="ux-form-layout">
+        <div asp-validation-summary="ModelOnly" class="ux-form-error"></div>
+
+        <div class="ux-form-card">
+            <div class="ux-form-section-header">
+                <div class="ux-form-section-icon" style="background:rgba(0,91,113,0.1);color:#005B71;"><i class="bi bi-building-fill"></i></div>
+                <div><h3 class="ux-form-section-title">Property Details</h3><p class="ux-form-section-sub">Basic property information.</p></div>
+            </div>
+            <div class="ux-form-grid">
+                <div class="ux-field">
+                    <label asp-for="Name" class="ux-label"></label>
+                    <input asp-for="Name" class="ux-input" placeholder="e.g. Al-Lulu Tower" />
+                    <span asp-validation-for="Name" class="ux-field-error"></span>
+                </div>
+                <div class="ux-field">
+                    <label asp-for="GovernorateId" class="ux-label">Governorate</label>
+                    <select asp-for="GovernorateId" class="ux-input" asp-items="ViewBag.GovernorateId">
+                        <option value="">-- Select Governorate --</option>
+                    </select>
+                    <span asp-validation-for="GovernorateId" class="ux-field-error"></span>
+                </div>
+                <div class="ux-field" style="grid-column:1/-1;">
+                    <label asp-for="Description" class="ux-label"></label>
+                    <textarea asp-for="Description" class="ux-input" placeholder="Describe the property..." style="min-height:80px;resize:vertical;"></textarea>
+                    <span asp-validation-for="Description" class="ux-field-error"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="ux-form-card">
+            <div class="ux-form-section-header">
+                <div class="ux-form-section-icon" style="background:rgba(30,142,110,0.1);color:#1E8E6E;"><i class="bi bi-geo-alt-fill"></i></div>
+                <div><h3 class="ux-form-section-title">Location</h3><p class="ux-form-section-sub">Physical address details.</p></div>
+            </div>
+            <div class="ux-form-grid">
+                <div class="ux-field">
+                    <label asp-for="City" class="ux-label"></label>
+                    <input asp-for="City" class="ux-input" placeholder="e.g. Manama" />
+                    <span asp-validation-for="City" class="ux-field-error"></span>
+                </div>
+                <div class="ux-field">
+                    <label asp-for="Block" class="ux-label"></label>
+                    <input asp-for="Block" class="ux-input" placeholder="e.g. 310" />
+                    <span asp-validation-for="Block" class="ux-field-error"></span>
+                </div>
+                <div class="ux-field">
+                    <label asp-for="Building" class="ux-label"></label>
+                    <input asp-for="Building" class="ux-input" placeholder="e.g. 42" />
+                    <span asp-validation-for="Building" class="ux-field-error"></span>
+                </div>
+                <div class="ux-field">
+                    <label asp-for="Road" class="ux-label"></label>
+                    <input asp-for="Road" class="ux-input" placeholder="e.g. 1234" />
+                    <span asp-validation-for="Road" class="ux-field-error"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="ux-form-actions">
+            <button type="submit" class="ux-btn-primary" style="padding:0.65rem 2rem;">
+                <i class="bi bi-building-add"></i> Create Property
+            </button>
+            <a asp-action="Index" class="ux-btn-ghost" style="padding:0.65rem 1.5rem;">Cancel</a>
+        </div>
+    </form>
+
 </div>
 
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
 }
