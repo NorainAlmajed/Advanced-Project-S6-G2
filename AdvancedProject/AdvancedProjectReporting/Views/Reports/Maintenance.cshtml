@@ -3,69 +3,74 @@
     ViewData["Title"] = "Maintenance Report";
 }
 
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h2>Maintenance Report</h2>
-    <span class="text-muted small">Generated @DateTime.Now.ToString("dd MMM yyyy, HH:mm")</span>
+<div class="d-flex justify-content-between align-items-start mb-4">
+    <div>
+        <p class="page-eyebrow mb-1">Reports</p>
+        <h2 class="page-title">Maintenance Report</h2>
+        <p class="page-subtitle mt-1">Generated @DateTime.Now.ToString("dd MMM yyyy, HH:mm")</p>
+    </div>
+    <a asp-action="Index" class="btn btn-sm mt-2" style="background:#E8F1F3;color:#005B71;border-radius:12px;font-weight:700;padding:0.6rem 1.1rem;">
+        &larr; Dashboard
+    </a>
 </div>
 
 @if (Model == null)
 {
-    <div class="alert alert-info">No maintenance data available.</div>
+    <div class="alert alert-info rounded-4">No maintenance data available.</div>
 }
 else
 {
-    <div class="row mb-4">
+    <div class="row g-3 mb-4">
         <div class="col-md-3">
-            <div class="card text-white bg-secondary">
-                <div class="card-body">
-                    <h5 class="card-title">Total Requests</h5>
-                    <p class="card-text fs-3 fw-bold">@Model.TotalRequests</p>
+            <div class="card report-stat-card text-white h-100" style="background:linear-gradient(135deg,#4D6268,#6b7b88);">
+                <div class="card-body p-4">
+                    <div class="stat-value">@Model.TotalRequests</div>
+                    <div class="stat-label">Total Requests</div>
                 </div>
             </div>
         </div>
         <div class="col-md-3">
-            <div class="card text-white bg-warning">
-                <div class="card-body">
-                    <h5 class="card-title">Pending</h5>
-                    <p class="card-text fs-3 fw-bold">@Model.PendingRequests</p>
+            <div class="card report-stat-card text-white h-100" style="background:linear-gradient(135deg,#b45309,#f59e0b);">
+                <div class="card-body p-4">
+                    <div class="stat-value">@Model.PendingRequests</div>
+                    <div class="stat-label">Pending</div>
                 </div>
             </div>
         </div>
         <div class="col-md-3">
-            <div class="card text-white bg-primary">
-                <div class="card-body">
-                    <h5 class="card-title">In Progress</h5>
-                    <p class="card-text fs-3 fw-bold">@Model.InProgressRequests</p>
+            <div class="card report-stat-card text-white h-100" style="background:linear-gradient(135deg,#005B71,#0a7f8f);">
+                <div class="card-body p-4">
+                    <div class="stat-value">@Model.InProgressRequests</div>
+                    <div class="stat-label">In Progress</div>
                 </div>
             </div>
         </div>
         <div class="col-md-3">
-            <div class="card text-white bg-success">
-                <div class="card-body">
-                    <h5 class="card-title">Resolved</h5>
-                    <p class="card-text fs-3 fw-bold">@Model.ResolvedRequests</p>
+            <div class="card report-stat-card text-white h-100" style="background:linear-gradient(135deg,#1E8E6E,#16795e);">
+                <div class="card-body p-4">
+                    <div class="stat-value">@Model.ResolvedRequests</div>
+                    <div class="stat-label">Resolved</div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="row mb-4">
+    <div class="row g-3">
         <div class="col-md-4">
-            <div class="card h-100">
-                <div class="card-header fw-semibold">Avg. Resolution Time</div>
-                <div class="card-body d-flex align-items-center justify-content-center">
-                    <span class="fs-2 fw-bold text-primary">
-                        @Model.AverageResolutionDays.ToString("F1") days
-                    </span>
+            <div class="section-card h-100 d-flex flex-column justify-content-center align-items-center p-4 text-center">
+                <p class="page-eyebrow mb-2">Average Resolution Time</p>
+                <div style="font-size:3rem;font-weight:900;color:var(--primary);">
+                    @Model.AverageResolutionDays.ToString("F1")
                 </div>
+                <div style="font-size:1.1rem;font-weight:600;color:var(--text-muted);">days</div>
             </div>
         </div>
         <div class="col-md-8">
-            <div class="card h-100">
-                <div class="card-header fw-semibold">Requests by Skill Type</div>
-                <div class="card-body p-0">
-                    <table class="table table-striped mb-0">
-                        <thead class="table-dark">
+            <div class="section-card h-100">
+                <div class="section-card-header">Requests by Skill Type</div>
+                <div class="report-table-card" style="border-radius:0 0 20px 20px;border:none;">
+                    <table class="table report-table mb-0">
+                        <thead>
                             <tr>
                                 <th>Skill Type</th>
                                 <th class="text-center">Count</th>

@@ -3,70 +3,78 @@
     ViewData["Title"] = "Occupancy Report";
 }
 
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h2>Occupancy Report</h2>
-    <span class="text-muted small">Generated @DateTime.Now.ToString("dd MMM yyyy, HH:mm")</span>
+<div class="d-flex justify-content-between align-items-start mb-4">
+    <div>
+        <p class="page-eyebrow mb-1">Reports</p>
+        <h2 class="page-title">Occupancy Report</h2>
+        <p class="page-subtitle mt-1">Generated @DateTime.Now.ToString("dd MMM yyyy, HH:mm")</p>
+    </div>
+    <a asp-action="Index" class="btn btn-sm mt-2" style="background:#E8F1F3;color:#005B71;border-radius:12px;font-weight:700;padding:0.6rem 1.1rem;">
+        &larr; Dashboard
+    </a>
 </div>
 
 @if (!Model.Any())
 {
-    <div class="alert alert-info">No property data available.</div>
+    <div class="alert alert-info rounded-4">No property data available.</div>
 }
 else
 {
-    <div class="row mb-4">
+    <div class="row g-3 mb-4">
         <div class="col-md-4">
-            <div class="card text-white bg-primary">
-                <div class="card-body">
-                    <h5 class="card-title">Total Units</h5>
-                    <p class="card-text fs-3 fw-bold">@Model.Sum(p => p.TotalUnits)</p>
+            <div class="card report-stat-card text-white h-100" style="background:linear-gradient(135deg,#005B71,#0a7f8f);">
+                <div class="card-body p-4">
+                    <div class="stat-value">@Model.Sum(p => p.TotalUnits)</div>
+                    <div class="stat-label">Total Units</div>
                 </div>
             </div>
         </div>
         <div class="col-md-4">
-            <div class="card text-white bg-success">
-                <div class="card-body">
-                    <h5 class="card-title">Occupied</h5>
-                    <p class="card-text fs-3 fw-bold">@Model.Sum(p => p.OccupiedUnits)</p>
+            <div class="card report-stat-card text-white h-100" style="background:linear-gradient(135deg,#1E8E6E,#16795e);">
+                <div class="card-body p-4">
+                    <div class="stat-value">@Model.Sum(p => p.OccupiedUnits)</div>
+                    <div class="stat-label">Occupied</div>
                 </div>
             </div>
         </div>
         <div class="col-md-4">
-            <div class="card text-white bg-warning">
-                <div class="card-body">
-                    <h5 class="card-title">Vacant</h5>
-                    <p class="card-text fs-3 fw-bold">@Model.Sum(p => p.VacantUnits)</p>
+            <div class="card report-stat-card text-white h-100" style="background:linear-gradient(135deg,#b45309,#f59e0b);">
+                <div class="card-body p-4">
+                    <div class="stat-value">@Model.Sum(p => p.VacantUnits)</div>
+                    <div class="stat-label">Vacant</div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="card">
-        <div class="card-header fw-semibold">Breakdown by Building</div>
-        <div class="card-body p-0">
-            <table class="table table-striped table-hover mb-0">
-                <thead class="table-dark">
+    <div class="section-card">
+        <div class="section-card-header">Breakdown by Building</div>
+        <div class="report-table-card" style="border-radius:0 0 20px 20px;border:none;">
+            <table class="table report-table mb-0">
+                <thead>
                     <tr>
                         <th>Building</th>
                         <th class="text-center">Total Units</th>
                         <th class="text-center">Occupied</th>
                         <th class="text-center">Vacant</th>
-                        <th class="text-center">Occupancy Rate</th>
+                        <th>Occupancy Rate</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach (var row in Model)
                     {
                         <tr>
-                            <td>@row.BuildingName</td>
+                            <td class="fw-700">@row.BuildingName</td>
                             <td class="text-center">@row.TotalUnits</td>
                             <td class="text-center">@row.OccupiedUnits</td>
                             <td class="text-center">@row.VacantUnits</td>
-                            <td class="text-center">
-                                <div class="progress" style="height:20px;">
-                                    <div class="progress-bar bg-success"
-                                         style="width:@row.OccupancyRate.ToString("F0")%">
-                                        @row.OccupancyRate.ToString("F1")%
+                            <td style="min-width:180px;">
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="progress flex-grow-1" style="height:18px;">
+                                        <div class="progress-bar bg-success"
+                                             style="width:@row.OccupancyRate.ToString("F0")%">
+                                            @row.OccupancyRate.ToString("F1")%
+                                        </div>
                                     </div>
                                 </div>
                             </td>
