@@ -1,6 +1,6 @@
 ﻿namespace AdvancedProjectReporting.Dtos
 {
-    // Dashboard (combines all three reports)
+    // Dashboard 
     public class DashboardViewModel
     {
         public List<OccupancyReportDto> Occupancy { get; set; } = new();
