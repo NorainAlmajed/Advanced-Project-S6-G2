@@ -2730,6 +2730,403 @@ body {
 
 
 /* ══════════════════════════════════════════
+   UX REDESIGN — SHARED COMPONENTS
+   ══════════════════════════════════════════ */
+
+.ux-page {
+    max-width: 1100px;
+}
+
+/* Page header */
+.ux-page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.ux-eyebrow {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+    margin-bottom: 0.2rem;
+}
+
+.ux-title {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--text-main);
+    margin: 0 0 0.2rem;
+    letter-spacing: -0.02em;
+}
+
+.ux-subtitle {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    margin: 0;
+}
+
+/* Buttons */
+.ux-btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5rem 1.1rem;
+    background: var(--primary);
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.18s;
+}
+
+.ux-btn-primary:hover {
+    background: #004a5e;
+    color: #fff;
+}
+
+.ux-btn-outline {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5rem 1.1rem;
+    background: transparent;
+    color: var(--primary);
+    border: 1.5px solid var(--primary);
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.18s;
+}
+
+.ux-btn-outline:hover {
+    background: var(--primary);
+    color: #fff;
+}
+
+.ux-btn-ghost {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5rem 1.1rem;
+    background: transparent;
+    color: var(--text-muted);
+    border: 1.5px solid #e5e7eb;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.18s;
+}
+
+.ux-btn-ghost:hover {
+    border-color: #d1d5db;
+    color: var(--text-main);
+}
+
+/* Stats row */
+.ux-stats-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+}
+
+.ux-stat-card {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 1rem 1.1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    border: 1px solid #f0f0f0;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+}
+
+.ux-stat-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+}
+
+.ux-stat-value {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--text-main);
+    line-height: 1;
+    margin-bottom: 0.15rem;
+}
+
+.ux-stat-label {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+/* Toolbar (search + filter tabs) */
+.ux-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.ux-search-form {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex: 1;
+    min-width: 0;
+}
+
+.ux-search-wrap {
+    position: relative;
+    flex: 1;
+    min-width: 0;
+}
+
+.ux-search-icon {
+    position: absolute;
+    left: 0.85rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #9ca3af;
+    font-size: 0.85rem;
+    pointer-events: none;
+}
+
+.ux-search-input {
+    width: 100%;
+    padding: 0.55rem 1rem 0.55rem 2.3rem;
+    background: #ffffff;
+    border: 1.5px solid #e5e7eb;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    color: var(--text-main);
+    transition: border-color 0.18s;
+    outline: none;
+}
+
+.ux-search-input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(0, 91, 113, 0.08);
+}
+
+.ux-search-input::placeholder {
+    color: #9ca3af;
+}
+
+/* Filter tabs */
+.ux-filter-tabs {
+    display: flex;
+    align-items: center;
+    background: #f3f4f6;
+    border-radius: 8px;
+    padding: 3px;
+    gap: 2px;
+    flex-shrink: 0;
+}
+
+.ux-filter-tab {
+    padding: 0.35rem 0.9rem;
+    border-radius: 6px;
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: all 0.18s;
+    white-space: nowrap;
+}
+
+.ux-filter-tab:hover {
+    color: var(--text-main);
+}
+
+.ux-filter-tab.active {
+    background: #ffffff;
+    color: var(--primary);
+    font-weight: 600;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+}
+
+/* Table card */
+.ux-table-card {
+    background: #ffffff;
+    border-radius: 14px;
+    border: 1px solid #f0f0f0;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.05);
+    overflow: hidden;
+}
+
+.ux-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.ux-table thead tr {
+    background: #0d1b2a;
+    border-bottom: none;
+}
+
+.ux-table thead th {
+    padding: 0.75rem 1.1rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: rgba(255,255,255,0.5);
+}
+
+.ux-table tbody tr {
+    border-bottom: 1px solid #f9fafb;
+    transition: background 0.15s;
+}
+
+.ux-table tbody tr:last-child {
+    border-bottom: none;
+}
+
+.ux-table tbody tr:hover {
+    background: #e8f0f5;
+}
+
+.ux-table tbody td {
+    padding: 0.85rem 1.1rem;
+    vertical-align: middle;
+}
+
+/* User cell */
+.ux-user-cell {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+}
+
+.ux-avatar {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    color: #ffffff;
+    font-size: 0.8rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.ux-user-name {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text-main);
+}
+
+.ux-user-sub {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+}
+
+.ux-cell-muted {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+/* Role badges */
+.ux-role-badge {
+    display: inline-block;
+    padding: 0.25rem 0.7rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.ux-role-tenant {
+    background: rgba(30,142,110,0.1);
+    color: #1E8E6E;
+}
+
+.ux-role-maintenancestaff,
+.ux-role-staff {
+    background: rgba(99,102,241,0.1);
+    color: #6366f1;
+}
+
+.ux-role-propertymanager,
+.ux-role-manager {
+    background: rgba(245,158,11,0.1);
+    color: #d97706;
+}
+
+/* Details button */
+.ux-details-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.38rem 0.85rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--primary);
+    background: rgba(0,91,113,0.06);
+    border-radius: 7px;
+    text-decoration: none;
+    transition: all 0.18s;
+}
+
+.ux-details-btn:hover {
+    background: var(--primary);
+    color: #ffffff;
+}
+
+/* Empty state */
+.ux-empty {
+    text-align: center;
+    padding: 3.5rem 1rem;
+    color: var(--text-muted);
+}
+
+.ux-empty i {
+    font-size: 2.5rem;
+    display: block;
+    margin-bottom: 0.75rem;
+    opacity: 0.3;
+}
+
+.ux-empty p {
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+@media (max-width: 767px) {
+    .ux-stats-row {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .ux-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .ux-search-form {
+        flex-wrap: wrap;
+    }
+}
+
+/* ══════════════════════════════════════════
    SIDEBAR LAYOUT
    ══════════════════════════════════════════ */
 
