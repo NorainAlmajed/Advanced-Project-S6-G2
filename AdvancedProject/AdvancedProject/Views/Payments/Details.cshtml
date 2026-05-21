@@ -6,12 +6,28 @@
 
 <div class="lease-details-page">
 
-    <div class="lease-details-header mb-4">
-        <p class="lease-eyebrow mb-2">PAYMENT DETAILS</p>
-        <h1 class="lease-title mb-2">Payment #@Model.PaymentId</h1>
-        <p class="lease-subtitle mb-0">
-            View payment amount, status, lease, property, unit, method, and frequency.
-        </p>
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+        <div>
+            <p class="lease-eyebrow mb-2">PAYMENT DETAILS</p>
+            <h1 class="lease-title mb-2">Payment #@Model.PaymentId</h1>
+            <p class="lease-subtitle mb-0">
+                View payment amount, status, lease, property, unit, method, and frequency.
+            </p>
+        </div>
+
+        <div class="d-flex gap-2 flex-wrap">
+            @if (User.IsInRole("PropertyManager"))
+            {
+                <a asp-action="Edit"
+                   asp-route-id="@Model.PaymentId"
+                   class="btn btn-success lease-action-btn">
+                    Edit Payment
+                </a>
+            }
+            <a asp-action="Index" class="btn btn-light-custom lease-action-btn">
+                Back to List
+            </a>
+        </div>
     </div>
 
     <div class="lease-details-card">
@@ -86,19 +102,6 @@
                 </div>
             </div>
 
-        </div>
-
-        <div class="mt-4 d-flex gap-3 flex-wrap">
-            <a asp-action="Edit"
-               asp-route-id="@Model.PaymentId"
-               class="btn btn-success lease-action-btn">
-                Edit Payment
-            </a>
-
-            <a asp-action="Index"
-               class="btn btn-light-custom lease-action-btn">
-                Back to List
-            </a>
         </div>
 
     </div>
