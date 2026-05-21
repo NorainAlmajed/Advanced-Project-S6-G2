@@ -1,12 +1,12 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using AdvancedProject.Data;
-using AdvancedProject.Models;
+using AdvancedProjectAPI.Data;
+using AdvancedProjectAPI.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
@@ -230,7 +230,7 @@ namespace AdvancedProject.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("ApplicationId,StartDate,DurationId")] LeaseApplication leaseApplication)
         {
-            Console.WriteLine("POST HIT 🔥");
+            Console.WriteLine("POST HIT ??");
 
             if (id != leaseApplication.ApplicationId)
             {
@@ -244,7 +244,7 @@ namespace AdvancedProject.Controllers
                 return NotFound();
             }
 
-            // 🔥 IMPORTANT: remove validation for fields not included in Bind
+            // ?? IMPORTANT: remove validation for fields not included in Bind
             ModelState.Remove("Tenant");
             ModelState.Remove("Unit");
             ModelState.Remove("Duration");
@@ -258,7 +258,7 @@ namespace AdvancedProject.Controllers
 
             if (!ModelState.IsValid)
             {
-                Console.WriteLine("ModelState NOT valid ❌");
+                Console.WriteLine("ModelState NOT valid ?");
 
                 var errors = ModelState.Values
                     .SelectMany(v => v.Errors)
@@ -274,9 +274,9 @@ namespace AdvancedProject.Controllers
                 return View(leaseApplication);
             }
 
-            Console.WriteLine("ModelState valid ✅");
+            Console.WriteLine("ModelState valid ?");
 
-            // ✅ update only allowed fields
+            // ? update only allowed fields
             existing.StartDate = leaseApplication.StartDate;
             existing.DurationId = leaseApplication.DurationId;
 

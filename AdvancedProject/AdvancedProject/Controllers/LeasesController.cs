@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -6,8 +6,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using AdvancedProject.Data;
-using AdvancedProject.Models;
+using AdvancedProjectAPI.Data;
+using AdvancedProjectAPI.Models;
 
 namespace AdvancedProject.Controllers
 {
@@ -108,16 +108,16 @@ namespace AdvancedProject.Controllers
             {
                 if (dateFilter == "Latest")
                 {
-                    leasesQuery = leasesQuery.OrderByDescending(l => l.StartDate);
+                    leasesQuery = leasesQuery.OrderByDescending(l => l.CreatedAt);
                 }
                 else
                 {
-                    leasesQuery = leasesQuery.OrderBy(l => l.StartDate);
+                    leasesQuery = leasesQuery.OrderBy(l => l.CreatedAt);
                 }
             }
             else
             {
-                leasesQuery = leasesQuery.OrderByDescending(l => l.StartDate);
+                leasesQuery = leasesQuery.OrderByDescending(l => l.CreatedAt);
             }
 
             var leases = await leasesQuery.ToListAsync();

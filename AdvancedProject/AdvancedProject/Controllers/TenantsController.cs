@@ -1,4 +1,4 @@
-ï»¿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -6,8 +6,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using AdvancedProject.Data;
-using AdvancedProject.Models;
+using AdvancedProjectAPI.Data;
+using AdvancedProjectAPI.Models;
+using AdvancedProject.ViewModels;
 
 namespace AdvancedProject.Controllers
 {
@@ -175,7 +176,7 @@ namespace AdvancedProject.Controllers
 
             if (tenant == null) return NotFound();
 
-            // GET: Tenants/Edit/5 â€” populate the VM
+            // GET: Tenants/Edit/5 — populate the VM
             var vm = new TenantEditVM
             {
                 TenantId = tenant.TenantId,
@@ -272,7 +273,7 @@ namespace AdvancedProject.Controllers
                 }
 
                 // Update Tenant
-                // POST: Tenants/Edit/5 â€” replace the tenant update block
+                // POST: Tenants/Edit/5 — replace the tenant update block
                 tenant.Dob = DateOnly.FromDateTime(vm.Dob);
                 tenant.NationalId = vm.NationalId;
                 tenant.Salary = vm.Salary;

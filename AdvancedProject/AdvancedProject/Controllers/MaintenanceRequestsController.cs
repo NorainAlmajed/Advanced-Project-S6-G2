@@ -1,4 +1,4 @@
-ï»¿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -6,8 +6,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using AdvancedProject.Data;
-using AdvancedProject.Models;
+using AdvancedProjectAPI.Data;
+using AdvancedProjectAPI.Models;
 
 namespace AdvancedProject.Controllers
 {
@@ -245,6 +245,7 @@ namespace AdvancedProject.Controllers
                 _context.Add(maintenanceRequest);
                 await _context.SaveChangesAsync();
 
+                // Notify manager when a tenant submits
                 if (!User.IsInRole("PropertyManager"))
                 {
                     _context.Notifications.Add(new Notification
@@ -255,9 +256,22 @@ namespace AdvancedProject.Controllers
                         NotificationTypeId = 2,
                         CreatedAt = DateTime.Now
                     });
-                    await _context.SaveChangesAsync();
                 }
 
+                // Notify the assigned staff member
+                if (staff != null)
+                {
+                    _context.Notifications.Add(new Notification
+                    {
+                        UserId = staff.UserId,
+                        Title = "New Maintenance Request",
+                        Message = "You have been assigned a new maintenance request.",
+                        NotificationTypeId = 2,
+                        CreatedAt = DateTime.Now
+                    });
+                }
+
+                await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
 
@@ -393,13 +407,13 @@ namespace AdvancedProject.Controllers
 
                 if (!managerChangedStaff)
                 {
-                    // Manager didn't change staff â€” free old staff first so the search can re-select them
+                    // Manager didn't change staff — free old staff first so the search can re-select them
                     if (oldStaff != null)
                     {
                         oldStaff.AvailabilityStatus = "Available";
                     }
 
-                    // Load all staff into memory â€” EF returns tracked entities so in-memory availability changes are visible
+                    // Load all staff into memory — EF returns tracked entities so in-memory availability changes are visible
                     var allStaff = await _context.MaintenanceStaffs
                         .Include(s => s.Skills)
                         .ToListAsync();
@@ -430,7 +444,7 @@ namespace AdvancedProject.Controllers
                 }
                 else
                 {
-                    // Manager manually picked a staff â€” save as-is, manage availability
+                    // Manager manually picked a staff — save as-is, manage availability
                     if (oldStaff != null)
                     {
                         oldStaff.AvailabilityStatus = "Available";
@@ -449,6 +463,7 @@ namespace AdvancedProject.Controllers
                     }
                 }
 
+                // Notify tenant
                 _context.Notifications.Add(new Notification
                 {
                     UserId = request.UserId,
@@ -458,11 +473,29 @@ namespace AdvancedProject.Controllers
                     CreatedAt = DateTime.Now
                 });
 
+                // Notify assigned staff
+                if (request.AssignedStaffId != null)
+                {
+                    var assignedStaff = await _context.MaintenanceStaffs
+                        .FirstOrDefaultAsync(s => s.StaffId == request.AssignedStaffId);
+                    if (assignedStaff != null)
+                    {
+                        _context.Notifications.Add(new Notification
+                        {
+                            UserId = assignedStaff.UserId,
+                            Title = "Maintenance Request Edited",
+                            Message = $"Your maintenance request #{request.RequestId} has been edited.",
+                            NotificationTypeId = 2,
+                            CreatedAt = DateTime.Now
+                        });
+                    }
+                }
+
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
 
-            // ðŸ”¥ reload Unit dropdown
+            // ?? reload Unit dropdown
             var tenant = await _context.Tenants
                 .FirstOrDefaultAsync(t => t.UserId == request.UserId);
 
@@ -612,7 +645,7 @@ namespace AdvancedProject.Controllers
                 request.Status = form.Status;
                 request.Notes = form.Notes;
 
-                // 3. Load all staff into memory â€” EF returns tracked entities so in-memory availability changes are visible
+                // 3. Load all staff into memory — EF returns tracked entities so in-memory availability changes are visible
                 var allStaff = await _context.MaintenanceStaffs
                     .Include(s => s.Skills)
                     .ToListAsync();
@@ -641,6 +674,7 @@ namespace AdvancedProject.Controllers
                     newStaff.AvailabilityStatus = "Busy";
                 }
 
+                // Notify tenant
                 _context.Notifications.Add(new Notification
                 {
                     UserId = request.UserId,
@@ -649,6 +683,24 @@ namespace AdvancedProject.Controllers
                     NotificationTypeId = 2,
                     CreatedAt = DateTime.Now
                 });
+
+                // Notify assigned staff
+                if (request.AssignedStaffId != null)
+                {
+                    var assignedStaff = await _context.MaintenanceStaffs
+                        .FirstOrDefaultAsync(s => s.StaffId == request.AssignedStaffId);
+                    if (assignedStaff != null)
+                    {
+                        _context.Notifications.Add(new Notification
+                        {
+                            UserId = assignedStaff.UserId,
+                            Title = "Maintenance Request Edited",
+                            Message = $"Your maintenance request #{request.RequestId} has been edited.",
+                            NotificationTypeId = 2,
+                            CreatedAt = DateTime.Now
+                        });
+                    }
+                }
 
                 await _context.SaveChangesAsync();
 
@@ -752,6 +804,7 @@ namespace AdvancedProject.Controllers
             request.Status = "In Progress";
             request.InProgressTime = DateTime.Now;
 
+            // Notify tenant
             _context.Notifications.Add(new Notification
             {
                 UserId = request.UserId,
@@ -760,6 +813,24 @@ namespace AdvancedProject.Controllers
                 NotificationTypeId = 2,
                 CreatedAt = DateTime.Now
             });
+
+            // Notify staff only when manager performs the action
+            if (User.IsInRole("PropertyManager") && request.AssignedStaffId != null)
+            {
+                var assignedStaff = await _context.MaintenanceStaffs
+                    .FirstOrDefaultAsync(s => s.StaffId == request.AssignedStaffId);
+                if (assignedStaff != null)
+                {
+                    _context.Notifications.Add(new Notification
+                    {
+                        UserId = assignedStaff.UserId,
+                        Title = "Maintenance Update",
+                        Message = $"Your maintenance request #{request.RequestId} has been marked as In Progress.",
+                        NotificationTypeId = 2,
+                        CreatedAt = DateTime.Now
+                    });
+                }
+            }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Details), new { id });
@@ -774,6 +845,7 @@ namespace AdvancedProject.Controllers
 
             request.Status = "Cancelled";
 
+            // Notify tenant
             _context.Notifications.Add(new Notification
             {
                 UserId = request.UserId,
@@ -782,6 +854,24 @@ namespace AdvancedProject.Controllers
                 NotificationTypeId = 2,
                 CreatedAt = DateTime.Now
             });
+
+            // Notify assigned staff
+            if (request.AssignedStaffId != null)
+            {
+                var assignedStaff = await _context.MaintenanceStaffs
+                    .FirstOrDefaultAsync(s => s.StaffId == request.AssignedStaffId);
+                if (assignedStaff != null)
+                {
+                    _context.Notifications.Add(new Notification
+                    {
+                        UserId = assignedStaff.UserId,
+                        Title = "Maintenance Request Cancelled",
+                        Message = $"Your maintenance request #{request.RequestId} has been cancelled.",
+                        NotificationTypeId = 2,
+                        CreatedAt = DateTime.Now
+                    });
+                }
+            }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Details), new { id });
@@ -797,6 +887,7 @@ namespace AdvancedProject.Controllers
             request.Status = "Resolved";
             request.ResolvedTime = DateTime.Now;
 
+            // Notify tenant
             _context.Notifications.Add(new Notification
             {
                 UserId = request.UserId,
@@ -805,6 +896,24 @@ namespace AdvancedProject.Controllers
                 NotificationTypeId = 2,
                 CreatedAt = DateTime.Now
             });
+
+            // Notify staff only when manager performs the action
+            if (User.IsInRole("PropertyManager") && request.AssignedStaffId != null)
+            {
+                var assignedStaff = await _context.MaintenanceStaffs
+                    .FirstOrDefaultAsync(s => s.StaffId == request.AssignedStaffId);
+                if (assignedStaff != null)
+                {
+                    _context.Notifications.Add(new Notification
+                    {
+                        UserId = assignedStaff.UserId,
+                        Title = "Maintenance Update",
+                        Message = $"Your maintenance request #{request.RequestId} has been marked as resolved.",
+                        NotificationTypeId = 2,
+                        CreatedAt = DateTime.Now
+                    });
+                }
+            }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Details), new { id });
@@ -820,6 +929,7 @@ namespace AdvancedProject.Controllers
             request.Status = "Closed";
             request.ClosedTime = DateTime.Now;
 
+            // Notify tenant
             _context.Notifications.Add(new Notification
             {
                 UserId = request.UserId,
@@ -828,6 +938,24 @@ namespace AdvancedProject.Controllers
                 NotificationTypeId = 2,
                 CreatedAt = DateTime.Now
             });
+
+            // Notify staff only when manager performs the action
+            if (User.IsInRole("PropertyManager") && request.AssignedStaffId != null)
+            {
+                var assignedStaff = await _context.MaintenanceStaffs
+                    .FirstOrDefaultAsync(s => s.StaffId == request.AssignedStaffId);
+                if (assignedStaff != null)
+                {
+                    _context.Notifications.Add(new Notification
+                    {
+                        UserId = assignedStaff.UserId,
+                        Title = "Maintenance Update",
+                        Message = $"Your maintenance request #{request.RequestId} has been closed.",
+                        NotificationTypeId = 2,
+                        CreatedAt = DateTime.Now
+                    });
+                }
+            }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Details), new { id });

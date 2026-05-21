@@ -1,11 +1,11 @@
-﻿@model IEnumerable<AdvancedProject.Models.Unit>
+@model IEnumerable<AdvancedProjectAPI.Models.Unit>
 
 @{
     ViewData["Title"] = "Index";
     var currentStatus = ViewBag.CurrentStatus as string ?? "All";
     var propertyId = ViewBag.PropertyId;
     var selectedAmenities = ViewBag.SelectedAmenities as int[] ?? Array.Empty<int>();
-    var amenityList = ViewBag.AmenityList as List<AdvancedProject.Models.Amenity> ?? new List<AdvancedProject.Models.Amenity>();
+    var amenityList = ViewBag.AmenityList as List<AdvancedProjectAPI.Models.Amenity> ?? new List<AdvancedProjectAPI.Models.Amenity>();
 }
 
 <h1 class="mb-4">

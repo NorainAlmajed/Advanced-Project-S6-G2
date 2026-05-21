@@ -1,6 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
-namespace AdvancedProject.Models
+namespace AdvancedProject.ViewModels
 {
     public class LoginViewModel
     {

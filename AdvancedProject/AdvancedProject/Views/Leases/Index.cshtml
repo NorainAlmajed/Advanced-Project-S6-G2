@@ -1,4 +1,4 @@
-﻿@model IEnumerable<AdvancedProject.Models.Lease>
+@model IEnumerable<AdvancedProjectAPI.Models.Lease>
 
 @{
     ViewData["Title"] = "Leases";
@@ -43,7 +43,7 @@
                     </div>
 
                     <div class="col-lg-2">
-                        <label class="form-label fw-semibold text-white">Start Date</label>
+                        <label class="form-label fw-semibold text-white">Created Date</label>
                         <select name="dateFilter" class="form-select users-search-input">
                             <option value="">All Dates</option>
                             <option value="Latest" selected="@(currentDateFilter == "Latest")">Latest</option>

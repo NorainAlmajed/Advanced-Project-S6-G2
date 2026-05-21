@@ -1,4 +1,4 @@
-namespace AdvancedProject.Models
+namespace AdvancedProject.ViewModels
 {
     public class ErrorViewModel
     {

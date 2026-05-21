@@ -1,4 +1,4 @@
-﻿@model IEnumerable<AdvancedProject.Models.Property>
+@model IEnumerable<AdvancedProjectAPI.Models.Property>
 
 @{
     ViewData["Title"] = "Index";
@@ -98,7 +98,7 @@ else
                             </h4>
 
                                 <p class="text-muted mb-0">
-                                    📍 @item.Governorate?.Name - @item.City
+                                    ?? @item.Governorate?.Name - @item.City
                                 </p>
 
                         </div>
