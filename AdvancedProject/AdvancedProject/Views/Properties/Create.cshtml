@@ -15,9 +15,43 @@
         <a asp-action="Index" class="ux-btn-ghost"><i class="bi bi-arrow-left"></i> Back</a>
     </div>
 
-    <form asp-action="Create" method="post" class="ux-form-layout">
+    <form asp-action="Create" method="post" enctype="multipart/form-data" class="ux-form-layout">
         <div asp-validation-summary="ModelOnly" class="ux-form-error"></div>
 
+        @* ── Property Image (required) ── *@
+        <div class="ux-form-card">
+            <div class="ux-form-section-header">
+                <div class="ux-form-section-icon" style="background:rgba(245,158,11,0.1);color:#d97706;">
+                    <i class="bi bi-image-fill"></i>
+                </div>
+                <div>
+                    <h3 class="ux-form-section-title">Property Image <span style="color:#dc3545;font-size:0.85rem;font-weight:600;">*Required</span></h3>
+                    <p class="ux-form-section-sub">Upload a high-quality photo of the property.</p>
+                </div>
+            </div>
+
+            <div class="prop-img-upload-area" id="imgUploadArea">
+                <div class="prop-img-preview-wrap" id="imgPreviewWrap" style="display:none;">
+                    <img id="imgPreview" src="#" alt="Preview" class="prop-img-preview" />
+                    <button type="button" class="prop-img-remove" id="imgRemoveBtn" title="Remove image">
+                        <i class="bi bi-x-lg"></i>
+                    </button>
+                </div>
+                <div class="prop-img-placeholder" id="imgPlaceholder">
+                    <i class="bi bi-cloud-arrow-up-fill prop-img-upload-icon"></i>
+                    <p class="prop-img-upload-text">Click to upload or drag &amp; drop</p>
+                    <p class="prop-img-upload-hint">JPG, PNG, GIF, WEBP &nbsp;·&nbsp; Max 5 MB</p>
+                </div>
+                <input type="file" name="imageFile" id="imageFileInput"
+                       accept=".jpg,.jpeg,.png,.gif,.webp"
+                       class="prop-img-file-input" />
+            </div>
+            <span class="ux-field-error" id="imgError">
+                @Html.ValidationMessage("imageFile")
+            </span>
+        </div>
+
+        @* ── Property Details ── *@
         <div class="ux-form-card">
             <div class="ux-form-section-header">
                 <div class="ux-form-section-icon" style="background:rgba(0,91,113,0.1);color:#005B71;"><i class="bi bi-building-fill"></i></div>
@@ -44,6 +78,7 @@
             </div>
         </div>
 
+        @* ── Location ── *@
         <div class="ux-form-card">
             <div class="ux-form-section-header">
                 <div class="ux-form-section-icon" style="background:rgba(30,142,110,0.1);color:#1E8E6E;"><i class="bi bi-geo-alt-fill"></i></div>
@@ -85,4 +120,51 @@
 
 @section Scripts {
     @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+    <script>
+        (function () {
+            const input = document.getElementById('imageFileInput');
+            const area  = document.getElementById('imgUploadArea');
+            const placeholder = document.getElementById('imgPlaceholder');
+            const previewWrap = document.getElementById('imgPreviewWrap');
+            const preview = document.getElementById('imgPreview');
+            const removeBtn = document.getElementById('imgRemoveBtn');
+
+            function showPreview(file) {
+                const reader = new FileReader();
+                reader.onload = e => {
+                    preview.src = e.target.result;
+                    placeholder.style.display = 'none';
+                    previewWrap.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+
+            area.addEventListener('click', e => {
+                if (e.target !== removeBtn && !removeBtn.contains(e.target))
+                    input.click();
+            });
+
+            input.addEventListener('change', () => {
+                if (input.files[0]) showPreview(input.files[0]);
+            });
+
+            removeBtn.addEventListener('click', e => {
+                e.stopPropagation();
+                input.value = '';
+                preview.src = '#';
+                previewWrap.style.display = 'none';
+                placeholder.style.display = 'flex';
+            });
+
+            // Drag & drop
+            area.addEventListener('dragover', e => { e.preventDefault(); area.classList.add('drag-over'); });
+            area.addEventListener('dragleave', () => area.classList.remove('drag-over'));
+            area.addEventListener('drop', e => {
+                e.preventDefault();
+                area.classList.remove('drag-over');
+                const file = e.dataTransfer.files[0];
+                if (file) { input.files = e.dataTransfer.files; showPreview(file); }
+            });
+        })();
+    </script>
 }

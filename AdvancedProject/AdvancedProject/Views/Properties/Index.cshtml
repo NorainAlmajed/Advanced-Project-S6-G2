@@ -35,7 +35,9 @@
             <button type="submit" class="ux-btn-primary">Search</button>
             <a asp-action="Index" class="ux-btn-ghost">Reset</a>
         </form>
-        <div class="ux-stat-label" style="color:var(--text-muted);font-size:0.8rem;white-space:nowrap;">@Model.Count() propert@(Model.Count()==1?"y":"ies")</div>
+        <div class="ux-stat-label" style="color:var(--text-muted);font-size:0.8rem;white-space:nowrap;">
+            @Model.Count() propert@(Model.Count() == 1 ? "y" : "ies")
+        </div>
     </div>
 
     @if (!Model.Any())
@@ -49,31 +51,48 @@
     }
     else
     {
-        <div class="ux-property-grid">
+        <div class="prop-card-grid">
             @foreach (var item in Model)
             {
-                <div class="ux-property-card">
-                    <div class="ux-property-card-header">
-                        <div class="ux-property-icon"><i class="bi bi-building-fill"></i></div>
-                        <div>
-                            <h3 class="ux-property-name">@item.Name</h3>
-                            <p class="ux-property-location">
-                                <i class="bi bi-geo-alt-fill"></i>
-                                @item.Governorate?.Name — @item.City
-                            </p>
-                        </div>
+                <div class="prop-card">
+                    @* Image or placeholder *@
+                    <div class="prop-card-img-wrap">
+                        @if (item.ImageData != null)
+                        {
+                            <img src="@Url.Action("GetImage", new { id = item.PropertyId })"
+                                 alt="@item.Name" class="prop-card-img" />
+                        }
+                        else
+                        {
+                            <div class="prop-card-img-placeholder">
+                                <i class="bi bi-building-fill"></i>
+                            </div>
+                        }
+                        <span class="prop-card-badge">@(item.Governorate?.Name ?? "Property")</span>
                     </div>
-                    @if (!string.IsNullOrEmpty(item.Description))
-                    {
-                        <p class="ux-property-desc">@item.Description</p>
-                    }
-                    <div class="ux-property-actions">
-                        <a asp-action="Details" asp-route-id="@item.PropertyId" class="ux-details-btn">
-                            Details <i class="bi bi-arrow-right"></i>
-                        </a>
-                        <a asp-controller="Units" asp-action="Index" asp-route-id="@item.PropertyId" class="ux-btn-outline" style="font-size:0.8rem;padding:0.38rem 0.85rem;">
-                            <i class="bi bi-grid-fill"></i> Units
-                        </a>
+
+                    @* Card body *@
+                    <div class="prop-card-body">
+                        <h3 class="prop-card-name">@item.Name</h3>
+                        <p class="prop-card-location">
+                            <i class="bi bi-geo-alt-fill"></i>
+                            @item.City@(item.Governorate != null ? ", " + item.Governorate.Name : ""), Bahrain
+                        </p>
+
+                        @if (!string.IsNullOrEmpty(item.Description))
+                        {
+                            <p class="prop-card-desc">@item.Description</p>
+                        }
+
+                        <div class="prop-card-footer">
+                            <a asp-action="Details" asp-route-id="@item.PropertyId" class="ux-details-btn">
+                                Details <i class="bi bi-arrow-right"></i>
+                            </a>
+                            <a asp-controller="Units" asp-action="Index" asp-route-id="@item.PropertyId"
+                               class="ux-btn-outline" style="font-size:0.8rem;padding:0.38rem 0.85rem;">
+                                <i class="bi bi-grid-fill"></i> Units
+                            </a>
+                        </div>
                     </div>
                 </div>
             }

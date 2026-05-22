@@ -109,8 +109,28 @@ using (var scope = app.Services.CreateScope())
         }
     }
 
-    // Hash any plain-text passwords in the custom Users table (all users)
+    // Seed property images from wwwroot/images/seed/
     var dbContext = scope.ServiceProvider.GetRequiredService<APContext>();
+    var seedImageDir = Path.Combine(app.Environment.WebRootPath, "images", "seed");
+    var propertiesToSeed = await dbContext.Properties
+        .Where(p => p.ImageData == null)
+        .OrderBy(p => p.PropertyId)
+        .ToListAsync();
+
+    var seedFiles = new[] { "property1.jpg", "property2.jpg", "property3.jpg" };
+    for (int i = 0; i < propertiesToSeed.Count && i < seedFiles.Length; i++)
+    {
+        var filePath = Path.Combine(seedImageDir, seedFiles[i]);
+        if (File.Exists(filePath))
+        {
+            propertiesToSeed[i].ImageData = await File.ReadAllBytesAsync(filePath);
+            propertiesToSeed[i].ImageContentType = "image/jpeg";
+        }
+    }
+    await dbContext.SaveChangesAsync();
+
+    // Hash any plain-text passwords in the custom Users table (all users)
+    dbContext = scope.ServiceProvider.GetRequiredService<APContext>();
     var hasher = new PasswordHasher<User>();
     var allUsers = dbContext.Users.ToList();
     foreach (var user in allUsers)

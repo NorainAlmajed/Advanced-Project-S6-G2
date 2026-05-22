@@ -22,6 +22,46 @@ namespace AdvancedProject.Controllers
             _context = context;
         }
 
+        // ── Image helper ────────────────────────────────────────────────
+        private async Task<(byte[]? data, string? contentType)> ProcessImageUpload(IFormFile? file)
+        {
+            if (file == null || file.Length == 0)
+                return (null, null);
+
+            if (file.Length > 5 * 1024 * 1024)
+            {
+                ModelState.AddModelError("imageFile", "Image must not exceed 5 MB.");
+                return (null, null);
+            }
+
+            var allowed = new[] { ".jpg", ".jpeg", ".png", ".gif", ".webp" };
+            var ext = Path.GetExtension(file.FileName).ToLowerInvariant();
+            if (!allowed.Contains(ext))
+            {
+                ModelState.AddModelError("imageFile", "Only JPG, PNG, GIF, or WEBP images are allowed.");
+                return (null, null);
+            }
+
+            using var ms = new MemoryStream();
+            await file.CopyToAsync(ms);
+            return (ms.ToArray(), file.ContentType);
+        }
+
+        // ── Serve property image ─────────────────────────────────────────
+        [AllowAnonymous]
+        public async Task<IActionResult> GetImage(int? id)
+        {
+            if (id == null) return NotFound();
+
+            var property = await _context.Properties
+                .FirstOrDefaultAsync(p => p.PropertyId == id);
+
+            if (property?.ImageData == null || property.ImageContentType == null)
+                return NotFound();
+
+            return File(property.ImageData, property.ImageContentType);
+        }
+
         // GET: Properties
         public async Task<IActionResult> Index(string searchString, int? governorateId)
         {
@@ -29,7 +69,6 @@ namespace AdvancedProject.Controllers
                 .Include(p => p.Governorate)
                 .Where(p => p.IsActive)
                 .AsQueryable();
-
 
             if (!string.IsNullOrEmpty(searchString))
             {
@@ -57,18 +96,13 @@ namespace AdvancedProject.Controllers
         // GET: Properties/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var @property = await _context.Properties
                 .Include(p => p.Governorate)
                 .FirstOrDefaultAsync(m => m.PropertyId == id);
-            if (@property == null)
-            {
-                return NotFound();
-            }
+
+            if (@property == null) return NotFound();
 
             return View(@property);
         }
@@ -78,29 +112,32 @@ namespace AdvancedProject.Controllers
         public IActionResult Create()
         {
             ViewData["GovernorateId"] = new SelectList(
-                _context.Governorates,
-                "GovernorateId",
-                "Name"
-            );
-
+                _context.Governorates, "GovernorateId", "Name");
             return View();
         }
-
 
         // POST: Properties/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "PropertyManager")]
-        public async Task<IActionResult> Create([Bind("PropertyId,Name,City,Description,Block,Building,Road,GovernorateId")] Property property)
+        public async Task<IActionResult> Create(
+            [Bind("PropertyId,Name,City,Description,Block,Building,Road,GovernorateId")] Property property,
+            IFormFile? imageFile)
         {
             if (property.GovernorateId == 0)
-            {
                 ModelState.AddModelError("GovernorateId", "Please select a governorate.");
-            }
+
+            // Image is required on create
+            if (imageFile == null || imageFile.Length == 0)
+                ModelState.AddModelError("imageFile", "A property image is required.");
+
+            var (imgData, imgType) = await ProcessImageUpload(imageFile);
 
             if (ModelState.IsValid)
             {
                 property.CreatedAt = DateTime.Now;
+                property.ImageData = imgData;
+                property.ImageContentType = imgType;
 
                 _context.Add(property);
                 await _context.SaveChangesAsync();
@@ -110,12 +147,7 @@ namespace AdvancedProject.Controllers
             }
 
             ViewData["GovernorateId"] = new SelectList(
-                _context.Governorates,
-                "GovernorateId",
-                "Name",
-                property.GovernorateId
-            );
-
+                _context.Governorates, "GovernorateId", "Name", property.GovernorateId);
             return View(property);
         }
 
@@ -123,20 +155,13 @@ namespace AdvancedProject.Controllers
         [Authorize(Roles = "PropertyManager")]
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
-                return NotFound();
+            if (id == null) return NotFound();
 
             var property = await _context.Properties.FindAsync(id);
-            if (property == null)
-                return NotFound();
+            if (property == null) return NotFound();
 
             ViewData["GovernorateId"] = new SelectList(
-                _context.Governorates,
-                "GovernorateId",
-                "Name",
-                property.GovernorateId
-            );
-
+                _context.Governorates, "GovernorateId", "Name", property.GovernorateId);
             return View(property);
         }
 
@@ -144,15 +169,39 @@ namespace AdvancedProject.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "PropertyManager")]
-        public async Task<IActionResult> Edit(int id, [Bind("PropertyId,Name,City,Description,Block,Building,Road,GovernorateId")] Property property)
+        public async Task<IActionResult> Edit(
+            int id,
+            [Bind("PropertyId,Name,City,Description,Block,Building,Road,GovernorateId")] Property property,
+            IFormFile? imageFile)
         {
-            if (id != property.PropertyId)
-                return NotFound();
+            if (id != property.PropertyId) return NotFound();
+
+            var (imgData, imgType) = await ProcessImageUpload(imageFile);
 
             if (ModelState.IsValid)
             {
                 try
                 {
+                    // Load existing to preserve image if none uploaded
+                    var existing = await _context.Properties
+                        .AsNoTracking()
+                        .FirstOrDefaultAsync(p => p.PropertyId == id);
+
+                    if (imgData != null)
+                    {
+                        property.ImageData = imgData;
+                        property.ImageContentType = imgType;
+                    }
+                    else if (existing != null)
+                    {
+                        property.ImageData = existing.ImageData;
+                        property.ImageContentType = existing.ImageContentType;
+                    }
+
+                    // Preserve CreatedAt
+                    property.CreatedAt = existing?.CreatedAt ?? DateTime.Now;
+                    property.IsActive = existing?.IsActive ?? true;
+
                     _context.Update(property);
                     await _context.SaveChangesAsync();
                 }
@@ -169,31 +218,19 @@ namespace AdvancedProject.Controllers
             }
 
             ViewData["GovernorateId"] = new SelectList(
-                _context.Governorates,
-                "GovernorateId",
-                "Name",
-                property.GovernorateId
-            );
-
+                _context.Governorates, "GovernorateId", "Name", property.GovernorateId);
             return View(property);
         }
-
 
         // GET: Properties/Delete/5
         [Authorize(Roles = "PropertyManager")]
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var @property = await _context.Properties
                 .FirstOrDefaultAsync(m => m.PropertyId == id);
-            if (@property == null)
-            {
-                return NotFound();
-            }
+            if (@property == null) return NotFound();
 
             return View(@property);
         }
@@ -206,9 +243,7 @@ namespace AdvancedProject.Controllers
         {
             var @property = await _context.Properties.FindAsync(id);
             if (@property != null)
-            {
                 _context.Properties.Remove(@property);
-            }
 
             await _context.SaveChangesAsync();
             TempData["SuccessMessage"] = "Property was deleted successfully.";
@@ -227,7 +262,6 @@ namespace AdvancedProject.Controllers
             if (property == null) return NotFound();
 
             property.IsActive = false;
-
             foreach (var unit in property.Units)
                 unit.IsActive = false;
 
