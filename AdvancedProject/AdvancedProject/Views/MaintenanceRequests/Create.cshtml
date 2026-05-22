@@ -36,8 +36,19 @@
                 </div>
                 <div class="ux-form-grid">
                     <div class="ux-field">
-                        <label asp-for="UnitId" class="ux-label">Unit</label>
-                        <select asp-for="UnitId" class="ux-input" asp-items="ViewBag.UnitId" id="unitSearchDropdown">
+                        <label class="ux-label">Unit</label>
+                        <div style="position:relative;">
+                            <input type="text" id="unitSearchInput" class="ux-input" placeholder="Search unit..." autocomplete="off" readonly
+                                   style="cursor:pointer;" />
+                            <div id="unitDropdownList" style="display:none;position:absolute;top:calc(100% + 4px);left:0;right:0;background:#fff;border:1.5px solid #e2e8f0;border-radius:10px;box-shadow:0 6px 20px rgba(0,0,0,0.10);z-index:200;max-height:220px;overflow-y:auto;">
+                                <div style="padding:0.5rem 0.75rem;">
+                                    <input type="text" id="unitSearchFilter" class="ux-input" placeholder="Type to search..." autocomplete="off"
+                                           style="font-size:0.85rem;padding:0.45rem 0.75rem;" />
+                                </div>
+                                <div id="unitOptionsList"></div>
+                            </div>
+                        </div>
+                        <select asp-for="UnitId" asp-items="ViewBag.UnitId" id="unitSearchDropdown" style="display:none;">
                             <option value="">-- Select Unit --</option>
                         </select>
                         <span asp-validation-for="UnitId" class="ux-field-error"></span>
@@ -82,13 +93,62 @@
     @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            const unitDropdown = document.getElementById('unitSearchDropdown');
-            if (unitDropdown) {
-                new Choices(unitDropdown, {
-                    searchEnabled: true, itemSelectText: '', shouldSort: false,
-                    placeholder: true, searchPlaceholderValue: 'Search unit...',
-                    classNames: { containerOuter: 'choices ux-choices' }
+            const hiddenSelect = document.getElementById('unitSearchDropdown');
+            const displayInput = document.getElementById('unitSearchInput');
+            const dropdownList = document.getElementById('unitDropdownList');
+            const filterInput  = document.getElementById('unitSearchFilter');
+            const optionsList  = document.getElementById('unitOptionsList');
+
+            if (!hiddenSelect) return;
+
+            const allOptions = Array.from(hiddenSelect.options).filter(o => o.value !== '');
+
+            function renderOptions(query) {
+                optionsList.innerHTML = '';
+                const q = query.trim().toLowerCase();
+                const filtered = q ? allOptions.filter(o => o.text.toLowerCase().includes(q)) : allOptions;
+
+                if (filtered.length === 0) {
+                    optionsList.innerHTML = '<div style="padding:0.6rem 1rem;color:#94a3b8;font-size:0.85rem;">No units found</div>';
+                    return;
+                }
+
+                filtered.forEach(function (o) {
+                    const item = document.createElement('div');
+                    item.textContent = o.text;
+                    item.dataset.value = o.value;
+                    item.style.cssText = 'padding:0.6rem 1rem;font-size:0.875rem;cursor:pointer;border-radius:6px;margin:0 4px;';
+                    item.addEventListener('mouseenter', function () { this.style.background = '#f1f5f9'; });
+                    item.addEventListener('mouseleave', function () { this.style.background = ''; });
+                    item.addEventListener('mousedown', function (e) {
+                        e.preventDefault();
+                        hiddenSelect.value = o.value;
+                        displayInput.value = o.text;
+                        dropdownList.style.display = 'none';
+                    });
+                    optionsList.appendChild(item);
                 });
+            }
+
+            function openDropdown() {
+                renderOptions(filterInput.value);
+                dropdownList.style.display = 'block';
+                setTimeout(function () { filterInput.focus(); }, 50);
+            }
+
+            displayInput.addEventListener('click', openDropdown);
+            filterInput.addEventListener('input', function () { renderOptions(this.value); });
+
+            document.addEventListener('mousedown', function (e) {
+                if (!dropdownList.contains(e.target) && e.target !== displayInput) {
+                    dropdownList.style.display = 'none';
+                }
+            });
+
+            // If a value was pre-selected (e.g. validation failed), restore label
+            if (hiddenSelect.value) {
+                const match = allOptions.find(o => o.value === hiddenSelect.value);
+                if (match) displayInput.value = match.text;
             }
         });
     </script>
