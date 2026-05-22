@@ -3,7 +3,9 @@ using System.Net.Http;
 using System.Text.Json;
 using AdvancedProject.ViewModels;
 using AdvancedProjectAPI.Data;
+using AdvancedProjectAPI.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,27 +17,25 @@ namespace AdvancedProject.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly APContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public HomeController(ILogger<HomeController> logger, IHttpClientFactory httpClientFactory, APContext context)
+        public HomeController(ILogger<HomeController> logger, IHttpClientFactory httpClientFactory, APContext context, UserManager<ApplicationUser> userManager)
         {
             _logger = logger;
             _httpClientFactory = httpClientFactory;
             _context = context;
+            _userManager = userManager;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            // Authenticated users go straight to their dashboard
             if (User.Identity?.IsAuthenticated == true)
             {
-                if (User.IsInRole("PropertyManager"))
-                    return RedirectToAction("Index", "Properties");
-                if (User.IsInRole("Tenant"))
-                    return RedirectToAction("Index", "Units");
-                if (User.IsInRole("MaintenanceStaff"))
-                    return RedirectToAction("Index", "MaintenanceRequests");
+                var user = await _userManager.GetUserAsync(User);
+                ViewBag.FirstName = user?.FullName?.Split(' ')[0] ?? user?.FullName ?? "there";
+                ViewBag.PropertyCount = await _context.Properties.CountAsync(p => p.IsActive);
+                ViewBag.UnitCount     = await _context.Units.CountAsync(u => u.IsActive);
             }
-
             return View(new MaintenanceLookupVM());
         }
 
