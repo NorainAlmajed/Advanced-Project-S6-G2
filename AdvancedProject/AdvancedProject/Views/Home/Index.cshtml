@@ -1,8 +1,705 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+@model AdvancedProject.ViewModels.MaintenanceLookupVM
+
+@{
+    ViewData["Title"] = "Home";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    bool isAuth  = User.Identity?.IsAuthenticated == true;
+    bool isPM    = User.IsInRole("PropertyManager");
+    bool isTenant= User.IsInRole("Tenant");
+    bool isStaff = User.IsInRole("MaintenanceStaff");
+    string firstName = ViewBag.FirstName ?? "there";
+    int propCount = ViewBag.PropertyCount ?? 0;
+    int unitCount = ViewBag.UnitCount ?? 0;
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<style>
+/* ── Full-bleed background ─────────────────────────────── */
+.home-bg {
+    margin: -1.75rem -2rem;
+    background-image:
+        linear-gradient(135deg,
+            rgba(13,27,42,0.82) 0%,
+            rgba(0,55,75,0.65) 45%,
+            rgba(13,27,42,0.80) 100%),
+        url('/images/seed/property2.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    min-height: 100vh;
+}
+@@media (max-width: 768px) {
+    .home-bg { margin: -1.25rem -1.25rem; background-attachment: scroll; }
+}
+
+/* ── Hero ──────────────────────────────────────────────── */
+.home-hero {
+    padding: 5.5rem 1.5rem 8rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+.home-hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    pointer-events: none;
+}
+/* Decorative glowing orbs */
+.home-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(60px);
+    pointer-events: none;
+}
+.home-orb-1 { width: 400px; height: 400px; top: -120px; right: -100px; background: rgba(0,91,113,0.25); }
+.home-orb-2 { width: 300px; height: 300px; bottom: -80px;  left:  -80px; background: rgba(30,142,110,0.18); }
+
+.home-hero-inner { position: relative; z-index: 1; }
+
+.home-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(255,255,255,0.10);
+    border: 1px solid rgba(255,255,255,0.18);
+    border-radius: 40px;
+    padding: 0.35rem 1.1rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: rgba(255,255,255,0.85);
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+}
+.home-eyebrow i { color: #5ee8c8; }
+
+.home-hero-title {
+    font-size: clamp(2.2rem, 5vw, 3.6rem);
+    font-weight: 900;
+    color: #ffffff;
+    line-height: 1.15;
+    letter-spacing: -0.03em;
+    margin: 0 0 1rem;
+}
+.home-hero-title .accent {
+    background: linear-gradient(90deg, #5ee8c8 0%, #38d9b9 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+.home-hero-sub {
+    font-size: 1.05rem;
+    color: rgba(255,255,255,0.68);
+    max-width: 520px;
+    margin: 0 auto 2.25rem;
+    line-height: 1.65;
+}
+
+/* CTA buttons */
+.home-cta-row {
+    display: flex;
+    gap: 0.85rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+.home-btn-primary {
+    display: inline-flex; align-items: center; gap: 0.45rem;
+    background: linear-gradient(135deg, #1E8E6E, #0a7f8f);
+    color: #fff;
+    padding: 0.75rem 1.75rem;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-decoration: none;
+    transition: transform 0.15s, box-shadow 0.15s;
+    box-shadow: 0 4px 16px rgba(30,142,110,0.35);
+}
+.home-btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(30,142,110,0.45); color: #fff; }
+.home-btn-ghost {
+    display: inline-flex; align-items: center; gap: 0.45rem;
+    background: rgba(255,255,255,0.10);
+    color: #fff;
+    padding: 0.75rem 1.75rem;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-decoration: none;
+    border: 1.5px solid rgba(255,255,255,0.25);
+    transition: background 0.15s;
+}
+.home-btn-ghost:hover { background: rgba(255,255,255,0.18); color: #fff; }
+
+/* Role badge (authenticated) */
+.home-role-badge {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    background: rgba(94,232,200,0.12);
+    border: 1px solid rgba(94,232,200,0.3);
+    border-radius: 40px;
+    padding: 0.3rem 1rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #5ee8c8;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    margin-bottom: 1.25rem;
+}
+
+/* Mini stats row (authenticated hero) */
+.home-hero-stats {
+    display: inline-flex;
+    gap: 2rem;
+    margin-top: 2rem;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.14);
+    border-radius: 16px;
+    padding: 0.9rem 2rem;
+    backdrop-filter: blur(8px);
+}
+.home-hero-stat-num  { font-size: 1.6rem; font-weight: 800; color: #fff; line-height: 1; }
+.home-hero-stat-label{ font-size: 0.72rem; font-weight: 600; color: rgba(255,255,255,0.55); text-transform: uppercase; letter-spacing: 0.06em; margin-top: 0.2rem; }
+
+/* ── Quick-action glass cards ──────────────────────────── */
+.home-section {
+    max-width: 900px;
+    margin: -4rem auto 0;
+    padding: 0 1.5rem 3rem;
+    position: relative;
+    z-index: 10;
+}
+.home-section-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: rgba(255,255,255,0.45);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 0.85rem;
+    padding-left: 0.15rem;
+}
+.home-qgrid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+}
+@@media (max-width: 600px) {
+    .home-qgrid { grid-template-columns: repeat(2, 1fr); }
+}
+.home-qcard {
+    background: rgba(255,255,255,0.10);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(255,255,255,0.18);
+    border-radius: 18px;
+    padding: 1.6rem 1rem 1.4rem;
+    text-align: center;
+    text-decoration: none;
+    color: #fff;
+    transition: background 0.18s, transform 0.18s, box-shadow 0.18s;
+    display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+}
+.home-qcard:hover {
+    background: rgba(255,255,255,0.20);
+    transform: translateY(-5px);
+    box-shadow: 0 12px 32px rgba(0,0,0,0.25);
+    color: #fff;
+}
+.home-qcard-icon {
+    width: 52px; height: 52px;
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.4rem;
+    margin-bottom: 0.25rem;
+}
+.home-qcard-name  { font-size: 0.88rem; font-weight: 700; }
+.home-qcard-desc  { font-size: 0.72rem; color: rgba(255,255,255,0.55); line-height: 1.3; }
+
+/* ── Lookup card (unauthenticated) ─────────────────────── */
+.pub-card-wrap {
+    max-width: 660px;
+    margin: -3.5rem auto 0;
+    padding: 0 1.5rem;
+    position: relative;
+    z-index: 10;
+}
+.pub-card {
+    background: rgba(255,255,255,0.97);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.75);
+    box-shadow: 0 24px 64px rgba(0,0,0,0.30), 0 1px 0 rgba(255,255,255,0.5) inset;
+    padding: 2.5rem 2.25rem 2rem;
+}
+.pub-card-header { display:flex; align-items:center; gap:0.85rem; margin-bottom:1.75rem; }
+.pub-card-icon {
+    width:46px; height:46px; border-radius:12px;
+    background:rgba(0,91,113,0.08); display:flex; align-items:center;
+    justify-content:center; color:#005B71; font-size:1.3rem; flex-shrink:0;
+}
+.pub-card-title { font-size:1.15rem; font-weight:700; color:var(--text-main); margin:0 0 0.15rem; }
+.pub-card-desc  { font-size:0.82rem; color:var(--text-muted); margin:0; }
+.pub-input-row  { display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1.25rem; }
+@@media (max-width: 520px) {
+    .pub-input-row { grid-template-columns:1fr; }
+    .pub-card { padding:1.75rem 1.25rem 1.5rem; }
+}
+.pub-field label { display:block; font-size:0.8rem; font-weight:600; color:var(--text-main); margin-bottom:0.4rem; letter-spacing:0.01em; }
+.pub-field input {
+    width:100%; padding:0.65rem 0.9rem;
+    border:1.5px solid #e5e7eb; border-radius:10px;
+    font-size:0.9rem; color:var(--text-main); outline:none;
+    transition:border-color 0.15s; background:#fafafa;
+}
+.pub-field input:focus { border-color:#005B71; background:#fff; }
+.pub-field .field-error { font-size:0.75rem; color:#dc3545; margin-top:0.3rem; }
+.pub-submit-btn {
+    width:100%; padding:0.75rem;
+    background:linear-gradient(135deg,#005B71,#0a7f8f);
+    color:#fff; border:none; border-radius:10px;
+    font-size:0.92rem; font-weight:700; cursor:pointer;
+    display:flex; align-items:center; justify-content:center; gap:0.5rem;
+    transition:opacity 0.15s,transform 0.15s;
+}
+.pub-submit-btn:hover { opacity:0.9; transform:translateY(-1px); }
+
+/* ── Result card ───────────────────────────────────────── */
+.pub-result-wrap {
+    max-width: 660px;
+    margin: 1.5rem auto 0;
+    padding: 0 1.5rem;
+}
+.pub-result-card {
+    background: rgba(255,255,255,0.97);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.75);
+    box-shadow: 0 24px 64px rgba(0,0,0,0.30);
+    overflow: hidden;
+    animation: fadeUp 0.3s ease;
+}
+@@keyframes fadeUp {
+    from { opacity:0; transform:translateY(12px); }
+    to   { opacity:1; transform:translateY(0); }
+}
+.pub-result-header {
+    background:linear-gradient(135deg,#003d4d,#005B71);
+    padding:1.4rem 2rem;
+    display:flex; align-items:center; justify-content:space-between;
+    flex-wrap:wrap; gap:0.75rem;
+}
+.pub-result-ticket { font-size:0.75rem; font-weight:700; color:rgba(255,255,255,0.6); letter-spacing:0.08em; text-transform:uppercase; margin:0 0 0.2rem; }
+.pub-result-id { font-size:1.5rem; font-weight:800; color:#fff; margin:0; }
+.pub-status-badge {
+    display:inline-flex; align-items:center; gap:0.4rem;
+    padding:0.45rem 1.1rem; border-radius:40px;
+    font-size:0.82rem; font-weight:700;
+    border:2px solid rgba(255,255,255,0.3);
+}
+.pub-result-body { padding:1.75rem 2rem; }
+.pub-timeline { display:flex; align-items:center; justify-content:space-between; margin-bottom:2rem; position:relative; }
+.pub-timeline::before { content:""; position:absolute; top:18px; left:18px; right:18px; height:3px; background:#e5e7eb; z-index:0; }
+.pub-tl-step { display:flex; flex-direction:column; align-items:center; gap:0.4rem; position:relative; z-index:1; flex:1; }
+.pub-tl-dot { width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.95rem; border:3px solid #e5e7eb; background:#f9fafb; color:#9ca3af; }
+.pub-tl-dot.active { background:#005B71; border-color:#005B71; color:#fff; box-shadow:0 0 0 4px rgba(0,91,113,0.15); }
+.pub-tl-dot.done   { background:#1E8E6E; border-color:#1E8E6E; color:#fff; }
+.pub-tl-dot.cancelled { background:#dc3545; border-color:#dc3545; color:#fff; }
+.pub-tl-label { font-size:0.68rem; font-weight:600; color:#9ca3af; text-align:center; white-space:nowrap; }
+.pub-tl-label.active { color:#005B71; }
+.pub-tl-label.done   { color:#1E8E6E; }
+.pub-tl-label.cancelled { color:#dc3545; }
+.pub-detail-grid { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+@@media (max-width: 520px) { .pub-detail-grid { grid-template-columns:1fr; } }
+.pub-detail-item { background:#f8fafc; border-radius:12px; padding:1rem 1.1rem; border:1px solid #f0f0f0; }
+.pub-detail-label { font-size:0.72rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:0.3rem; }
+.pub-detail-value { font-size:0.92rem; font-weight:600; color:var(--text-main); }
+.pub-notes-block { margin-top:1rem; background:#f8fafc; border-radius:12px; padding:1rem 1.1rem; border:1px solid #f0f0f0; border-left:4px solid #005B71; }
+.pub-notes-label { font-size:0.72rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:0.4rem; }
+.pub-notes-text  { font-size:0.875rem; color:var(--text-main); line-height:1.6; }
+
+/* ── Not found ─────────────────────────────────────────── */
+.pub-notfound { max-width:660px; margin:1.5rem auto 0; padding:0 1.5rem; }
+.pub-notfound-card {
+    background:rgba(255,245,245,0.96); border:1px solid #fee2e2; border-left:4px solid #dc3545;
+    border-radius:16px; padding:1.5rem 1.75rem;
+    display:flex; align-items:flex-start; gap:1rem; animation:fadeUp 0.3s ease;
+}
+.pub-notfound-icon { width:44px; height:44px; border-radius:10px; background:rgba(220,53,69,0.1); display:flex; align-items:center; justify-content:center; color:#dc3545; font-size:1.2rem; flex-shrink:0; }
+.pub-notfound-title { font-size:0.95rem; font-weight:700; color:#991b1b; margin:0 0 0.25rem; }
+.pub-notfound-text  { font-size:0.85rem; color:#7f1d1d; margin:0; line-height:1.5; }
+
+/* ── Info strip ────────────────────────────────────────── */
+.home-info-strip {
+    max-width: 660px;
+    margin: 2rem auto 0;
+    padding: 0 1.5rem 3rem;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+}
+@@media (max-width: 560px) { .home-info-strip { grid-template-columns:1fr; } }
+.home-info-card {
+    background: rgba(255,255,255,0.10);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,0.18);
+    border-radius: 16px;
+    padding: 1.25rem 1rem;
+    text-align: center;
+}
+.home-info-icon  { font-size:1.6rem; color:#5ee8c8; margin-bottom:0.5rem; }
+.home-info-title { font-size:0.82rem; font-weight:700; color:#fff; margin:0 0 0.2rem; }
+.home-info-text  { font-size:0.75rem; color:rgba(255,255,255,0.6); line-height:1.4; margin:0; }
+
+/* ── Login nudge ───────────────────────────────────────── */
+.home-nudge {
+    max-width:660px; margin:0 auto; padding:0 1.5rem 1.5rem;
+    text-align:center;
+}
+.home-nudge p { font-size:0.85rem; color:rgba(255,255,255,0.65); margin:0; }
+.home-nudge a { color:#5ee8c8; font-weight:600; text-decoration:none; }
+.home-nudge a:hover { color:#fff; text-decoration:underline; }
+</style>
+
+<div class="home-bg">
+
+    @* ── Hero ──────────────────────────────────────────────────── *@
+    <div class="home-hero">
+        <div class="home-orb home-orb-1"></div>
+        <div class="home-orb home-orb-2"></div>
+
+        <div class="home-hero-inner">
+            @if (isAuth)
+            {
+                <div class="home-role-badge">
+                    <i class="bi bi-@(isPM ? "building-fill" : isTenant ? "house-door-fill" : "wrench-adjustable")"></i>
+                    @(isPM ? "Property Manager" : isTenant ? "Tenant" : "Maintenance Staff")
+                </div>
+                <h1 class="home-hero-title">
+                    Welcome back,<br>
+                    <span class="accent">@firstName</span>
+                </h1>
+                <p class="home-hero-sub">
+                    @if (isPM) { <text>Manage your properties, leases, and maintenance requests from one place.</text> }
+                    else if (isTenant) { <text>Browse available units, track your lease, and submit maintenance requests.</text> }
+                    else { <text>View your assigned maintenance requests and update job statuses.</text> }
+                </p>
+                @if (isPM)
+                {
+                    <div class="home-hero-stats">
+                        <div>
+                            <div class="home-hero-stat-num">@propCount</div>
+                            <div class="home-hero-stat-label">Properties</div>
+                        </div>
+                        <div style="width:1px;background:rgba(255,255,255,0.15);"></div>
+                        <div>
+                            <div class="home-hero-stat-num">@unitCount</div>
+                            <div class="home-hero-stat-label">Active Units</div>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="home-eyebrow">
+                    <i class="bi bi-buildings-fill"></i>
+                    Rentify — Property Management Platform
+                </div>
+                <h1 class="home-hero-title">
+                    Your <span class="accent">Perfect Home</span><br>Awaits
+                </h1>
+                <p class="home-hero-sub">
+                    Browse available properties, track maintenance requests, and manage your lease — all in one place.
+                </p>
+                <div class="home-cta-row">
+                    <a asp-controller="Account" asp-action="Login" class="home-btn-primary">
+                        <i class="bi bi-box-arrow-in-right"></i> Get Started
+                    </a>
+                    <a href="#lookup" class="home-btn-ghost">
+                        <i class="bi bi-search"></i> Track Request
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+
+    @* ── Authenticated: quick-action cards ─────────────────────── *@
+    @if (isAuth)
+    {
+        <div class="home-section">
+            <div class="home-section-label">Quick Actions</div>
+            <div class="home-qgrid">
+                @if (isPM)
+                {
+                    <a asp-controller="Properties"       asp-action="Index" class="home-qcard">
+                        <div class="home-qcard-icon" style="background:rgba(0,91,113,0.4);"><i class="bi bi-building-fill"></i></div>
+                        <div class="home-qcard-name">Properties</div>
+                        <div class="home-qcard-desc">Manage all properties</div>
+                    </a>
+                    <a asp-controller="Users"            asp-action="Index" class="home-qcard">
+                        <div class="home-qcard-icon" style="background:rgba(30,142,110,0.4);"><i class="bi bi-people-fill"></i></div>
+                        <div class="home-qcard-name">Users</div>
+                        <div class="home-qcard-desc">Tenants & staff</div>
+                    </a>
+                    <a asp-controller="LeaseApplications" asp-action="Index" class="home-qcard">
+                        <div class="home-qcard-icon" style="background:rgba(124,58,237,0.4);"><i class="bi bi-file-earmark-text-fill"></i></div>
+                        <div class="home-qcard-name">Applications</div>
+                        <div class="home-qcard-desc">Review requests</div>
+                    </a>
+                    <a asp-controller="Leases"           asp-action="Index" class="home-qcard">
+                        <div class="home-qcard-icon" style="background:rgba(37,99,235,0.4);"><i class="bi bi-file-earmark-check-fill"></i></div>
+                        <div class="home-qcard-name">Leases</div>
+                        <div class="home-qcard-desc">Active agreements</div>
+                    </a>
+                    <a asp-controller="MaintenanceRequests" asp-action="Index" class="home-qcard">
+                        <div class="home-qcard-icon" style="background:rgba(245,158,11,0.4);"><i class="bi bi-wrench-adjustable"></i></div>
+                        <div class="home-qcard-name">Maintenance</div>
+                        <div class="home-qcard-desc">Open requests</div>
+                    </a>
+                    <a asp-controller="Payments"         asp-action="Index" class="home-qcard">
+                        <div class="home-qcard-icon" style="background:rgba(220,53,69,0.4);"><i class="bi bi-credit-card-fill"></i></div>
+                        <div class="home-qcard-name">Payments</div>
+                        <div class="home-qcard-desc">Billing & records</div>
+                    </a>
+                }
+                else if (isTenant)
+                {
+                    <a asp-controller="Properties"       asp-action="Index" class="home-qcard">
+                        <div class="home-qcard-icon" style="background:rgba(0,91,113,0.4);"><i class="bi bi-building-fill"></i></div>
+                        <div class="home-qcard-name">Properties</div>
+                        <div class="home-qcard-desc">Browse available units</div>
+                    </a>
+                    <a asp-controller="LeaseApplications" asp-action="Index" class="home-qcard">
+                        <div class="home-qcard-icon" style="background:rgba(124,58,237,0.4);"><i class="bi bi-file-earmark-text-fill"></i></div>
+                        <div class="home-qcard-name">Applications</div>
+                        <div class="home-qcard-desc">My applications</div>
+                    </a>
+                    <a asp-controller="Leases"           asp-action="Index" class="home-qcard">
+                        <div class="home-qcard-icon" style="background:rgba(37,99,235,0.4);"><i class="bi bi-file-earmark-check-fill"></i></div>
+                        <div class="home-qcard-name">My Lease</div>
+                        <div class="home-qcard-desc">View active lease</div>
+                    </a>
+                    <a asp-controller="MaintenanceRequests" asp-action="Index" class="home-qcard">
+                        <div class="home-qcard-icon" style="background:rgba(245,158,11,0.4);"><i class="bi bi-wrench-adjustable"></i></div>
+                        <div class="home-qcard-name">Maintenance</div>
+                        <div class="home-qcard-desc">My requests</div>
+                    </a>
+                    <a asp-controller="Payments"         asp-action="Index" class="home-qcard">
+                        <div class="home-qcard-icon" style="background:rgba(30,142,110,0.4);"><i class="bi bi-credit-card-fill"></i></div>
+                        <div class="home-qcard-name">Payments</div>
+                        <div class="home-qcard-desc">Payment history</div>
+                    </a>
+                }
+                else if (isStaff)
+                {
+                    <a asp-controller="MaintenanceRequests" asp-action="Index" class="home-qcard">
+                        <div class="home-qcard-icon" style="background:rgba(245,158,11,0.4);"><i class="bi bi-wrench-adjustable"></i></div>
+                        <div class="home-qcard-name">My Requests</div>
+                        <div class="home-qcard-desc">Assigned jobs</div>
+                    </a>
+                    <a asp-controller="MaintenanceStaffs" asp-action="Index" class="home-qcard">
+                        <div class="home-qcard-icon" style="background:rgba(0,91,113,0.4);"><i class="bi bi-person-badge-fill"></i></div>
+                        <div class="home-qcard-name">My Profile</div>
+                        <div class="home-qcard-desc">Skills & details</div>
+                    </a>
+                }
+            </div>
+        </div>
+    }
+
+    @* ── Unauthenticated: maintenance lookup ───────────────────── *@
+    @if (!isAuth)
+    {
+        <div id="lookup" class="pub-card-wrap">
+            <div class="pub-card">
+                <div class="pub-card-header">
+                    <div class="pub-card-icon"><i class="bi bi-search-heart-fill"></i></div>
+                    <div>
+                        <p class="pub-card-title">Request Lookup</p>
+                        <p class="pub-card-desc">Your ticket number was provided when you submitted the request.</p>
+                    </div>
+                </div>
+
+                <form asp-action="Index" method="post">
+                    @Html.AntiForgeryToken()
+                    <div class="pub-input-row">
+                        <div class="pub-field">
+                            <label asp-for="TicketNumber">
+                                <i class="bi bi-hash" style="opacity:.6;"></i> Ticket Number
+                            </label>
+                            <input asp-for="TicketNumber" type="number" min="1"
+                                   placeholder="e.g. 1042" autocomplete="off" />
+                            <span asp-validation-for="TicketNumber" class="field-error"></span>
+                        </div>
+                        <div class="pub-field">
+                            <label asp-for="Phone">
+                                <i class="bi bi-telephone" style="opacity:.6;"></i> Registered Phone
+                            </label>
+                            <input asp-for="Phone" type="tel"
+                                   placeholder="e.g. 33001122" autocomplete="off" />
+                            <span asp-validation-for="Phone" class="field-error"></span>
+                        </div>
+                    </div>
+
+                    @if (!ViewData.ModelState.IsValid && ViewData.ModelState.ContainsKey(""))
+                    {
+                        <div style="background:#fff5f5;border:1px solid #fee2e2;border-radius:8px;padding:0.65rem 0.9rem;font-size:0.83rem;color:#991b1b;margin-bottom:1rem;">
+                            <i class="bi bi-exclamation-circle-fill me-1"></i>
+                            @ViewData.ModelState[""]?.Errors.FirstOrDefault()?.ErrorMessage
+                        </div>
+                    }
+
+                    <button type="submit" class="pub-submit-btn">
+                        <i class="bi bi-search"></i> Look Up Request
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        @* Not found *@
+        @if (Model?.NotFound == true)
+        {
+            <div class="pub-notfound">
+                <div class="pub-notfound-card">
+                    <div class="pub-notfound-icon"><i class="bi bi-exclamation-triangle-fill"></i></div>
+                    <div>
+                        <p class="pub-notfound-title">No Request Found</p>
+                        <p class="pub-notfound-text">
+                            We couldn't find a maintenance request matching ticket
+                            <strong>#@Model.TicketNumber</strong> with the provided phone number.
+                            Please double-check your details or contact the property office.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        }
+
+        @* Result card *@
+        @if (Model?.Result != null)
+        {
+            var r = Model.Result;
+            string statusColor = r.Status switch {
+                "Pending"=>"#b45309","Assigned"=>"#2563eb","In Progress"=>"#7c3aed",
+                "Resolved"=>"#1E8E6E","Closed"=>"#4b5563","Cancelled"=>"#dc3545",_=>"#6b7280"
+            };
+            string statusBg = r.Status switch {
+                "Pending"=>"rgba(245,158,11,0.2)","Assigned"=>"rgba(59,130,246,0.2)",
+                "In Progress"=>"rgba(124,58,237,0.2)","Resolved"=>"rgba(30,142,110,0.2)",
+                "Closed"=>"rgba(75,85,99,0.2)","Cancelled"=>"rgba(220,53,69,0.2)",_=>"rgba(107,114,128,0.2)"
+            };
+            string priorityColor = r.Priority switch {"High"=>"#dc3545","Medium"=>"#f59e0b","Low"=>"#1E8E6E",_=>"#6b7280"};
+            var steps = new[] {"Pending","Assigned","In Progress","Resolved","Closed"};
+            bool isCancelled = r.Status == "Cancelled";
+            int activeIdx = Array.IndexOf(steps, r.Status);
+
+            <div class="pub-result-wrap">
+                <div class="pub-result-card">
+                    <div class="pub-result-header">
+                        <div>
+                            <p class="pub-result-ticket">Ticket Number</p>
+                            <p class="pub-result-id">#@r.RequestId</p>
+                        </div>
+                        <span class="pub-status-badge" style="background:@statusBg;color:@statusColor;">
+                            @if (r.Status=="Closed"){<i class="bi bi-check2-all"></i>}
+                            else if (r.Status=="Resolved"){<i class="bi bi-check-circle-fill"></i>}
+                            else if (r.Status=="Cancelled"){<i class="bi bi-x-circle-fill"></i>}
+                            else if (r.Status=="In Progress"){<i class="bi bi-tools"></i>}
+                            else if (r.Status=="Assigned"){<i class="bi bi-person-check-fill"></i>}
+                            else{<i class="bi bi-hourglass-split"></i>}
+                            @r.Status
+                        </span>
+                    </div>
+                    <div class="pub-result-body">
+                        @if (!isCancelled)
+                        {
+                            <div class="pub-timeline">
+                                @foreach (var (step, i) in steps.Select((s, i) => (s, i)))
+                                {
+                                    string dc = i < activeIdx ? "done" : (i == activeIdx ? "active" : "");
+                                    <div class="pub-tl-step">
+                                        <div class="pub-tl-dot @dc">
+                                            @if (i < activeIdx || (i == activeIdx && (r.Status=="Closed"||r.Status=="Resolved")))
+                                            { <i class="bi bi-check-lg"></i> }
+                                            else if (i == activeIdx)
+                                            { <i class="bi bi-circle-fill" style="font-size:0.5rem;"></i> }
+                                            else
+                                            { <span style="font-size:0.7rem;font-weight:700;">@(i+1)</span> }
+                                        </div>
+                                        <span class="pub-tl-label @dc">@step</span>
+                                    </div>
+                                }
+                            </div>
+                        }
+                        else
+                        {
+                            <div style="text-align:center;padding:0.75rem 0 1.25rem;">
+                                <span style="background:rgba(220,53,69,0.1);color:#dc3545;padding:0.4rem 1.2rem;border-radius:40px;font-size:0.82rem;font-weight:700;">
+                                    <i class="bi bi-x-circle-fill me-1"></i> This request has been cancelled
+                                </span>
+                            </div>
+                        }
+                        <div class="pub-detail-grid">
+                            <div class="pub-detail-item">
+                                <div class="pub-detail-label"><i class="bi bi-calendar3 me-1"></i>Submitted On</div>
+                                <div class="pub-detail-value">@r.RequestDate.ToString("dd MMM yyyy")</div>
+                            </div>
+                            <div class="pub-detail-item">
+                                <div class="pub-detail-label"><i class="bi bi-door-open me-1"></i>Unit</div>
+                                <div class="pub-detail-value">@r.UnitNumber</div>
+                            </div>
+                            <div class="pub-detail-item">
+                                <div class="pub-detail-label"><i class="bi bi-tools me-1"></i>Maintenance Type</div>
+                                <div class="pub-detail-value">@r.SkillName</div>
+                            </div>
+                            <div class="pub-detail-item">
+                                <div class="pub-detail-label"><i class="bi bi-exclamation-diamond me-1"></i>Priority</div>
+                                <div class="pub-detail-value" style="color:@priorityColor;">@r.Priority</div>
+                            </div>
+                            @if (!string.IsNullOrWhiteSpace(r.AssignedStaffName))
+                            {
+                                <div class="pub-detail-item" style="grid-column:1/-1;">
+                                    <div class="pub-detail-label"><i class="bi bi-person-badge me-1"></i>Assigned Staff</div>
+                                    <div class="pub-detail-value">@r.AssignedStaffName</div>
+                                </div>
+                            }
+                        </div>
+                        @if (!string.IsNullOrWhiteSpace(r.Notes))
+                        {
+                            <div class="pub-notes-block">
+                                <div class="pub-notes-label"><i class="bi bi-chat-left-text me-1"></i>Request Notes</div>
+                                <p class="pub-notes-text">@r.Notes</p>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+
+        <div class="home-nudge" style="margin-top:1.75rem;">
+            <p>Already have an account? <a asp-controller="Account" asp-action="Login">Sign in for full access</a></p>
+        </div>
+
+        <div class="home-info-strip">
+            <div class="home-info-card">
+                <div class="home-info-icon"><i class="bi bi-shield-check"></i></div>
+                <p class="home-info-title">Secure &amp; Private</p>
+                <p class="home-info-text">Only you can view your request using your unique ticket and phone number.</p>
+            </div>
+            <div class="home-info-card">
+                <div class="home-info-icon"><i class="bi bi-clock-history"></i></div>
+                <p class="home-info-title">Real-Time Status</p>
+                <p class="home-info-text">Status updates are reflected immediately as our team works on your request.</p>
+            </div>
+            <div class="home-info-card">
+                <div class="home-info-icon"><i class="bi bi-headset"></i></div>
+                <p class="home-info-title">Need Help?</p>
+                <p class="home-info-text">Contact the property office if you can't locate your ticket number.</p>
+            </div>
+        </div>
+    }
+
 </div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

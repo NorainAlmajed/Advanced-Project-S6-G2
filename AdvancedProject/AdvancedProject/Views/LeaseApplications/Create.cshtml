@@ -4,52 +4,52 @@
     ViewData["Title"] = "Apply for Lease";
 }
 
-<div class="lease-form-page">
-    <div class="lease-form-wrapper">
-        <div class="lease-form-card shadow-soft">
-            <div class="lease-form-header">
-                <p class="lease-form-eyebrow mb-2">Lease Application</p>
-                <h1 class="lease-form-title mb-2">@ViewBag.PropertyName - Unit @ViewBag.UnitNumber</h1>              
-                <p class="lease-form-subtitle mb-0">
-                    Select your preferred start date and lease duration for this unit.
-                </p>
+<div class="ux-page">
+
+    <div class="ux-page-header">
+        <div>
+            <p class="ux-eyebrow">Lease Application</p>
+            <h1 class="ux-title">Apply for Unit</h1>
+            <p class="ux-subtitle">@ViewBag.PropertyName — Unit @ViewBag.UnitNumber</p>
+        </div>
+        <a asp-controller="Units" asp-action="Details" asp-route-id="@ViewBag.UnitId" asp-route-propertyId="@ViewBag.PropertyId" class="ux-btn-ghost"><i class="bi bi-arrow-left"></i> Back</a>
+    </div>
+
+    <form asp-action="Create" method="post" class="ux-form-layout">
+        <input type="hidden" asp-for="UnitId" />
+        <div asp-validation-summary="ModelOnly" class="ux-form-error"></div>
+
+        <div class="ux-form-card">
+            <div class="ux-form-section-header">
+                <div class="ux-form-section-icon" style="background:rgba(0,91,113,0.1);color:#005B71;"><i class="bi bi-file-earmark-text-fill"></i></div>
+                <div><h3 class="ux-form-section-title">Application Details</h3><p class="ux-form-section-sub">Choose your preferred start date and lease duration.</p></div>
             </div>
-
-            <form asp-action="Create" method="post" class="lease-form-body">
-                <input type="hidden" asp-for="UnitId" />
-
-                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
-
-                <div class="lease-form-group">
-                    <label asp-for="StartDate" class="lease-form-label">Start Date</label>
-                    <input asp-for="StartDate" type="date" class="form-control lease-form-input" />
-                    <span asp-validation-for="StartDate" class="text-danger small"></span>
+            <div class="ux-form-grid">
+                <div class="ux-field">
+                    <label asp-for="StartDate" class="ux-label">Preferred Start Date</label>
+                    <input asp-for="StartDate" type="date" class="ux-input" />
+                    <span asp-validation-for="StartDate" class="ux-field-error"></span>
                 </div>
-
-                <div class="lease-form-group">
-                    <label asp-for="DurationId" class="lease-form-label">Duration</label>
-                    <select asp-for="DurationId" class="form-select lease-form-input" asp-items="ViewBag.DurationId">
+                <div class="ux-field">
+                    <label asp-for="DurationId" class="ux-label">Duration</label>
+                    <select asp-for="DurationId" class="ux-input" asp-items="ViewBag.DurationId">
                         <option value="">-- Select Duration --</option>
                     </select>
-                    <span asp-validation-for="DurationId" class="text-danger small"></span>
+                    <span asp-validation-for="DurationId" class="ux-field-error"></span>
                 </div>
-
-                <div class="lease-form-actions">
-                    <button type="submit" class="btn btn-primary lease-submit-btn">
-                        Submit Application
-                    </button>
-
-                    <a asp-action="Index" class="lease-back-link">
-                        Back to List
-                    </a>
-                </div>
-            </form>
+            </div>
         </div>
-    </div>
+
+        <div class="ux-form-actions">
+            <button type="submit" class="ux-btn-primary" style="padding:0.65rem 2rem;">
+                <i class="bi bi-send-fill"></i> Submit Application
+            </button>
+            <a asp-action="Index" class="ux-btn-ghost" style="padding:0.65rem 1.5rem;">Cancel</a>
+        </div>
+    </form>
+
 </div>
 
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
 }

@@ -120,12 +120,15 @@ namespace AdvancedProject.Controllers
             }
 
             var payment = await _context.Payments
-     .Include(p => p.Lease)
-         .ThenInclude(l => l.Unit)
-             .ThenInclude(u => u.Property)
-     .Include(p => p.PaymentFrequency)
-     .Include(p => p.PaymentMethod)
-     .FirstOrDefaultAsync(m => m.PaymentId == id);
+                .Include(p => p.Lease)
+                    .ThenInclude(l => l.Unit)
+                        .ThenInclude(u => u.Property)
+                .Include(p => p.Lease)
+                    .ThenInclude(l => l.Tenant)
+                        .ThenInclude(t => t.User)
+                .Include(p => p.PaymentFrequency)
+                .Include(p => p.PaymentMethod)
+                .FirstOrDefaultAsync(m => m.PaymentId == id);
             if (payment == null)
             {
                 return NotFound();
@@ -192,6 +195,7 @@ namespace AdvancedProject.Controllers
                 });
 
                 await _context.SaveChangesAsync();
+                TempData["SuccessMessage"] = "Payment was created successfully.";
                 return RedirectToAction(nameof(Index));
             }
 
@@ -278,7 +282,8 @@ namespace AdvancedProject.Controllers
 
             await _context.SaveChangesAsync();
 
-            return RedirectToAction(nameof(Index));
+            TempData["SuccessMessage"] = "Payment was edited successfully.";
+            return RedirectToAction(nameof(Details), new { id = id });
         }
         // GET: Payments/Delete/5
         [Authorize(Roles = "PropertyManager")]
@@ -315,6 +320,7 @@ namespace AdvancedProject.Controllers
             }
 
             await _context.SaveChangesAsync();
+            TempData["SuccessMessage"] = "Payment was deleted successfully.";
             return RedirectToAction(nameof(Index));
         }
 

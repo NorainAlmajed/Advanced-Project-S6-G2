@@ -1,39 +1,55 @@
 @model AdvancedProjectAPI.Models.LeaseApplication
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Edit Application";
 }
 
-<h1>Edit</h1>
+<div class="ux-page">
 
-<h4>LeaseApplication</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="ApplicationId" />
-            <div class="form-group">
-                <label asp-for="StartDate" class="control-label"></label>
-                <input asp-for="StartDate" class="form-control" />
-                <span asp-validation-for="StartDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="DurationId" class="control-label"></label>
-                <select asp-for="DurationId" class="form-control" asp-items="ViewBag.DurationId"></select>
-                <span asp-validation-for="DurationId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+    <div class="ux-page-header">
+        <div>
+            <p class="ux-eyebrow">Lease Application</p>
+            <h1 class="ux-title">Edit Application #@Model.ApplicationId</h1>
+            <p class="ux-subtitle">Update the start date and duration of this application.</p>
+        </div>
+        <a asp-action="Index" class="ux-btn-ghost"><i class="bi bi-arrow-left"></i> Back</a>
     </div>
-</div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
+    <form asp-action="Edit" method="post" class="ux-form-layout">
+        <input type="hidden" asp-for="ApplicationId" />
+        <div asp-validation-summary="ModelOnly" class="ux-form-error"></div>
+
+        <div class="ux-form-card">
+            <div class="ux-form-section-header">
+                <div class="ux-form-section-icon" style="background:rgba(0,91,113,0.1);color:#005B71;"><i class="bi bi-file-earmark-text-fill"></i></div>
+                <div><h3 class="ux-form-section-title">Application Details</h3><p class="ux-form-section-sub">Update preferred start date and duration.</p></div>
+            </div>
+            <div class="ux-form-grid">
+                <div class="ux-field">
+                    <label asp-for="StartDate" class="ux-label">Start Date</label>
+                    <input asp-for="StartDate" type="date" class="ux-input" />
+                    <span asp-validation-for="StartDate" class="ux-field-error"></span>
+                </div>
+                <div class="ux-field">
+                    <label asp-for="DurationId" class="ux-label">Duration</label>
+                    <select asp-for="DurationId" class="ux-input" asp-items="ViewBag.DurationId">
+                        <option value="">-- Select Duration --</option>
+                    </select>
+                    <span asp-validation-for="DurationId" class="ux-field-error"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="ux-form-actions">
+            <button type="submit" class="ux-btn-primary" style="padding:0.65rem 2rem;">
+                <i class="bi bi-check-lg"></i> Save Changes
+            </button>
+            <a asp-action="Index" class="ux-btn-ghost" style="padding:0.65rem 1.5rem;">Cancel</a>
+        </div>
+    </form>
+
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
 }

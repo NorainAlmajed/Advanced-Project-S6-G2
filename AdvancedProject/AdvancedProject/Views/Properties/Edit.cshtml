@@ -4,90 +4,174 @@
     ViewData["Title"] = "Edit Property";
 }
 
-<div class="property-form-page">
-    <div class="lease-form-wrapper">
-        <div class="lease-form-card shadow-soft">
+<div class="ux-page">
 
-            <div class="lease-form-header">
-                <p class="lease-form-eyebrow mb-2">Property</p>
-                <h1 class="lease-form-title mb-2">Edit Property</h1>
-                <p class="lease-form-subtitle mb-0">
-                    Update property details, location, and description.
-                </p>
+    <div class="ux-page-header">
+        <div>
+            <p class="ux-eyebrow">Property Management</p>
+            <h1 class="ux-title">Edit Property</h1>
+            <p class="ux-subtitle">Update property details, location, and description.</p>
+        </div>
+        <a asp-action="Index" class="ux-btn-ghost"><i class="bi bi-arrow-left"></i> Back</a>
+    </div>
+
+    <form asp-action="Edit" method="post" enctype="multipart/form-data" class="ux-form-layout">
+        <input type="hidden" asp-for="PropertyId" />
+        <div asp-validation-summary="ModelOnly" class="ux-form-error"></div>
+
+        @* ── Property Image ── *@
+        <div class="ux-form-card">
+            <div class="ux-form-section-header">
+                <div class="ux-form-section-icon" style="background:rgba(245,158,11,0.1);color:#d97706;">
+                    <i class="bi bi-image-fill"></i>
+                </div>
+                <div>
+                    <h3 class="ux-form-section-title">Property Image</h3>
+                    <p class="ux-form-section-sub">Leave empty to keep the current image. Max 5 MB.</p>
+                </div>
             </div>
 
-            <form asp-action="Edit" method="post" class="lease-form-body">
-
-                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
-
-                <input type="hidden" asp-for="PropertyId" />
-
-                <div class="row g-3">
-
-                    <div class="col-md-6 lease-form-group">
-                        <label asp-for="Name" class="lease-form-label"></label>
-                        <input asp-for="Name" class="form-control lease-form-input" />
-                        <span asp-validation-for="Name" class="text-danger"></span>
-                    </div>
-
-                    <div class="col-md-6 lease-form-group">
-                        <label asp-for="GovernorateId" class="lease-form-label">Governorate</label>
-                        <select asp-for="GovernorateId" class="form-control lease-form-input" asp-items="ViewBag.GovernorateId">
-                            <option value="">-- Select Governorate --</option>
-                        </select>
-                        <span asp-validation-for="GovernorateId" class="text-danger"></span>
-                    </div>
-
-                    <div class="col-md-6 lease-form-group">
-                        <label asp-for="City" class="lease-form-label"></label>
-                        <input asp-for="City" class="form-control lease-form-input" />
-                        <span asp-validation-for="City" class="text-danger"></span>
-                    </div>
-
-                    <div class="col-md-6 lease-form-group">
-                        <label asp-for="Block" class="lease-form-label"></label>
-                        <input asp-for="Block" class="form-control lease-form-input" />
-                        <span asp-validation-for="Block" class="text-danger"></span>
-                    </div>
-
-                    <div class="col-md-6 lease-form-group">
-                        <label asp-for="Building" class="lease-form-label"></label>
-                        <input asp-for="Building" class="form-control lease-form-input" />
-                        <span asp-validation-for="Building" class="text-danger"></span>
-                    </div>
-
-                    <div class="col-md-6 lease-form-group">
-                        <label asp-for="Road" class="lease-form-label"></label>
-                        <input asp-for="Road" class="form-control lease-form-input" />
-                        <span asp-validation-for="Road" class="text-danger"></span>
-                    </div>
-
-                    <div class="col-12 lease-form-group">
-                        <label asp-for="Description" class="lease-form-label"></label>
-                        <textarea asp-for="Description"
-                                  class="form-control lease-form-input property-description-input"></textarea>
-                        <span asp-validation-for="Description" class="text-danger"></span>
-                    </div>
-
+            @if (Model.ImageData != null)
+            {
+                <div class="prop-current-img-wrap">
+                    <span class="prop-current-img-label"><i class="bi bi-image-fill me-1"></i>Current Image</span>
+                    <img src="@Url.Action("GetImage", new { id = Model.PropertyId })"
+                         alt="Current property image" class="prop-current-img" />
                 </div>
+            }
 
-                <div class="lease-form-actions">
-                    <button type="submit" class="btn btn-primary lease-submit-btn">
-                        Save Changes
+            <div class="prop-img-upload-area" id="imgUploadArea">
+                <div class="prop-img-preview-wrap" id="imgPreviewWrap" style="display:none;">
+                    <img id="imgPreview" src="#" alt="Preview" class="prop-img-preview" />
+                    <button type="button" class="prop-img-remove" id="imgRemoveBtn" title="Remove">
+                        <i class="bi bi-x-lg"></i>
                     </button>
-
-                    <a asp-action="Index" class="lease-back-link">
-                        Back to List
-                    </a>
                 </div>
-
-            </form>
+                <div class="prop-img-placeholder" id="imgPlaceholder">
+                    <i class="bi bi-arrow-repeat prop-img-upload-icon"></i>
+                    <p class="prop-img-upload-text">Click to replace image</p>
+                    <p class="prop-img-upload-hint">JPG, PNG, GIF, WEBP &nbsp;·&nbsp; Max 5 MB</p>
+                </div>
+                <input type="file" name="imageFile" id="imageFileInput"
+                       accept=".jpg,.jpeg,.png,.gif,.webp"
+                       class="prop-img-file-input" />
+            </div>
+            <span class="ux-field-error">@Html.ValidationMessage("imageFile")</span>
         </div>
-    </div>
+
+        @* ── Property Details ── *@
+        <div class="ux-form-card">
+            <div class="ux-form-section-header">
+                <div class="ux-form-section-icon" style="background:rgba(0,91,113,0.1);color:#005B71;"><i class="bi bi-building-fill"></i></div>
+                <div><h3 class="ux-form-section-title">Property Details</h3><p class="ux-form-section-sub">Basic property information.</p></div>
+            </div>
+            <div class="ux-form-grid">
+                <div class="ux-field">
+                    <label asp-for="Name" class="ux-label"></label>
+                    <input asp-for="Name" class="ux-input" />
+                    <span asp-validation-for="Name" class="ux-field-error"></span>
+                </div>
+                <div class="ux-field">
+                    <label asp-for="GovernorateId" class="ux-label">Governorate</label>
+                    <select asp-for="GovernorateId" class="ux-input" asp-items="ViewBag.GovernorateId">
+                        <option value="">-- Select Governorate --</option>
+                    </select>
+                    <span asp-validation-for="GovernorateId" class="ux-field-error"></span>
+                </div>
+                <div class="ux-field" style="grid-column:1/-1;">
+                    <label asp-for="Description" class="ux-label"></label>
+                    <textarea asp-for="Description" class="ux-input" style="min-height:80px;resize:vertical;"></textarea>
+                    <span asp-validation-for="Description" class="ux-field-error"></span>
+                </div>
+            </div>
+        </div>
+
+        @* ── Location ── *@
+        <div class="ux-form-card">
+            <div class="ux-form-section-header">
+                <div class="ux-form-section-icon" style="background:rgba(30,142,110,0.1);color:#1E8E6E;"><i class="bi bi-geo-alt-fill"></i></div>
+                <div><h3 class="ux-form-section-title">Location</h3><p class="ux-form-section-sub">Physical address details.</p></div>
+            </div>
+            <div class="ux-form-grid">
+                <div class="ux-field">
+                    <label asp-for="City" class="ux-label"></label>
+                    <input asp-for="City" class="ux-input" />
+                    <span asp-validation-for="City" class="ux-field-error"></span>
+                </div>
+                <div class="ux-field">
+                    <label asp-for="Block" class="ux-label"></label>
+                    <input asp-for="Block" class="ux-input" />
+                    <span asp-validation-for="Block" class="ux-field-error"></span>
+                </div>
+                <div class="ux-field">
+                    <label asp-for="Building" class="ux-label"></label>
+                    <input asp-for="Building" class="ux-input" />
+                    <span asp-validation-for="Building" class="ux-field-error"></span>
+                </div>
+                <div class="ux-field">
+                    <label asp-for="Road" class="ux-label"></label>
+                    <input asp-for="Road" class="ux-input" />
+                    <span asp-validation-for="Road" class="ux-field-error"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="ux-form-actions">
+            <button type="submit" class="ux-btn-primary" style="padding:0.65rem 2rem;">
+                <i class="bi bi-check-lg"></i> Save Changes
+            </button>
+            <a asp-action="Index" class="ux-btn-ghost" style="padding:0.65rem 1.5rem;">Cancel</a>
+        </div>
+    </form>
+
 </div>
 
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+    <script>
+        (function () {
+            const input = document.getElementById('imageFileInput');
+            const area  = document.getElementById('imgUploadArea');
+            const placeholder = document.getElementById('imgPlaceholder');
+            const previewWrap = document.getElementById('imgPreviewWrap');
+            const preview = document.getElementById('imgPreview');
+            const removeBtn = document.getElementById('imgRemoveBtn');
+
+            function showPreview(file) {
+                const reader = new FileReader();
+                reader.onload = e => {
+                    preview.src = e.target.result;
+                    placeholder.style.display = 'none';
+                    previewWrap.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+
+            area.addEventListener('click', e => {
+                if (e.target !== removeBtn && !removeBtn.contains(e.target))
+                    input.click();
+            });
+
+            input.addEventListener('change', () => {
+                if (input.files[0]) showPreview(input.files[0]);
+            });
+
+            removeBtn.addEventListener('click', e => {
+                e.stopPropagation();
+                input.value = '';
+                preview.src = '#';
+                previewWrap.style.display = 'none';
+                placeholder.style.display = 'flex';
+            });
+
+            area.addEventListener('dragover', e => { e.preventDefault(); area.classList.add('drag-over'); });
+            area.addEventListener('dragleave', () => area.classList.remove('drag-over'));
+            area.addEventListener('drop', e => {
+                e.preventDefault();
+                area.classList.remove('drag-over');
+                const file = e.dataTransfer.files[0];
+                if (file) { input.files = e.dataTransfer.files; showPreview(file); }
+            });
+        })();
+    </script>
 }

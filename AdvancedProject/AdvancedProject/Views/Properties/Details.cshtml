@@ -1,160 +1,132 @@
 @model AdvancedProjectAPI.Models.Property
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Property Details";
 }
 
-<div class="card border-0 shadow-sm overflow-hidden">
-    <div class="card-body p-0">
+<div class="ux-page">
 
-        <!-- Top Header Section -->
-        <div class="p-4 text-white" style="background: linear-gradient(135deg, #1f3c88, #0f766e);">
-            <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
-                <div>
-                    <div class="mb-2">
-                        <span class="badge rounded-pill px-3 py-2 bg-light text-dark fw-semibold">
-                            ?? @Model.City
-                        </span>
-                    </div>
-
-                    <h1 class="mb-1">@Model.Name</h1>
-                    <p class="mb-0">Property Details Overview</p>
-                </div>
-
-                <div class="d-flex gap-2">
-                    <a asp-action="Edit" asp-route-id="@Model?.PropertyId" class="btn btn-light fw-semibold px-3">
-                        ?? Edit
-                    </a>
-                    @if (User.IsInRole("PropertyManager"))
+    <div class="ux-page-header">
+        <div>
+            <p class="ux-eyebrow">Property Management</p>
+            <h1 class="ux-title">@Model.Name</h1>
+            <p class="ux-subtitle">
+                @if (!string.IsNullOrEmpty(Model.Governorate?.Name))
+                {
+                    <i class="bi bi-geo-alt-fill" style="color:var(--accent);"></i>
+                    @Model.Governorate.Name
+                    @if (!string.IsNullOrEmpty(Model.City))
                     {
-                        <button type="button" class="btn btn-danger fw-semibold px-3"
-                                data-bs-toggle="modal" data-bs-target="#deletePropertyModal">
-                            ?? Delete
-                        </button>
+                        <span> — @Model.City</span>
                     }
-                    <a asp-action="Index" class="btn btn-outline-light px-3">
-                        ? Back
-                    </a>
-                </div>
-            </div>
+                }
+                else if (!string.IsNullOrEmpty(Model.City))
+                {
+                    <i class="bi bi-geo-alt-fill" style="color:var(--accent);"></i>
+                    @Model.City
+                }
+            </p>
         </div>
-
-        <div class="p-4">
-
-            <!-- Summary Cards -->
-            <div class="row g-3 mb-4">
-                <div class="col-md-4">
-                    <div class="border rounded-3 p-3 h-100 bg-light summary-card">
-                        <div class="text-muted small mb-1">?? CITY</div>
-                        <h4 class="mb-0">@Model.City</h4>
-                    </div>
-                </div>
-
-                <div class="col-md-4">
-                    <div class="border rounded-3 p-3 h-100 bg-light summary-card">
-                        <div class="text-muted small mb-1">?? BUILDING</div>
-                        <h4 class="mb-0">@Model.Building</h4>
-                    </div>
-                </div>
-
-                <div class="col-md-4">
-                    <div class="border rounded-3 p-3 h-100 bg-light summary-card">
-                        <div class="text-muted small mb-1">?? ROAD</div>
-                        <h4 class="mb-0">@Model.Road</h4>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row g-4">
-                <!-- Left Section -->
-                <div class="col-lg-8">
-                    <div class="border rounded-3 p-4 h-100">
-                        <h5 class="mb-3">?? Property Overview</h5>
-
-                        <div class="row mb-2">
-                            <div class="col-sm-4 fw-semibold">Name</div>
-                            <div class="col-sm-8">@Model.Name</div>
-                        </div>
-
-                        <div class="row mb-2">
-                            <div class="col-sm-4 fw-semibold">City</div>
-                            <div class="col-sm-8">@Model.City</div>
-                        </div>
-
-                        <div class="row mb-2">
-                            <div class="col-sm-4 fw-semibold">Description</div>
-                            <div class="col-sm-8">@Model.Description</div>
-                        </div>
-
-                        @* <div class="row mb-2">
-                            <div class="col-sm-4 fw-semibold">Created At</div>
-                            <div class="col-sm-8">@Model.CreatedAt.ToString("dd MMM yyyy")</div>
-                        </div> *@
-                    </div>
-                </div>
-
-                <!-- Right Section -->
-                <div class="col-lg-4">
-                    <div class="border rounded-3 p-4 h-100">
-                        <h5 class="mb-3">?? Management Actions</h5>
-
-                        <div class="d-grid gap-2">
-                            <a asp-action="Edit" asp-route-id="@Model?.PropertyId" class="btn btn-primary">
-                                Edit Property
-                            </a>
-
-                            <a asp-controller="Units" asp-action="Index" asp-route-id="@Model.PropertyId" class="btn btn-accent">
-                                View Units
-                            </a>
-
-                            @if (User.IsInRole("PropertyManager"))
-                            {
-                                <button type="button" class="btn btn-danger"
-                                        data-bs-toggle="modal" data-bs-target="#deletePropertyModal">
-                                    Delete Property
-                                </button>
-                            }
-
-                            <a asp-action="Index" class="btn btn-outline-secondary">
-                                Back to Properties
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Location Details -->
-                <div class="col-12">
-                    <div class="border rounded-3 p-4">
-                        <h5 class="mb-3">?? Location Details</h5>
-
-                        <div class="row g-3">
-                            <div class="col-md-4">
-                                <div class="border rounded-3 p-3 text-center bg-light summary-card h-100">
-                                    <div class="text-muted small mb-1">BLOCK</div>
-                                    <div class="fw-semibold">@Model.Block</div>
-                                </div>
-                            </div>
-
-                            <div class="col-md-4">
-                                <div class="border rounded-3 p-3 text-center bg-light summary-card h-100">
-                                    <div class="text-muted small mb-1">BUILDING</div>
-                                    <div class="fw-semibold">@Model.Building</div>
-                                </div>
-                            </div>
-
-                            <div class="col-md-4">
-                                <div class="border rounded-3 p-3 text-center bg-light summary-card h-100">
-                                    <div class="text-muted small mb-1">ROAD</div>
-                                    <div class="fw-semibold">@Model.Road</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
+        <div class="d-flex gap-2 flex-wrap">
+            @if (User.IsInRole("PropertyManager"))
+            {
+                <a asp-action="Edit" asp-route-id="@Model.PropertyId" class="ux-btn-outline">
+                    <i class="bi bi-pencil-fill"></i> Edit
+                </a>
+                <button type="button" class="ux-btn-danger" data-bs-toggle="modal" data-bs-target="#deletePropertyModal">
+                    <i class="bi bi-trash-fill"></i> Delete
+                </button>
+            }
+            <a asp-controller="Units" asp-action="Index" asp-route-id="@Model.PropertyId" class="ux-btn-primary">
+                <i class="bi bi-grid-fill"></i> View Units
+            </a>
+            <a asp-action="Index" class="ux-btn-ghost">
+                <i class="bi bi-arrow-left"></i> Back
+            </a>
         </div>
     </div>
+
+    @* ── Property Hero Image ── *@
+    @if (Model.ImageData != null)
+    {
+        <div class="prop-details-hero">
+            <img src="@Url.Action("GetImage", new { id = Model.PropertyId })"
+                 alt="@Model.Name" class="prop-details-hero-img" />
+            <div class="prop-details-hero-overlay">
+                <span class="prop-details-hero-badge">
+                    <i class="bi bi-building-fill me-1"></i>@(Model.Governorate?.Name ?? "Property")
+                </span>
+            </div>
+        </div>
+    }
+
+    <div class="ux-details-main" style="display:flex;flex-direction:column;gap:1.25rem;">
+
+        <div class="ux-form-card">
+            <div class="ux-form-section-header">
+                <div class="ux-form-section-icon" style="background:rgba(0,91,113,0.1);color:#005B71;">
+                    <i class="bi bi-info-circle-fill"></i>
+                </div>
+                <div>
+                    <h3 class="ux-form-section-title">Property Overview</h3>
+                    <p class="ux-form-section-sub">General information about this property.</p>
+                </div>
+            </div>
+            <div class="ux-details-grid">
+                <div class="ux-detail-item">
+                    <span class="ux-detail-label">Property Name</span>
+                    <span class="ux-detail-value">@Model.Name</span>
+                </div>
+                <div class="ux-detail-item">
+                    <span class="ux-detail-label">Governorate</span>
+                    <span class="ux-detail-value">@(Model.Governorate?.Name ?? "—")</span>
+                </div>
+                <div class="ux-detail-item">
+                    <span class="ux-detail-label">City</span>
+                    <span class="ux-detail-value">@Model.City</span>
+                </div>
+                <div class="ux-detail-item">
+                    <span class="ux-detail-label">Created</span>
+                    <span class="ux-detail-value">@Model.CreatedAt.ToString("dd MMM yyyy")</span>
+                </div>
+                @if (!string.IsNullOrEmpty(Model.Description))
+                {
+                    <div class="ux-detail-item" style="grid-column:1/-1;">
+                        <span class="ux-detail-label">Description</span>
+                        <span class="ux-detail-value">@Model.Description</span>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="ux-form-card">
+            <div class="ux-form-section-header">
+                <div class="ux-form-section-icon" style="background:rgba(30,142,110,0.1);color:#1E8E6E;">
+                    <i class="bi bi-geo-alt-fill"></i>
+                </div>
+                <div>
+                    <h3 class="ux-form-section-title">Location Details</h3>
+                    <p class="ux-form-section-sub">Full address breakdown.</p>
+                </div>
+            </div>
+            <div class="ux-details-grid">
+                <div class="ux-detail-item">
+                    <span class="ux-detail-label"><i class="bi bi-grid-3x3-gap-fill" style="color:var(--accent);margin-right:0.3rem;"></i>Block</span>
+                    <span class="ux-detail-value">@Model.Block</span>
+                </div>
+                <div class="ux-detail-item">
+                    <span class="ux-detail-label"><i class="bi bi-building-fill" style="color:var(--accent);margin-right:0.3rem;"></i>Building</span>
+                    <span class="ux-detail-value">@Model.Building</span>
+                </div>
+                <div class="ux-detail-item">
+                    <span class="ux-detail-label"><i class="bi bi-signpost-fill" style="color:var(--accent);margin-right:0.3rem;"></i>Road</span>
+                    <span class="ux-detail-value">@Model.Road</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
 </div>
 
 @if (User.IsInRole("PropertyManager"))
@@ -173,7 +145,7 @@
                     <button type="button" class="btn btn-light-custom" data-bs-dismiss="modal">Cancel</button>
                     <form asp-action="SoftDelete" asp-route-id="@Model.PropertyId" method="post">
                         @Html.AntiForgeryToken()
-                        <button type="submit" class="btn btn-danger lease-action-btn">Confirm Delete</button>
+                        <button type="submit" class="ux-btn-danger">Confirm Delete</button>
                     </form>
                 </div>
             </div>

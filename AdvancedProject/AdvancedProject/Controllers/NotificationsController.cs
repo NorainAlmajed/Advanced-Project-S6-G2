@@ -179,6 +179,7 @@ namespace AdvancedProject.Controllers
             }
 
             await _context.SaveChangesAsync();
+            TempData["SuccessMessage"] = "Notification was deleted successfully.";
             return RedirectToAction(nameof(Index));
         }
 

@@ -272,6 +272,7 @@ namespace AdvancedProject.Controllers
                 }
 
                 await _context.SaveChangesAsync();
+                TempData["SuccessMessage"] = "Maintenance Request was created successfully.";
                 return RedirectToAction(nameof(Index));
             }
 
@@ -360,10 +361,10 @@ namespace AdvancedProject.Controllers
                     .Select(s => new
                     {
                         s.StaffId,
-                        FullName = s.User.FullName
+                        Username = s.User.Username
                     }),
                 "StaffId",
-                "FullName",
+                "Username",
                 maintenanceRequest.AssignedStaffId
             );
 
@@ -407,13 +408,13 @@ namespace AdvancedProject.Controllers
 
                 if (!managerChangedStaff)
                 {
-                    // Manager didn't change staff — free old staff first so the search can re-select them
+                    // Manager didn't change staff ï¿½ free old staff first so the search can re-select them
                     if (oldStaff != null)
                     {
                         oldStaff.AvailabilityStatus = "Available";
                     }
 
-                    // Load all staff into memory — EF returns tracked entities so in-memory availability changes are visible
+                    // Load all staff into memory ï¿½ EF returns tracked entities so in-memory availability changes are visible
                     var allStaff = await _context.MaintenanceStaffs
                         .Include(s => s.Skills)
                         .ToListAsync();
@@ -444,7 +445,7 @@ namespace AdvancedProject.Controllers
                 }
                 else
                 {
-                    // Manager manually picked a staff — save as-is, manage availability
+                    // Manager manually picked a staff ï¿½ save as-is, manage availability
                     if (oldStaff != null)
                     {
                         oldStaff.AvailabilityStatus = "Available";
@@ -492,7 +493,8 @@ namespace AdvancedProject.Controllers
                 }
 
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                TempData["SuccessMessage"] = "Maintenance Request was edited successfully.";
+                return RedirectToAction(nameof(Details), new { id = id });
             }
 
             // ?? reload Unit dropdown
@@ -530,10 +532,10 @@ namespace AdvancedProject.Controllers
                     .Select(s => new
                     {
                         s.StaffId,
-                        FullName = s.User.FullName
+                        Username = s.User.Username
                     }),
                 "StaffId",
-                "FullName",
+                "Username",
                 form.AssignedStaffId
             );
 
@@ -597,10 +599,10 @@ namespace AdvancedProject.Controllers
                     .Select(s => new
                     {
                         s.StaffId,
-                        FullName = s.User.FullName
+                        Username = s.User.Username
                     }),
                 "StaffId",
-                "FullName",
+                "Username",
                 maintenanceRequest.AssignedStaffId
             );
 
@@ -645,7 +647,7 @@ namespace AdvancedProject.Controllers
                 request.Status = form.Status;
                 request.Notes = form.Notes;
 
-                // 3. Load all staff into memory — EF returns tracked entities so in-memory availability changes are visible
+                // 3. Load all staff into memory ï¿½ EF returns tracked entities so in-memory availability changes are visible
                 var allStaff = await _context.MaintenanceStaffs
                     .Include(s => s.Skills)
                     .ToListAsync();
@@ -742,10 +744,10 @@ namespace AdvancedProject.Controllers
                     .Select(s => new
                     {
                         s.StaffId,
-                        FullName = s.User.FullName
+                        Username = s.User.Username
                     }),
                 "StaffId",
-                "FullName",
+                "Username",
                 form.AssignedStaffId
             );
 
@@ -791,6 +793,7 @@ namespace AdvancedProject.Controllers
             }
 
             await _context.SaveChangesAsync();
+            TempData["SuccessMessage"] = "Maintenance Request was deleted successfully.";
             return RedirectToAction(nameof(Index));
         }
 
@@ -833,6 +836,7 @@ namespace AdvancedProject.Controllers
             }
 
             await _context.SaveChangesAsync();
+            TempData["SuccessMessage"] = "Request was marked as In Progress successfully.";
             return RedirectToAction(nameof(Details), new { id });
         }
 
@@ -874,6 +878,7 @@ namespace AdvancedProject.Controllers
             }
 
             await _context.SaveChangesAsync();
+            TempData["SuccessMessage"] = "Request was marked as Cancelled successfully.";
             return RedirectToAction(nameof(Details), new { id });
         }
 
@@ -916,6 +921,7 @@ namespace AdvancedProject.Controllers
             }
 
             await _context.SaveChangesAsync();
+            TempData["SuccessMessage"] = "Request was marked as Resolved successfully.";
             return RedirectToAction(nameof(Details), new { id });
         }
 
@@ -958,6 +964,7 @@ namespace AdvancedProject.Controllers
             }
 
             await _context.SaveChangesAsync();
+            TempData["SuccessMessage"] = "Request was marked as Closed successfully.";
             return RedirectToAction(nameof(Details), new { id });
         }
 

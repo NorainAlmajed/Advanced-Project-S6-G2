@@ -107,6 +107,7 @@ namespace AdvancedProject.Controllers
                 user.IsActive = true;
                 _context.Add(user);
                 await _context.SaveChangesAsync();
+                TempData["SuccessMessage"] = "User was created successfully.";
                 return RedirectToAction(nameof(Index));
             }
             return View(user);
@@ -176,7 +177,8 @@ namespace AdvancedProject.Controllers
 
             await _context.SaveChangesAsync();
 
-            return RedirectToAction(nameof(Index));
+            TempData["SuccessMessage"] = "User was edited successfully.";
+            return RedirectToAction(nameof(Details), new { id = vm.UserId });
         }
 
 
@@ -212,6 +214,7 @@ namespace AdvancedProject.Controllers
             }
 
             await _context.SaveChangesAsync();
+            TempData["SuccessMessage"] = "User was deleted successfully.";
             return RedirectToAction(nameof(Index));
         }
 

@@ -234,6 +234,7 @@ namespace AdvancedProject.Controllers
                 return View(unit);
             }
 
+            TempData["SuccessMessage"] = "Unit was created successfully.";
             return RedirectToAction(nameof(Index), new { id = unit.PropertyId });
         }
 
@@ -336,7 +337,8 @@ namespace AdvancedProject.Controllers
                 }
             }
 
-            return RedirectToAction(nameof(Index), new { id = existingUnit.PropertyId });
+            TempData["SuccessMessage"] = "Unit was edited successfully.";
+            return RedirectToAction(nameof(Details), new { id = existingUnit.UnitId });
         }
 
 
@@ -374,6 +376,7 @@ namespace AdvancedProject.Controllers
             }
 
             await _context.SaveChangesAsync();
+            TempData["SuccessMessage"] = "Unit was deleted successfully.";
             return RedirectToAction(nameof(Index));
         }
 

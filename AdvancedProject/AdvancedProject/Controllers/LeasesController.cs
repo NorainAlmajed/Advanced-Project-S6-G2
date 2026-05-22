@@ -261,6 +261,7 @@ namespace AdvancedProject.Controllers
             _context.Leases.Add(lease);
             await _context.SaveChangesAsync();
 
+            TempData["SuccessMessage"] = "Lease was created successfully.";
             return RedirectToAction(nameof(Index));
         }
 
@@ -374,7 +375,8 @@ namespace AdvancedProject.Controllers
 
             await _context.SaveChangesAsync();
 
-            return RedirectToAction(nameof(Index));
+            TempData["SuccessMessage"] = "Lease was edited successfully.";
+            return RedirectToAction(nameof(Details), new { id = id });
         }
 
         // GET: Leases/Delete/5
@@ -411,6 +413,7 @@ namespace AdvancedProject.Controllers
             }
 
             await _context.SaveChangesAsync();
+            TempData["SuccessMessage"] = "Lease was deleted successfully.";
             return RedirectToAction(nameof(Index));
         }
 
@@ -441,6 +444,7 @@ namespace AdvancedProject.Controllers
             });
 
             await _context.SaveChangesAsync();
+            TempData["SuccessMessage"] = "Lease was terminated successfully.";
             return RedirectToAction(nameof(Details), new { id });
         }
 
@@ -477,6 +481,7 @@ namespace AdvancedProject.Controllers
             });
 
             await _context.SaveChangesAsync();
+            TempData["SuccessMessage"] = "Lease was renewed successfully.";
             return RedirectToAction(nameof(Details), new { id });
         }
 

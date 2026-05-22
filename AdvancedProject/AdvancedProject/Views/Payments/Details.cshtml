@@ -4,101 +4,132 @@
     ViewData["Title"] = "Payment Details";
 }
 
-<div class="lease-details-page">
+<div class="ux-page">
 
-    <div class="lease-details-header mb-4">
-        <p class="lease-eyebrow mb-2">PAYMENT DETAILS</p>
-        <h1 class="lease-title mb-2">Payment #@Model.PaymentId</h1>
-        <p class="lease-subtitle mb-0">
-            View payment amount, status, lease, property, unit, method, and frequency.
-        </p>
+    <div class="ux-page-header">
+        <div>
+            <p class="ux-eyebrow">Payment Management</p>
+            <h1 class="ux-title">Payment #@Model.PaymentId</h1>
+            <p class="ux-subtitle">
+                <i class="bi bi-cash-stack" style="color:var(--accent);margin-right:0.3rem;"></i>
+                BD @Model.Amount.ToString("0.00")
+                <span style="margin:0 0.4rem;color:var(--text-muted);">&middot;</span>
+                @if (Model.Status == "Paid")
+                {
+                    <span class="custom-pill lease-status-approved" style="font-size:0.7rem;">Paid</span>
+                }
+                else if (Model.Status == "Pending")
+                {
+                    <span class="custom-pill lease-status-pending" style="font-size:0.7rem;">Pending</span>
+                }
+                else if (Model.Status == "Overdue")
+                {
+                    <span class="custom-pill lease-status-rejected" style="font-size:0.7rem;">Overdue</span>
+                }
+                else
+                {
+                    <span class="custom-pill badge-soft-default" style="font-size:0.7rem;">@Model.Status</span>
+                }
+            </p>
+        </div>
+        <div class="d-flex gap-2 flex-wrap">
+            @if (User.IsInRole("PropertyManager"))
+            {
+                <a asp-action="Edit" asp-route-id="@Model.PaymentId" class="ux-btn-outline">
+                    <i class="bi bi-pencil-fill"></i> Edit
+                </a>
+            }
+            <a asp-action="Index" class="ux-btn-ghost">
+                <i class="bi bi-arrow-left"></i> Back
+            </a>
+        </div>
     </div>
 
-    <div class="lease-details-card">
+    <div class="ux-details-main" style="display:flex;flex-direction:column;gap:1.25rem;">
 
-        <div class="section-header">
-            <h3>Payment Information</h3>
-            <p>Main payment details and payment status.</p>
+        <div class="ux-form-card">
+            <div class="ux-form-section-header">
+                <div class="ux-form-section-icon" style="background:rgba(0,91,113,0.1);color:#005B71;">
+                    <i class="bi bi-credit-card-fill"></i>
+                </div>
+                <div>
+                    <h3 class="ux-form-section-title">Payment Information</h3>
+                    <p class="ux-form-section-sub">Main payment details and status.</p>
+                </div>
+            </div>
+            <div class="ux-details-grid">
+                <div class="ux-detail-item">
+                    <span class="ux-detail-label">Amount</span>
+                    <span class="ux-detail-value">BD @Model.Amount.ToString("0.00")</span>
+                </div>
+                <div class="ux-detail-item">
+                    <span class="ux-detail-label">Status</span>
+                    <span class="ux-detail-value">
+                        @if (Model.Status == "Paid")
+                        {
+                            <span class="custom-pill lease-status-approved">Paid</span>
+                        }
+                        else if (Model.Status == "Pending")
+                        {
+                            <span class="custom-pill lease-status-pending">Pending</span>
+                        }
+                        else if (Model.Status == "Overdue")
+                        {
+                            <span class="custom-pill lease-status-rejected">Overdue</span>
+                        }
+                        else
+                        {
+                            <span class="custom-pill badge-soft-default">@Model.Status</span>
+                        }
+                    </span>
+                </div>
+                <div class="ux-detail-item">
+                    <span class="ux-detail-label">Start Date</span>
+                    <span class="ux-detail-value">@Model.StartDate.ToString("dd MMM yyyy")</span>
+                </div>
+                <div class="ux-detail-item">
+                    <span class="ux-detail-label">End Date</span>
+                    <span class="ux-detail-value">@Model.EndDate.ToString("dd MMM yyyy")</span>
+                </div>
+                <div class="ux-detail-item">
+                    <span class="ux-detail-label">Payment Method</span>
+                    <span class="ux-detail-value">@Model.PaymentMethod.Name</span>
+                </div>
+                <div class="ux-detail-item">
+                    <span class="ux-detail-label">Payment Frequency</span>
+                    <span class="ux-detail-value">@Model.PaymentFrequency.Name</span>
+                </div>
+            </div>
         </div>
 
-        <div class="row g-4">
-
-            <div class="col-md-6">
-                <div class="info-box">
-                    <div class="info-label">AMOUNT</div>
-                    <div class="info-value">BD @Model.Amount.ToString("0.00")</div>
+        <div class="ux-form-card">
+            <div class="ux-form-section-header">
+                <div class="ux-form-section-icon" style="background:rgba(30,142,110,0.1);color:#1E8E6E;">
+                    <i class="bi bi-house-fill"></i>
+                </div>
+                <div>
+                    <h3 class="ux-form-section-title">Lease & Property</h3>
+                    <p class="ux-form-section-sub">Lease, property, and unit linked to this payment.</p>
                 </div>
             </div>
-
-            <div class="col-md-6">
-                <div class="info-box">
-                    <div class="info-label">STATUS</div>
-                    <div class="info-value">@Model.Status</div>
+            <div class="ux-details-grid">
+                <div class="ux-detail-item">
+                    <span class="ux-detail-label">Lease ID</span>
+                    <span class="ux-detail-value">#@Model.Lease.LeaseId</span>
+                </div>
+                <div class="ux-detail-item">
+                    <span class="ux-detail-label">Tenant</span>
+                    <span class="ux-detail-value">@Model.Lease.Tenant.User.FullName</span>
+                </div>
+                <div class="ux-detail-item">
+                    <span class="ux-detail-label">Property</span>
+                    <span class="ux-detail-value">@Model.Lease.Unit.Property.Name</span>
+                </div>
+                <div class="ux-detail-item">
+                    <span class="ux-detail-label">Unit Number</span>
+                    <span class="ux-detail-value">@Model.Lease.Unit.UnitNumber</span>
                 </div>
             </div>
-
-            <div class="col-md-6">
-                <div class="info-box">
-                    <div class="info-label">START DATE</div>
-                    <div class="info-value">@Model.StartDate.ToString("dd MMM yyyy")</div>
-                </div>
-            </div>
-
-            <div class="col-md-6">
-                <div class="info-box">
-                    <div class="info-label">END DATE</div>
-                    <div class="info-value">@Model.EndDate.ToString("dd MMM yyyy")</div>
-                </div>
-            </div>
-
-            <div class="col-md-6">
-                <div class="info-box">
-                    <div class="info-label">LEASE ID</div>
-                    <div class="info-value">#@Model.Lease.LeaseId</div>
-                </div>
-            </div>
-
-            <div class="col-md-6">
-                <div class="info-box">
-                    <div class="info-label">PROPERTY</div>
-                    <div class="info-value">@Model.Lease.Unit.Property.Name</div>
-                </div>
-            </div>
-
-            <div class="col-md-6">
-                <div class="info-box">
-                    <div class="info-label">UNIT NUMBER</div>
-                    <div class="info-value">@Model.Lease.Unit.UnitNumber</div>
-                </div>
-            </div>
-
-            <div class="col-md-6">
-                <div class="info-box">
-                    <div class="info-label">PAYMENT METHOD</div>
-                    <div class="info-value">@Model.PaymentMethod.Name</div>
-                </div>
-            </div>
-
-            <div class="col-md-6">
-                <div class="info-box">
-                    <div class="info-label">PAYMENT FREQUENCY</div>
-                    <div class="info-value">@Model.PaymentFrequency.Name</div>
-                </div>
-            </div>
-
-        </div>
-
-        <div class="mt-4 d-flex gap-3 flex-wrap">
-            <a asp-action="Edit"
-               asp-route-id="@Model.PaymentId"
-               class="btn btn-success lease-action-btn">
-                Edit Payment
-            </a>
-
-            <a asp-action="Index"
-               class="btn btn-light-custom lease-action-btn">
-                Back to List
-            </a>
         </div>
 
     </div>
