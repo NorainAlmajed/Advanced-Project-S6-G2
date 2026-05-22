@@ -49,6 +49,17 @@ builder.Services.ConfigureApplicationCookie(options =>
 
 builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 
+builder.Services.AddHttpClient("MaintenanceApi", client =>
+{
+    var apiUrl = builder.Configuration["ApiBaseUrl"] ?? "https://localhost:7211";
+    client.BaseAddress = new Uri(apiUrl);
+    client.DefaultRequestHeaders.Add("Accept", "application/json");
+})
+.ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
+{
+    ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+});
+
 var app = builder.Build();
 //  this makes sure the roles and the manager always exist in the db
 using (var scope = app.Services.CreateScope())

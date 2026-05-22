@@ -162,6 +162,17 @@
                             <span class="mreq-meta-label">Unit</span>
                             <span class="mreq-meta-value">@(item.Unit?.UnitNumber ?? "—") <span style="color:var(--text-muted);font-weight:500;">@(item.Unit?.Property?.Name != null ? "· " + item.Unit.Property.Name : "")</span></span>
                         </div>
+                        @if (!string.IsNullOrWhiteSpace(item.User?.Phone))
+                        {
+                            <div class="mreq-meta-item" style="grid-column:1/-1;">
+                                <span class="mreq-meta-label">Lookup Phone</span>
+                                <span class="mreq-meta-value" style="display:inline-flex;align-items:center;gap:0.4rem;">
+                                    <span style="background:rgba(0,91,113,0.08);color:#005B71;border-radius:6px;padding:0.15rem 0.55rem;font-size:0.82rem;font-weight:700;letter-spacing:0.02em;font-family:monospace;">
+                                        <i class="bi bi-telephone-fill" style="font-size:0.75rem;margin-right:0.25rem;"></i>@item.User.Phone
+                                    </span>
+                                </span>
+                            </div>
+                        }
                     </div>
 
                     <div class="mreq-card-footer">
