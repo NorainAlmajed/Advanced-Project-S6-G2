@@ -477,11 +477,6 @@
     </div>
 </div>
 
-@* ── Login nudge ──────────────────────────────────────────────── *@
-<div class="pub-login-nudge mt-3">
-    <p>Already have an account? <a asp-controller="Account" asp-action="Login">Sign in for full access</a></p>
-</div>
-
 @* ── Not found state ──────────────────────────────────────────── *@
 @if (Model?.NotFound == true)
 {
@@ -627,6 +622,11 @@
         </div>
     </div>
 }
+
+@* ── Login nudge ──────────────────────────────────────────────── *@
+<div class="pub-login-nudge" style="margin-top:1.5rem;margin-bottom:0;">
+    <p>Already have an account? <a asp-controller="Account" asp-action="Login">Sign in for full access</a></p>
+</div>
 
 @* ── Info strip ───────────────────────────────────────────────── *@
 <div class="pub-info-strip">
