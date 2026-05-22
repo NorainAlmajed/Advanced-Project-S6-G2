@@ -12,7 +12,7 @@
             <h1 class="ux-title">Apply for Unit</h1>
             <p class="ux-subtitle">@ViewBag.PropertyName — Unit @ViewBag.UnitNumber</p>
         </div>
-        <a asp-action="Index" class="ux-btn-ghost"><i class="bi bi-arrow-left"></i> Back</a>
+        <a asp-controller="Units" asp-action="Details" asp-route-id="@ViewBag.UnitId" asp-route-propertyId="@ViewBag.PropertyId" class="ux-btn-ghost"><i class="bi bi-arrow-left"></i> Back</a>
     </div>
 
     <form asp-action="Create" method="post" class="ux-form-layout">

@@ -156,6 +156,8 @@ namespace AdvancedProject.Controllers
             ViewData["DurationId"] = new SelectList(_context.Durations, "DurationId", "Months");
             ViewBag.UnitNumber = unit.UnitNumber;
             ViewBag.PropertyName = unit.Property.Name;
+            ViewBag.UnitId = unit.UnitId;
+            ViewBag.PropertyId = unit.Property.PropertyId;
 
             return View(model);
         }
