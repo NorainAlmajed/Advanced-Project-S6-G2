@@ -361,10 +361,10 @@ namespace AdvancedProject.Controllers
                     .Select(s => new
                     {
                         s.StaffId,
-                        FullName = s.User.FullName
+                        Username = s.User.Username
                     }),
                 "StaffId",
-                "FullName",
+                "Username",
                 maintenanceRequest.AssignedStaffId
             );
 
@@ -532,10 +532,10 @@ namespace AdvancedProject.Controllers
                     .Select(s => new
                     {
                         s.StaffId,
-                        FullName = s.User.FullName
+                        Username = s.User.Username
                     }),
                 "StaffId",
-                "FullName",
+                "Username",
                 form.AssignedStaffId
             );
 
@@ -599,10 +599,10 @@ namespace AdvancedProject.Controllers
                     .Select(s => new
                     {
                         s.StaffId,
-                        FullName = s.User.FullName
+                        Username = s.User.Username
                     }),
                 "StaffId",
-                "FullName",
+                "Username",
                 maintenanceRequest.AssignedStaffId
             );
 
@@ -744,10 +744,10 @@ namespace AdvancedProject.Controllers
                     .Select(s => new
                     {
                         s.StaffId,
-                        FullName = s.User.FullName
+                        Username = s.User.Username
                     }),
                 "StaffId",
-                "FullName",
+                "Username",
                 form.AssignedStaffId
             );
 

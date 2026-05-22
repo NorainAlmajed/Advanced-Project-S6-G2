@@ -26,8 +26,17 @@
             </div>
             <div class="ux-form-grid">
                 <div class="ux-field">
-                    <label asp-for="UnitId" class="ux-label">Unit</label>
-                    <select asp-for="UnitId" class="ux-input" asp-items="ViewBag.UnitId"></select>
+                    <label class="ux-label">Unit</label>
+                    <div style="position:relative;">
+                        <input type="text" id="UnitId_display" class="ux-input" placeholder="Select unit..." autocomplete="off" readonly style="cursor:pointer;" />
+                        <div id="UnitId_dropdown" style="display:none;position:absolute;top:calc(100% + 4px);left:0;right:0;background:#fff;border:1.5px solid #e2e8f0;border-radius:10px;box-shadow:0 6px 20px rgba(0,0,0,0.10);z-index:200;max-height:220px;overflow-y:auto;">
+                            <div style="padding:0.5rem 0.75rem;">
+                                <input type="text" id="UnitId_filter" class="ux-input" placeholder="Type to search..." autocomplete="off" style="font-size:0.85rem;padding:0.45rem 0.75rem;" />
+                            </div>
+                            <div id="UnitId_options"></div>
+                        </div>
+                    </div>
+                    <select asp-for="UnitId" asp-items="ViewBag.UnitId" style="display:none;"></select>
                     <span asp-validation-for="UnitId" class="ux-field-error"></span>
                 </div>
                 <div class="ux-field">
@@ -64,4 +73,59 @@
 
 @section Scripts {
     @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            makeSearchable('UnitId');
+        });
+
+        function makeSearchable(selectId) {
+            const hiddenSelect = document.getElementById(selectId);
+            if (!hiddenSelect) return;
+            const allOptions = Array.from(hiddenSelect.options).filter(function (o) { return o.value !== ''; });
+            const displayInput = document.getElementById(selectId + '_display');
+            const dropdownDiv  = document.getElementById(selectId + '_dropdown');
+            const filterInput  = document.getElementById(selectId + '_filter');
+            const optionsList  = document.getElementById(selectId + '_options');
+
+            function renderOptions(query) {
+                optionsList.innerHTML = '';
+                var q = query.trim().toLowerCase();
+                var filtered = q ? allOptions.filter(function (o) { return o.text.toLowerCase().includes(q); }) : allOptions;
+                if (filtered.length === 0) {
+                    optionsList.innerHTML = '<div style="padding:0.6rem 1rem;color:#94a3b8;font-size:0.85rem;">No results found</div>';
+                    return;
+                }
+                filtered.forEach(function (o) {
+                    var item = document.createElement('div');
+                    item.textContent = o.text;
+                    item.style.cssText = 'padding:0.6rem 1rem;font-size:0.875rem;cursor:pointer;border-radius:6px;margin:0 4px;';
+                    item.addEventListener('mouseenter', function () { this.style.background = '#f1f5f9'; });
+                    item.addEventListener('mouseleave', function () { this.style.background = ''; });
+                    item.addEventListener('mousedown', function (e) {
+                        e.preventDefault();
+                        hiddenSelect.value = o.value;
+                        displayInput.value = o.text;
+                        dropdownDiv.style.display = 'none';
+                    });
+                    optionsList.appendChild(item);
+                });
+            }
+
+            displayInput.addEventListener('click', function () {
+                renderOptions(filterInput.value);
+                dropdownDiv.style.display = 'block';
+                setTimeout(function () { filterInput.focus(); }, 50);
+            });
+            filterInput.addEventListener('input', function () { renderOptions(this.value); });
+            document.addEventListener('mousedown', function (e) {
+                if (!dropdownDiv.contains(e.target) && e.target !== displayInput) {
+                    dropdownDiv.style.display = 'none';
+                }
+            });
+            if (hiddenSelect.value) {
+                var match = allOptions.find(function (o) { return o.value === hiddenSelect.value; });
+                if (match) displayInput.value = match.text;
+            }
+        }
+    </script>
 }
