@@ -94,8 +94,6 @@ namespace AdvancedProject.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditMyProfile(ManagerSelfEditVM vm)
         {
-            ModelState.Remove("Password");
-
             if (!ModelState.IsValid) return View(vm);
 
             var user = await _context.Users.FindAsync(vm.UserId);

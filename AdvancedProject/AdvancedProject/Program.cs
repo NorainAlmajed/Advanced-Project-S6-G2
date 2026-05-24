@@ -109,6 +109,11 @@ using (var scope = app.Services.CreateScope())
             if (result.Succeeded)
                 await userManager.AddToRoleAsync(identityUser, seed.Role);
         }
+        else if (existing.UserId == null)
+        {
+            existing.UserId = seed.UserId;
+            await userManager.UpdateAsync(existing);
+        }
     }
 
     // Seed property images from wwwroot/images/seed/
