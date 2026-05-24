@@ -1,6 +1,228 @@
-﻿@{
+@{
     ViewData["Title"] = "Privacy Policy";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<h1>@ViewData["Title"]</h1>
 
-<p>Use this page to detail your site's privacy policy.</p>
+<style>
+.privacy-wrap {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 2.5rem 1.5rem 4rem;
+}
+.privacy-hero {
+    margin-bottom: 2.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1.5px solid var(--border-color, #e5e7eb);
+}
+.privacy-hero-eyebrow {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--accent, #005B71);
+    margin-bottom: 0.5rem;
+}
+.privacy-hero h1 {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--text-main, #111827);
+    margin: 0 0 0.5rem;
+}
+.privacy-hero .privacy-date {
+    font-size: 0.82rem;
+    color: var(--text-muted, #6b7280);
+}
+.privacy-section {
+    margin-bottom: 2.25rem;
+}
+.privacy-section h2 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--text-main, #111827);
+    margin: 0 0 0.65rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+.privacy-section h2 i {
+    color: var(--accent, #005B71);
+    font-size: 1rem;
+}
+.privacy-section p,
+.privacy-section li {
+    font-size: 0.9rem;
+    color: var(--text-muted, #4b5563);
+    line-height: 1.75;
+    margin: 0 0 0.5rem;
+}
+.privacy-section ul {
+    padding-left: 1.4rem;
+    margin: 0;
+}
+.privacy-section ul li {
+    margin-bottom: 0.3rem;
+}
+.privacy-divider {
+    border: none;
+    border-top: 1px solid var(--border-color, #e5e7eb);
+    margin: 2rem 0;
+}
+.privacy-contact-card {
+    background: var(--bg-card, #f8fafc);
+    border: 1px solid var(--border-color, #e5e7eb);
+    border-left: 4px solid var(--accent, #005B71);
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem;
+    font-size: 0.88rem;
+    color: var(--text-muted, #4b5563);
+    line-height: 1.6;
+}
+.privacy-contact-card strong {
+    color: var(--text-main, #111827);
+}
+</style>
+
+<div class="privacy-wrap">
+
+    <div class="privacy-hero">
+        <p class="privacy-hero-eyebrow"><i class="bi bi-shield-lock-fill me-1"></i> Rentify Platform</p>
+        <h1>Privacy Policy</h1>
+        <p class="privacy-date">Effective Date: 1 January 2025 &nbsp;·&nbsp; Last Updated: May 2026</p>
+    </div>
+
+    <div class="privacy-section">
+        <h2><i class="bi bi-info-circle-fill"></i> 1. Overview</h2>
+        <p>
+            Rentify is a property leasing and maintenance management platform serving tenants, property managers,
+            and maintenance staff in Bahrain. This Privacy Policy explains how we collect, use, store, and
+            protect your personal information when you use the Rentify platform.
+        </p>
+        <p>
+            By using Rentify, you agree to the practices described in this policy. If you do not agree,
+            please discontinue use of the platform.
+        </p>
+    </div>
+
+    <hr class="privacy-divider" />
+
+    <div class="privacy-section">
+        <h2><i class="bi bi-person-lines-fill"></i> 2. Information We Collect</h2>
+        <p>We collect the following types of personal information:</p>
+        <ul>
+            <li><strong>Identity Information:</strong> Full name, national ID, date of birth, and gender.</li>
+            <li><strong>Contact Information:</strong> Email address and phone number.</li>
+            <li><strong>Account Credentials:</strong> Username and encrypted password.</li>
+            <li><strong>Financial Information:</strong> Salary, employment status, and marital status (used for lease eligibility).</li>
+            <li><strong>Lease & Payment Records:</strong> Lease agreements, payment history, and related dates.</li>
+            <li><strong>Maintenance Request Data:</strong> Request details, priority, status updates, and associated unit information.</li>
+            <li><strong>Usage Data:</strong> Pages visited, actions performed, and timestamps within the platform.</li>
+        </ul>
+    </div>
+
+    <hr class="privacy-divider" />
+
+    <div class="privacy-section">
+        <h2><i class="bi bi-gear-fill"></i> 3. How We Use Your Information</h2>
+        <p>Your information is used solely for the operation of the Rentify platform. Specifically:</p>
+        <ul>
+            <li>To create and manage your account and verify your identity.</li>
+            <li>To process and manage lease applications and active leases.</li>
+            <li>To record and track rental payments.</li>
+            <li>To assign and manage maintenance requests between tenants and staff.</li>
+            <li>To send in-platform notifications about the status of your requests and applications.</li>
+            <li>To allow property managers to oversee properties, units, and tenants effectively.</li>
+            <li>To assess tenant financial eligibility based on salary and employment information.</li>
+        </ul>
+        <p>We do <strong>not</strong> sell, rent, or share your personal information with third parties for marketing purposes.</p>
+    </div>
+
+    <hr class="privacy-divider" />
+
+    <div class="privacy-section">
+        <h2><i class="bi bi-people-fill"></i> 4. Information Sharing</h2>
+        <p>Your data may be shared within the platform only as necessary:</p>
+        <ul>
+            <li><strong>Property Managers</strong> can view tenant profiles, lease applications, maintenance requests, and payment records related to their properties.</li>
+            <li><strong>Maintenance Staff</strong> can view the details of requests assigned to them, including the unit and submitting tenant's contact information.</li>
+            <li><strong>Tenants</strong> can only access their own profile, lease, payments, and requests.</li>
+        </ul>
+        <p>No personal data is shared with parties outside the Rentify platform without your explicit consent, unless required by Bahraini law.</p>
+    </div>
+
+    <hr class="privacy-divider" />
+
+    <div class="privacy-section">
+        <h2><i class="bi bi-shield-fill-check"></i> 5. Data Security</h2>
+        <p>
+            We take the security of your personal information seriously. The following measures are in place:
+        </p>
+        <ul>
+            <li>Passwords are stored using industry-standard hashing (ASP.NET Core Identity).</li>
+            <li>All passwords must meet strength requirements: minimum 8 characters, including uppercase, lowercase, a number, and a special character.</li>
+            <li>Access to data is role-restricted — tenants, managers, and staff can only access what is relevant to their role.</li>
+            <li>All forms are protected against cross-site request forgery (CSRF) using anti-forgery tokens.</li>
+            <li>Communication within the platform uses real-time secure connections (SignalR over HTTPS).</li>
+        </ul>
+    </div>
+
+    <hr class="privacy-divider" />
+
+    <div class="privacy-section">
+        <h2><i class="bi bi-clock-history"></i> 6. Data Retention</h2>
+        <p>
+            We retain your personal data for as long as your account is active or as needed to provide services.
+            Lease and payment records are retained for audit and legal compliance purposes even after a lease ends.
+            Maintenance request records are kept for operational history.
+        </p>
+        <p>
+            If you wish to request deletion of your account data, please contact the property management office directly.
+        </p>
+    </div>
+
+    <hr class="privacy-divider" />
+
+    <div class="privacy-section">
+        <h2><i class="bi bi-person-check-fill"></i> 7. Your Rights</h2>
+        <p>As a user of the Rentify platform, you have the right to:</p>
+        <ul>
+            <li><strong>Access</strong> the personal information we hold about you via your profile page.</li>
+            <li><strong>Update</strong> your contact details, username, and password through your account settings.</li>
+            <li><strong>Request correction</strong> of any inaccurate information by contacting the property manager.</li>
+            <li><strong>Request deletion</strong> of your account, subject to outstanding lease or payment obligations.</li>
+        </ul>
+    </div>
+
+    <hr class="privacy-divider" />
+
+    <div class="privacy-section">
+        <h2><i class="bi bi-bell-fill"></i> 8. Notifications</h2>
+        <p>
+            Rentify uses in-platform real-time notifications (via SignalR) to inform you of updates related to
+            your lease applications, maintenance requests, and payments. These notifications are delivered only
+            within the platform and are not sent to external services such as email or SMS unless separately configured.
+        </p>
+    </div>
+
+    <hr class="privacy-divider" />
+
+    <div class="privacy-section">
+        <h2><i class="bi bi-pencil-square"></i> 9. Changes to This Policy</h2>
+        <p>
+            We may update this Privacy Policy from time to time to reflect changes in the platform or applicable regulations.
+            The "Last Updated" date at the top of this page will reflect any revisions.
+            Continued use of the platform after changes are posted constitutes acceptance of the updated policy.
+        </p>
+    </div>
+
+    <hr class="privacy-divider" />
+
+    <div class="privacy-contact-card">
+        <strong><i class="bi bi-envelope-fill me-1"></i> Contact Us</strong><br />
+        If you have any questions or concerns about this Privacy Policy or how your data is handled,
+        please reach out to the Rentify management team:<br /><br />
+        <i class="bi bi-geo-alt me-1"></i> Manama, Bahrain<br />
+        <i class="bi bi-envelope me-1"></i> support@rentify.com<br />
+        <i class="bi bi-telephone me-1"></i> +973 1700 0000
+    </div>
+
+</div>
