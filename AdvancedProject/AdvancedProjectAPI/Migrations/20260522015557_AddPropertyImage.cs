@@ -23,6 +23,11 @@ namespace AdvancedProjectAPI.Migrations
                 type: "varbinary(max)",
                 nullable: true);
 
+            // Fix for AspNetUserTokens - drop PK first, alter, then recreate
+            migrationBuilder.DropPrimaryKey(
+                name: "PK_AspNetUserTokens",
+                table: "AspNetUserTokens");
+
             migrationBuilder.AlterColumn<string>(
                 name: "Name",
                 table: "AspNetUserTokens",
@@ -41,6 +46,16 @@ namespace AdvancedProjectAPI.Migrations
                 oldClrType: typeof(string),
                 oldType: "nvarchar(450)");
 
+            migrationBuilder.AddPrimaryKey(
+                name: "PK_AspNetUserTokens",
+                table: "AspNetUserTokens",
+                columns: new[] { "UserId", "LoginProvider", "Name" });
+
+            // Fix for AspNetUserLogins - drop PK first, alter, then recreate
+            migrationBuilder.DropPrimaryKey(
+                name: "PK_AspNetUserLogins",
+                table: "AspNetUserLogins");
+
             migrationBuilder.AlterColumn<string>(
                 name: "ProviderKey",
                 table: "AspNetUserLogins",
@@ -58,6 +73,11 @@ namespace AdvancedProjectAPI.Migrations
                 nullable: false,
                 oldClrType: typeof(string),
                 oldType: "nvarchar(450)");
+
+            migrationBuilder.AddPrimaryKey(
+                name: "PK_AspNetUserLogins",
+                table: "AspNetUserLogins",
+                columns: new[] { "LoginProvider", "ProviderKey" });
 
             migrationBuilder.UpdateData(
                 table: "Properties",
