@@ -2984,6 +2984,26 @@ body {
     color: #fff;
 }
 
+.ux-btn-outline-danger {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5rem 1.1rem;
+    background: transparent;
+    color: #dc3545;
+    border: 1.5px solid #dc3545;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.18s;
+}
+
+.ux-btn-outline-danger:hover {
+    background: #dc3545;
+    color: #fff;
+}
+
 .ux-btn-danger {
     display: inline-flex;
     align-items: center;
