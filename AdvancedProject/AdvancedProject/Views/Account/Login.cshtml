@@ -25,7 +25,13 @@
 
             <div class="ux-field mb-4">
                 <label asp-for="Password" class="ux-label"></label>
-                <input asp-for="Password" class="ux-input" autocomplete="new-password" placeholder="••••••••" />
+                <div style="position:relative;">
+                    <input asp-for="Password" class="ux-input" autocomplete="new-password" placeholder="••••••••" style="padding-right:2.75rem;" id="login-password" />
+                    <button type="button" onclick="togglePw('login-password','login-pw-icon')"
+                            style="position:absolute;right:0.75rem;top:50%;transform:translateY(-50%);background:none;border:none;padding:0;cursor:pointer;color:var(--text-muted);" tabindex="-1">
+                        <i class="bi bi-eye" id="login-pw-icon"></i>
+                    </button>
+                </div>
                 <span asp-validation-for="Password" class="ux-field-error"></span>
             </div>
 
@@ -51,4 +57,17 @@
 
 @section Scripts {
     @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+    <script>
+    function togglePw(inputId, iconId) {
+        var input = document.getElementById(inputId);
+        var icon  = document.getElementById(iconId);
+        if (input.type === 'password') {
+            input.type = 'text';
+            icon.classList.replace('bi-eye', 'bi-eye-slash');
+        } else {
+            input.type = 'password';
+            icon.classList.replace('bi-eye-slash', 'bi-eye');
+        }
+    }
+    </script>
 }
