@@ -406,6 +406,22 @@
     @await RenderSectionAsync("Scripts", required: false)
 
     <script>
+        // Inject back button on all inner (ux-page) pages
+        (function () {
+            var page = document.querySelector('.ux-page');
+            if (!page) return;
+            var header = page.querySelector('.ux-page-header');
+            if (!header) return;
+            var btn = document.createElement('button');
+            btn.className = 'ux-back-btn';
+            btn.type = 'button';
+            btn.innerHTML = '<i class="bi bi-arrow-left-short" style="font-size:1rem;"></i> Back';
+            btn.addEventListener('click', function () { history.back(); });
+            header.insertAdjacentElement('beforebegin', btn);
+        })();
+    </script>
+
+    <script>
         // Auto-dismiss success toast after 4 seconds
         (function () {
             var toast = document.getElementById('uxSuccessToast');

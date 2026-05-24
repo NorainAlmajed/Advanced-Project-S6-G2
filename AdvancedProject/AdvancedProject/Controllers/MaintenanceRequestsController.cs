@@ -881,43 +881,56 @@ namespace AdvancedProject.Controllers
             request.Status = "In Progress";
             request.InProgressTime = DateTime.Now;
 
-            // Notify tenant
             var tenantNotif = new Notification
             {
                 UserId = request.UserId,
-                Title = "Maintenance Update",
-                Message = $"Your maintenance request #{request.RequestId} has been marked as In Progress.",
+                Title = "Request In Progress",
+                Message = $"Your maintenance request #{request.RequestId} is now being worked on.",
                 NotificationTypeId = 2,
                 CreatedAt = DateTime.Now
             };
             _context.Notifications.Add(tenantNotif);
 
-            // Notify staff only when manager performs the action
-            Notification? staffNotif = null;
+            Notification? otherNotif = null;
             if (User.IsInRole("PropertyManager") && request.AssignedStaffId != null)
             {
                 var assignedStaff = await _context.MaintenanceStaffs
                     .FirstOrDefaultAsync(s => s.StaffId == request.AssignedStaffId);
                 if (assignedStaff != null)
                 {
-                    staffNotif = new Notification
+                    otherNotif = new Notification
                     {
                         UserId = assignedStaff.UserId,
-                        Title = "Maintenance Update",
-                        Message = $"Your maintenance request #{request.RequestId} has been marked as In Progress.",
+                        Title = "Request Marked In Progress",
+                        Message = $"Maintenance request #{request.RequestId} has been marked as In Progress.",
                         NotificationTypeId = 2,
                         CreatedAt = DateTime.Now
                     };
-                    _context.Notifications.Add(staffNotif);
+                    _context.Notifications.Add(otherNotif);
                 }
+            }
+            else if (User.IsInRole("MaintenanceStaff"))
+            {
+                otherNotif = new Notification
+                {
+                    UserId = 1,
+                    Title = "Request In Progress",
+                    Message = $"Maintenance request #{request.RequestId} has been marked as In Progress by staff.",
+                    NotificationTypeId = 2,
+                    CreatedAt = DateTime.Now
+                };
+                _context.Notifications.Add(otherNotif);
             }
 
             await _context.SaveChangesAsync();
 
             await PushNotificationAsync(tenantNotif);
-            if (staffNotif != null) await PushNotificationAsync(staffNotif);
+            if (otherNotif != null) await PushNotificationAsync(otherNotif);
             await BroadcastBoardUpdateAsync(id, "updated");
 
+            TempData["ToastTitle"]   = "Status Updated";
+            TempData["ToastMessage"] = $"Request #{id} is now In Progress.";
+            TempData["ToastType"]    = "Maintenance";
             TempData["SuccessMessage"] = "Request was marked as In Progress successfully.";
             return RedirectToAction(nameof(Details), new { id });
         }
@@ -931,43 +944,61 @@ namespace AdvancedProject.Controllers
 
             request.Status = "Cancelled";
 
-            // Notify tenant
             var tenantNotif = new Notification
             {
                 UserId = request.UserId,
-                Title = "Maintenance Update",
+                Title = "Request Cancelled",
                 Message = $"Your maintenance request #{request.RequestId} has been cancelled.",
                 NotificationTypeId = 2,
                 CreatedAt = DateTime.Now
             };
             _context.Notifications.Add(tenantNotif);
 
-            // Notify assigned staff
-            Notification? staffNotif = null;
+            Notification? otherNotif = null;
             if (request.AssignedStaffId != null)
             {
                 var assignedStaff = await _context.MaintenanceStaffs
                     .FirstOrDefaultAsync(s => s.StaffId == request.AssignedStaffId);
                 if (assignedStaff != null)
                 {
-                    staffNotif = new Notification
+                    otherNotif = new Notification
                     {
                         UserId = assignedStaff.UserId,
-                        Title = "Maintenance Request Cancelled",
-                        Message = $"Your maintenance request #{request.RequestId} has been cancelled.",
+                        Title = "Request Cancelled",
+                        Message = $"Maintenance request #{request.RequestId} has been cancelled.",
                         NotificationTypeId = 2,
                         CreatedAt = DateTime.Now
                     };
-                    _context.Notifications.Add(staffNotif);
+                    _context.Notifications.Add(otherNotif);
                 }
             }
 
-            await _context.SaveChangesAsync();
+            if (User.IsInRole("MaintenanceStaff"))
+            {
+                var managerNotif = new Notification
+                {
+                    UserId = 1,
+                    Title = "Request Cancelled",
+                    Message = $"Maintenance request #{request.RequestId} was cancelled by staff.",
+                    NotificationTypeId = 2,
+                    CreatedAt = DateTime.Now
+                };
+                _context.Notifications.Add(managerNotif);
+                await _context.SaveChangesAsync();
+                await PushNotificationAsync(managerNotif);
+            }
+            else
+            {
+                await _context.SaveChangesAsync();
+            }
 
             await PushNotificationAsync(tenantNotif);
-            if (staffNotif != null) await PushNotificationAsync(staffNotif);
+            if (otherNotif != null) await PushNotificationAsync(otherNotif);
             await BroadcastBoardUpdateAsync(id, "updated");
 
+            TempData["ToastTitle"]   = "Request Cancelled";
+            TempData["ToastMessage"] = $"Request #{id} has been cancelled.";
+            TempData["ToastType"]    = "Maintenance";
             TempData["SuccessMessage"] = "Request was marked as Cancelled successfully.";
             return RedirectToAction(nameof(Details), new { id });
         }
@@ -982,43 +1013,56 @@ namespace AdvancedProject.Controllers
             request.Status = "Resolved";
             request.ResolvedTime = DateTime.Now;
 
-            // Notify tenant
             var tenantNotif = new Notification
             {
                 UserId = request.UserId,
-                Title = "Maintenance Update",
-                Message = $"Your maintenance request #{request.RequestId} has been marked as resolved.",
+                Title = "Request Resolved",
+                Message = $"Your maintenance request #{request.RequestId} has been resolved.",
                 NotificationTypeId = 2,
                 CreatedAt = DateTime.Now
             };
             _context.Notifications.Add(tenantNotif);
 
-            // Notify staff only when manager performs the action
-            Notification? staffNotif = null;
+            Notification? otherNotif = null;
             if (User.IsInRole("PropertyManager") && request.AssignedStaffId != null)
             {
                 var assignedStaff = await _context.MaintenanceStaffs
                     .FirstOrDefaultAsync(s => s.StaffId == request.AssignedStaffId);
                 if (assignedStaff != null)
                 {
-                    staffNotif = new Notification
+                    otherNotif = new Notification
                     {
                         UserId = assignedStaff.UserId,
-                        Title = "Maintenance Update",
-                        Message = $"Your maintenance request #{request.RequestId} has been marked as resolved.",
+                        Title = "Request Resolved",
+                        Message = $"Maintenance request #{request.RequestId} has been marked as resolved.",
                         NotificationTypeId = 2,
                         CreatedAt = DateTime.Now
                     };
-                    _context.Notifications.Add(staffNotif);
+                    _context.Notifications.Add(otherNotif);
                 }
+            }
+            else if (User.IsInRole("MaintenanceStaff"))
+            {
+                otherNotif = new Notification
+                {
+                    UserId = 1,
+                    Title = "Request Resolved",
+                    Message = $"Maintenance request #{request.RequestId} has been resolved by staff.",
+                    NotificationTypeId = 2,
+                    CreatedAt = DateTime.Now
+                };
+                _context.Notifications.Add(otherNotif);
             }
 
             await _context.SaveChangesAsync();
 
             await PushNotificationAsync(tenantNotif);
-            if (staffNotif != null) await PushNotificationAsync(staffNotif);
+            if (otherNotif != null) await PushNotificationAsync(otherNotif);
             await BroadcastBoardUpdateAsync(id, "updated");
 
+            TempData["ToastTitle"]   = "Request Resolved";
+            TempData["ToastMessage"] = $"Request #{id} has been marked as resolved.";
+            TempData["ToastType"]    = "Maintenance";
             TempData["SuccessMessage"] = "Request was marked as Resolved successfully.";
             return RedirectToAction(nameof(Details), new { id });
         }
@@ -1033,43 +1077,56 @@ namespace AdvancedProject.Controllers
             request.Status = "Closed";
             request.ClosedTime = DateTime.Now;
 
-            // Notify tenant
             var tenantNotif = new Notification
             {
                 UserId = request.UserId,
-                Title = "Maintenance Update",
+                Title = "Request Closed",
                 Message = $"Your maintenance request #{request.RequestId} has been closed.",
                 NotificationTypeId = 2,
                 CreatedAt = DateTime.Now
             };
             _context.Notifications.Add(tenantNotif);
 
-            // Notify staff only when manager performs the action
-            Notification? staffNotif = null;
+            Notification? otherNotif = null;
             if (User.IsInRole("PropertyManager") && request.AssignedStaffId != null)
             {
                 var assignedStaff = await _context.MaintenanceStaffs
                     .FirstOrDefaultAsync(s => s.StaffId == request.AssignedStaffId);
                 if (assignedStaff != null)
                 {
-                    staffNotif = new Notification
+                    otherNotif = new Notification
                     {
                         UserId = assignedStaff.UserId,
-                        Title = "Maintenance Update",
-                        Message = $"Your maintenance request #{request.RequestId} has been closed.",
+                        Title = "Request Closed",
+                        Message = $"Maintenance request #{request.RequestId} has been closed.",
                         NotificationTypeId = 2,
                         CreatedAt = DateTime.Now
                     };
-                    _context.Notifications.Add(staffNotif);
+                    _context.Notifications.Add(otherNotif);
                 }
+            }
+            else if (User.IsInRole("MaintenanceStaff"))
+            {
+                otherNotif = new Notification
+                {
+                    UserId = 1,
+                    Title = "Request Closed",
+                    Message = $"Maintenance request #{request.RequestId} has been closed by staff.",
+                    NotificationTypeId = 2,
+                    CreatedAt = DateTime.Now
+                };
+                _context.Notifications.Add(otherNotif);
             }
 
             await _context.SaveChangesAsync();
 
             await PushNotificationAsync(tenantNotif);
-            if (staffNotif != null) await PushNotificationAsync(staffNotif);
+            if (otherNotif != null) await PushNotificationAsync(otherNotif);
             await BroadcastBoardUpdateAsync(id, "updated");
 
+            TempData["ToastTitle"]   = "Request Closed";
+            TempData["ToastMessage"] = $"Request #{id} has been closed.";
+            TempData["ToastType"]    = "Maintenance";
             TempData["SuccessMessage"] = "Request was marked as Closed successfully.";
             return RedirectToAction(nameof(Details), new { id });
         }
