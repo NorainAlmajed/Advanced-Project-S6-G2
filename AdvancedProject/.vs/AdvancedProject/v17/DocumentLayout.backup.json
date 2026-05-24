@@ -3,16 +3,16 @@
   "WorkspaceRootPath": "D:\\year3 sem2\\advanced programming project\\Advanced-Project-S6-G2\\AdvancedProject\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{B4100081-BB0A-41BA-A933-BD3CCDB833B9}|AdvancedProject\\AdvancedProject.csproj|d:\\year3 sem2\\advanced programming project\\advanced-project-s6-g2\\advancedproject\\advancedproject\\controllers\\unitscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B4100081-BB0A-41BA-A933-BD3CCDB833B9}|AdvancedProject\\AdvancedProject.csproj|solutionrelative:advancedproject\\controllers\\unitscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{B4100081-BB0A-41BA-A933-BD3CCDB833B9}|AdvancedProject\\AdvancedProject.csproj|d:\\year3 sem2\\advanced programming project\\advanced-project-s6-g2\\advancedproject\\advancedproject\\wwwroot\\css\\site.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
       "RelativeMoniker": "D:0:0:{B4100081-BB0A-41BA-A933-BD3CCDB833B9}|AdvancedProject\\AdvancedProject.csproj|solutionrelative:advancedproject\\wwwroot\\css\\site.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{B4100081-BB0A-41BA-A933-BD3CCDB833B9}|AdvancedProject\\AdvancedProject.csproj|d:\\year3 sem2\\advanced programming project\\advanced-project-s6-g2\\advancedproject\\advancedproject\\views\\units\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{B4100081-BB0A-41BA-A933-BD3CCDB833B9}|AdvancedProject\\AdvancedProject.csproj|solutionrelative:advancedproject\\views\\units\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{B4100081-BB0A-41BA-A933-BD3CCDB833B9}|AdvancedProject\\AdvancedProject.csproj|d:\\year3 sem2\\advanced programming project\\advanced-project-s6-g2\\advancedproject\\advancedproject\\controllers\\unitscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{B4100081-BB0A-41BA-A933-BD3CCDB833B9}|AdvancedProject\\AdvancedProject.csproj|solutionrelative:advancedproject\\controllers\\unitscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{B4100081-BB0A-41BA-A933-BD3CCDB833B9}|AdvancedProject\\AdvancedProject.csproj|d:\\year3 sem2\\advanced programming project\\advanced-project-s6-g2\\advancedproject\\advancedproject\\views\\units\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
@@ -62,11 +62,11 @@
       "DocumentGroups": [
         {
           "DockedHeight": 85,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 4,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "site.css",
               "DocumentMoniker": "D:\\year3 sem2\\advanced programming project\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\wwwroot\\css\\site.css",
               "RelativeDocumentMoniker": "AdvancedProject\\wwwroot\\css\\site.css",
@@ -74,12 +74,11 @@
               "RelativeToolTip": "AdvancedProject\\wwwroot\\css\\site.css",
               "ViewState": "AgIAAIEKAAAAAAAAAAAkwIgKAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
-              "WhenOpened": "2026-05-15T22:00:32.303Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-05-15T22:00:32.303Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "Details.cshtml",
               "DocumentMoniker": "D:\\year3 sem2\\advanced programming project\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Views\\Units\\Details.cshtml",
               "RelativeDocumentMoniker": "AdvancedProject\\Views\\Units\\Details.cshtml",
@@ -87,8 +86,7 @@
               "RelativeToolTip": "AdvancedProject\\Views\\Units\\Details.cshtml",
               "ViewState": "AgIAAGYAAAAAAAAAAADwv4EAAAAGAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-05-15T22:00:17.576Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-05-15T22:00:17.576Z"
             },
             {
               "$type": "Document",
@@ -116,13 +114,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 0,
               "Title": "UnitsController.cs",
               "DocumentMoniker": "D:\\year3 sem2\\advanced programming project\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Controllers\\UnitsController.cs",
               "RelativeDocumentMoniker": "AdvancedProject\\Controllers\\UnitsController.cs",
               "ToolTip": "D:\\year3 sem2\\advanced programming project\\Advanced-Project-S6-G2\\AdvancedProject\\AdvancedProject\\Controllers\\UnitsController.cs",
               "RelativeToolTip": "AdvancedProject\\Controllers\\UnitsController.cs",
-              "ViewState": "AgIAAF8BAAAAAAAAAAAswHUBAAA7AAAAAAAAAA==",
+              "ViewState": "AgIAAFYBAAAAAAAAAAAswFcBAAANAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-05-15T21:33:15.522Z",
               "EditorCaption": ""
