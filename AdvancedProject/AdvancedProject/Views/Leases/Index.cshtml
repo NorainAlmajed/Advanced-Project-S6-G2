@@ -1,145 +1,126 @@
-﻿@model IEnumerable<AdvancedProject.Models.Lease>
+@model IEnumerable<AdvancedProjectAPI.Models.Lease>
 
 @{
     ViewData["Title"] = "Leases";
-
-    var currentSearchTerm = ViewData["CurrentSearchTerm"]?.ToString();
-    var currentStatusFilter = ViewData["CurrentStatusFilter"]?.ToString();
-    var currentDateFilter = ViewData["CurrentDateFilter"]?.ToString();
-    var totalLeases = ViewData["TotalLeases"] ?? 0;
+    var currentSearch = ViewData["CurrentSearchTerm"]?.ToString() ?? "";
+    var currentStatus = ViewData["CurrentStatusFilter"]?.ToString() ?? "";
+    var currentDate   = ViewData["CurrentDateFilter"]?.ToString() ?? "";
+    int total      = Model.Count();
+    int active     = Model.Count(l => l.Status == "Active");
+    int terminated = Model.Count(l => l.Status == "Terminated");
+    int renewed    = Model.Count(l => l.Status == "Renewed");
 }
 
-<div class="leases-page">
-    <div class="d-flex flex-column flex-lg-row align-items-lg-center justify-content-between gap-3 mb-4">
+<div class="ux-page">
+
+    <div class="ux-page-header">
         <div>
-            <h1 class="details-title mb-2">Leases</h1>
-            <p class="users-subtitle mb-0">
-                Browse and manage leases by tenant, unit, property, and status.
-            </p>
+            <p class="ux-eyebrow">Lease Management</p>
+            <h1 class="ux-title">Leases</h1>
+            <p class="ux-subtitle">Browse and manage active, terminated, and renewed leases.</p>
         </div>
     </div>
 
-    <div class="card search-card users-search-card shadow-soft border-0 mb-4">
-        <div class="card-body p-4">
-            <form asp-action="Index" method="get">
-                <div class="row g-3 align-items-end">
-                    <div class="col-lg-5">
-                        <label class="form-label fw-semibold text-white">Search Leases</label>
-                        <input type="text"
-                               name="searchTerm"
-                               value="@currentSearchTerm"
-                               class="form-control users-search-input"
-                               placeholder="Search by lease ID, tenant, unit, or property..." />
-                    </div>
-
-                    <div class="col-lg-2">
-                        <label class="form-label fw-semibold text-white">Status</label>
-                        <select name="statusFilter" class="form-select users-search-input">
-                            <option value="">All Statuses</option>
-                            <option value="Active" selected="@(currentStatusFilter == "Active")">Active</option>
-                            <option value="Terminated" selected="@(currentStatusFilter == "Terminated")">Terminated</option>
-                        </select>
-                    </div>
-
-                    <div class="col-lg-2">
-                        <label class="form-label fw-semibold text-white">Start Date</label>
-                        <select name="dateFilter" class="form-select users-search-input">
-                            <option value="">All Dates</option>
-                            <option value="Latest" selected="@(currentDateFilter == "Latest")">Latest</option>
-                            <option value="Oldest" selected="@(currentDateFilter == "Oldest")">Oldest</option>
-                        </select>
-                    </div>
-
-                    <div class="col-lg-1">
-                        <div class="lease-total-box">
-                            <span class="lease-total-label">Total</span>
-                            <span class="lease-total-value">@totalLeases</span>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-1">
-                        <button type="submit" class="btn btn-primary users-search-btn w-100">
-                            Search
-                        </button>
-                    </div>
-
-                    <div class="col-lg-1">
-                        <a asp-action="Index" class="btn btn-outline-light users-reset-btn w-100">
-                            Reset
-                        </a>
-                    </div>
-                </div>
-            </form>
+    <div class="ux-stats-row">
+        <div class="ux-stat-card">
+            <div class="ux-stat-icon" style="background:rgba(0,91,113,0.1);color:#005B71;"><i class="bi bi-file-earmark-text-fill"></i></div>
+            <div><div class="ux-stat-value">@total</div><div class="ux-stat-label">Total Leases</div></div>
+        </div>
+        <div class="ux-stat-card">
+            <div class="ux-stat-icon" style="background:rgba(30,142,110,0.1);color:#1E8E6E;"><i class="bi bi-check-circle-fill"></i></div>
+            <div><div class="ux-stat-value">@active</div><div class="ux-stat-label">Active</div></div>
+        </div>
+        <div class="ux-stat-card">
+            <div class="ux-stat-icon" style="background:rgba(220,53,69,0.1);color:#b42318;"><i class="bi bi-x-circle-fill"></i></div>
+            <div><div class="ux-stat-value">@terminated</div><div class="ux-stat-label">Terminated</div></div>
+        </div>
+        <div class="ux-stat-card">
+            <div class="ux-stat-icon" style="background:rgba(59,130,246,0.1);color:#1d4ed8;"><i class="bi bi-arrow-repeat"></i></div>
+            <div><div class="ux-stat-value">@renewed</div><div class="ux-stat-label">Renewed</div></div>
         </div>
     </div>
 
-    <div class="users-table-card">
-        <div class="table-responsive">
-            <table class="table users-table align-middle mb-0">
-                <thead>
-                    <tr>
-                        <th>Lease ID</th>
-                        <th>Tenant</th>
-                        <th>Unit</th>
-                        <th>Start Date</th>
-                        <th>End Date</th>
-                        <th>Status</th>
-                        <th class="text-center">Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @if (Model.Any())
-                    {
+    <div class="ux-toolbar">
+        <form asp-action="Index" method="get" class="ux-search-form">
+            <div class="ux-search-wrap">
+                <i class="bi bi-search ux-search-icon"></i>
+                <input type="text" name="searchTerm" value="@currentSearch"
+                       class="ux-search-input" placeholder="Search by lease ID, tenant, unit, property..." />
+            </div>
+            <select name="statusFilter" class="ux-search-input" style="width:150px;padding:0.55rem 0.85rem;border:1.5px solid #e5e7eb;border-radius:8px;font-size:0.875rem;outline:none;">
+                <option value="">All Statuses</option>
+                <option value="Active"     selected="@(currentStatus=="Active")">Active</option>
+                <option value="Terminated" selected="@(currentStatus=="Terminated")">Terminated</option>
+                <option value="Renewed"    selected="@(currentStatus=="Renewed")">Renewed</option>
+            </select>
+            <select name="dateFilter" class="ux-search-input" style="width:130px;padding:0.55rem 0.85rem;border:1.5px solid #e5e7eb;border-radius:8px;font-size:0.875rem;outline:none;">
+                <option value="">All Dates</option>
+                <option value="Latest" selected="@(currentDate=="Latest")">Latest First</option>
+                <option value="Oldest" selected="@(currentDate=="Oldest")">Oldest First</option>
+            </select>
+            <button type="submit" class="ux-btn-primary">Search</button>
+            <a asp-action="Index" class="ux-btn-ghost">Reset</a>
+        </form>
+        <div class="ux-stat-label" style="color:var(--text-muted);font-size:0.8rem;">@total lease(s)</div>
+    </div>
+
+    <div class="ux-table-card">
+        @if (Model.Any())
+        {
+            <div class="table-responsive">
+                <table class="ux-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Tenant</th>
+                            <th>Unit</th>
+                            <th>Start Date</th>
+                            <th>End Date</th>
+                            <th>Rent</th>
+                            <th>Status</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
                         @foreach (var item in Model)
                         {
+                            string statusColor = item.Status == "Active" ? "#1E8E6E" : item.Status == "Renewed" ? "#1d4ed8" : "#b42318";
+                            string statusBg    = item.Status == "Active" ? "rgba(30,142,110,0.1)" : item.Status == "Renewed" ? "rgba(59,130,246,0.1)" : "rgba(220,53,69,0.1)";
+                            string initial = item.Tenant?.User?.FullName?.Length > 0 ? item.Tenant.User.FullName[0].ToString().ToUpper() : "T";
                             <tr>
-                                <td class="fw-bold">@item.LeaseId</td>
-
-                                <td>@item.Tenant.User.FullName</td>
-
+                                <td class="ux-cell-muted fw-semibold">#@item.LeaseId</td>
                                 <td>
-                                    <div class="fw-semibold">@item.Unit.UnitNumber</div>
-                                    <div class="lease-property-name">@item.Unit.Property.Name</div>
+                                    <div class="ux-user-cell">
+                                        <div class="ux-avatar" style="background:#1E8E6E;">@initial</div>
+                                        <div class="ux-user-name">@item.Tenant?.User?.FullName</div>
+                                    </div>
                                 </td>
-
-                                <td>@item.StartDate.ToString("dd MMM yyyy")</td>
-                                <td>@item.EndDate.ToString("dd MMM yyyy")</td>
-
                                 <td>
-                                    @if (item.Status == "Active")
-                                    {
-                                        <span class="custom-pill lease-status-active">Active</span>
-                                    }
-                                    else if (item.Status == "Terminated")
-                                    {
-                                        <span class="custom-pill lease-status-terminated">Terminated</span>
-                                    }
-                                    else
-                                    {
-                                        <span class="custom-pill badge-soft-default">@item.Status</span>
-                                    }
+                                    <div class="ux-user-name">@item.Unit?.UnitNumber</div>
+                                    <div class="ux-user-sub">@item.Unit?.Property?.Name</div>
                                 </td>
-
-                                <td class="text-center">
-                                    <a asp-action="Details"
-                                       asp-route-id="@item.LeaseId"
-                                       class="btn btn-primary users-details-btn">
-                                        View Details
+                                <td class="ux-cell-muted">@item.StartDate.ToString("dd MMM yyyy")</td>
+                                <td class="ux-cell-muted">@item.EndDate.ToString("dd MMM yyyy")</td>
+                                <td class="ux-user-name">BD @item.MonthlyRent.ToString("0.00")</td>
+                                <td><span class="ux-role-badge" style="background:@statusBg;color:@statusColor;">@item.Status</span></td>
+                                <td class="text-end">
+                                    <a asp-action="Details" asp-route-id="@item.LeaseId" class="ux-details-btn">
+                                        View <i class="bi bi-arrow-right"></i>
                                     </a>
                                 </td>
                             </tr>
                         }
-                    }
-                    else
-                    {
-                        <tr>
-                            <td colspan="7" class="text-center py-4">
-                                No leases found.
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <div class="ux-empty">
+                <i class="bi bi-file-earmark-x"></i>
+                <p>No leases found.</p>
+            </div>
+        }
     </div>
+
 </div>

@@ -1,15 +1,17 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using AdvancedProject.Data;
-using AdvancedProject.Models;
+using AdvancedProjectAPI.Data;
+using AdvancedProjectAPI.Models;
 
 namespace AdvancedProject.Controllers
 {
+    [Authorize]
     public class PaymentsController : Controller
     {
         private readonly APContext _context;
@@ -49,9 +51,25 @@ namespace AdvancedProject.Controllers
         {
             var paymentsQuery = _context.Payments
                 .Include(p => p.Lease)
+                    .ThenInclude(l => l.Tenant)
                 .Include(p => p.PaymentFrequency)
                 .Include(p => p.PaymentMethod)
                 .AsQueryable();
+
+            // Tenants only see their own payments
+            if (!User.IsInRole("PropertyManager"))
+            {
+                var currentUserEmail = User.Identity!.Name;
+                var currentUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == currentUserEmail);
+                if (currentUser != null)
+                {
+                    var tenant = await _context.Tenants.FirstOrDefaultAsync(t => t.UserId == currentUser.UserId);
+                    if (tenant != null)
+                        paymentsQuery = paymentsQuery.Where(p => p.Lease.TenantId == tenant.TenantId);
+                    else
+                        paymentsQuery = paymentsQuery.Where(p => false);
+                }
+            }
 
             if (!string.IsNullOrWhiteSpace(searchTerm))
             {
@@ -71,16 +89,16 @@ namespace AdvancedProject.Controllers
             {
                 if (dateFilter == "Latest")
                 {
-                    paymentsQuery = paymentsQuery.OrderByDescending(p => p.StartDate);
+                    paymentsQuery = paymentsQuery.OrderByDescending(p => p.PaymentId);
                 }
                 else
                 {
-                    paymentsQuery = paymentsQuery.OrderBy(p => p.StartDate);
+                    paymentsQuery = paymentsQuery.OrderBy(p => p.PaymentId);
                 }
             }
             else
             {
-                paymentsQuery = paymentsQuery.OrderByDescending(p => p.StartDate); // default starts from 1
+                paymentsQuery = paymentsQuery.OrderByDescending(p => p.PaymentId);
             }
 
             var payments = await paymentsQuery.ToListAsync();
@@ -102,12 +120,15 @@ namespace AdvancedProject.Controllers
             }
 
             var payment = await _context.Payments
-     .Include(p => p.Lease)
-         .ThenInclude(l => l.Unit)
-             .ThenInclude(u => u.Property)
-     .Include(p => p.PaymentFrequency)
-     .Include(p => p.PaymentMethod)
-     .FirstOrDefaultAsync(m => m.PaymentId == id);
+                .Include(p => p.Lease)
+                    .ThenInclude(l => l.Unit)
+                        .ThenInclude(u => u.Property)
+                .Include(p => p.Lease)
+                    .ThenInclude(l => l.Tenant)
+                        .ThenInclude(t => t.User)
+                .Include(p => p.PaymentFrequency)
+                .Include(p => p.PaymentMethod)
+                .FirstOrDefaultAsync(m => m.PaymentId == id);
             if (payment == null)
             {
                 return NotFound();
@@ -118,6 +139,7 @@ namespace AdvancedProject.Controllers
         }
 
         // GET: Payments/Create
+        [Authorize(Roles = "PropertyManager")]
         public IActionResult Create()
         {
             PopulateDropdowns();
@@ -127,11 +149,15 @@ namespace AdvancedProject.Controllers
         // POST: Payments/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "PropertyManager")]
         public async Task<IActionResult> Create([Bind("LeaseId,Status,PaymentMethodId,PaymentFrequencyId, StartDate,GovernorateId")] Payment payment)
         {
             if (ModelState.IsValid)
             {
-                var lease = await _context.Leases.Include(l => l.Duration).FirstOrDefaultAsync(l => l.LeaseId == payment.LeaseId);
+                var lease = await _context.Leases
+                    .Include(l => l.Duration)
+                    .Include(l => l.Tenant)
+                    .FirstOrDefaultAsync(l => l.LeaseId == payment.LeaseId);
 
                 var frequency = await _context.PaymentFrequencies.FirstOrDefaultAsync(f => f.PaymentFrequencyId == payment.PaymentFrequencyId);
 
@@ -158,7 +184,18 @@ namespace AdvancedProject.Controllers
                 payment.Amount = lease.MonthlyRent * frequency.Frequency;
 
                 _context.Add(payment);
+
+                _context.Notifications.Add(new Notification
+                {
+                    UserId = lease.Tenant.UserId,
+                    Title = "Payment Update",
+                    Message = "A new payment record has been added.",
+                    NotificationTypeId = 3,
+                    CreatedAt = DateTime.Now
+                });
+
                 await _context.SaveChangesAsync();
+                TempData["SuccessMessage"] = "Payment was created successfully.";
                 return RedirectToAction(nameof(Index));
             }
 
@@ -166,6 +203,7 @@ namespace AdvancedProject.Controllers
         }
 
         // GET: Payments/Edit/5
+        [Authorize(Roles = "PropertyManager")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -184,14 +222,15 @@ namespace AdvancedProject.Controllers
         // POST: Payments/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "PropertyManager")]
         public async Task<IActionResult> Edit(int id, [Bind("PaymentId,StartDate,Status,PaymentMethodId,PaymentFrequencyId")] Payment payment)
         {
             if (id != payment.PaymentId)
                 return NotFound();
 
             var existing = await _context.Payments
-                .Include(p => p.Lease)
-                .ThenInclude(l => l.Duration)
+                .Include(p => p.Lease).ThenInclude(l => l.Duration)
+                .Include(p => p.Lease).ThenInclude(l => l.Tenant)
                 .FirstOrDefaultAsync(p => p.PaymentId == id);
 
             if (existing == null)
@@ -232,11 +271,22 @@ namespace AdvancedProject.Controllers
             existing.EndDate = payment.StartDate.AddDays(7);
             existing.Amount = existing.Lease.MonthlyRent * frequency.Frequency;
 
+            _context.Notifications.Add(new Notification
+            {
+                UserId = existing.Lease.Tenant.UserId,
+                Title = "Payment Update",
+                Message = $"Payment record #{existing.PaymentId} has been edited.",
+                NotificationTypeId = 3,
+                CreatedAt = DateTime.Now
+            });
+
             await _context.SaveChangesAsync();
 
-            return RedirectToAction(nameof(Index));
+            TempData["SuccessMessage"] = "Payment was edited successfully.";
+            return RedirectToAction(nameof(Details), new { id = id });
         }
         // GET: Payments/Delete/5
+        [Authorize(Roles = "PropertyManager")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -260,6 +310,7 @@ namespace AdvancedProject.Controllers
         // POST: Payments/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "PropertyManager")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var payment = await _context.Payments.FindAsync(id);
@@ -269,6 +320,7 @@ namespace AdvancedProject.Controllers
             }
 
             await _context.SaveChangesAsync();
+            TempData["SuccessMessage"] = "Payment was deleted successfully.";
             return RedirectToAction(nameof(Index));
         }
 

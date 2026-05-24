@@ -1,5 +1,6 @@
 ﻿using AdvancedProjectAPI.Data;
 using AdvancedProjectAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,6 +19,7 @@ namespace AdvancedProjectAPI.Controllers
 
         // GET: api/leaseapplications
         [HttpGet]
+        [Authorize(Roles = "PropertyManager")]
         public async Task<ActionResult<IEnumerable<LeaseApplication>>> GetAll()
         {
             var applications = await _context.LeaseApplications
@@ -29,6 +31,7 @@ namespace AdvancedProjectAPI.Controllers
 
         // GET: api/leaseapplications/{id}
         [HttpGet("{id}")]
+        [Authorize]
         public async Task<ActionResult<LeaseApplication>> GetById(int id)
         {
             var application = await _context.LeaseApplications
@@ -43,6 +46,7 @@ namespace AdvancedProjectAPI.Controllers
 
         // POST: api/leaseapplications
         [HttpPost]
+        [Authorize(Roles = "Tenant")]
         public async Task<ActionResult<LeaseApplication>> Create(LeaseApplication application)
         {
             _context.LeaseApplications.Add(application);
@@ -52,6 +56,7 @@ namespace AdvancedProjectAPI.Controllers
 
         // PUT: api/leaseapplications/{id}
         [HttpPut("{id}")]
+        [Authorize(Roles = "PropertyManager")]
         public async Task<IActionResult> Update(int id, LeaseApplication updated)
         {
             var existing = await _context.LeaseApplications.FindAsync(id);
@@ -71,6 +76,7 @@ namespace AdvancedProjectAPI.Controllers
 
         // DELETE: api/leaseapplications/{id}
         [HttpDelete("{id}")]
+        [Authorize(Roles = "PropertyManager")]
         public async Task<IActionResult> Delete(int id)
         {
             var application = await _context.LeaseApplications.FindAsync(id);

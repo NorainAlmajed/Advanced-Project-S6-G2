@@ -1,5 +1,6 @@
-﻿using AdvancedProject.Data;
-using AdvancedProject.Models;
+using AdvancedProjectAPI.Data;
+using AdvancedProjectAPI.Models;
+using AdvancedProject.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -12,15 +13,18 @@ namespace AdvancedProject.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly APContext _context;
+        private readonly IPasswordHasher<User> _passwordHasher;
 
         public AccountController(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
-            APContext context)
+            APContext context,
+            IPasswordHasher<User> passwordHasher)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _context = context;
+            _passwordHasher = passwordHasher;
         }
 
         [HttpGet]
@@ -82,7 +86,7 @@ namespace AdvancedProject.Controllers
                     var user = new User
                     {
                         Username = username,
-                        Password = model.Password,
+                        Password = _passwordHasher.HashPassword(null!, model.Password),
                         FullName = model.FullName,
                         Email = email,
                         Phone = phone,

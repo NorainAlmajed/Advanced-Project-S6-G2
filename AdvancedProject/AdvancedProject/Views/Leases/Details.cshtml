@@ -1,148 +1,182 @@
-﻿@model AdvancedProject.Models.Lease
+@model AdvancedProjectAPI.Models.Lease
 
 @{
     ViewData["Title"] = "Lease Details";
+    bool showRenew = Model.Status == "Active"
+                     && DateTime.Today >= Model.EndDate.AddMonths(-1)
+                     && DateTime.Today < Model.EndDate;
 }
 
-<div class="lease-details-page">
+<div class="ux-page">
 
-    <div class="lease-details-header d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+    <div class="ux-page-header">
         <div>
-            <p class="lease-eyebrow mb-2">LEASE DETAILS</p>
-            <h1 class="lease-title mb-2">
-                Lease #@Model.LeaseId
-            </h1>
-            <p class="lease-subtitle mb-0">
-                View lease information and tenant details.
+            <p class="ux-eyebrow">Lease Management</p>
+            <h1 class="ux-title">Lease #@Model.LeaseId</h1>
+            <p class="ux-subtitle">
+                <i class="bi bi-person-fill" style="color:var(--accent);margin-right:0.3rem;"></i>
+                @Model.Tenant.User.FullName
+                <span style="margin:0 0.4rem;color:var(--text-muted);">&middot;</span>
+                @Model.StartDate.ToString("dd MMM yyyy") &ndash; @Model.EndDate.ToString("dd MMM yyyy")
             </p>
         </div>
-
-       
+        <div class="d-flex gap-2 flex-wrap">
+            @if (Model.Status == "Active")
+            {
+                <button type="button" class="ux-btn-danger" data-bs-toggle="modal" data-bs-target="#terminateModal">
+                    <i class="bi bi-x-circle-fill"></i> Terminate Lease
+                </button>
+                @if (showRenew)
+                {
+                    <button type="button" class="ux-btn-primary" data-bs-toggle="modal" data-bs-target="#renewModal">
+                        <i class="bi bi-arrow-repeat"></i> Renew Lease
+                    </button>
+                }
+            }
+            <a asp-action="Index" class="ux-btn-ghost">
+                <i class="bi bi-arrow-left"></i> Back
+            </a>
+        </div>
     </div>
 
-    <div class="lease-details-card">
+    <div class="ux-details-main" style="display:flex;flex-direction:column;gap:1.25rem;">
 
-        <div class="section-header">
-            <h3>Lease Information</h3>
-            <p>Main lease details and rental information.</p>
-        </div>
-
-        <div class="row g-4">
-
-            <div class="col-md-6">
-                <div class="info-box">
-                    <div class="info-label">TENANT</div>
-                    <div class="info-value">
-                        @Model.Tenant.User.FullName
-                    </div>
+        <div class="ux-form-card">
+            <div class="ux-form-section-header">
+                <div class="ux-form-section-icon" style="background:rgba(0,91,113,0.1);color:#005B71;">
+                    <i class="bi bi-file-text-fill"></i>
+                </div>
+                <div>
+                    <h3 class="ux-form-section-title">Lease Information</h3>
+                    <p class="ux-form-section-sub">Main lease details and rental information.</p>
                 </div>
             </div>
-
-            <div class="col-md-6">
-                <div class="info-box">
-                    <div class="info-label">PROPERTY</div>
-                    <div class="info-value">
-                        @Model.Unit.Property.Name
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-6">
-                <div class="info-box">
-                    <div class="info-label">UNIT NUMBER</div>
-                    <div class="info-value">
-                        @Model.Unit.UnitNumber
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-6">
-                <div class="info-box">
-                    <div class="info-label">DURATION</div>
-                    <div class="info-value">
-                        @Model.Duration.Months Months
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-6">
-                <div class="info-box">
-                    <div class="info-label">START DATE</div>
-                    <div class="info-value">
-                        @Model.StartDate.ToString("dd MMM yyyy")
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-6">
-                <div class="info-box">
-                    <div class="info-label">END DATE</div>
-                    <div class="info-value">
-                        @Model.EndDate.ToString("dd MMM yyyy")
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-6">
-                <div class="info-box">
-                    <div class="info-label">MONTHLY RENT</div>
-                    <div class="info-value">
-                        BD @Model.MonthlyRent.ToString("0.00")
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-6">
-                <div class="info-box">
-                    <div class="info-label">STATUS</div>
-
-                    <div class="info-value">
+            <div class="ux-details-grid">
+                <div class="ux-detail-item">
+                    <span class="ux-detail-label">Status</span>
+                    <span class="ux-detail-value">
                         @if (Model.Status == "Active")
                         {
-                            <span class="custom-pill lease-status-active">
-                                Active
-                            </span>
+                            <span class="custom-pill lease-status-active">Active</span>
+                        }
+                        else if (Model.Status == "Terminated")
+                        {
+                            <span class="custom-pill lease-status-terminated">Terminated</span>
+                        }
+                        else if (Model.Status == "Renewed")
+                        {
+                            <span class="custom-pill lease-status-renewed">Renewed</span>
                         }
                         else
                         {
-                            <span class="custom-pill lease-status-inactive">
-                                @Model.Status
-                            </span>
+                            <span class="custom-pill badge-soft-default">@Model.Status</span>
                         }
-                    </div>
+                    </span>
                 </div>
-            </div>
-
-            <div class="col-md-6">
-                <div class="info-box">
-                    <div class="info-label">CREATED AT</div>
-                    <div class="info-value">
-                        @Model.CreatedAt.ToString("dd MMM yyyy")
-                    </div>
+                <div class="ux-detail-item">
+                    <span class="ux-detail-label">Duration</span>
+                    <span class="ux-detail-value">@Model.Duration.Months Months</span>
                 </div>
+                <div class="ux-detail-item">
+                    <span class="ux-detail-label">Start Date</span>
+                    <span class="ux-detail-value">@Model.StartDate.ToString("dd MMM yyyy")</span>
+                </div>
+                <div class="ux-detail-item">
+                    <span class="ux-detail-label">End Date</span>
+                    <span class="ux-detail-value">@Model.EndDate.ToString("dd MMM yyyy")</span>
+                </div>
+                <div class="ux-detail-item">
+                    <span class="ux-detail-label">Monthly Rent</span>
+                    <span class="ux-detail-value">BD @Model.MonthlyRent.ToString("0.00")</span>
+                </div>
+                <div class="ux-detail-item">
+                    <span class="ux-detail-label">Created At</span>
+                    <span class="ux-detail-value">@Model.CreatedAt.ToString("dd MMM yyyy")</span>
+                </div>
+                @if (Model.TerminationDate != null)
+                {
+                    <div class="ux-detail-item">
+                        <span class="ux-detail-label">Termination Date</span>
+                        <span class="ux-detail-value">@Model.TerminationDate.Value.ToString("dd MMM yyyy")</span>
+                    </div>
+                }
             </div>
-
         </div>
 
-        <div class="mt-4 d-flex gap-3 flex-wrap">
-            <a asp-action="Edit"
-               asp-route-id="@Model.LeaseId"
-               class="btn btn-success lease-action-btn">
-                Edit Lease
-            </a>
-
-            <a asp-action="Index"
-               class="btn btn-light-custom lease-action-btn">
-                Back to List
-            </a>
+        <div class="ux-form-card">
+            <div class="ux-form-section-header">
+                <div class="ux-form-section-icon" style="background:rgba(30,142,110,0.1);color:#1E8E6E;">
+                    <i class="bi bi-people-fill"></i>
+                </div>
+                <div>
+                    <h3 class="ux-form-section-title">Parties & Unit</h3>
+                    <p class="ux-form-section-sub">Tenant, property, and unit linked to this lease.</p>
+                </div>
+            </div>
+            <div class="ux-details-grid">
+                <div class="ux-detail-item">
+                    <span class="ux-detail-label">Tenant</span>
+                    <span class="ux-detail-value">@Model.Tenant.User.FullName</span>
+                </div>
+                <div class="ux-detail-item">
+                    <span class="ux-detail-label">Property</span>
+                    <span class="ux-detail-value">@Model.Unit.Property.Name</span>
+                </div>
+                <div class="ux-detail-item">
+                    <span class="ux-detail-label">Unit Number</span>
+                    <span class="ux-detail-value">@Model.Unit.UnitNumber</span>
+                </div>
+            </div>
         </div>
 
     </div>
 
 </div>
 
-@section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+@if (Model.Status == "Active")
+{
+    <div class="modal fade" id="terminateModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 rounded-4 shadow">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title fw-bold">Terminate Lease</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body pt-2">
+                    Are you sure you want to terminate this lease? This action cannot be undone.
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-light-custom" data-bs-dismiss="modal">Cancel</button>
+                    <form asp-action="Terminate" asp-route-id="@Model.LeaseId" method="post">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="ux-btn-danger">Confirm Termination</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (showRenew)
+    {
+        <div class="modal fade" id="renewModal" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content border-0 rounded-4 shadow">
+                    <div class="modal-header border-0 pb-0">
+                        <h5 class="modal-title fw-bold">Renew Lease</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body pt-2">
+                        Are you sure you want to renew this lease? A new application will be created for review.
+                    </div>
+                    <div class="modal-footer border-0">
+                        <button type="button" class="btn btn-light-custom" data-bs-dismiss="modal">Cancel</button>
+                        <form asp-action="Renew" asp-route-id="@Model.LeaseId" method="post">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="ux-btn-primary">Confirm Renewal</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
     }
 }

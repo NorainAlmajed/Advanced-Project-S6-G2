@@ -1,15 +1,17 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using AdvancedProject.Data;
-using AdvancedProject.Models;
+using AdvancedProjectAPI.Data;
+using AdvancedProjectAPI.Models;
 
 namespace AdvancedProject.Controllers
 {
+    [Authorize]
     public class UnitsController : Controller
     {
         private readonly APContext _context;
@@ -32,6 +34,7 @@ namespace AdvancedProject.Controllers
             .Include(u => u.Property)
             .Include(u => u.UnitType)
             .Include(u => u.Amenities)
+            .Where(u => u.IsActive)
             .AsQueryable();
 
             if (id != null)
@@ -158,6 +161,7 @@ namespace AdvancedProject.Controllers
         }
 
         // GET: Units/Create
+        [Authorize(Roles = "PropertyManager")]
         public IActionResult Create(int propertyId)
         {
             if (propertyId == 0)
@@ -178,6 +182,7 @@ namespace AdvancedProject.Controllers
         //POST
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "PropertyManager")]
         public async Task<IActionResult> Create(Unit unit, int[] selectedAmenities)
         {
             if (unit.PropertyId == 0)
@@ -229,11 +234,12 @@ namespace AdvancedProject.Controllers
                 return View(unit);
             }
 
+            TempData["SuccessMessage"] = "Unit was created successfully.";
             return RedirectToAction(nameof(Index), new { id = unit.PropertyId });
         }
 
         // GET: Units/Edit/5
-        // GET: Units/Edit/5
+        [Authorize(Roles = "PropertyManager")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -261,6 +267,7 @@ namespace AdvancedProject.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "PropertyManager")]
         public async Task<IActionResult> Edit(int id, [Bind("UnitId,PropertyId,UnitNumber,UnitTypeId,SizeSqFt,RentAmount,AvailabilityStatus,CreatedAt")] Unit unit, int[] selectedAmenities)
         {
             if (id != unit.UnitId)
@@ -330,12 +337,14 @@ namespace AdvancedProject.Controllers
                 }
             }
 
-            return RedirectToAction(nameof(Index), new { id = existingUnit.PropertyId });
+            TempData["SuccessMessage"] = "Unit was edited successfully.";
+            return RedirectToAction(nameof(Details), new { id = existingUnit.UnitId });
         }
 
 
 
         // GET: Units/Delete/5
+        [Authorize(Roles = "PropertyManager")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -357,6 +366,7 @@ namespace AdvancedProject.Controllers
         // POST: Units/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "PropertyManager")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var unit = await _context.Units.FindAsync(id);
@@ -366,7 +376,22 @@ namespace AdvancedProject.Controllers
             }
 
             await _context.SaveChangesAsync();
+            TempData["SuccessMessage"] = "Unit was deleted successfully.";
             return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "PropertyManager")]
+        public async Task<IActionResult> SoftDelete(int id)
+        {
+            var unit = await _context.Units.FindAsync(id);
+            if (unit == null) return NotFound();
+
+            int propertyId = unit.PropertyId;
+            unit.IsActive = false;
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index), new { id = propertyId });
         }
 
         private bool UnitExists(int id)

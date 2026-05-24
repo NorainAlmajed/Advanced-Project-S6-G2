@@ -1,15 +1,18 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using AdvancedProject.Data;
-using AdvancedProject.Models;
+using AdvancedProjectAPI.Data;
+using AdvancedProjectAPI.Models;
+using AdvancedProject.ViewModels;
 
 namespace AdvancedProject.Controllers
 {
+    [Authorize(Roles = "PropertyManager")]
     public class UsersController : Controller
     {
         private readonly APContext _context;
@@ -104,6 +107,7 @@ namespace AdvancedProject.Controllers
                 user.IsActive = true;
                 _context.Add(user);
                 await _context.SaveChangesAsync();
+                TempData["SuccessMessage"] = "User was created successfully.";
                 return RedirectToAction(nameof(Index));
             }
             return View(user);
@@ -173,7 +177,8 @@ namespace AdvancedProject.Controllers
 
             await _context.SaveChangesAsync();
 
-            return RedirectToAction(nameof(Index));
+            TempData["SuccessMessage"] = "User was edited successfully.";
+            return RedirectToAction(nameof(Details), new { id = vm.UserId });
         }
 
 
@@ -209,6 +214,7 @@ namespace AdvancedProject.Controllers
             }
 
             await _context.SaveChangesAsync();
+            TempData["SuccessMessage"] = "User was deleted successfully.";
             return RedirectToAction(nameof(Index));
         }
 

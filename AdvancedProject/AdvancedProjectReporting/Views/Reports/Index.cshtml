@@ -1,0 +1,123 @@
+@model AdvancedProjectReporting.Dtos.DashboardViewModel
+@{
+    ViewData["Title"] = "Dashboard";
+    var totalUnits    = Model.Occupancy.Sum(p => p.TotalUnits);
+    var occupiedUnits = Model.Occupancy.Sum(p => p.OccupiedUnits);
+    var overallRate   = totalUnits == 0 ? 0 : (double)occupiedUnits / totalUnits * 100;
+}
+
+<div class="d-flex justify-content-between align-items-start mb-4">
+    <div>
+        <p class="page-eyebrow mb-1">Overview</p>
+        <h2 class="page-title">Property Manager Dashboard</h2>
+        <p class="page-subtitle mt-1">Generated @DateTime.Now.ToString("dd MMM yyyy, HH:mm")</p>
+    </div>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-3">
+        <div class="card report-stat-card text-white h-100" style="background:linear-gradient(135deg,#005B71,#0a7f8f);">
+            <div class="card-body p-4">
+                <div class="stat-value">@overallRate.ToString("F1")%</div>
+                <div class="stat-label">Overall Occupancy</div>
+                <div class="stat-sub">@occupiedUnits / @totalUnits units occupied</div>
+            </div>
+            <div class="card-footer bg-transparent border-0 pb-3 pt-0 px-4">
+                <a asp-action="Occupancy" class="text-white small fw-semibold text-decoration-none">View full report &rarr;</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card report-stat-card text-white h-100" style="background:linear-gradient(135deg,#b45309,#f59e0b);">
+            <div class="card-body p-4">
+                <div class="stat-value">@(Model.Maintenance?.PendingRequests ?? 0)</div>
+                <div class="stat-label">Pending Maintenance</div>
+                <div class="stat-sub">of @(Model.Maintenance?.TotalRequests ?? 0) total requests</div>
+            </div>
+            <div class="card-footer bg-transparent border-0 pb-3 pt-0 px-4">
+                <a asp-action="Maintenance" class="text-white small fw-semibold text-decoration-none">View full report &rarr;</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card report-stat-card text-white h-100" style="background:linear-gradient(135deg,#1E8E6E,#16795e);">
+            <div class="card-body p-4">
+                <div class="stat-value">BD @(Model.Payments?.TotalCollected.ToString("N0") ?? "0")</div>
+                <div class="stat-label">Revenue Collected</div>
+                <div class="stat-sub">BD @(Model.Payments?.TotalOutstanding.ToString("N0") ?? "0") outstanding</div>
+            </div>
+            <div class="card-footer bg-transparent border-0 pb-3 pt-0 px-4">
+                <a asp-action="Payments" class="text-white small fw-semibold text-decoration-none">View full report &rarr;</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card report-stat-card text-white h-100" style="background:linear-gradient(135deg,#b42318,#dc3545);">
+            <div class="card-body p-4">
+                <div class="stat-value">@(Model.Payments?.OverdueCount ?? 0)</div>
+                <div class="stat-label">Overdue Payments</div>
+                <div class="stat-sub">require immediate attention</div>
+            </div>
+            <div class="card-footer bg-transparent border-0 pb-3 pt-0 px-4">
+                <a asp-action="Payments" class="text-white small fw-semibold text-decoration-none">View full report &rarr;</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3">
+    <div class="col-md-6">
+        <div class="section-card h-100">
+            <div class="section-card-header">Occupancy by Building</div>
+            <div class="report-table-card" style="border-radius:0 0 20px 20px;border:none;">
+                <table class="table report-table mb-0">
+                    <thead>
+                        <tr>
+                            <th>Building</th>
+                            <th class="text-center">Occupied</th>
+                            <th class="text-center">Total</th>
+                            <th class="text-center">Rate</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var row in Model.Occupancy)
+                        {
+                            <tr>
+                                <td>@row.BuildingName</td>
+                                <td class="text-center">@row.OccupiedUnits</td>
+                                <td class="text-center">@row.TotalUnits</td>
+                                <td class="text-center">
+                                    <span class="custom-pill pill-success">@row.OccupancyRate.ToString("F1")%</span>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="section-card h-100">
+            <div class="section-card-header">Maintenance by Skill Type</div>
+            <div class="report-table-card" style="border-radius:0 0 20px 20px;border:none;">
+                <table class="table report-table mb-0">
+                    <thead>
+                        <tr>
+                            <th>Skill Type</th>
+                            <th class="text-center">Requests</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var t in Model.Maintenance?.ByType ?? new())
+                        {
+                            <tr>
+                                <td>@t.Type</td>
+                                <td class="text-center">@t.Count</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

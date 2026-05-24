@@ -1,30 +1,77 @@
-﻿@model AdvancedProject.Models.PropertyManager
+@model AdvancedProjectAPI.Models.PropertyManager
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Manager Details";
+
+    string fullName = Model.User?.FullName ?? "Property Manager";
+    string username = Model.User?.Username ?? "—";
+    string email = Model.User?.Email ?? "—";
+    string phone = Model.User?.Phone ?? "—";
+    string genderText = Model.User?.Gender == "F" ? "Female" : "Male";
 }
 
-<h1>Details</h1>
+<div class="ux-page">
 
-<div>
-    <h4>PropertyManager</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.HireDate)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.HireDate)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.User)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.User.UserId)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.ManagerId">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <div class="ux-page-header">
+        <div>
+            <p class="ux-eyebrow">Property Management</p>
+            <h1 class="ux-title">@fullName</h1>
+            <p class="ux-subtitle">
+                <i class="bi bi-at" style="color:var(--accent);"></i>@username
+                <span style="margin:0 0.4rem;color:var(--text-muted);">&middot;</span>
+                Property Manager
+            </p>
+        </div>
+        <div class="d-flex gap-2 flex-wrap">
+            <a asp-action="Edit" asp-route-id="@Model.ManagerId" class="ux-btn-outline">
+                <i class="bi bi-pencil-fill"></i> Edit
+            </a>
+            <a asp-action="Index" class="ux-btn-ghost">
+                <i class="bi bi-arrow-left"></i> Back
+            </a>
+        </div>
+    </div>
+
+    <div class="ux-details-main" style="display:flex;flex-direction:column;gap:1.25rem;">
+
+        <div class="ux-form-card">
+            <div class="ux-form-section-header">
+                <div class="ux-form-section-icon" style="background:rgba(0,91,113,0.1);color:#005B71;">
+                    <i class="bi bi-person-badge-fill"></i>
+                </div>
+                <div>
+                    <h3 class="ux-form-section-title">Manager Profile</h3>
+                    <p class="ux-form-section-sub">Contact and role details for this property manager.</p>
+                </div>
+            </div>
+            <div class="ux-details-grid">
+                <div class="ux-detail-item">
+                    <span class="ux-detail-label">Full Name</span>
+                    <span class="ux-detail-value">@fullName</span>
+                </div>
+                <div class="ux-detail-item">
+                    <span class="ux-detail-label">Username</span>
+                    <span class="ux-detail-value">@username</span>
+                </div>
+                <div class="ux-detail-item">
+                    <span class="ux-detail-label">Email</span>
+                    <span class="ux-detail-value">@email</span>
+                </div>
+                <div class="ux-detail-item">
+                    <span class="ux-detail-label">Phone</span>
+                    <span class="ux-detail-value">@phone</span>
+                </div>
+                <div class="ux-detail-item">
+                    <span class="ux-detail-label">Gender</span>
+                    <span class="ux-detail-value">@genderText</span>
+                </div>
+                <div class="ux-detail-item">
+                    <span class="ux-detail-label">Hire Date</span>
+                    <span class="ux-detail-value">@Model.HireDate.ToString("dd MMM yyyy")</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
 </div>

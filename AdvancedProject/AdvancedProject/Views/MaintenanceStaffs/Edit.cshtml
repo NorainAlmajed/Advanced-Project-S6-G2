@@ -1,158 +1,123 @@
-﻿@model MaintenanceStaffEditVM
+@model MaintenanceStaffEditVM
 
 @{
     ViewData["Title"] = "Edit Maintenance Staff";
 }
 
-<div class="staff-form-page">
-    <div class="lease-form-wrapper">
-        <div class="lease-form-card shadow-soft">
+<div class="ux-page">
 
-            <div class="lease-form-header">
-                <p class="lease-form-eyebrow mb-2">Maintenance Staff</p>
-                <h1 class="lease-form-title mb-2">Edit Staff</h1>
-                <p class="lease-form-subtitle mb-0">
-                    Update staff account details, availability, and skills.
-                </p>
-            </div>
-
-            <div class="lease-form-body">
-                <form asp-action="Edit" method="post">
-
-                    <input type="hidden" asp-for="StaffId" />
-                    <input type="hidden" asp-for="UserId" />
-
-                    <div asp-validation-summary="ModelOnly" class="text-danger mb-4"></div>
-
-                    <div class="row g-4">
-
-                        <div class="col-md-6">
-                            <div class="lease-form-group">
-                                <label class="lease-form-label">Username</label>
-                                <input asp-for="Username" class="form-control lease-form-input" />
-                                <span asp-validation-for="Username" class="text-danger"></span>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="lease-form-group">
-                                <label class="lease-form-label">Full Name</label>
-                                <input asp-for="FullName" class="form-control lease-form-input" />
-                                <span asp-validation-for="FullName" class="text-danger"></span>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="lease-form-group">
-                                <label class="lease-form-label">Email</label>
-                                <input asp-for="Email" type="email" class="form-control lease-form-input" />
-                                <span asp-validation-for="Email" class="text-danger"></span>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="lease-form-group">
-                                <label class="lease-form-label">Phone</label>
-                                <input asp-for="Phone" class="form-control lease-form-input" />
-                                <span asp-validation-for="Phone" class="text-danger"></span>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="lease-form-group">
-                                <label class="lease-form-label">Password</label>
-                                <input asp-for="Password"
-                                       type="password"
-                                       class="form-control lease-form-input"
-                                       placeholder="Leave empty to keep current password" />
-                                <span asp-validation-for="Password" class="text-danger"></span>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="lease-form-group">
-                                <label class="lease-form-label">Confirm Password</label>
-                                <input asp-for="ConfirmPassword"
-                                       type="password"
-                                       class="form-control lease-form-input"
-                                       placeholder="Confirm new password" />
-                                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
-                            </div>
-                        </div>
-
-                        <div class="col-12">
-                            <div class="lease-form-group">
-                                <label class="lease-form-label d-block mb-3">Gender</label>
-
-                                <div class="staff-radio-group">
-                                    <label class="staff-radio-card">
-                                        <input type="radio" asp-for="Gender" value="M" />
-                                        Male
-                                    </label>
-
-                                    <label class="staff-radio-card">
-                                        <input type="radio" asp-for="Gender" value="F" />
-                                        Female
-                                    </label>
-                                </div>
-
-                                <span asp-validation-for="Gender" class="text-danger"></span>
-                            </div>
-                        </div>
-
-                        <div class="col-12">
-                            <div class="lease-form-group">
-                                <label class="lease-form-label">Availability Status</label>
-
-                                <select asp-for="AvailabilityStatus" class="form-select lease-form-input">
-                                    <option value="Available">Available</option>
-                                    <option value="Busy">Busy</option>
-                                </select>
-
-                                <span asp-validation-for="AvailabilityStatus" class="text-danger"></span>
-                            </div>
-                        </div>
-
-                        <div class="col-12">
-                            <div class="lease-form-group">
-                                <label class="lease-form-label d-block mb-3">Skills</label>
-
-                                <div class="staff-skills-grid">
-                                    @foreach (var skill in (List<Skill>)ViewData["Skills"])
-                                    {
-                                        <label class="staff-skill-card">
-                                            <input type="checkbox"
-                                                   name="SelectedSkillIds"
-                                                   value="@skill.SkillId"
-                                                   @(Model.SelectedSkillIds != null && Model.SelectedSkillIds.Contains(skill.SkillId) ? "checked" : "") />
-                                            @skill.Name
-                                        </label>
-                                    }
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-
-                    <div class="lease-form-actions">
-                        <button type="submit" class="btn btn-primary lease-submit-btn">
-                            Save Changes
-                        </button>
-
-                        <a asp-action="Index" class="lease-back-link">
-                            Back to Staff
-                        </a>
-                    </div>
-
-                </form>
-            </div>
-
+    <div class="ux-page-header">
+        <div>
+            <p class="ux-eyebrow">User Management</p>
+            <h1 class="ux-title">Edit Staff</h1>
+            <p class="ux-subtitle">Update staff account details, availability, and skills.</p>
         </div>
+        <a asp-action="Index" class="ux-btn-ghost"><i class="bi bi-arrow-left"></i> Back</a>
     </div>
+
+    <form asp-action="Edit" method="post" class="ux-form-layout">
+        <input type="hidden" asp-for="StaffId" />
+        <input type="hidden" asp-for="UserId" />
+        <div asp-validation-summary="ModelOnly" class="ux-form-error"></div>
+
+        <div class="ux-form-card">
+            <div class="ux-form-section-header">
+                <div class="ux-form-section-icon" style="background:rgba(0,91,113,0.1);color:#005B71;"><i class="bi bi-person-lock"></i></div>
+                <div><h3 class="ux-form-section-title">Account</h3><p class="ux-form-section-sub">Login credentials.</p></div>
+            </div>
+            <div class="ux-form-grid">
+                <div class="ux-field">
+                    <label asp-for="Username" class="ux-label">Username</label>
+                    <input asp-for="Username" class="ux-input" autocomplete="off" />
+                    <span asp-validation-for="Username" class="ux-field-error"></span>
+                </div>
+                <div></div>
+                <div class="ux-field">
+                    <label asp-for="Password" class="ux-label">New Password</label>
+                    <input asp-for="Password" type="password" class="ux-input" placeholder="Leave empty to keep current" autocomplete="new-password" />
+                    <span asp-validation-for="Password" class="ux-field-error"></span>
+                </div>
+                <div class="ux-field">
+                    <label asp-for="ConfirmPassword" class="ux-label">Confirm Password</label>
+                    <input asp-for="ConfirmPassword" type="password" class="ux-input" placeholder="Confirm new password" autocomplete="new-password" />
+                    <span asp-validation-for="ConfirmPassword" class="ux-field-error"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="ux-form-card">
+            <div class="ux-form-section-header">
+                <div class="ux-form-section-icon" style="background:rgba(99,102,241,0.1);color:#6366f1;"><i class="bi bi-person-badge-fill"></i></div>
+                <div><h3 class="ux-form-section-title">Personal Information</h3><p class="ux-form-section-sub">Staff contact and availability.</p></div>
+            </div>
+            <div class="ux-form-grid">
+                <div class="ux-field">
+                    <label asp-for="FullName" class="ux-label">Full Name</label>
+                    <input asp-for="FullName" class="ux-input" />
+                    <span asp-validation-for="FullName" class="ux-field-error"></span>
+                </div>
+                <div class="ux-field">
+                    <label asp-for="Email" class="ux-label"></label>
+                    <input asp-for="Email" type="email" class="ux-input" />
+                    <span asp-validation-for="Email" class="ux-field-error"></span>
+                </div>
+                <div class="ux-field">
+                    <label asp-for="Phone" class="ux-label"></label>
+                    <input asp-for="Phone" class="ux-input" />
+                    <span asp-validation-for="Phone" class="ux-field-error"></span>
+                </div>
+                <div class="ux-field">
+                    <label asp-for="AvailabilityStatus" class="ux-label">Availability</label>
+                    <select asp-for="AvailabilityStatus" class="ux-input">
+                        <option value="Available">Available</option>
+                        <option value="Busy">Busy</option>
+                    </select>
+                    <span asp-validation-for="AvailabilityStatus" class="ux-field-error"></span>
+                </div>
+                <div class="ux-field">
+                    <label class="ux-label">Gender</label>
+                    <div class="ux-radio-group">
+                        <label class="ux-radio-card">
+                            <input type="radio" asp-for="Gender" value="M" />
+                            <i class="bi bi-gender-male"></i><span>Male</span>
+                        </label>
+                        <label class="ux-radio-card">
+                            <input type="radio" asp-for="Gender" value="F" />
+                            <i class="bi bi-gender-female"></i><span>Female</span>
+                        </label>
+                    </div>
+                    <span asp-validation-for="Gender" class="ux-field-error"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="ux-form-card">
+            <div class="ux-form-section-header">
+                <div class="ux-form-section-icon" style="background:rgba(30,142,110,0.1);color:#1E8E6E;"><i class="bi bi-tools"></i></div>
+                <div><h3 class="ux-form-section-title">Skills</h3><p class="ux-form-section-sub">Select all applicable maintenance skills.</p></div>
+            </div>
+            <div class="ux-check-grid">
+                @foreach (var skill in (List<Skill>)ViewData["Skills"])
+                {
+                    <label class="ux-check-card">
+                        <input type="checkbox" name="SelectedSkillIds" value="@skill.SkillId"
+                               @(Model.SelectedSkillIds != null && Model.SelectedSkillIds.Contains(skill.SkillId) ? "checked" : "") />
+                        @skill.Name
+                    </label>
+                }
+            </div>
+        </div>
+
+        <div class="ux-form-actions">
+            <button type="submit" class="ux-btn-primary" style="padding:0.65rem 2rem;">
+                <i class="bi bi-check-lg"></i> Save Changes
+            </button>
+            <a asp-action="Index" class="ux-btn-ghost" style="padding:0.65rem 1.5rem;">Cancel</a>
+        </div>
+    </form>
+
 </div>
 
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
 }

@@ -1,6 +1,7 @@
 ﻿using AdvancedProjectAPI.Data;
 using AdvancedProjectAPI.Dtos;
 using AdvancedProjectAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,6 +20,7 @@ namespace AdvancedProjectAPI.Controllers
 
         // GET: api/maintenance
         [HttpGet]
+        [Authorize(Roles = "PropertyManager,MaintenanceStaff")]
         public async Task<ActionResult<IEnumerable<MaintenanceRequestDto>>> GetAll()
         {
             var requests = await _context.MaintenanceRequests
@@ -43,6 +45,7 @@ namespace AdvancedProjectAPI.Controllers
 
         // GET: api/maintenance/{ticketNumber}/{phone}
         [HttpGet("{ticketNumber}/{phone}")]
+        [AllowAnonymous]
         public async Task<ActionResult<MaintenanceRequestDto>> GetByTicketAndPhone(int ticketNumber, string phone)
         {
             var request = await _context.MaintenanceRequests
@@ -72,6 +75,7 @@ namespace AdvancedProjectAPI.Controllers
 
         // GET: api/maintenance/{id}
         [HttpGet("{id}")]
+        [Authorize]
         public async Task<ActionResult<MaintenanceRequest>> GetById(int id)
         {
             var request = await _context.MaintenanceRequests
@@ -88,6 +92,7 @@ namespace AdvancedProjectAPI.Controllers
 
         // POST: api/maintenance
         [HttpPost]
+        [Authorize(Roles = "Tenant,PropertyManager")]
         public async Task<ActionResult<MaintenanceRequest>> Create(MaintenanceRequest request)
         {
             _context.MaintenanceRequests.Add(request);
@@ -97,6 +102,7 @@ namespace AdvancedProjectAPI.Controllers
 
         // PUT: api/maintenance/{id}
         [HttpPut("{id}")]
+        [Authorize(Roles = "PropertyManager,MaintenanceStaff")]
         public async Task<IActionResult> Update(int id, MaintenanceRequest updated)
         {
             var existing = await _context.MaintenanceRequests.FindAsync(id);
@@ -115,6 +121,7 @@ namespace AdvancedProjectAPI.Controllers
 
         // DELETE: api/maintenance/{id}
         [HttpDelete("{id}")]
+        [Authorize(Roles = "PropertyManager")]
         public async Task<IActionResult> Delete(int id)
         {
             var request = await _context.MaintenanceRequests.FindAsync(id);

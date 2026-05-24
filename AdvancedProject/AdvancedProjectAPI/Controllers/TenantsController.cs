@@ -1,5 +1,6 @@
 ﻿using AdvancedProjectAPI.Data;
 using AdvancedProjectAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,6 +19,7 @@ namespace AdvancedProjectAPI.Controllers
 
         // GET: api/tenants
         [HttpGet]
+        [Authorize(Roles = "PropertyManager")]
         public async Task<ActionResult<IEnumerable<Tenant>>> GetAll()
         {
             var tenants = await _context.Tenants
@@ -28,6 +30,7 @@ namespace AdvancedProjectAPI.Controllers
 
         // GET: api/tenants/{id}
         [HttpGet("{id}")]
+        [Authorize]
         public async Task<ActionResult<Tenant>> GetById(int id)
         {
             var tenant = await _context.Tenants
@@ -41,6 +44,7 @@ namespace AdvancedProjectAPI.Controllers
 
         // POST: api/tenants
         [HttpPost]
+        [Authorize(Roles = "PropertyManager")]
         public async Task<ActionResult<Tenant>> Create(Tenant tenant)
         {
             _context.Tenants.Add(tenant);
@@ -50,6 +54,7 @@ namespace AdvancedProjectAPI.Controllers
 
         // PUT: api/tenants/{id}
         [HttpPut("{id}")]
+        [Authorize(Roles = "PropertyManager")]
         public async Task<IActionResult> Update(int id, Tenant updated)
         {
             var existing = await _context.Tenants.FindAsync(id);
@@ -68,6 +73,7 @@ namespace AdvancedProjectAPI.Controllers
 
         // DELETE: api/tenants/{id}
         [HttpDelete("{id}")]
+        [Authorize(Roles = "PropertyManager")]
         public async Task<IActionResult> Delete(int id)
         {
             var tenant = await _context.Tenants.FindAsync(id);

@@ -1,15 +1,18 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using AdvancedProject.Data;
-using AdvancedProject.Models;
+using AdvancedProjectAPI.Data;
+using AdvancedProjectAPI.Models;
+using AdvancedProject.ViewModels;
 
 namespace AdvancedProject.Controllers
 {
+    [Authorize]
     public class TenantsController : Controller
     {
         private readonly APContext _context;
@@ -20,6 +23,7 @@ namespace AdvancedProject.Controllers
         }
 
         // GET: Tenants
+        [Authorize(Roles = "PropertyManager")]
         public async Task<IActionResult> Index(string searchTerm)
         {
             var tenantsQuery = _context.Users
@@ -49,16 +53,22 @@ namespace AdvancedProject.Controllers
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
-            {
                 return NotFound();
-            }
 
             var tenant = await _context.Tenants
                 .Include(t => t.User)
                 .FirstOrDefaultAsync(m => m.TenantId == id);
+
             if (tenant == null)
-            {
                 return NotFound();
+
+            // Tenants can only view their own details
+            if (!User.IsInRole("PropertyManager"))
+            {
+                var currentUserEmail = User.Identity!.Name;
+                var currentUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == currentUserEmail);
+                if (currentUser == null || tenant.UserId != currentUser.UserId)
+                    return Forbid();
             }
 
             return View(tenant);
@@ -80,8 +90,8 @@ namespace AdvancedProject.Controllers
             if (ModelState.IsValid)
             {
                 // Age validation
-                var age = DateTime.Today.Year - vm.Dob.Year;
-                if (vm.Dob.Date > DateTime.Today.AddYears(-age)) age--;
+                var age = DateTime.Today.Year - vm.Dob!.Value.Year;
+                if (vm.Dob.Value.Date > DateTime.Today.AddYears(-age)) age--;
 
                 if (age < 21)
                 {
@@ -137,7 +147,7 @@ namespace AdvancedProject.Controllers
                 // 2. Create Tenant
                 var tenant = new Tenant
                 {
-                    Dob = DateOnly.FromDateTime(vm.Dob),
+                    Dob = DateOnly.FromDateTime(vm.Dob!.Value),
                     NationalId = vm.NationalId,
                     UserId = user.UserId,
                     Salary = vm.Salary,
@@ -149,6 +159,7 @@ namespace AdvancedProject.Controllers
                 _context.Tenants.Add(tenant);
                 await _context.SaveChangesAsync();
 
+                TempData["SuccessMessage"] = "Tenant was created successfully.";
                 return RedirectToAction(nameof(Index));
             }
 
@@ -166,7 +177,7 @@ namespace AdvancedProject.Controllers
 
             if (tenant == null) return NotFound();
 
-            // GET: Tenants/Edit/5 — populate the VM
+            // GET: Tenants/Edit/5 � populate the VM
             var vm = new TenantEditVM
             {
                 TenantId = tenant.TenantId,
@@ -263,7 +274,7 @@ namespace AdvancedProject.Controllers
                 }
 
                 // Update Tenant
-                // POST: Tenants/Edit/5 — replace the tenant update block
+                // POST: Tenants/Edit/5 � replace the tenant update block
                 tenant.Dob = DateOnly.FromDateTime(vm.Dob);
                 tenant.NationalId = vm.NationalId;
                 tenant.Salary = vm.Salary;
@@ -272,7 +283,8 @@ namespace AdvancedProject.Controllers
                 tenant.EmploymentStatus = vm.EmploymentStatus;
                 await _context.SaveChangesAsync();
 
-                return RedirectToAction(nameof(Index));
+                TempData["SuccessMessage"] = "Tenant was edited successfully.";
+                return RedirectToAction(nameof(Details), new { id = vm.TenantId });
             }
 
             return View(vm);
@@ -316,6 +328,7 @@ namespace AdvancedProject.Controllers
             }
 
             await _context.SaveChangesAsync();
+            TempData["SuccessMessage"] = "Tenant was deleted successfully.";
             return RedirectToAction(nameof(Index));
         }
 

@@ -1,114 +1,154 @@
-﻿@model AdvancedProject.Models.MaintenanceRequest
+@model AdvancedProjectAPI.Models.MaintenanceRequest
 
 @{
     ViewData["Title"] = "Create Maintenance Request";
 }
 
-<div class="maintenance-request-form-page">
-    <div class="lease-form-wrapper">
-        <div class="lease-form-card shadow-soft">
+<div class="ux-page">
 
-            <div class="lease-form-header">
-                <p class="lease-form-eyebrow mb-2">Maintenance Request</p>
-                <h1 class="lease-form-title mb-2">Create Request</h1>
-                <p class="lease-form-subtitle mb-0">
-                    Select your unit, request type, priority, and describe the issue.
-                </p>
-            </div>
-
-            <div class="lease-form-body">
-
-                @if (ViewBag.HasActiveLease == false)
-                {
-                    <div class="alert alert-warning maintenance-request-warning mb-0">
-                        You cannot create a maintenance request because you do not have any active lease units.
-                    </div>
-
-                    <div class="lease-form-actions">
-                        <a asp-action="Index" class="lease-back-link">Back to List</a>
-                    </div>
-                }
-                else
-                {
-                    <form asp-action="Create" method="post">
-
-                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
-
-                        <div class="lease-form-group">
-                            <label asp-for="UnitId" class="lease-form-label">Unit Number</label>
-                            <select asp-for="UnitId"
-                                    class="form-control lease-form-input"
-                                    asp-items="ViewBag.UnitId"
-                                    id="unitSearchDropdown">
-                                <option value="">-- Select Unit --</option>
-                            </select>
-                            <span asp-validation-for="UnitId" class="text-danger"></span>
-                        </div>
-
-                        <div class="lease-form-group">
-                            <label asp-for="SkillId" class="lease-form-label">Request Type</label>
-                            <select asp-for="SkillId"
-                                    class="form-control lease-form-input"
-                                    asp-items="ViewBag.SkillId">
-                                <option value="">-- Select Type --</option>
-                            </select>
-                            <span asp-validation-for="SkillId" class="text-danger"></span>
-                        </div>
-
-                        <div class="lease-form-group">
-                            <label asp-for="Priority" class="lease-form-label">Priority</label>
-                            <select asp-for="Priority" class="form-control lease-form-input">
-                                <option value="">-- Select Priority --</option>
-                                <option>Low</option>
-                                <option>Medium</option>
-                                <option>High</option>
-                            </select>
-                            <span asp-validation-for="Priority" class="text-danger"></span>
-                        </div>
-
-                        <div class="lease-form-group">
-                            <label asp-for="Notes" class="lease-form-label">Notes</label>
-                            <textarea asp-for="Notes"
-                                      class="form-control lease-form-input maintenance-notes-input"
-                                      placeholder="Describe the issue..."></textarea>
-                            <span asp-validation-for="Notes" class="text-danger"></span>
-                        </div>
-
-                        <div class="lease-form-actions">
-                            <button type="submit" class="btn btn-primary lease-submit-btn">
-                                Create Request
-                            </button>
-
-                            <a asp-action="Index" class="lease-back-link">
-                                Back to List
-                            </a>
-                        </div>
-
-                    </form>
-                }
-
-            </div>
+    <div class="ux-page-header">
+        <div>
+            <p class="ux-eyebrow">Maintenance</p>
+            <h1 class="ux-title">New Request</h1>
+            <p class="ux-subtitle">Select your unit, request type, priority, and describe the issue.</p>
         </div>
+        <a asp-action="Index" class="ux-btn-ghost"><i class="bi bi-arrow-left"></i> Back</a>
     </div>
+
+    @if (ViewBag.HasActiveLease == false)
+    {
+        <div class="ux-form-card" style="text-align:center;padding:2.5rem;">
+            <div style="color:#d97706;font-size:2rem;margin-bottom:0.75rem;"><i class="bi bi-exclamation-triangle-fill"></i></div>
+            <h3 style="font-size:1rem;font-weight:700;color:var(--text-main);margin-bottom:0.35rem;">No Active Lease</h3>
+            <p style="font-size:0.875rem;color:var(--text-muted);margin-bottom:1.25rem;">You cannot create a maintenance request because you do not have any active lease units.</p>
+            <a asp-action="Index" class="ux-btn-ghost">Back to List</a>
+        </div>
+    }
+    else
+    {
+        <form asp-action="Create" method="post" class="ux-form-layout">
+            <div asp-validation-summary="ModelOnly" class="ux-form-error"></div>
+
+            <div class="ux-form-card">
+                <div class="ux-form-section-header">
+                    <div class="ux-form-section-icon" style="background:rgba(0,91,113,0.1);color:#005B71;"><i class="bi bi-wrench-adjustable"></i></div>
+                    <div><h3 class="ux-form-section-title">Request Details</h3><p class="ux-form-section-sub">Specify the unit, type, and priority.</p></div>
+                </div>
+                <div class="ux-form-grid">
+                    <div class="ux-field">
+                        <label class="ux-label">Unit</label>
+                        <div style="position:relative;">
+                            <input type="text" id="unitSearchInput" class="ux-input" placeholder="Search unit..." autocomplete="off" readonly
+                                   style="cursor:pointer;" />
+                            <div id="unitDropdownList" style="display:none;position:absolute;top:calc(100% + 4px);left:0;right:0;background:#fff;border:1.5px solid #e2e8f0;border-radius:10px;box-shadow:0 6px 20px rgba(0,0,0,0.10);z-index:200;max-height:220px;overflow-y:auto;">
+                                <div style="padding:0.5rem 0.75rem;">
+                                    <input type="text" id="unitSearchFilter" class="ux-input" placeholder="Type to search..." autocomplete="off"
+                                           style="font-size:0.85rem;padding:0.45rem 0.75rem;" />
+                                </div>
+                                <div id="unitOptionsList"></div>
+                            </div>
+                        </div>
+                        <select asp-for="UnitId" asp-items="ViewBag.UnitId" id="unitSearchDropdown" style="display:none;">
+                            <option value="">-- Select Unit --</option>
+                        </select>
+                        <span asp-validation-for="UnitId" class="ux-field-error"></span>
+                    </div>
+                    <div class="ux-field">
+                        <label asp-for="SkillId" class="ux-label">Request Type</label>
+                        <select asp-for="SkillId" class="ux-input" asp-items="ViewBag.SkillId">
+                            <option value="">-- Select Type --</option>
+                        </select>
+                        <span asp-validation-for="SkillId" class="ux-field-error"></span>
+                    </div>
+                    <div class="ux-field">
+                        <label asp-for="Priority" class="ux-label">Priority</label>
+                        <select asp-for="Priority" class="ux-input">
+                            <option value="">-- Select Priority --</option>
+                            <option>Low</option>
+                            <option>Medium</option>
+                            <option>High</option>
+                        </select>
+                        <span asp-validation-for="Priority" class="ux-field-error"></span>
+                    </div>
+                    <div class="ux-field" style="grid-column:1/-1;">
+                        <label asp-for="Notes" class="ux-label">Description</label>
+                        <textarea asp-for="Notes" class="ux-input" placeholder="Describe the issue in detail..." style="min-height:100px;resize:vertical;"></textarea>
+                        <span asp-validation-for="Notes" class="ux-field-error"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ux-form-actions">
+                <button type="submit" class="ux-btn-primary" style="padding:0.65rem 2rem;">
+                    <i class="bi bi-send-fill"></i> Submit Request
+                </button>
+                <a asp-action="Index" class="ux-btn-ghost" style="padding:0.65rem 1.5rem;">Cancel</a>
+            </div>
+        </form>
+    }
+
 </div>
 
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
-
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            const unitDropdown = document.getElementById('unitSearchDropdown');
+            const hiddenSelect = document.getElementById('unitSearchDropdown');
+            const displayInput = document.getElementById('unitSearchInput');
+            const dropdownList = document.getElementById('unitDropdownList');
+            const filterInput  = document.getElementById('unitSearchFilter');
+            const optionsList  = document.getElementById('unitOptionsList');
 
-            if (unitDropdown) {
-                new Choices(unitDropdown, {
-                    searchEnabled: true,
-                    itemSelectText: '',
-                    shouldSort: false,
-                    placeholder: true,
-                    searchPlaceholderValue: 'Search unit number...'
+            if (!hiddenSelect) return;
+
+            const allOptions = Array.from(hiddenSelect.options).filter(o => o.value !== '');
+
+            function renderOptions(query) {
+                optionsList.innerHTML = '';
+                const q = query.trim().toLowerCase();
+                const filtered = q ? allOptions.filter(o => o.text.toLowerCase().includes(q)) : allOptions;
+
+                if (filtered.length === 0) {
+                    optionsList.innerHTML = '<div style="padding:0.6rem 1rem;color:#94a3b8;font-size:0.85rem;">No units found</div>';
+                    return;
+                }
+
+                filtered.forEach(function (o) {
+                    const item = document.createElement('div');
+                    item.textContent = o.text;
+                    item.dataset.value = o.value;
+                    item.style.cssText = 'padding:0.6rem 1rem;font-size:0.875rem;cursor:pointer;border-radius:6px;margin:0 4px;';
+                    item.addEventListener('mouseenter', function () { this.style.background = '#f1f5f9'; });
+                    item.addEventListener('mouseleave', function () { this.style.background = ''; });
+                    item.addEventListener('mousedown', function (e) {
+                        e.preventDefault();
+                        hiddenSelect.value = o.value;
+                        displayInput.value = o.text;
+                        dropdownList.style.display = 'none';
+                    });
+                    optionsList.appendChild(item);
                 });
+            }
+
+            function openDropdown() {
+                renderOptions(filterInput.value);
+                dropdownList.style.display = 'block';
+                setTimeout(function () { filterInput.focus(); }, 50);
+            }
+
+            displayInput.addEventListener('click', openDropdown);
+            filterInput.addEventListener('input', function () { renderOptions(this.value); });
+
+            document.addEventListener('mousedown', function (e) {
+                if (!dropdownList.contains(e.target) && e.target !== displayInput) {
+                    dropdownList.style.display = 'none';
+                }
+            });
+
+            // If a value was pre-selected (e.g. validation failed), restore label
+            if (hiddenSelect.value) {
+                const match = allOptions.find(o => o.value === hiddenSelect.value);
+                if (match) displayInput.value = match.text;
             }
         });
     </script>

@@ -1,67 +1,75 @@
-﻿@model AdvancedProject.Models.Payment
+@model AdvancedProjectAPI.Models.Payment
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Create Payment";
 }
 
-<h1>Create</h1>
+<div class="ux-page">
 
-<h4>Payment</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="LeaseId" class="control-label"></label>
-                <select asp-for="LeaseId" class="form-control" asp-items="ViewBag.LeaseId">
-                    <option value="">-- Select Lease --</option>
-                </select>
-                <span asp-validation-for="LeaseId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="StartDate" class="control-label"></label>
-                <input asp-for="StartDate" class="form-control" />
-                <span asp-validation-for="StartDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="PaymentFrequencyId" class="control-label"></label>
-                <select asp-for="PaymentFrequencyId"
-                        class="form-control"
-                        asp-items="ViewBag.PaymentFrequencyId">
-                    <option value="">-- Select Frequency --</option>
-                </select>
-                <span asp-validation-for="PaymentFrequencyId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="PaymentMethodId" class="control-label"></label>
-                <select asp-for="PaymentMethodId"
-                        class="form-control"
-                        asp-items="ViewBag.PaymentMethodId">
-                    <option value="">-- Select Payment Method --</option>
-                </select>
-                <span asp-validation-for="PaymentMethodId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Status" class="control-label"></label>
-                <select asp-for="Status"
-                        class="form-control"
-                        asp-items="ViewBag.StatusList">
-                    <option value="">-- Select Status --</option>
-                </select>
-                <span asp-validation-for="Status" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+    <div class="ux-page-header">
+        <div>
+            <p class="ux-eyebrow">Financial</p>
+            <h1 class="ux-title">Create Payment</h1>
+            <p class="ux-subtitle">Add a new payment record for an active lease.</p>
+        </div>
+        <a asp-action="Index" class="ux-btn-ghost"><i class="bi bi-arrow-left"></i> Back</a>
     </div>
-</div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
+    <form asp-action="Create" method="post" class="ux-form-layout">
+        <div asp-validation-summary="ModelOnly" class="ux-form-error"></div>
+
+        <div class="ux-form-card">
+            <div class="ux-form-section-header">
+                <div class="ux-form-section-icon" style="background:rgba(0,91,113,0.1);color:#005B71;"><i class="bi bi-credit-card-fill"></i></div>
+                <div><h3 class="ux-form-section-title">Payment Details</h3><p class="ux-form-section-sub">Select the lease, date, method, and frequency.</p></div>
+            </div>
+            <div class="ux-form-grid">
+                <div class="ux-field" style="grid-column:1/-1;">
+                    <label asp-for="LeaseId" class="ux-label">Lease</label>
+                    <select asp-for="LeaseId" class="ux-input" asp-items="ViewBag.LeaseId">
+                        <option value="">-- Select Lease --</option>
+                    </select>
+                    <span asp-validation-for="LeaseId" class="ux-field-error"></span>
+                </div>
+                <div class="ux-field">
+                    <label asp-for="StartDate" class="ux-label">Start Date</label>
+                    <input asp-for="StartDate" type="date" class="ux-input" />
+                    <span asp-validation-for="StartDate" class="ux-field-error"></span>
+                </div>
+                <div class="ux-field">
+                    <label asp-for="Status" class="ux-label">Status</label>
+                    <select asp-for="Status" class="ux-input" asp-items="ViewBag.StatusList">
+                        <option value="">-- Select Status --</option>
+                    </select>
+                    <span asp-validation-for="Status" class="ux-field-error"></span>
+                </div>
+                <div class="ux-field">
+                    <label asp-for="PaymentMethodId" class="ux-label">Payment Method</label>
+                    <select asp-for="PaymentMethodId" class="ux-input" asp-items="ViewBag.PaymentMethodId">
+                        <option value="">-- Select Method --</option>
+                    </select>
+                    <span asp-validation-for="PaymentMethodId" class="ux-field-error"></span>
+                </div>
+                <div class="ux-field">
+                    <label asp-for="PaymentFrequencyId" class="ux-label">Payment Frequency</label>
+                    <select asp-for="PaymentFrequencyId" class="ux-input" asp-items="ViewBag.PaymentFrequencyId">
+                        <option value="">-- Select Frequency --</option>
+                    </select>
+                    <span asp-validation-for="PaymentFrequencyId" class="ux-field-error"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="ux-form-actions">
+            <button type="submit" class="ux-btn-primary" style="padding:0.65rem 2rem;">
+                <i class="bi bi-plus-lg"></i> Create Payment
+            </button>
+            <a asp-action="Index" class="ux-btn-ghost" style="padding:0.65rem 1.5rem;">Cancel</a>
+        </div>
+    </form>
+
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
 }

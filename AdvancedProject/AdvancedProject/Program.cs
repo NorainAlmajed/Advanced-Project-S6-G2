@@ -1,11 +1,28 @@
 using Microsoft.EntityFrameworkCore;
-using AdvancedProject.Data;
-using AdvancedProject.Models;
+using AdvancedProjectAPI.Data;
+using AdvancedProjectAPI.Models;
 using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler =
+            System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+        options.JsonSerializerOptions.DefaultIgnoreCondition =
+            System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull;
+    })
+    .ConfigureApplicationPartManager(apm =>
+    {
+        // Prevent the API project's controllers from being loaded into the MVC app.
+        // The project reference is needed only for models and DbContext.
+        var apiParts = apm.ApplicationParts
+            .Where(ap => ap.Name == "AdvancedProjectAPI")
+            .ToList();
+        foreach (var part in apiParts)
+            apm.ApplicationParts.Remove(part);
+    });
 
 builder.Services.AddDbContext<APContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -30,6 +47,19 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.AccessDeniedPath = "/Account/AccessDenied";
 });
 
+builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
+
+builder.Services.AddHttpClient("MaintenanceApi", client =>
+{
+    var apiUrl = builder.Configuration["ApiBaseUrl"] ?? "https://localhost:7211";
+    client.BaseAddress = new Uri(apiUrl);
+    client.DefaultRequestHeaders.Add("Accept", "application/json");
+})
+.ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
+{
+    ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+});
+
 var app = builder.Build();
 //  this makes sure the roles and the manager always exist in the db
 using (var scope = app.Services.CreateScope())
@@ -44,21 +74,73 @@ using (var scope = app.Services.CreateScope())
     }
 
     var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-    var pmEmail = "manager@mail.com";
-    var pmUser = await userManager.FindByEmailAsync(pmEmail);
-    if (pmUser == null)
+
+    var seedUsers = new[]
     {
-        pmUser = new ApplicationUser
+        new { UserId = 1, Email = "manager@mail.com",           FullName = "System Manager",    Password = "Manager@123",   Role = "PropertyManager" },
+        new { UserId = 2, Email = "zahraa.hubail8@gmail.com",   FullName = "Zahraa Hubail",     Password = "Zahraa.123",    Role = "Tenant" },
+        new { UserId = 3, Email = "raghad@gmail.com",           FullName = "Raghad Aleskafi",   Password = "Raghad.123",    Role = "Tenant" },
+        new { UserId = 4, Email = "fatima@gmail.com",           FullName = "Fatima Alaiwi",     Password = "Fatima.123",    Role = "Tenant" },
+        new { UserId = 5, Email = "norain@mail.com",            FullName = "Norain Almajed",    Password = "Norain.123",    Role = "Tenant" },
+        new { UserId = 6, Email = "ahmed.ali@gmail.com",        FullName = "Ahmed Ali",         Password = "Ahmed.999",     Role = "Tenant" },
+        new { UserId = 7, Email = "alihassan@mail.com",         FullName = "Ali Hassan",        Password = "Ali.1234",      Role = "MaintenanceStaff" },
+        new { UserId = 8, Email = "sara.mohamed@gmail.com",     FullName = "Sara Mohamed",      Password = "Sara.888",      Role = "MaintenanceStaff" },
+        new { UserId = 9, Email = "abbas@gmail.com",            FullName = "Abbas Hadi",        Password = "Abbas.123",     Role = "MaintenanceStaff" },
+        new { UserId = 10, Email = "layla@gmail.com",           FullName = "Layla Yaser",       Password = "Layla.999",     Role = "MaintenanceStaff" },
+        new { UserId = 11, Email = "mohammed@gmail.com",        FullName = "Mohammed Karim",    Password = "Mohammed.123",  Role = "MaintenanceStaff" },
+    };
+
+    foreach (var seed in seedUsers)
+    {
+        var existing = await userManager.FindByEmailAsync(seed.Email);
+        if (existing == null)
         {
-            UserName = pmEmail,
-            Email = pmEmail,
-            FullName = "System Manager",
-            EmailConfirmed = true,
-            UserId = 1
-        };
-        await userManager.CreateAsync(pmUser, "Manager@123");
-        await userManager.AddToRoleAsync(pmUser, "PropertyManager");
+            var identityUser = new ApplicationUser
+            {
+                UserName = seed.Email,
+                Email = seed.Email,
+                FullName = seed.FullName,
+                EmailConfirmed = true,
+                UserId = seed.UserId
+            };
+            var result = await userManager.CreateAsync(identityUser, seed.Password);
+            if (result.Succeeded)
+                await userManager.AddToRoleAsync(identityUser, seed.Role);
+        }
     }
+
+    // Seed property images from wwwroot/images/seed/
+    var dbContext = scope.ServiceProvider.GetRequiredService<APContext>();
+    var seedImageDir = Path.Combine(app.Environment.WebRootPath, "images", "seed");
+    var propertiesToSeed = await dbContext.Properties
+        .Where(p => p.ImageData == null)
+        .OrderBy(p => p.PropertyId)
+        .ToListAsync();
+
+    var seedFiles = new[] { "property1.jpg", "property2.jpg", "property3.jpg" };
+    for (int i = 0; i < propertiesToSeed.Count && i < seedFiles.Length; i++)
+    {
+        var filePath = Path.Combine(seedImageDir, seedFiles[i]);
+        if (File.Exists(filePath))
+        {
+            propertiesToSeed[i].ImageData = await File.ReadAllBytesAsync(filePath);
+            propertiesToSeed[i].ImageContentType = "image/jpeg";
+        }
+    }
+    await dbContext.SaveChangesAsync();
+
+    // Hash any plain-text passwords in the custom Users table (all users)
+    dbContext = scope.ServiceProvider.GetRequiredService<APContext>();
+    var hasher = new PasswordHasher<User>();
+    var allUsers = dbContext.Users.ToList();
+    foreach (var user in allUsers)
+    {
+        if (user.Password.Length <= 50) // plain text is short; hashes are 84 chars
+        {
+            user.Password = hasher.HashPassword(null!, user.Password);
+        }
+    }
+    await dbContext.SaveChangesAsync();
 }
 
 if (!app.Environment.IsDevelopment())

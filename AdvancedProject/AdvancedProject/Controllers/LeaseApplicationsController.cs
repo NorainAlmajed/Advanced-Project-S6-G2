@@ -1,16 +1,18 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using AdvancedProject.Data;
-using AdvancedProject.Models;
+using AdvancedProjectAPI.Data;
+using AdvancedProjectAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace AdvancedProject.Controllers
 {
+    [Authorize]
     public class LeaseApplicationsController : Controller
     {
         private readonly APContext _context;
@@ -30,6 +32,21 @@ namespace AdvancedProject.Controllers
          .ThenInclude(u => u.Property)
      .Include(l => l.Duration)
      .AsQueryable();
+
+            // Tenants only see their own applications
+            if (!User.IsInRole("PropertyManager"))
+            {
+                var currentUserEmail = User.Identity!.Name;
+                var currentUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == currentUserEmail);
+                if (currentUser != null)
+                {
+                    var tenant = await _context.Tenants.FirstOrDefaultAsync(t => t.UserId == currentUser.UserId);
+                    if (tenant != null)
+                        applicationsQuery = applicationsQuery.Where(l => l.TenantId == tenant.TenantId);
+                    else
+                        applicationsQuery = applicationsQuery.Where(l => false);
+                }
+            }
 
             if (!string.IsNullOrWhiteSpace(searchTerm))
             {
@@ -65,6 +82,21 @@ namespace AdvancedProject.Controllers
                 applicationsQuery = applicationsQuery
         .OrderByDescending(l => l.ApplicationDate);
             }
+
+            // Auto-reject pending applications whose start date has already passed
+            var today = DateTime.Today;
+            var overdue = await _context.LeaseApplications
+                .Where(a => a.Status == "Pending" && a.StartDate.Date <= today)
+                .ToListAsync();
+
+            foreach (var app in overdue)
+            {
+                app.Status = "Rejected";
+                app.RejectTime = DateTime.Now;
+            }
+
+            if (overdue.Any())
+                await _context.SaveChangesAsync();
 
             var applications = await applicationsQuery.ToListAsync();
 
@@ -110,9 +142,10 @@ namespace AdvancedProject.Controllers
                 .FirstOrDefault(u => u.UnitId == unitId);
 
             if (unit == null)
-            {
                 return NotFound();
-            }
+
+            if (unit.AvailabilityStatus == "Occupied")
+                return RedirectToAction("Index", "Units");
 
             var model = new LeaseApplication
             {
@@ -123,18 +156,23 @@ namespace AdvancedProject.Controllers
             ViewData["DurationId"] = new SelectList(_context.Durations, "DurationId", "Months");
             ViewBag.UnitNumber = unit.UnitNumber;
             ViewBag.PropertyName = unit.Property.Name;
+            ViewBag.UnitId = unit.UnitId;
+            ViewBag.PropertyId = unit.Property.PropertyId;
 
             return View(model);
         }
 
         // POST: LeaseApplications/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(LeaseApplication leaseApplication)
         {
-            leaseApplication.TenantId = 1;
+            var currentUserEmail = User.Identity!.Name;
+            var currentUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == currentUserEmail);
+            var tenant = currentUser == null ? null
+                : await _context.Tenants.FirstOrDefaultAsync(t => t.UserId == currentUser.UserId);
+
+            leaseApplication.TenantId = tenant?.TenantId ?? 0;
             leaseApplication.Status = "Pending";
             leaseApplication.ApplicationDate = DateTime.Now;
 
@@ -157,6 +195,17 @@ namespace AdvancedProject.Controllers
             _context.Add(leaseApplication);
             await _context.SaveChangesAsync();
 
+            _context.Notifications.Add(new Notification
+            {
+                UserId = 1,
+                Title = "New Lease Application",
+                Message = "A new lease application has been submitted.",
+                NotificationTypeId = 1,
+                CreatedAt = DateTime.Now
+            });
+            await _context.SaveChangesAsync();
+
+            TempData["SuccessMessage"] = "Lease Application was created successfully.";
             return RedirectToAction(nameof(Index));
         }
 
@@ -184,7 +233,7 @@ namespace AdvancedProject.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("ApplicationId,StartDate,DurationId")] LeaseApplication leaseApplication)
         {
-            Console.WriteLine("POST HIT 🔥");
+            Console.WriteLine("POST HIT ??");
 
             if (id != leaseApplication.ApplicationId)
             {
@@ -198,7 +247,7 @@ namespace AdvancedProject.Controllers
                 return NotFound();
             }
 
-            // 🔥 IMPORTANT: remove validation for fields not included in Bind
+            // ?? IMPORTANT: remove validation for fields not included in Bind
             ModelState.Remove("Tenant");
             ModelState.Remove("Unit");
             ModelState.Remove("Duration");
@@ -212,7 +261,7 @@ namespace AdvancedProject.Controllers
 
             if (!ModelState.IsValid)
             {
-                Console.WriteLine("ModelState NOT valid ❌");
+                Console.WriteLine("ModelState NOT valid ?");
 
                 var errors = ModelState.Values
                     .SelectMany(v => v.Errors)
@@ -228,15 +277,16 @@ namespace AdvancedProject.Controllers
                 return View(leaseApplication);
             }
 
-            Console.WriteLine("ModelState valid ✅");
+            Console.WriteLine("ModelState valid ?");
 
-            // ✅ update only allowed fields
+            // ? update only allowed fields
             existing.StartDate = leaseApplication.StartDate;
             existing.DurationId = leaseApplication.DurationId;
 
             await _context.SaveChangesAsync();
 
-            return RedirectToAction(nameof(Index));
+            TempData["SuccessMessage"] = "Lease Application was edited successfully.";
+            return RedirectToAction(nameof(Details), new { id = id });
         }
 
         // GET: LeaseApplications/Delete/5
@@ -274,6 +324,7 @@ namespace AdvancedProject.Controllers
             }
 
             await _context.SaveChangesAsync();
+            TempData["SuccessMessage"] = "Lease Application was deleted successfully.";
             return RedirectToAction(nameof(Index));
         }
 
@@ -288,6 +339,7 @@ namespace AdvancedProject.Controllers
             var application = await _context.LeaseApplications
                 .Include(a => a.Unit)
                 .Include(a => a.Duration)
+                .Include(a => a.Tenant)
                 .FirstOrDefaultAsync(a => a.ApplicationId == id);
 
             if (application == null)
@@ -319,8 +371,19 @@ namespace AdvancedProject.Controllers
             application.Unit.AvailabilityStatus = "Occupied";
 
             _context.Leases.Add(lease);
+
+            _context.Notifications.Add(new Notification
+            {
+                UserId = application.Tenant.UserId,
+                Title = "Application Approved",
+                Message = $"Your lease application #{application.ApplicationId} has been approved.",
+                NotificationTypeId = 1,
+                CreatedAt = DateTime.Now
+            });
+
             await _context.SaveChangesAsync();
 
+            TempData["SuccessMessage"] = "Application was approved successfully.";
             return RedirectToAction(nameof(Details), new { id });
         }
 
@@ -329,6 +392,7 @@ namespace AdvancedProject.Controllers
         public async Task<IActionResult> Reject(int id)
         {
             var application = await _context.LeaseApplications
+                .Include(a => a.Tenant)
                 .FirstOrDefaultAsync(a => a.ApplicationId == id);
 
             if (application == null)
@@ -345,8 +409,18 @@ namespace AdvancedProject.Controllers
             application.RejectTime = DateTime.Now;
             application.ApproveTime = null;
 
+            _context.Notifications.Add(new Notification
+            {
+                UserId = application.Tenant.UserId,
+                Title = "Application Rejected",
+                Message = $"Your lease application #{application.ApplicationId} has been rejected.",
+                NotificationTypeId = 1,
+                CreatedAt = DateTime.Now
+            });
+
             await _context.SaveChangesAsync();
 
+            TempData["SuccessMessage"] = "Application was rejected successfully.";
             return RedirectToAction(nameof(Details), new { id });
         }
 
@@ -355,6 +429,23 @@ namespace AdvancedProject.Controllers
 
 
 
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CancelApplication(int id)
+        {
+            var application = await _context.LeaseApplications.FindAsync(id);
+            if (application == null) return NotFound();
+
+            if (application.Status == "Pending")
+            {
+                application.Status = "Cancelled";
+                await _context.SaveChangesAsync();
+                TempData["SuccessMessage"] = "Application was cancelled successfully.";
+            }
+
+            return RedirectToAction(nameof(Details), new { id });
+        }
 
         private bool LeaseApplicationExists(int id)
         {
