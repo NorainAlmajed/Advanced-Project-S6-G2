@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using AdvancedProjectAPI.Data;
 using AdvancedProjectAPI.Models;
 using Microsoft.AspNetCore.Identity;
+using AdvancedProject.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -48,6 +49,7 @@ builder.Services.ConfigureApplicationCookie(options =>
 });
 
 builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
+builder.Services.AddSignalR();
 
 builder.Services.AddHttpClient("MaintenanceApi", client =>
 {
@@ -159,4 +161,6 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
 app.MapRazorPages();
+app.MapHub<NotificationHub>("/hubs/notifications");
+app.MapHub<MaintenanceBoardHub>("/hubs/maintenance-board");
 app.Run();
