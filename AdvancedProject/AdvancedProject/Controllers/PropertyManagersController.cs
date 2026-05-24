@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AdvancedProjectAPI.Data;
 using AdvancedProjectAPI.Models;
+using AdvancedProject.ViewModels;
 
 namespace AdvancedProject.Controllers
 {
@@ -45,6 +46,86 @@ namespace AdvancedProject.Controllers
             }
 
             return View(propertyManager);
+        }
+
+        // GET: PropertyManagers/MyProfile
+        public async Task<IActionResult> MyProfile()
+        {
+            var currentUserEmail = User.Identity!.Name;
+            var currentUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == currentUserEmail);
+            if (currentUser == null) return NotFound();
+
+            var manager = await _context.PropertyManagers
+                .Include(m => m.User)
+                .FirstOrDefaultAsync(m => m.UserId == currentUser.UserId);
+            if (manager == null) return NotFound();
+
+            return View(manager);
+        }
+
+        // GET: PropertyManagers/EditMyProfile
+        public async Task<IActionResult> EditMyProfile()
+        {
+            var currentUserEmail = User.Identity!.Name;
+            var currentUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == currentUserEmail);
+            if (currentUser == null) return NotFound();
+
+            var manager = await _context.PropertyManagers
+                .Include(m => m.User)
+                .FirstOrDefaultAsync(m => m.UserId == currentUser.UserId);
+            if (manager == null) return NotFound();
+
+            var vm = new ManagerSelfEditVM
+            {
+                ManagerId = manager.ManagerId,
+                UserId = manager.UserId,
+                Username = manager.User.Username,
+                FullName = manager.User.FullName,
+                Email = manager.User.Email,
+                Phone = manager.User.Phone,
+                Gender = manager.User.Gender
+            };
+
+            return View(vm);
+        }
+
+        // POST: PropertyManagers/EditMyProfile
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditMyProfile(ManagerSelfEditVM vm)
+        {
+            ModelState.Remove("Password");
+
+            if (!ModelState.IsValid) return View(vm);
+
+            var user = await _context.Users.FindAsync(vm.UserId);
+            if (user == null) return NotFound();
+
+            var username = vm.Username.Trim().ToLower();
+            var email = vm.Email.Trim().ToLower();
+            var phone = vm.Phone.Trim();
+
+            if (_context.Users.Any(u => u.Username.ToLower() == username && u.UserId != vm.UserId))
+                ModelState.AddModelError("Username", "Username already exists");
+            if (_context.Users.Any(u => u.Email.ToLower() == email && u.UserId != vm.UserId))
+                ModelState.AddModelError("Email", "Email already exists");
+            if (_context.Users.Any(u => u.Phone == phone && u.UserId != vm.UserId))
+                ModelState.AddModelError("Phone", "Phone already exists");
+
+            if (!ModelState.IsValid) return View(vm);
+
+            user.Username = username;
+            user.FullName = vm.FullName;
+            user.Email = email;
+            user.Phone = phone;
+            user.Gender = vm.Gender;
+
+            if (!string.IsNullOrWhiteSpace(vm.Password))
+                user.Password = vm.Password;
+
+            await _context.SaveChangesAsync();
+            TempData["SuccessMessage"] = "Profile updated successfully.";
+            return RedirectToAction(nameof(MyProfile));
         }
 
         // GET: PropertyManagers/Create

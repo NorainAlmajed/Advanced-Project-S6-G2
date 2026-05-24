@@ -146,6 +146,8 @@ namespace AdvancedProject.Controllers
         // GET: MaintenanceRequests/Create
         public async Task<IActionResult> Create()
         {
+            if (User.IsInRole("MaintenanceStaff")) return Forbid();
+
             var currentUserEmail = User.Identity!.Name;
             var currentUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == currentUserEmail);
 
@@ -214,6 +216,8 @@ namespace AdvancedProject.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("UnitId,SkillId,Priority,Notes")] MaintenanceRequest maintenanceRequest)
         {
+            if (User.IsInRole("MaintenanceStaff")) return Forbid();
+
             var currentUserEmail = User.Identity!.Name;
             var currentUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == currentUserEmail);
 
@@ -314,6 +318,8 @@ namespace AdvancedProject.Controllers
         // GET: MaintenanceRequests/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            if (User.IsInRole("MaintenanceStaff")) return Forbid();
+
             if (id == null)
                 return NotFound();
 
@@ -380,6 +386,8 @@ namespace AdvancedProject.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, MaintenanceRequest form)
         {
+            if (User.IsInRole("MaintenanceStaff")) return Forbid();
+
             if (id != form.RequestId)
                 return NotFound();
 
@@ -552,6 +560,8 @@ namespace AdvancedProject.Controllers
         // GET: MaintenanceRequests/Edit/5
         public async Task<IActionResult> EditTenant(int? id)
         {
+            if (User.IsInRole("MaintenanceStaff")) return Forbid();
+
             if (id == null)
                 return NotFound();
 
@@ -618,6 +628,8 @@ namespace AdvancedProject.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditTenant(int id, MaintenanceRequest form)
         {
+            if (User.IsInRole("MaintenanceStaff")) return Forbid();
+
             if (id != form.RequestId)
                 return NotFound();
 

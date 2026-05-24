@@ -1,0 +1,98 @@
+@model ManagerSelfEditVM
+
+@{
+    ViewData["Title"] = "Edit My Profile";
+}
+
+<div class="ux-page">
+
+    <div class="ux-page-header">
+        <div>
+            <p class="ux-eyebrow">My Account</p>
+            <h1 class="ux-title">Edit My Profile</h1>
+            <p class="ux-subtitle">Update your personal and login details.</p>
+        </div>
+        <a asp-action="MyProfile" class="ux-btn-ghost"><i class="bi bi-arrow-left"></i> Back</a>
+    </div>
+
+    <form asp-action="EditMyProfile" method="post" class="ux-form-layout">
+        <input type="hidden" asp-for="ManagerId" />
+        <input type="hidden" asp-for="UserId" />
+        <div asp-validation-summary="ModelOnly" class="ux-form-error"></div>
+
+        <div class="ux-form-card">
+            <div class="ux-form-section-header">
+                <div class="ux-form-section-icon" style="background:rgba(0,91,113,0.1);color:#005B71;"><i class="bi bi-person-lock"></i></div>
+                <div><h3 class="ux-form-section-title">Account</h3><p class="ux-form-section-sub">Login credentials.</p></div>
+            </div>
+            <div class="ux-form-grid">
+                <div class="ux-field">
+                    <label asp-for="Username" class="ux-label">Username</label>
+                    <input asp-for="Username" class="ux-input" autocomplete="off" />
+                    <span asp-validation-for="Username" class="ux-field-error"></span>
+                </div>
+                <div></div>
+                <div class="ux-field">
+                    <label asp-for="Password" class="ux-label">New Password</label>
+                    <input asp-for="Password" type="password" class="ux-input" placeholder="Leave empty to keep current" autocomplete="new-password" />
+                    <span asp-validation-for="Password" class="ux-field-error"></span>
+                </div>
+                <div class="ux-field">
+                    <label asp-for="ConfirmPassword" class="ux-label">Confirm Password</label>
+                    <input asp-for="ConfirmPassword" type="password" class="ux-input" placeholder="Confirm new password" autocomplete="new-password" />
+                    <span asp-validation-for="ConfirmPassword" class="ux-field-error"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="ux-form-card">
+            <div class="ux-form-section-header">
+                <div class="ux-form-section-icon" style="background:rgba(99,102,241,0.1);color:#6366f1;"><i class="bi bi-person-fill"></i></div>
+                <div><h3 class="ux-form-section-title">Personal Information</h3><p class="ux-form-section-sub">Your contact details.</p></div>
+            </div>
+            <div class="ux-form-grid">
+                <div class="ux-field">
+                    <label asp-for="FullName" class="ux-label">Full Name</label>
+                    <input asp-for="FullName" class="ux-input" />
+                    <span asp-validation-for="FullName" class="ux-field-error"></span>
+                </div>
+                <div class="ux-field">
+                    <label asp-for="Email" class="ux-label">Email</label>
+                    <input asp-for="Email" type="email" class="ux-input" />
+                    <span asp-validation-for="Email" class="ux-field-error"></span>
+                </div>
+                <div class="ux-field">
+                    <label asp-for="Phone" class="ux-label">Phone</label>
+                    <input asp-for="Phone" class="ux-input" />
+                    <span asp-validation-for="Phone" class="ux-field-error"></span>
+                </div>
+                <div class="ux-field">
+                    <label class="ux-label">Gender</label>
+                    <div class="ux-radio-group">
+                        <label class="ux-radio-card">
+                            <input type="radio" asp-for="Gender" value="M" />
+                            <i class="bi bi-gender-male"></i><span>Male</span>
+                        </label>
+                        <label class="ux-radio-card">
+                            <input type="radio" asp-for="Gender" value="F" />
+                            <i class="bi bi-gender-female"></i><span>Female</span>
+                        </label>
+                    </div>
+                    <span asp-validation-for="Gender" class="ux-field-error"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="ux-form-actions">
+            <button type="submit" class="ux-btn-primary" style="padding:0.65rem 2rem;">
+                <i class="bi bi-check-lg"></i> Save Changes
+            </button>
+            <a asp-action="MyProfile" class="ux-btn-ghost" style="padding:0.65rem 1.5rem;">Cancel</a>
+        </div>
+    </form>
+
+</div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}
