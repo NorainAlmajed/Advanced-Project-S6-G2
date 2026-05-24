@@ -93,6 +93,12 @@
                             <span>Payments</span>
                         </a>
                     </li>
+                    <li>
+                        <a asp-controller="PropertyManagers" asp-action="MyProfile">
+                            <i class="bi bi-person-fill"></i>
+                            <span>My Profile</span>
+                        </a>
+                    </li>
                 }
 
                 @if (User.IsInRole("Tenant"))
@@ -127,6 +133,12 @@
                             <span>Payments</span>
                         </a>
                     </li>
+                    <li>
+                        <a asp-controller="Tenants" asp-action="MyProfile">
+                            <i class="bi bi-person-fill"></i>
+                            <span>My Profile</span>
+                        </a>
+                    </li>
                 }
 
                 @if (User.IsInRole("MaintenanceStaff"))
@@ -138,7 +150,7 @@
                         </a>
                     </li>
                     <li>
-                        <a asp-controller="MaintenanceStaffs" asp-action="Index">
+                        <a asp-controller="MaintenanceStaffs" asp-action="MyProfile">
                             <i class="bi bi-person-badge-fill"></i>
                             <span>My Profile</span>
                         </a>

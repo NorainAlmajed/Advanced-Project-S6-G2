@@ -12,7 +12,7 @@ using AdvancedProjectAPI.Models;
 
 namespace AdvancedProject.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "PropertyManager,Tenant")]
     public class PropertiesController : Controller
     {
         private readonly APContext _context;

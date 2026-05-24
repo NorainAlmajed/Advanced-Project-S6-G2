@@ -1,0 +1,77 @@
+@model AdvancedProjectAPI.Models.PropertyManager
+
+@{
+    ViewData["Title"] = "My Profile";
+    string fullName = Model.User?.FullName ?? "—";
+    string username = Model.User?.Username ?? "—";
+    string email = Model.User?.Email ?? "—";
+    string phone = Model.User?.Phone ?? "—";
+    string genderText = Model.User?.Gender == "F" ? "Female" : "Male";
+    string hireDate = Model.HireDate.ToString("dd MMM yyyy");
+}
+
+<div class="ux-page">
+
+    <div class="ux-page-header">
+        <div>
+            <p class="ux-eyebrow">My Account</p>
+            <h1 class="ux-title">@fullName</h1>
+            <p class="ux-subtitle">
+                <i class="bi bi-at" style="color:var(--accent);"></i>@username
+                <span style="margin:0 0.4rem;color:var(--text-muted);">&middot;</span>
+                Property Manager
+            </p>
+        </div>
+        <a asp-action="EditMyProfile" class="ux-btn-outline">
+            <i class="bi bi-pencil-fill"></i> Edit
+        </a>
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="ux-alert-success">@TempData["SuccessMessage"]</div>
+    }
+
+    <div class="ux-details-main" style="display:flex;flex-direction:column;gap:1.25rem;">
+
+        <div class="ux-form-card">
+            <div class="ux-form-section-header">
+                <div class="ux-form-section-icon" style="background:rgba(0,91,113,0.1);color:#005B71;">
+                    <i class="bi bi-person-fill"></i>
+                </div>
+                <div>
+                    <h3 class="ux-form-section-title">Profile</h3>
+                    <p class="ux-form-section-sub">Your personal and contact details.</p>
+                </div>
+            </div>
+            <div class="ux-details-grid">
+                <div class="ux-detail-item">
+                    <span class="ux-detail-label">Full Name</span>
+                    <span class="ux-detail-value">@fullName</span>
+                </div>
+                <div class="ux-detail-item">
+                    <span class="ux-detail-label">Username</span>
+                    <span class="ux-detail-value">@username</span>
+                </div>
+                <div class="ux-detail-item">
+                    <span class="ux-detail-label">Email</span>
+                    <span class="ux-detail-value">@email</span>
+                </div>
+                <div class="ux-detail-item">
+                    <span class="ux-detail-label">Phone</span>
+                    <span class="ux-detail-value">@phone</span>
+                </div>
+                <div class="ux-detail-item">
+                    <span class="ux-detail-label">Gender</span>
+                    <span class="ux-detail-value">@genderText</span>
+                </div>
+                <div class="ux-detail-item">
+                    <span class="ux-detail-label">Hire Date</span>
+                    <span class="ux-detail-value">@hireDate</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
