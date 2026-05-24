@@ -9,7 +9,9 @@ namespace AdvancedProject.ViewModels
 
         [Required]
         [DataType(DataType.Password)]
-        [StringLength(100, MinimumLength = 8)]
+        [MinLength(8, ErrorMessage = "Password must be at least 8 characters.")]
+        [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z0-9]).+$",
+            ErrorMessage = "Password must include uppercase, lowercase, a number, and a special character.")]
         public string Password { get; set; } = null!;
 
         [Required]
