@@ -17,6 +17,8 @@
             <input type="text" style="display:none" tabindex="-1" autocomplete="username" aria-hidden="true" />
             <input type="password" style="display:none" tabindex="-1" autocomplete="current-password" aria-hidden="true" />
 
+            <div asp-validation-summary="ModelOnly" class="auth-error-summary"></div>
+
             <div class="ux-field mb-3">
                 <label asp-for="Email" class="ux-label"></label>
                 <input asp-for="Email" class="ux-input" autocomplete="new-password" placeholder="your@email.com" />
