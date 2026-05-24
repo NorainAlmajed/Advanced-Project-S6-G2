@@ -8,9 +8,18 @@
 
     <div class="ux-page-header">
         <div>
-            <p class="ux-eyebrow">Property Management</p>
-            <h1 class="ux-title">Properties</h1>
-            <p class="ux-subtitle">Browse and manage all available properties.</p>
+            @if (User.IsInRole("Tenant"))
+            {
+                <p class="ux-eyebrow">Available Properties</p>
+                <h1 class="ux-title">Properties</h1>
+                <p class="ux-subtitle">Browse available properties and find your next home.</p>
+            }
+            else
+            {
+                <p class="ux-eyebrow">Property Management</p>
+                <h1 class="ux-title">Properties</h1>
+                <p class="ux-subtitle">Browse and manage all available properties.</p>
+            }
         </div>
         @if (User.IsInRole("PropertyManager"))
         {
