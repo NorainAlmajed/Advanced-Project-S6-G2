@@ -593,7 +593,9 @@ namespace AdvancedProject.Controllers
                 // Broadcast board update
                 await BroadcastBoardUpdateAsync(request.RequestId, "updated");
 
-                TempData["SuccessMessage"] = "Maintenance Request was edited successfully.";
+                TempData["ToastTitle"]   = "Request Updated";
+                TempData["ToastMessage"] = $"Maintenance request #{id} has been updated successfully.";
+                TempData["ToastType"]    = "Maintenance";
                 return RedirectToAction(nameof(Details), new { id = id });
             }
 
