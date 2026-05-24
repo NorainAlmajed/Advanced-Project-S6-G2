@@ -1,6 +1,8 @@
-﻿using AdvancedProjectAPI.Data;
+﻿using System.IdentityModel.Tokens.Jwt;
+using AdvancedProjectAPI.Data;
 using AdvancedProjectAPI.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,10 +13,12 @@ namespace AdvancedProjectAPI.Controllers
     public class TenantsController : ControllerBase
     {
         private readonly APContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public TenantsController(APContext context)
+        public TenantsController(APContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: api/tenants
@@ -39,6 +43,15 @@ namespace AdvancedProjectAPI.Controllers
 
             if (tenant == null)
                 return NotFound(new { message = "Tenant not found." });
+
+            if (!User.IsInRole("PropertyManager"))
+            {
+                var identityUserId = User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
+                var appUser = await _userManager.FindByIdAsync(identityUserId!);
+                if (appUser?.UserId != tenant.UserId)
+                    return Forbid();
+            }
+
             return Ok(tenant);
         }
 
@@ -54,18 +67,28 @@ namespace AdvancedProjectAPI.Controllers
 
         // PUT: api/tenants/{id}
         [HttpPut("{id}")]
-        [Authorize(Roles = "PropertyManager")]
+        [Authorize]
         public async Task<IActionResult> Update(int id, Tenant updated)
         {
             var existing = await _context.Tenants.FindAsync(id);
             if (existing == null) return NotFound(new { message = "Tenant not found." });
+
+            if (!User.IsInRole("PropertyManager"))
+            {
+                var identityUserId = User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
+                var appUser = await _userManager.FindByIdAsync(identityUserId!);
+                if (appUser?.UserId != existing.UserId)
+                    return Forbid();
+            }
 
             existing.Dob = updated.Dob;
             existing.NationalId = updated.NationalId;
             existing.Salary = updated.Salary;
             existing.MaritalStatus = updated.MaritalStatus;
             existing.EmploymentStatus = updated.EmploymentStatus;
-            existing.FinancialStability = updated.FinancialStability;
+
+            if (User.IsInRole("PropertyManager"))
+                existing.FinancialStability = updated.FinancialStability;
 
             await _context.SaveChangesAsync();
             return NoContent();

@@ -71,6 +71,126 @@ namespace AdvancedProject.Controllers
             return View(staffList);
         }
 
+        // GET: MaintenanceStaffs/MyProfile
+        [AllowAnonymous]
+        public async Task<IActionResult> MyProfile()
+        {
+            if (!User.Identity!.IsAuthenticated || !User.IsInRole("MaintenanceStaff"))
+                return Forbid();
+
+            var currentUserEmail = User.Identity.Name;
+            var currentUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == currentUserEmail);
+            if (currentUser == null) return NotFound();
+
+            var staff = await _context.MaintenanceStaffs
+                .Include(m => m.User)
+                .Include(m => m.Skills)
+                .FirstOrDefaultAsync(m => m.UserId == currentUser.UserId);
+
+            if (staff == null) return NotFound();
+
+            return View("Details", staff);
+        }
+
+        // GET: MaintenanceStaffs/EditMyProfile
+        [AllowAnonymous]
+        public async Task<IActionResult> EditMyProfile()
+        {
+            if (!User.Identity!.IsAuthenticated || !User.IsInRole("MaintenanceStaff"))
+                return Forbid();
+
+            var currentUserEmail = User.Identity.Name;
+            var currentUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == currentUserEmail);
+            if (currentUser == null) return NotFound();
+
+            var staff = await _context.MaintenanceStaffs
+                .Include(s => s.User)
+                .Include(s => s.Skills)
+                .FirstOrDefaultAsync(s => s.UserId == currentUser.UserId);
+            if (staff == null) return NotFound();
+
+            var vm = new MaintenanceStaffEditVM
+            {
+                StaffId = staff.StaffId,
+                UserId = staff.UserId,
+                Username = staff.User.Username,
+                FullName = staff.User.FullName,
+                Email = staff.User.Email,
+                Phone = staff.User.Phone,
+                Gender = staff.User.Gender,
+                AvailabilityStatus = staff.AvailabilityStatus,
+                SelectedSkillIds = staff.Skills.Select(s => s.SkillId).ToList()
+            };
+
+            ViewData["Skills"] = await _context.Skills.ToListAsync();
+            return View(vm);
+        }
+
+        // POST: MaintenanceStaffs/EditMyProfile
+        [AllowAnonymous]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditMyProfile(MaintenanceStaffEditVM vm)
+        {
+            if (!User.Identity!.IsAuthenticated || !User.IsInRole("MaintenanceStaff"))
+                return Forbid();
+
+            ModelState.Remove("Password");
+            ModelState.Remove("AvailabilityStatus");
+
+            if (!ModelState.IsValid)
+            {
+                ViewData["Skills"] = await _context.Skills.ToListAsync();
+                return View(vm);
+            }
+
+            var user = await _context.Users.FindAsync(vm.UserId);
+            var staff = await _context.MaintenanceStaffs
+                .Include(s => s.Skills)
+                .FirstOrDefaultAsync(s => s.StaffId == vm.StaffId);
+
+            if (user == null || staff == null) return NotFound();
+
+            var username = vm.Username.Trim().ToLower();
+            var email = vm.Email.Trim().ToLower();
+            var phone = vm.Phone.Trim();
+
+            if (_context.Users.Any(u => u.Username.ToLower() == username && u.UserId != vm.UserId))
+                ModelState.AddModelError("Username", "Username already exists");
+            if (_context.Users.Any(u => u.Email.ToLower() == email && u.UserId != vm.UserId))
+                ModelState.AddModelError("Email", "Email already exists");
+            if (_context.Users.Any(u => u.Phone == phone && u.UserId != vm.UserId))
+                ModelState.AddModelError("Phone", "Phone already exists");
+
+            if (!ModelState.IsValid)
+            {
+                ViewData["Skills"] = await _context.Skills.ToListAsync();
+                return View(vm);
+            }
+
+            user.Username = username;
+            user.FullName = vm.FullName;
+            user.Email = email;
+            user.Phone = phone;
+            user.Gender = vm.Gender;
+
+            if (!string.IsNullOrWhiteSpace(vm.Password))
+                user.Password = vm.Password;
+
+            staff.Skills.Clear();
+            if (vm.SelectedSkillIds != null && vm.SelectedSkillIds.Any())
+            {
+                var skills = await _context.Skills
+                    .Where(s => vm.SelectedSkillIds.Contains(s.SkillId))
+                    .ToListAsync();
+                staff.Skills = skills;
+            }
+
+            await _context.SaveChangesAsync();
+            TempData["SuccessMessage"] = "Profile updated successfully.";
+            return RedirectToAction(nameof(MyProfile));
+        }
+
         // GET: MaintenanceStaffs/Details/5
         public async Task<IActionResult> Details(int? id)
         {
