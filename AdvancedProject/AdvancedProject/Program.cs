@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using AdvancedProjectAPI.Data;
 using AdvancedProjectAPI.Models;
 using Microsoft.AspNetCore.Identity;
+using AdvancedProject.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -48,6 +49,7 @@ builder.Services.ConfigureApplicationCookie(options =>
 });
 
 builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
+builder.Services.AddSignalR();
 
 builder.Services.AddHttpClient("MaintenanceApi", client =>
 {
@@ -107,6 +109,11 @@ using (var scope = app.Services.CreateScope())
             if (result.Succeeded)
                 await userManager.AddToRoleAsync(identityUser, seed.Role);
         }
+        else if (existing.UserId == null)
+        {
+            existing.UserId = seed.UserId;
+            await userManager.UpdateAsync(existing);
+        }
     }
 
     // Seed property images from wwwroot/images/seed/
@@ -159,4 +166,6 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
 app.MapRazorPages();
+app.MapHub<NotificationHub>("/hubs/notifications");
+app.MapHub<MaintenanceBoardHub>("/hubs/maintenance-board");
 app.Run();

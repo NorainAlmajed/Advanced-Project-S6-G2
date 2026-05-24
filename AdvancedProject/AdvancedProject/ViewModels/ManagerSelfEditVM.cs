@@ -29,6 +29,16 @@ namespace AdvancedProject.ViewModels
         {
             if (!string.IsNullOrWhiteSpace(Password))
             {
+                if (Password.Length < 8)
+                    yield return new ValidationResult(
+                        "Password must be at least 8 characters.",
+                        new[] { nameof(Password) });
+
+                else if (!System.Text.RegularExpressions.Regex.IsMatch(Password, @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z0-9]).+$"))
+                    yield return new ValidationResult(
+                        "Password must include uppercase, lowercase, a number, and a special character.",
+                        new[] { nameof(Password) });
+
                 if (string.IsNullOrWhiteSpace(ConfirmPassword))
                     yield return new ValidationResult("Please confirm your new password.", new[] { nameof(ConfirmPassword) });
                 else if (Password != ConfirmPassword)
