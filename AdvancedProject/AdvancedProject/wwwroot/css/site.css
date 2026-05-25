@@ -4811,9 +4811,8 @@ body.sidebar-layout {
     flex-direction: column;
     align-items: center;
     gap: 0.6rem;
-    margin-top: 2rem;
-    padding: 1.5rem 0 0.75rem;
-    border-top: 1px solid #e2e8f0;
+    margin-top: 3rem;
+    padding: 0.5rem 0 0.75rem;
 }
 
 .ux-pagination {
