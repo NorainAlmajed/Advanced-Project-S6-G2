@@ -12,7 +12,7 @@ using AdvancedProject.ViewModels;
 
 namespace AdvancedProject.Controllers
 {
-    [Authorize(Roles = "PropertyManager")]
+    [Authorize]
     public class MaintenanceStaffsController : Controller
     {
         private readonly APContext _context;
@@ -23,6 +23,7 @@ namespace AdvancedProject.Controllers
         }
 
         // GET: MaintenanceStaffs
+        [Authorize(Roles = "PropertyManager")]
         public async Task<IActionResult> Index(string searchTerm, string availabilityFilter, List<int> skillIds)
         {
             var staffQuery = _context.MaintenanceStaffs
@@ -72,13 +73,10 @@ namespace AdvancedProject.Controllers
         }
 
         // GET: MaintenanceStaffs/MyProfile
-        [AllowAnonymous]
+        [Authorize(Roles = "MaintenanceStaff")]
         public async Task<IActionResult> MyProfile()
         {
-            if (!User.Identity!.IsAuthenticated || !User.IsInRole("MaintenanceStaff"))
-                return Forbid();
-
-            var currentUserEmail = User.Identity.Name;
+            var currentUserEmail = User.Identity!.Name;
             var currentUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == currentUserEmail);
             if (currentUser == null) return NotFound();
 
@@ -93,13 +91,10 @@ namespace AdvancedProject.Controllers
         }
 
         // GET: MaintenanceStaffs/EditMyProfile
-        [AllowAnonymous]
+        [Authorize(Roles = "MaintenanceStaff")]
         public async Task<IActionResult> EditMyProfile()
         {
-            if (!User.Identity!.IsAuthenticated || !User.IsInRole("MaintenanceStaff"))
-                return Forbid();
-
-            var currentUserEmail = User.Identity.Name;
+            var currentUserEmail = User.Identity!.Name;
             var currentUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == currentUserEmail);
             if (currentUser == null) return NotFound();
 
@@ -127,15 +122,11 @@ namespace AdvancedProject.Controllers
         }
 
         // POST: MaintenanceStaffs/EditMyProfile
-        [AllowAnonymous]
+        [Authorize(Roles = "MaintenanceStaff")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditMyProfile(MaintenanceStaffEditVM vm)
         {
-            if (!User.Identity!.IsAuthenticated || !User.IsInRole("MaintenanceStaff"))
-                return Forbid();
-
-            ModelState.Remove("Password");
             ModelState.Remove("AvailabilityStatus");
 
             if (!ModelState.IsValid)
@@ -192,6 +183,7 @@ namespace AdvancedProject.Controllers
         }
 
         // GET: MaintenanceStaffs/Details/5
+        [Authorize(Roles = "PropertyManager")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -213,6 +205,7 @@ namespace AdvancedProject.Controllers
         }
 
         // GET: MaintenanceStaffs/Create
+        [Authorize(Roles = "PropertyManager")]
         public async Task<IActionResult> Create()
         {
             ViewData["Skills"] = await _context.Skills.ToListAsync();
@@ -220,6 +213,7 @@ namespace AdvancedProject.Controllers
         }
 
         // POST: MaintenanceStaffs/Create
+        [Authorize(Roles = "PropertyManager")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(MaintenanceStaffCreateVM vm)
@@ -305,6 +299,7 @@ namespace AdvancedProject.Controllers
 
 
         // GET: MaintenanceStaffs/Edit/5
+        [Authorize(Roles = "PropertyManager")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null) return NotFound();
@@ -339,12 +334,11 @@ namespace AdvancedProject.Controllers
 
 
         // POST: MaintenanceStaffs/Edit/5
+        [Authorize(Roles = "PropertyManager")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(MaintenanceStaffEditVM vm)
         {
-            ModelState.Remove("Password");
-
             if (!ModelState.IsValid)
             {
                 ViewData["Skills"] = await _context.Skills.ToListAsync();
@@ -413,6 +407,7 @@ namespace AdvancedProject.Controllers
 
 
         // GET: MaintenanceStaffs/Delete/5
+        [Authorize(Roles = "PropertyManager")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -433,6 +428,7 @@ namespace AdvancedProject.Controllers
         }
 
         // POST: MaintenanceStaffs/Delete/5
+        [Authorize(Roles = "PropertyManager")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

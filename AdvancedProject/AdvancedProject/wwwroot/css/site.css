@@ -2890,6 +2890,24 @@ body {
     max-width: 1100px;
 }
 
+/* Back button */
+.ux-back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-decoration: none;
+    margin-bottom: 0.85rem;
+    transition: color 0.15s;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 0;
+}
+.ux-back-btn:hover { color: var(--accent); }
+
 /* Page header */
 .ux-page-header {
     display: flex;
@@ -2963,6 +2981,26 @@ body {
 
 .ux-btn-outline:hover {
     background: var(--primary);
+    color: #fff;
+}
+
+.ux-btn-outline-danger {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5rem 1.1rem;
+    background: transparent;
+    color: #dc3545;
+    border: 1.5px solid #dc3545;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.18s;
+}
+
+.ux-btn-outline-danger:hover {
+    background: #dc3545;
     color: #fff;
 }
 
@@ -4137,6 +4175,15 @@ body.sidebar-layout {
         padding: 1.25rem;
         padding-top: 4rem;
     }
+    /* When signed in, top-header provides the visual top bar —
+       no extra padding needed for the mobile toggle */
+    .sidebar-main-wrapper:has(.top-header) .sidebar-main-content {
+        padding-top: 1.25rem;
+    }
+    .home-bg {
+        margin: -1.25rem -1.25rem;
+        background-attachment: scroll;
+    }
 }
 
 
@@ -4144,14 +4191,19 @@ body.sidebar-layout {
    AUTH PAGES (Login / Register)
    ══════════════════════════════════════════ */
 
+/* Remove sidebar padding when auth pages render full-bleed */
+.sidebar-main-content:has(.auth-wrap) {
+    padding: 0;
+    background: transparent;
+}
+
 .auth-wrap {
     min-height: calc(100vh - 52px);
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 3rem 2rem;
-    /* escape sidebar-main-content padding for full-bleed */
-    margin: -1.75rem -2rem;
+    margin: 0;
     background-image:
         linear-gradient(135deg,
             rgba(13,27,42,0.78) 0%,
@@ -4162,6 +4214,25 @@ body.sidebar-layout {
     background-position: center;
     background-attachment: fixed;
 }
+
+/* Validation summary for auth pages */
+.auth-error-summary {
+    display: none;
+    background: #fff5f5;
+    border: 1px solid #fee2e2;
+    border-left: 4px solid #dc3545;
+    border-radius: 10px;
+    padding: 0.75rem 1rem;
+    font-size: 0.84rem;
+    color: #991b1b;
+    margin-bottom: 1.25rem;
+}
+.auth-error-summary ul {
+    margin: 0;
+    padding-left: 1.25rem;
+}
+.auth-error-summary li { margin-bottom: 0.2rem; }
+.auth-error-summary:not(:empty) { display: block; }
 
 /* Narrow card — used for Login */
 .auth-card {

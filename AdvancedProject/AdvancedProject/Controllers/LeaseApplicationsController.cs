@@ -9,6 +9,8 @@ using AdvancedProjectAPI.Data;
 using AdvancedProjectAPI.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using AdvancedProject.Hubs;
+using Microsoft.AspNetCore.SignalR;
 
 namespace AdvancedProject.Controllers
 {
@@ -16,10 +18,32 @@ namespace AdvancedProject.Controllers
     public class LeaseApplicationsController : Controller
     {
         private readonly APContext _context;
+        private readonly IHubContext<NotificationHub> _notifHub;
 
-        public LeaseApplicationsController(APContext context)
+        public LeaseApplicationsController(APContext context, IHubContext<NotificationHub> notifHub)
         {
             _context = context;
+            _notifHub = notifHub;
+        }
+
+        private async Task PushNotificationAsync(Notification notification)
+        {
+            var typeName = notification.NotificationTypeId switch
+            {
+                2 => "Maintenance",
+                3 => "Payment",
+                _ => "Lease"
+            };
+            await _notifHub.Clients
+                .Group($"user-{notification.UserId}")
+                .SendAsync("ReceiveNotification", new
+                {
+                    notificationId = notification.NotificationId,
+                    title          = notification.Title,
+                    message        = notification.Message,
+                    typeName,
+                    createdAt      = notification.CreatedAt.ToString("dd MMM yyyy · hh:mm tt")
+                });
         }
 
         // GET: LeaseApplications
@@ -195,16 +219,22 @@ namespace AdvancedProject.Controllers
             _context.Add(leaseApplication);
             await _context.SaveChangesAsync();
 
-            _context.Notifications.Add(new Notification
+            var managerNotif = new Notification
             {
                 UserId = 1,
                 Title = "New Lease Application",
-                Message = "A new lease application has been submitted.",
+                Message = $"A new lease application #{leaseApplication.ApplicationId} has been submitted.",
                 NotificationTypeId = 1,
                 CreatedAt = DateTime.Now
-            });
+            };
+            _context.Notifications.Add(managerNotif);
             await _context.SaveChangesAsync();
 
+            await PushNotificationAsync(managerNotif);
+
+            TempData["ToastTitle"]   = "Application Submitted";
+            TempData["ToastMessage"] = $"Your lease application #{leaseApplication.ApplicationId} has been submitted successfully.";
+            TempData["ToastType"]    = "Lease";
             TempData["SuccessMessage"] = "Lease Application was created successfully.";
             return RedirectToAction(nameof(Index));
         }
@@ -283,8 +313,23 @@ namespace AdvancedProject.Controllers
             existing.StartDate = leaseApplication.StartDate;
             existing.DurationId = leaseApplication.DurationId;
 
+            var editNotif = new Notification
+            {
+                UserId = 1,
+                Title = "Lease Application Edited",
+                Message = $"Lease application #{existing.ApplicationId} has been edited by the tenant.",
+                NotificationTypeId = 1,
+                CreatedAt = DateTime.Now
+            };
+            _context.Notifications.Add(editNotif);
+
             await _context.SaveChangesAsync();
 
+            await PushNotificationAsync(editNotif);
+
+            TempData["ToastTitle"]   = "Application Updated";
+            TempData["ToastMessage"] = $"Your lease application #{existing.ApplicationId} has been updated successfully.";
+            TempData["ToastType"]    = "Lease";
             TempData["SuccessMessage"] = "Lease Application was edited successfully.";
             return RedirectToAction(nameof(Details), new { id = id });
         }
@@ -372,17 +417,23 @@ namespace AdvancedProject.Controllers
 
             _context.Leases.Add(lease);
 
-            _context.Notifications.Add(new Notification
+            var approveNotif = new Notification
             {
                 UserId = application.Tenant.UserId,
                 Title = "Application Approved",
                 Message = $"Your lease application #{application.ApplicationId} has been approved.",
                 NotificationTypeId = 1,
                 CreatedAt = DateTime.Now
-            });
+            };
+            _context.Notifications.Add(approveNotif);
 
             await _context.SaveChangesAsync();
 
+            await PushNotificationAsync(approveNotif);
+
+            TempData["ToastTitle"]   = "Application Approved";
+            TempData["ToastMessage"] = $"Lease application #{application.ApplicationId} has been approved and a lease has been created.";
+            TempData["ToastType"]    = "Lease";
             TempData["SuccessMessage"] = "Application was approved successfully.";
             return RedirectToAction(nameof(Details), new { id });
         }
@@ -409,17 +460,23 @@ namespace AdvancedProject.Controllers
             application.RejectTime = DateTime.Now;
             application.ApproveTime = null;
 
-            _context.Notifications.Add(new Notification
+            var rejectNotif = new Notification
             {
                 UserId = application.Tenant.UserId,
                 Title = "Application Rejected",
                 Message = $"Your lease application #{application.ApplicationId} has been rejected.",
                 NotificationTypeId = 1,
                 CreatedAt = DateTime.Now
-            });
+            };
+            _context.Notifications.Add(rejectNotif);
 
             await _context.SaveChangesAsync();
 
+            await PushNotificationAsync(rejectNotif);
+
+            TempData["ToastTitle"]   = "Application Rejected";
+            TempData["ToastMessage"] = $"Lease application #{application.ApplicationId} has been rejected.";
+            TempData["ToastType"]    = "Lease";
             TempData["SuccessMessage"] = "Application was rejected successfully.";
             return RedirectToAction(nameof(Details), new { id });
         }
@@ -440,7 +497,24 @@ namespace AdvancedProject.Controllers
             if (application.Status == "Pending")
             {
                 application.Status = "Cancelled";
+
+                var cancelNotif = new Notification
+                {
+                    UserId = 1,
+                    Title = "Application Cancelled",
+                    Message = $"Lease application #{application.ApplicationId} has been cancelled by the tenant.",
+                    NotificationTypeId = 1,
+                    CreatedAt = DateTime.Now
+                };
+                _context.Notifications.Add(cancelNotif);
+
                 await _context.SaveChangesAsync();
+
+                await PushNotificationAsync(cancelNotif);
+
+                TempData["ToastTitle"]   = "Application Cancelled";
+                TempData["ToastMessage"] = $"Your lease application #{application.ApplicationId} has been cancelled.";
+                TempData["ToastType"]    = "Lease";
                 TempData["SuccessMessage"] = "Application was cancelled successfully.";
             }
 

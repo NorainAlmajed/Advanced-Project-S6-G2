@@ -144,17 +144,32 @@
             <div class="ux-form-grid">
                 <div class="ux-field">
                     <label asp-for="Password" class="ux-label"></label>
-                    <input asp-for="Password" class="ux-input" autocomplete="new-password" placeholder="••••••••" />
+                    <div style="position:relative;">
+                        <input asp-for="Password" class="ux-input" autocomplete="new-password" placeholder="••••••••" style="padding-right:2.75rem;" id="reg-password" />
+                        <button type="button" onclick="togglePw('reg-password','reg-pw-icon')"
+                                style="position:absolute;right:0.75rem;top:50%;transform:translateY(-50%);background:none;border:none;padding:0;cursor:pointer;color:var(--text-muted);" tabindex="-1">
+                            <i class="bi bi-eye" id="reg-pw-icon"></i>
+                        </button>
+                    </div>
                     <span asp-validation-for="Password" class="ux-field-error"></span>
                 </div>
 
                 <div class="ux-field">
                     <label asp-for="ConfirmPassword" class="ux-label"></label>
-                    <input asp-for="ConfirmPassword" class="ux-input" autocomplete="new-password" placeholder="••••••••" />
+                    <div style="position:relative;">
+                        <input asp-for="ConfirmPassword" class="ux-input" autocomplete="new-password" placeholder="••••••••" style="padding-right:2.75rem;" id="reg-confirm" />
+                        <button type="button" onclick="togglePw('reg-confirm','reg-confirm-icon')"
+                                style="position:absolute;right:0.75rem;top:50%;transform:translateY(-50%);background:none;border:none;padding:0;cursor:pointer;color:var(--text-muted);" tabindex="-1">
+                            <i class="bi bi-eye" id="reg-confirm-icon"></i>
+                        </button>
+                    </div>
                     <span asp-validation-for="ConfirmPassword" class="ux-field-error"></span>
                 </div>
             </div>
         </div>
+
+        <!-- Validation summary for Identity / server errors -->
+        <div asp-validation-summary="ModelOnly" class="auth-error-summary"></div>
 
         <!-- Actions -->
         <div class="ux-form-actions">
@@ -172,4 +187,17 @@
 
 @section Scripts {
     @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+    <script>
+    function togglePw(inputId, iconId) {
+        var input = document.getElementById(inputId);
+        var icon  = document.getElementById(iconId);
+        if (input.type === 'password') {
+            input.type = 'text';
+            icon.classList.replace('bi-eye', 'bi-eye-slash');
+        } else {
+            input.type = 'password';
+            icon.classList.replace('bi-eye-slash', 'bi-eye');
+        }
+    }
+    </script>
 }

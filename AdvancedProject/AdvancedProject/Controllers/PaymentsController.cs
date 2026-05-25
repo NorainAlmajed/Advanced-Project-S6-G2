@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AdvancedProjectAPI.Data;
 using AdvancedProjectAPI.Models;
+using AdvancedProject.Hubs;
+using Microsoft.AspNetCore.SignalR;
 
 namespace AdvancedProject.Controllers
 {
@@ -15,6 +17,27 @@ namespace AdvancedProject.Controllers
     public class PaymentsController : Controller
     {
         private readonly APContext _context;
+        private readonly IHubContext<NotificationHub> _notifHub;
+
+        private async Task PushNotificationAsync(Notification notification)
+        {
+            var typeName = notification.NotificationTypeId switch
+            {
+                2 => "Maintenance",
+                3 => "Payment",
+                _ => "Lease"
+            };
+            await _notifHub.Clients
+                .Group($"user-{notification.UserId}")
+                .SendAsync("ReceiveNotification", new
+                {
+                    notificationId = notification.NotificationId,
+                    title          = notification.Title,
+                    message        = notification.Message,
+                    typeName,
+                    createdAt      = notification.CreatedAt.ToString("dd MMM yyyy · hh:mm tt")
+                });
+        }
 
         private void PopulateDropdowns()
         {
@@ -41,9 +64,10 @@ namespace AdvancedProject.Controllers
     }, payment?.Status);
         }
 
-        public PaymentsController(APContext context)
+        public PaymentsController(APContext context, IHubContext<NotificationHub> notifHub)
         {
             _context = context;
+            _notifHub = notifHub;
         }
 
         // GET: Payments
@@ -184,17 +208,24 @@ namespace AdvancedProject.Controllers
                 payment.Amount = lease.MonthlyRent * frequency.Frequency;
 
                 _context.Add(payment);
+                await _context.SaveChangesAsync();
 
-                _context.Notifications.Add(new Notification
+                var tenantNotif = new Notification
                 {
                     UserId = lease.Tenant.UserId,
-                    Title = "Payment Update",
-                    Message = "A new payment record has been added.",
+                    Title = "New Payment Record",
+                    Message = $"A new payment record #{payment.PaymentId} has been added to your lease.",
                     NotificationTypeId = 3,
                     CreatedAt = DateTime.Now
-                });
-
+                };
+                _context.Notifications.Add(tenantNotif);
                 await _context.SaveChangesAsync();
+
+                await PushNotificationAsync(tenantNotif);
+
+                TempData["ToastTitle"]   = "Payment Created";
+                TempData["ToastMessage"] = $"Payment record #{payment.PaymentId} has been created successfully.";
+                TempData["ToastType"]    = "Payment";
                 TempData["SuccessMessage"] = "Payment was created successfully.";
                 return RedirectToAction(nameof(Index));
             }
@@ -271,17 +302,23 @@ namespace AdvancedProject.Controllers
             existing.EndDate = payment.StartDate.AddDays(7);
             existing.Amount = existing.Lease.MonthlyRent * frequency.Frequency;
 
-            _context.Notifications.Add(new Notification
+            var tenantNotif = new Notification
             {
                 UserId = existing.Lease.Tenant.UserId,
-                Title = "Payment Update",
-                Message = $"Payment record #{existing.PaymentId} has been edited.",
+                Title = "Payment Updated",
+                Message = $"Payment record #{existing.PaymentId} has been updated.",
                 NotificationTypeId = 3,
                 CreatedAt = DateTime.Now
-            });
+            };
+            _context.Notifications.Add(tenantNotif);
 
             await _context.SaveChangesAsync();
 
+            await PushNotificationAsync(tenantNotif);
+
+            TempData["ToastTitle"]   = "Payment Updated";
+            TempData["ToastMessage"] = $"Payment record #{existing.PaymentId} has been updated successfully.";
+            TempData["ToastType"]    = "Payment";
             TempData["SuccessMessage"] = "Payment was edited successfully.";
             return RedirectToAction(nameof(Details), new { id = id });
         }

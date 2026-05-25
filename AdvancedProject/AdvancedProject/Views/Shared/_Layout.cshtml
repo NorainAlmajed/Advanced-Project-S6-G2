@@ -27,6 +27,36 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/AdvancedProject.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
+    <style>
+        .notif-bell-wrapper { position: relative; display: inline-flex; align-items: center; }
+        .notif-badge {
+            position: absolute; top: -6px; right: -8px;
+            background: #ef4444; color: #fff; font-size: 10px; font-weight: 700;
+            min-width: 16px; height: 16px; border-radius: 8px; padding: 0 4px;
+            display: flex; align-items: center; justify-content: center; line-height: 1;
+        }
+        #notif-toast-container {
+            position: fixed; top: 1.2rem; right: 1.2rem; z-index: 9999;
+            display: flex; flex-direction: column; gap: 0.6rem;
+            max-width: 360px; pointer-events: none;
+        }
+        .notif-rt-toast {
+            background: #fff; border-left: 4px solid #6366f1;
+            border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,.13);
+            padding: 0.85rem 1rem; display: flex; align-items: flex-start;
+            gap: 0.7rem; pointer-events: all; animation: notif-slide-in 0.3s ease;
+        }
+        .notif-rt-toast .notif-icon { font-size: 1.25rem; color: #6366f1; flex-shrink: 0; margin-top: 2px; }
+        .notif-rt-toast .notif-body { flex: 1; }
+        .notif-rt-toast .notif-title { font-weight: 600; font-size: .85rem; color: #1e293b; margin-bottom: 2px; }
+        .notif-rt-toast .notif-msg { font-size: .8rem; color: #475569; line-height: 1.4; }
+        .notif-rt-toast .notif-time { font-size: .72rem; color: #94a3b8; margin-top: 4px; }
+        .notif-rt-toast .notif-close { background: none; border: none; cursor: pointer; color: #94a3b8; font-size: 1rem; padding: 0; line-height: 1; }
+        @@keyframes notif-slide-in {
+            from { transform: translateX(110%); opacity: 0; }
+            to   { transform: translateX(0);    opacity: 1; }
+        }
+    </style>
 </head>
 <body class="sidebar-layout">
 
@@ -191,7 +221,10 @@
 
                 <div class="top-header-actions">
                     <a asp-controller="Notifications" asp-action="Index" class="top-header-btn" title="Notifications">
-                        <i class="bi bi-bell-fill"></i>
+                        <span class="notif-bell-wrapper">
+                            <i class="bi bi-bell-fill"></i>
+                            <span id="notif-badge" class="notif-badge" style="display:none;">0</span>
+                        </span>
                         <span>Notifications</span>
                     </a>
 
@@ -265,6 +298,9 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.0/signalr.min.js"></script>
+
+    <div id="notif-toast-container"></div>
 
     <script>
         const sidebarToggle  = document.getElementById('sidebarToggle');
@@ -284,7 +320,106 @@
         }
     </script>
 
+    @if (SignInManager.IsSignedIn(User))
+    {
+        <script>
+        // Globally accessible so TempData-driven toasts can also call it
+        function showNotifToast(data) {
+            var container = document.getElementById('notif-toast-container');
+            if (!container) return;
+            var iconMap = {
+                Maintenance: 'bi-wrench-adjustable-circle-fill',
+                Payment:     'bi-credit-card-fill',
+                Lease:       'bi-file-earmark-check-fill'
+            };
+            var icon = iconMap[data.typeName] || 'bi-bell-fill';
+
+            var toast = document.createElement('div');
+            toast.className = 'notif-rt-toast';
+            toast.innerHTML =
+                '<i class="bi ' + icon + ' notif-icon"></i>' +
+                '<div class="notif-body">' +
+                    '<div class="notif-title">' + escHtml(data.title) + '</div>' +
+                    '<div class="notif-msg">'   + escHtml(data.message) + '</div>' +
+                    '<div class="notif-time">'  + escHtml(data.createdAt) + '</div>' +
+                '</div>' +
+                '<button class="notif-close" title="Dismiss"><i class="bi bi-x-lg"></i></button>';
+
+            toast.querySelector('.notif-close').addEventListener('click', function () {
+                toast.remove();
+            });
+            container.appendChild(toast);
+
+            setTimeout(function () {
+                toast.style.transition = 'opacity 0.4s ease';
+                toast.style.opacity = '0';
+                setTimeout(function () { toast.remove(); }, 400);
+            }, 7000);
+        }
+
+        function escHtml(str) {
+            if (!str) return '';
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;');
+        }
+
+        (function () {
+            var badge = document.getElementById('notif-badge');
+            var unreadCount = 0;
+
+            var connection = new signalR.HubConnectionBuilder()
+                .withUrl('/hubs/notifications')
+                .withAutomaticReconnect()
+                .build();
+
+            connection.on('ReceiveNotification', function (data) {
+                unreadCount++;
+                badge.textContent = unreadCount > 99 ? '99+' : unreadCount;
+                badge.style.display = 'flex';
+                showNotifToast(data);
+            });
+
+            connection.start().catch(function (err) {
+                console.error('NotificationHub error:', err);
+            });
+        })();
+        </script>
+    }
+
+    @if (TempData["ToastTitle"] != null)
+    {
+        <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            showNotifToast({
+                title:     @Html.Raw(System.Text.Json.JsonSerializer.Serialize(TempData["ToastTitle"]?.ToString())),
+                message:   @Html.Raw(System.Text.Json.JsonSerializer.Serialize(TempData["ToastMessage"]?.ToString())),
+                typeName:  @Html.Raw(System.Text.Json.JsonSerializer.Serialize(TempData["ToastType"]?.ToString() ?? "Maintenance")),
+                createdAt: '@Html.Raw(DateTime.Now.ToString("dd MMM yyyy · hh:mm tt"))'
+            });
+        });
+        </script>
+    }
+
     @await RenderSectionAsync("Scripts", required: false)
+
+    <script>
+        // Inject back button on all inner (ux-page) pages
+        (function () {
+            var page = document.querySelector('.ux-page');
+            if (!page) return;
+            var header = page.querySelector('.ux-page-header');
+            if (!header) return;
+            var btn = document.createElement('button');
+            btn.className = 'ux-back-btn';
+            btn.type = 'button';
+            btn.innerHTML = '<i class="bi bi-arrow-left-short" style="font-size:1rem;"></i> Back';
+            btn.addEventListener('click', function () { history.back(); });
+            header.insertAdjacentElement('beforebegin', btn);
+        })();
+    </script>
 
     <script>
         // Auto-dismiss success toast after 4 seconds

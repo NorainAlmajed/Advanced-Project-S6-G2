@@ -2,15 +2,25 @@
 
 @{
     ViewData["Title"] = "Properties";
+    int propTotal = Model?.Count() ?? 0;
 }
 
 <div class="ux-page">
 
     <div class="ux-page-header">
         <div>
-            <p class="ux-eyebrow">Property Management</p>
-            <h1 class="ux-title">Properties</h1>
-            <p class="ux-subtitle">Browse and manage all available properties.</p>
+            @if (User.IsInRole("Tenant"))
+            {
+                <p class="ux-eyebrow">Available Properties</p>
+                <h1 class="ux-title">Properties</h1>
+                <p class="ux-subtitle">Browse available properties and find your next home.</p>
+            }
+            else
+            {
+                <p class="ux-eyebrow">Property Management</p>
+                <h1 class="ux-title">Properties</h1>
+                <p class="ux-subtitle">Browse and manage all available properties.</p>
+            }
         </div>
         @if (User.IsInRole("PropertyManager"))
         {
@@ -18,6 +28,18 @@
                 <i class="bi bi-plus-lg"></i> Add Property
             </a>
         }
+    </div>
+
+    <div class="ux-stats-row">
+        <div class="ux-stat-card">
+            <div class="ux-stat-icon" style="background:rgba(0,91,113,0.1);color:#005B71;">
+                <i class="bi bi-building-fill"></i>
+            </div>
+            <div>
+                <div class="ux-stat-value">@propTotal</div>
+                <div class="ux-stat-label">@(User.IsInRole("Tenant") ? "Available Properties" : "Total Properties")</div>
+            </div>
+        </div>
     </div>
 
     <div class="ux-toolbar">
@@ -35,9 +57,6 @@
             <button type="submit" class="ux-btn-primary">Search</button>
             <a asp-action="Index" class="ux-btn-ghost">Reset</a>
         </form>
-        <div class="ux-stat-label" style="color:var(--text-muted);font-size:0.8rem;white-space:nowrap;">
-            @Model.Count() propert@(Model.Count() == 1 ? "y" : "ies")
-        </div>
     </div>
 
     @if (!Model.Any())

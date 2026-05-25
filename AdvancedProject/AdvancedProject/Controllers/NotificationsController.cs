@@ -183,6 +183,23 @@ namespace AdvancedProject.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        // POST: Notifications/ClearAll
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ClearAll()
+        {
+            var currentUserEmail = User.Identity!.Name;
+            var currentUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == currentUserEmail);
+            if (currentUser != null)
+            {
+                var notifs = _context.Notifications.Where(n => n.UserId == currentUser.UserId);
+                _context.Notifications.RemoveRange(notifs);
+                await _context.SaveChangesAsync();
+            }
+            TempData["SuccessMessage"] = "All notifications cleared.";
+            return RedirectToAction(nameof(Index));
+        }
+
         private bool NotificationExists(int id)
         {
             return _context.Notifications.Any(e => e.NotificationId == id);
