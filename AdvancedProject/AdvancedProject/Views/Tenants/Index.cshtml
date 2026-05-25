@@ -3,6 +3,7 @@
 @{
     ViewData["Title"] = "Tenants";
     string currentSearch = ViewData["CurrentSearchTerm"]?.ToString() ?? "";
+    int totalTenants = (int)(ViewData["TotalTenants"] ?? 0);
 }
 
 <div class="ux-page">
@@ -16,6 +17,18 @@
         <a asp-controller="Tenants" asp-action="Create" class="ux-btn-primary">
             <i class="bi bi-person-plus-fill"></i> Add Tenant
         </a>
+    </div>
+
+    <div class="ux-stats-row">
+        <div class="ux-stat-card">
+            <div class="ux-stat-icon" style="background: rgba(30,142,110,0.1); color: #1E8E6E;">
+                <i class="bi bi-person-fill"></i>
+            </div>
+            <div>
+                <div class="ux-stat-value">@totalTenants</div>
+                <div class="ux-stat-label">Total Tenants</div>
+            </div>
+        </div>
     </div>
 
     <div class="ux-toolbar">
@@ -86,5 +99,7 @@
             </div>
         }
     </div>
+
+    @await Html.PartialAsync("_Pagination", (AdvancedProject.ViewModels.PaginationVM)ViewBag.Pagination)
 
 </div>

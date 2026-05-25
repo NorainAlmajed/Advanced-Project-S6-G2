@@ -24,7 +24,7 @@ namespace AdvancedProject.Controllers
 
         // GET: Tenants
         [Authorize(Roles = "PropertyManager")]
-        public async Task<IActionResult> Index(string searchTerm)
+        public async Task<IActionResult> Index(string searchTerm, int page = 1)
         {
             var tenantsQuery = _context.Users
                 .Where(u => u.Role == "Tenant")
@@ -44,7 +44,22 @@ namespace AdvancedProject.Controllers
 
             ViewData["CurrentSearchTerm"] = searchTerm;
 
-            return View(await tenantsQuery.ToListAsync());
+            const int pageSize = 10;
+            int total = await tenantsQuery.CountAsync();
+            ViewData["TotalTenants"] = total;
+            int totalPages = (int)Math.Ceiling(total / (double)pageSize);
+            page = Math.Max(1, Math.Min(page, Math.Max(1, totalPages)));
+
+            ViewBag.Pagination = new AdvancedProject.ViewModels.PaginationVM
+            {
+                CurrentPage = page,
+                TotalPages = totalPages,
+                Action = "Index",
+                Controller = "Tenants",
+                RouteValues = new Dictionary<string, object?> { ["searchTerm"] = searchTerm }
+            };
+
+            return View(await tenantsQuery.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync());
         }
 
 
@@ -363,14 +378,15 @@ namespace AdvancedProject.Controllers
                 var email = vm.Email.Trim().ToLower();
                 var phone = vm.Phone.Trim();
 
-                if (_context.Users.Any(u => u.Username.ToLower() == username && u.UserId != vm.UserId))
-                    ModelState.AddModelError("Username", "Username already exists");
-                if (_context.Users.Any(u => u.Email.ToLower() == email && u.UserId != vm.UserId))
-                    ModelState.AddModelError("Email", "Email already exists");
-                if (_context.Users.Any(u => u.Phone == phone && u.UserId != vm.UserId))
-                    ModelState.AddModelError("Phone", "Phone already exists");
+                bool duplicateFound = _context.Users.Any(u => u.Username.ToLower() == username && u.UserId != vm.UserId)
+                    || _context.Users.Any(u => u.Email.ToLower() == email && u.UserId != vm.UserId)
+                    || _context.Users.Any(u => u.Phone == phone && u.UserId != vm.UserId);
 
-                if (!ModelState.IsValid) return View(vm);
+                if (duplicateFound)
+                {
+                    ModelState.AddModelError(string.Empty, "Update failed. Please review your details and try again.");
+                    return View(vm);
+                }
 
                 var tenant = await _context.Tenants.FindAsync(vm.TenantId);
                 var user = await _context.Users.FindAsync(vm.UserId);

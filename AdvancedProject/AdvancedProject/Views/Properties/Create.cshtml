@@ -139,8 +139,11 @@
                 reader.readAsDataURL(file);
             }
 
+            input.addEventListener('click', e => e.stopPropagation());
+
             area.addEventListener('click', e => {
-                if (e.target !== removeBtn && !removeBtn.contains(e.target))
+                if (e.target === removeBtn || removeBtn.contains(e.target)) return;
+                if (previewWrap.style.display === 'none' || previewWrap.style.display === '')
                     input.click();
             });
 

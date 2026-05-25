@@ -23,7 +23,7 @@ namespace AdvancedProject.Controllers
         }
 
         // GET: Users
-        public async Task<IActionResult> Index(string roleFilter, string searchTerm)
+        public async Task<IActionResult> Index(string roleFilter, string searchTerm, int page = 1)
         {
             var users = _context.Users.AsQueryable();
 
@@ -47,7 +47,25 @@ namespace AdvancedProject.Controllers
             ViewData["CurrentRoleFilter"] = roleFilter;
             ViewData["CurrentSearchTerm"] = searchTerm;
 
-            return View(await users.ToListAsync());
+            const int pageSize = 10;
+            int total = await users.CountAsync();
+            int totalPages = (int)Math.Ceiling(total / (double)pageSize);
+            page = Math.Max(1, Math.Min(page, Math.Max(1, totalPages)));
+
+            ViewBag.Pagination = new AdvancedProject.ViewModels.PaginationVM
+            {
+                CurrentPage = page,
+                TotalPages = totalPages,
+                Action = "Index",
+                Controller = "Users",
+                RouteValues = new Dictionary<string, object?>
+                {
+                    ["roleFilter"] = roleFilter,
+                    ["searchTerm"] = searchTerm
+                }
+            };
+
+            return View(await users.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync());
         }
 
         // GET: Users/Details/5

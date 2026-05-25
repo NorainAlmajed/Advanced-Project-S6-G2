@@ -63,7 +63,7 @@ namespace AdvancedProject.Controllers
         }
 
         // GET: Properties
-        public async Task<IActionResult> Index(string searchString, int? governorateId)
+        public async Task<IActionResult> Index(string searchString, int? governorateId, int page = 1)
         {
             var properties = _context.Properties
                 .Include(p => p.Governorate)
@@ -90,7 +90,25 @@ namespace AdvancedProject.Controllers
                 governorateId
             );
 
-            return View(await properties.ToListAsync());
+            const int pageSize = 9;
+            int total = await properties.CountAsync();
+            int totalPages = (int)Math.Ceiling(total / (double)pageSize);
+            page = Math.Max(1, Math.Min(page, Math.Max(1, totalPages)));
+
+            ViewBag.Pagination = new AdvancedProject.ViewModels.PaginationVM
+            {
+                CurrentPage = page,
+                TotalPages = totalPages,
+                Action = "Index",
+                Controller = "Properties",
+                RouteValues = new Dictionary<string, object?>
+                {
+                    ["searchString"] = searchString,
+                    ["governorateId"] = governorateId?.ToString()
+                }
+            };
+
+            return View(await properties.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync());
         }
 
         // GET: Properties/Details/5

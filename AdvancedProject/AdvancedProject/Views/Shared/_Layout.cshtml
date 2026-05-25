@@ -228,9 +228,10 @@
                         <span>Notifications</span>
                     </a>
 
-                    <form asp-controller="Account" asp-action="Logout" method="post" class="top-header-logout-form">
+                    <form asp-controller="Account" asp-action="Logout" method="post" class="top-header-logout-form" id="logoutForm">
                         @Html.AntiForgeryToken()
-                        <button type="submit" class="top-header-logout-btn" title="Logout">
+                        <button type="button" class="top-header-logout-btn" title="Logout"
+                                data-bs-toggle="modal" data-bs-target="#logoutModal">
                             <i class="bi bi-box-arrow-left"></i>
                             <span>Logout</span>
                         </button>
@@ -293,6 +294,25 @@
             <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy Policy</a>
         </div>
     </footer>
+
+    <!-- Logout Confirmation Modal -->
+    <div class="modal fade" id="logoutModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 rounded-4 shadow">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title fw-bold">Confirm Logout</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body pt-2">
+                    Are you sure you want to logout?
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-light-custom" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="ux-btn-danger" onclick="document.getElementById('logoutForm').submit();">Logout</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

@@ -146,15 +146,13 @@ namespace AdvancedProject.Controllers
             var email = vm.Email.Trim().ToLower();
             var phone = vm.Phone.Trim();
 
-            if (_context.Users.Any(u => u.Username.ToLower() == username && u.UserId != vm.UserId))
-                ModelState.AddModelError("Username", "Username already exists");
-            if (_context.Users.Any(u => u.Email.ToLower() == email && u.UserId != vm.UserId))
-                ModelState.AddModelError("Email", "Email already exists");
-            if (_context.Users.Any(u => u.Phone == phone && u.UserId != vm.UserId))
-                ModelState.AddModelError("Phone", "Phone already exists");
+            bool duplicateFound = _context.Users.Any(u => u.Username.ToLower() == username && u.UserId != vm.UserId)
+                || _context.Users.Any(u => u.Email.ToLower() == email && u.UserId != vm.UserId)
+                || _context.Users.Any(u => u.Phone == phone && u.UserId != vm.UserId);
 
-            if (!ModelState.IsValid)
+            if (duplicateFound)
             {
+                ModelState.AddModelError(string.Empty, "Update failed. Please review your details and try again.");
                 ViewData["Skills"] = await _context.Skills.ToListAsync();
                 return View(vm);
             }

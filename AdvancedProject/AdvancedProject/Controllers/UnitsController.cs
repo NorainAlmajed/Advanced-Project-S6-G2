@@ -28,7 +28,8 @@ namespace AdvancedProject.Controllers
       string statusFilter,
       string typeFilter,
       string priceFilter,
-      int[] selectedAmenities)
+      int[] selectedAmenities,
+      int page = 1)
         {
             var query = _context.Units
             .Include(u => u.Property)
@@ -132,7 +133,29 @@ namespace AdvancedProject.Controllers
             ViewBag.CurrentPrice = priceFilter;
             ViewBag.PropertyId = id;
 
-            var units = await query.ToListAsync();
+            const int pageSize = 9;
+            int total = await query.CountAsync();
+            int totalPages = (int)Math.Ceiling(total / (double)pageSize);
+            page = Math.Max(1, Math.Min(page, Math.Max(1, totalPages)));
+
+            ViewBag.Pagination = new AdvancedProject.ViewModels.PaginationVM
+            {
+                CurrentPage = page,
+                TotalPages = totalPages,
+                Action = "Index",
+                Controller = "Units",
+                RouteValues = new Dictionary<string, object?>
+                {
+                    ["id"] = id?.ToString(),
+                    ["searchString"] = searchString,
+                    ["statusFilter"] = statusFilter,
+                    ["typeFilter"] = typeFilter,
+                    ["priceFilter"] = priceFilter,
+                    ["selectedAmenities"] = selectedAmenities
+                }
+            };
+
+            var units = await query.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
 
             return View(units);
         }

@@ -1,0 +1,87 @@
+@model AdvancedProject.ViewModels.PaginationVM
+
+@if (Model != null && Model.TotalPages > 1)
+{
+    var hasPrev = Model.CurrentPage > 1;
+    var hasNext = Model.CurrentPage < Model.TotalPages;
+
+    <nav class="ux-pagination-nav" aria-label="Page navigation" style="margin-top:3rem;">
+        <ul class="ux-pagination">
+
+            @* Previous arrow *@
+            <li class="ux-page-item @(!hasPrev ? "disabled" : "")">
+                @if (hasPrev)
+                {
+                    var rv = new Microsoft.AspNetCore.Routing.RouteValueDictionary();
+                    foreach (var kvp in Model.RouteValues) { if (kvp.Value != null) rv[kvp.Key] = kvp.Value; }
+                    rv["page"] = Model.CurrentPage - 1;
+                    <a class="ux-page-link ux-page-arrow" href="@Url.Action(Model.Action, Model.Controller, rv)" aria-label="Previous">
+                        <i class="bi bi-chevron-left"></i>
+                    </a>
+                }
+                else
+                {
+                    <span class="ux-page-link ux-page-arrow"><i class="bi bi-chevron-left"></i></span>
+                }
+            </li>
+
+            @* Page numbers *@
+            @for (int i = 1; i <= Model.TotalPages; i++)
+            {
+                var show = i == 1 || i == Model.TotalPages || Math.Abs(i - Model.CurrentPage) <= 1;
+
+                if (i == 2 && !show)
+                {
+                    <li class="ux-page-item disabled">
+                        <span class="ux-page-link ux-page-ellipsis">…</span>
+                    </li>
+                }
+
+                if (show)
+                {
+                    if (i == Model.CurrentPage)
+                    {
+                        <li class="ux-page-item active">
+                            <span class="ux-page-link">@i</span>
+                        </li>
+                    }
+                    else
+                    {
+                        var prv = new Microsoft.AspNetCore.Routing.RouteValueDictionary();
+                        foreach (var kvp in Model.RouteValues) { if (kvp.Value != null) prv[kvp.Key] = kvp.Value; }
+                        prv["page"] = i;
+                        <li class="ux-page-item">
+                            <a class="ux-page-link" href="@Url.Action(Model.Action, Model.Controller, prv)">@i</a>
+                        </li>
+                    }
+                }
+
+                if (i == Model.TotalPages - 1 && !show)
+                {
+                    <li class="ux-page-item disabled">
+                        <span class="ux-page-link ux-page-ellipsis">…</span>
+                    </li>
+                }
+            }
+
+            @* Next arrow *@
+            <li class="ux-page-item @(!hasNext ? "disabled" : "")">
+                @if (hasNext)
+                {
+                    var rv = new Microsoft.AspNetCore.Routing.RouteValueDictionary();
+                    foreach (var kvp in Model.RouteValues) { if (kvp.Value != null) rv[kvp.Key] = kvp.Value; }
+                    rv["page"] = Model.CurrentPage + 1;
+                    <a class="ux-page-link ux-page-arrow" href="@Url.Action(Model.Action, Model.Controller, rv)" aria-label="Next">
+                        <i class="bi bi-chevron-right"></i>
+                    </a>
+                }
+                else
+                {
+                    <span class="ux-page-link ux-page-arrow"><i class="bi bi-chevron-right"></i></span>
+                }
+            </li>
+
+        </ul>
+        <p class="ux-pagination-info">Page @Model.CurrentPage of @Model.TotalPages</p>
+    </nav>
+}

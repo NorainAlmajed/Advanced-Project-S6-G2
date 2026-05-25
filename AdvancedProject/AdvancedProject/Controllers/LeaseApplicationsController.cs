@@ -47,7 +47,7 @@ namespace AdvancedProject.Controllers
         }
 
         // GET: LeaseApplications
-        public async Task<IActionResult> Index(string searchTerm, string statusFilter, string dateFilter)
+        public async Task<IActionResult> Index(string searchTerm, string statusFilter, string dateFilter, int page = 1)
         {
             var applicationsQuery = _context.LeaseApplications
      .Include(l => l.Tenant)
@@ -122,12 +122,31 @@ namespace AdvancedProject.Controllers
             if (overdue.Any())
                 await _context.SaveChangesAsync();
 
-            var applications = await applicationsQuery.ToListAsync();
+            const int pageSize = 10;
+            int total = await applicationsQuery.CountAsync();
+            int totalPages = (int)Math.Ceiling(total / (double)pageSize);
+            page = Math.Max(1, Math.Min(page, Math.Max(1, totalPages)));
+
+            var applications = await applicationsQuery.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
 
             ViewData["CurrentSearchTerm"] = searchTerm;
             ViewData["CurrentStatusFilter"] = statusFilter;
             ViewData["CurrentDateFilter"] = dateFilter;
-            ViewData["TotalApplications"] = applications.Count;
+            ViewData["TotalApplications"] = total;
+
+            ViewBag.Pagination = new AdvancedProject.ViewModels.PaginationVM
+            {
+                CurrentPage = page,
+                TotalPages = totalPages,
+                Action = "Index",
+                Controller = "LeaseApplications",
+                RouteValues = new Dictionary<string, object?>
+                {
+                    ["searchTerm"] = searchTerm,
+                    ["statusFilter"] = statusFilter,
+                    ["dateFilter"] = dateFilter
+                }
+            };
 
             return View(applications);
         }
