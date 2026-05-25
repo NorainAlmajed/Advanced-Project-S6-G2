@@ -15,6 +15,8 @@
             <p class="ux-subtitle">Fill in your details to create a Rentify account.</p>
         </div>
 
+        <div asp-validation-summary="ModelOnly" class="auth-error-summary"></div>
+
         <!-- Personal Information -->
         <div class="ux-form-card">
             <div class="ux-form-section-header">
@@ -167,9 +169,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- Validation summary for Identity / server errors -->
-        <div asp-validation-summary="ModelOnly" class="auth-error-summary"></div>
 
         <!-- Actions -->
         <div class="ux-form-actions">
