@@ -90,7 +90,7 @@ namespace AdvancedProject.Controllers
         }
 
         // GET: MaintenanceRequests
-        public async Task<IActionResult> Index(string searchTerm, string priorityFilter, string statusFilter, int? typeFilter, string sortOrder)
+        public async Task<IActionResult> Index(string searchTerm, string priorityFilter, string statusFilter, int? typeFilter, string sortOrder, int page = 1)
         {
             var query = _context.MaintenanceRequests
             .Include(m => m.AssignedStaff)
@@ -172,7 +172,28 @@ namespace AdvancedProject.Controllers
             };
 
 
-            var requests = await query.ToListAsync();
+            const int pageSize = 9;
+            int total = await query.CountAsync();
+            int totalPages = (int)Math.Ceiling(total / (double)pageSize);
+            page = Math.Max(1, Math.Min(page, Math.Max(1, totalPages)));
+
+            ViewBag.Pagination = new AdvancedProject.ViewModels.PaginationVM
+            {
+                CurrentPage = page,
+                TotalPages = totalPages,
+                Action = "Index",
+                Controller = "MaintenanceRequests",
+                RouteValues = new Dictionary<string, object?>
+                {
+                    ["searchTerm"] = searchTerm,
+                    ["priorityFilter"] = priorityFilter,
+                    ["statusFilter"] = statusFilter,
+                    ["typeFilter"] = typeFilter?.ToString(),
+                    ["sortOrder"] = sortOrder
+                }
+            };
+
+            var requests = await query.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
 
             return View(requests);
         }
@@ -302,7 +323,10 @@ namespace AdvancedProject.Controllers
                 maintenanceRequest.AssignedStaffId = staff?.StaffId;
 
                 if (staff != null)
+                {
                     staff.AvailabilityStatus = "Busy";
+                    maintenanceRequest.AssignedTime = DateTime.Now;
+                }
 
                 _context.Add(maintenanceRequest);
                 await _context.SaveChangesAsync();
@@ -496,7 +520,20 @@ namespace AdvancedProject.Controllers
                 request.UnitId = form.UnitId;
                 request.SkillId = form.SkillId;
                 request.Priority = form.Priority;
+
+                var oldStatus = request.Status;
                 request.Status = form.Status;
+                if (form.Status != oldStatus)
+                {
+                    switch (form.Status)
+                    {
+                        case "In Progress": request.InProgressTime = DateTime.Now; break;
+                        case "Resolved":    request.ResolvedTime   = DateTime.Now; break;
+                        case "Closed":      request.ClosedTime     = DateTime.Now; break;
+                        case "Completed":   request.CompletedDate  = DateTime.Now; break;
+                    }
+                }
+
                 request.Notes = form.Notes;
 
                 if (!managerChangedStaff)
@@ -529,6 +566,7 @@ namespace AdvancedProject.Controllers
                     if (newStaff != null)
                     {
                         newStaff.AvailabilityStatus = "Busy";
+                        request.AssignedTime = DateTime.Now;
                     }
                 }
                 else
@@ -547,6 +585,7 @@ namespace AdvancedProject.Controllers
                         if (newStaff != null)
                         {
                             newStaff.AvailabilityStatus = "Busy";
+                            request.AssignedTime = DateTime.Now;
                         }
                     }
                 }
@@ -741,7 +780,20 @@ namespace AdvancedProject.Controllers
                 request.UnitId = form.UnitId;
                 request.SkillId = form.SkillId;
                 request.Priority = form.Priority;
+
+                var oldStatus = request.Status;
                 request.Status = form.Status;
+                if (form.Status != oldStatus)
+                {
+                    switch (form.Status)
+                    {
+                        case "In Progress": request.InProgressTime = DateTime.Now; break;
+                        case "Resolved":    request.ResolvedTime   = DateTime.Now; break;
+                        case "Closed":      request.ClosedTime     = DateTime.Now; break;
+                        case "Completed":   request.CompletedDate  = DateTime.Now; break;
+                    }
+                }
+
                 request.Notes = form.Notes;
 
                 var allStaff = await _context.MaintenanceStaffs
@@ -766,6 +818,7 @@ namespace AdvancedProject.Controllers
                 if (newStaff != null)
                 {
                     newStaff.AvailabilityStatus = "Busy";
+                    request.AssignedTime = DateTime.Now;
                 }
 
                 // Notify tenant

@@ -62,7 +62,7 @@ namespace AdvancedProject.Controllers
         }
 
         // GET: Leases
-        public async Task<IActionResult> Index(string searchTerm, string statusFilter, string dateFilter)
+        public async Task<IActionResult> Index(string searchTerm, string statusFilter, string dateFilter, int page = 1)
         {
             await AutoTerminateExpiredLeasesAsync();
             var leasesQuery = _context.Leases
@@ -120,12 +120,31 @@ namespace AdvancedProject.Controllers
                 leasesQuery = leasesQuery.OrderByDescending(l => l.CreatedAt);
             }
 
-            var leases = await leasesQuery.ToListAsync();
+            const int pageSize = 10;
+            int total = await leasesQuery.CountAsync();
+            int totalPages = (int)Math.Ceiling(total / (double)pageSize);
+            page = Math.Max(1, Math.Min(page, Math.Max(1, totalPages)));
+
+            var leases = await leasesQuery.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
 
             ViewData["CurrentSearchTerm"] = searchTerm;
             ViewData["CurrentStatusFilter"] = statusFilter;
             ViewData["CurrentDateFilter"] = dateFilter;
-            ViewData["TotalLeases"] = leases.Count;
+            ViewData["TotalLeases"] = total;
+
+            ViewBag.Pagination = new AdvancedProject.ViewModels.PaginationVM
+            {
+                CurrentPage = page,
+                TotalPages = totalPages,
+                Action = "Index",
+                Controller = "Leases",
+                RouteValues = new Dictionary<string, object?>
+                {
+                    ["searchTerm"] = searchTerm,
+                    ["statusFilter"] = statusFilter,
+                    ["dateFilter"] = dateFilter
+                }
+            };
 
             return View(leases);
         }

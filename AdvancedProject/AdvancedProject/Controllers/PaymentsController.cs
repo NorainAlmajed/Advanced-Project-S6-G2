@@ -71,7 +71,7 @@ namespace AdvancedProject.Controllers
         }
 
         // GET: Payments
-        public async Task<IActionResult> Index(string searchTerm, string statusFilter, string dateFilter)
+        public async Task<IActionResult> Index(string searchTerm, string statusFilter, string dateFilter, int page = 1)
         {
             var paymentsQuery = _context.Payments
                 .Include(p => p.Lease)
@@ -125,12 +125,31 @@ namespace AdvancedProject.Controllers
                 paymentsQuery = paymentsQuery.OrderByDescending(p => p.PaymentId);
             }
 
-            var payments = await paymentsQuery.ToListAsync();
+            const int pageSize = 10;
+            int total = await paymentsQuery.CountAsync();
+            int totalPages = (int)Math.Ceiling(total / (double)pageSize);
+            page = Math.Max(1, Math.Min(page, Math.Max(1, totalPages)));
+
+            var payments = await paymentsQuery.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
 
             ViewData["CurrentSearchTerm"] = searchTerm;
             ViewData["CurrentStatusFilter"] = statusFilter;
             ViewData["CurrentDateFilter"] = dateFilter;
-            ViewData["TotalPayments"] = payments.Count;
+            ViewData["TotalPayments"] = total;
+
+            ViewBag.Pagination = new AdvancedProject.ViewModels.PaginationVM
+            {
+                CurrentPage = page,
+                TotalPages = totalPages,
+                Action = "Index",
+                Controller = "Payments",
+                RouteValues = new Dictionary<string, object?>
+                {
+                    ["searchTerm"] = searchTerm,
+                    ["statusFilter"] = statusFilter,
+                    ["dateFilter"] = dateFilter
+                }
+            };
 
             return View(payments);
         }

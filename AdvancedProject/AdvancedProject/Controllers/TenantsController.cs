@@ -24,7 +24,7 @@ namespace AdvancedProject.Controllers
 
         // GET: Tenants
         [Authorize(Roles = "PropertyManager")]
-        public async Task<IActionResult> Index(string searchTerm)
+        public async Task<IActionResult> Index(string searchTerm, int page = 1)
         {
             var tenantsQuery = _context.Users
                 .Where(u => u.Role == "Tenant")
@@ -44,7 +44,21 @@ namespace AdvancedProject.Controllers
 
             ViewData["CurrentSearchTerm"] = searchTerm;
 
-            return View(await tenantsQuery.ToListAsync());
+            const int pageSize = 10;
+            int total = await tenantsQuery.CountAsync();
+            int totalPages = (int)Math.Ceiling(total / (double)pageSize);
+            page = Math.Max(1, Math.Min(page, Math.Max(1, totalPages)));
+
+            ViewBag.Pagination = new AdvancedProject.ViewModels.PaginationVM
+            {
+                CurrentPage = page,
+                TotalPages = totalPages,
+                Action = "Index",
+                Controller = "Tenants",
+                RouteValues = new Dictionary<string, object?> { ["searchTerm"] = searchTerm }
+            };
+
+            return View(await tenantsQuery.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync());
         }
 
 
