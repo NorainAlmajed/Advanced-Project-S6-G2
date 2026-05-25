@@ -46,6 +46,7 @@ namespace AdvancedProject.Controllers
 
             const int pageSize = 10;
             int total = await tenantsQuery.CountAsync();
+            ViewData["TotalTenants"] = total;
             int totalPages = (int)Math.Ceiling(total / (double)pageSize);
             page = Math.Max(1, Math.Min(page, Math.Max(1, totalPages)));
 
