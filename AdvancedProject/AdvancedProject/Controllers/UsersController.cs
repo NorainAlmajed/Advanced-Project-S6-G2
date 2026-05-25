@@ -159,44 +159,42 @@ namespace AdvancedProject.Controllers
         public async Task<IActionResult> Edit(UserEditVM vm)
         {
             var user = await _context.Users.FindAsync(vm.UserId);
-
             if (user == null)
                 return NotFound();
 
-            var username = vm.Username.Trim().ToLower();
-            var email = vm.Email.Trim().ToLower();
-            var phone = vm.Phone.Trim();
-
-            // UNIQUE CHECKS (ignore current user)
-            if (_context.Users.Any(u => u.Username.ToLower() == username && u.UserId != vm.UserId))
-                ModelState.AddModelError("Username", "Username already exists");
-
-            if (_context.Users.Any(u => u.Email.ToLower() == email && u.UserId != vm.UserId))
-                ModelState.AddModelError("Email", "Email already exists");
-
-            if (_context.Users.Any(u => u.Phone == phone && u.UserId != vm.UserId))
-                ModelState.AddModelError("Phone", "Phone already exists");
-
-            if (!ModelState.IsValid)
-                return View(vm);
-
-            // Update fields
-            user.Username = username;
-            user.FullName = vm.FullName;
-            user.Email = email;
-            user.Phone = phone;
-            user.Gender = vm.Gender;
-
-            // OPTIONAL password
-            if (!string.IsNullOrWhiteSpace(vm.Password))
+            if (ModelState.IsValid)
             {
-                user.Password = vm.Password;
+                var username = vm.Username.Trim().ToLower();
+                var email = vm.Email.Trim().ToLower();
+                var phone = vm.Phone.Trim();
+
+                bool duplicateFound =
+                    _context.Users.Any(u => u.Username.ToLower() == username && u.UserId != vm.UserId)
+                    || _context.Users.Any(u => u.Email.ToLower() == email && u.UserId != vm.UserId)
+                    || _context.Users.Any(u => u.Phone == phone && u.UserId != vm.UserId);
+
+                if (duplicateFound)
+                {
+                    ModelState.AddModelError(string.Empty, "Update failed. Please review your details and try again.");
+                    return View(vm);
+                }
+
+                user.Username = username;
+                user.FullName = vm.FullName;
+                user.Email = email;
+                user.Phone = phone;
+                user.Gender = vm.Gender;
+
+                if (!string.IsNullOrWhiteSpace(vm.Password))
+                    user.Password = vm.Password;
+
+                await _context.SaveChangesAsync();
+
+                TempData["SuccessMessage"] = "User was edited successfully.";
+                return RedirectToAction(nameof(Details), new { id = vm.UserId });
             }
 
-            await _context.SaveChangesAsync();
-
-            TempData["SuccessMessage"] = "User was edited successfully.";
-            return RedirectToAction(nameof(Details), new { id = vm.UserId });
+            return View(vm);
         }
 
 
