@@ -197,7 +197,7 @@
 
                     <form asp-controller="Account" asp-action="Logout" method="post" class="top-header-logout-form">
                         @Html.AntiForgeryToken()
-                        <button type="submit" class="top-header-logout-btn" title="Logout">
+                        <button type="submit" class="top-header-logout-btn" title="Logout" onclick="return confirm('Are you sure you want to logout?');">
                             <i class="bi bi-box-arrow-left"></i>
                             <span>Logout</span>
                         </button>
