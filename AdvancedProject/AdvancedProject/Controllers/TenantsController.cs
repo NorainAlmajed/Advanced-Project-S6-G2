@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -6,8 +6,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using AdvancedProject.Data;
-using AdvancedProject.Models;
+using AdvancedProjectAPI.Data;
+using AdvancedProjectAPI.Models;
+using AdvancedProject.ViewModels;
 
 namespace AdvancedProject.Controllers
 {
@@ -23,7 +24,7 @@ namespace AdvancedProject.Controllers
 
         // GET: Tenants
         [Authorize(Roles = "PropertyManager")]
-        public async Task<IActionResult> Index(string searchTerm)
+        public async Task<IActionResult> Index(string searchTerm, int page = 1)
         {
             var tenantsQuery = _context.Users
                 .Where(u => u.Role == "Tenant")
@@ -43,7 +44,22 @@ namespace AdvancedProject.Controllers
 
             ViewData["CurrentSearchTerm"] = searchTerm;
 
-            return View(await tenantsQuery.ToListAsync());
+            const int pageSize = 10;
+            int total = await tenantsQuery.CountAsync();
+            ViewData["TotalTenants"] = total;
+            int totalPages = (int)Math.Ceiling(total / (double)pageSize);
+            page = Math.Max(1, Math.Min(page, Math.Max(1, totalPages)));
+
+            ViewBag.Pagination = new AdvancedProject.ViewModels.PaginationVM
+            {
+                CurrentPage = page,
+                TotalPages = totalPages,
+                Action = "Index",
+                Controller = "Tenants",
+                RouteValues = new Dictionary<string, object?> { ["searchTerm"] = searchTerm }
+            };
+
+            return View(await tenantsQuery.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync());
         }
 
 
@@ -89,8 +105,8 @@ namespace AdvancedProject.Controllers
             if (ModelState.IsValid)
             {
                 // Age validation
-                var age = DateTime.Today.Year - vm.Dob.Year;
-                if (vm.Dob.Date > DateTime.Today.AddYears(-age)) age--;
+                var age = DateTime.Today.Year - vm.Dob!.Value.Year;
+                if (vm.Dob.Value.Date > DateTime.Today.AddYears(-age)) age--;
 
                 if (age < 21)
                 {
@@ -146,7 +162,7 @@ namespace AdvancedProject.Controllers
                 // 2. Create Tenant
                 var tenant = new Tenant
                 {
-                    Dob = DateOnly.FromDateTime(vm.Dob),
+                    Dob = DateOnly.FromDateTime(vm.Dob!.Value),
                     NationalId = vm.NationalId,
                     UserId = user.UserId,
                     Salary = vm.Salary,
@@ -158,6 +174,7 @@ namespace AdvancedProject.Controllers
                 _context.Tenants.Add(tenant);
                 await _context.SaveChangesAsync();
 
+                TempData["SuccessMessage"] = "Tenant was created successfully.";
                 return RedirectToAction(nameof(Index));
             }
 
@@ -175,7 +192,7 @@ namespace AdvancedProject.Controllers
 
             if (tenant == null) return NotFound();
 
-            // GET: Tenants/Edit/5 — populate the VM
+            // GET: Tenants/Edit/5 � populate the VM
             var vm = new TenantEditVM
             {
                 TenantId = tenant.TenantId,
@@ -272,7 +289,7 @@ namespace AdvancedProject.Controllers
                 }
 
                 // Update Tenant
-                // POST: Tenants/Edit/5 — replace the tenant update block
+                // POST: Tenants/Edit/5 � replace the tenant update block
                 tenant.Dob = DateOnly.FromDateTime(vm.Dob);
                 tenant.NationalId = vm.NationalId;
                 tenant.Salary = vm.Salary;
@@ -281,7 +298,119 @@ namespace AdvancedProject.Controllers
                 tenant.EmploymentStatus = vm.EmploymentStatus;
                 await _context.SaveChangesAsync();
 
-                return RedirectToAction(nameof(Index));
+                TempData["SuccessMessage"] = "Tenant was edited successfully.";
+                return RedirectToAction(nameof(Details), new { id = vm.TenantId });
+            }
+
+            return View(vm);
+        }
+
+        // GET: Tenants/MyProfile
+        public async Task<IActionResult> MyProfile()
+        {
+            if (!User.IsInRole("Tenant")) return Forbid();
+
+            var currentUserEmail = User.Identity!.Name;
+            var currentUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == currentUserEmail);
+            if (currentUser == null) return NotFound();
+
+            var tenant = await _context.Tenants
+                .Include(t => t.User)
+                .FirstOrDefaultAsync(t => t.UserId == currentUser.UserId);
+            if (tenant == null) return NotFound();
+
+            return View(tenant);
+        }
+
+        // GET: Tenants/EditMyProfile
+        public async Task<IActionResult> EditMyProfile()
+        {
+            if (!User.IsInRole("Tenant")) return Forbid();
+
+            var currentUserEmail = User.Identity!.Name;
+            var currentUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == currentUserEmail);
+            if (currentUser == null) return NotFound();
+
+            var tenant = await _context.Tenants
+                .Include(t => t.User)
+                .FirstOrDefaultAsync(t => t.UserId == currentUser.UserId);
+            if (tenant == null) return NotFound();
+
+            var vm = new TenantEditVM
+            {
+                TenantId = tenant.TenantId,
+                UserId = tenant.UserId,
+                Username = tenant.User.Username,
+                FullName = tenant.User.FullName,
+                Email = tenant.User.Email,
+                Phone = tenant.User.Phone,
+                Gender = tenant.User.Gender,
+                Dob = tenant.Dob.ToDateTime(TimeOnly.MinValue),
+                NationalId = tenant.NationalId,
+                Salary = tenant.Salary,
+                FinancialStability = tenant.FinancialStability,
+                MaritalStatus = tenant.MaritalStatus,
+                EmploymentStatus = tenant.EmploymentStatus
+            };
+
+            return View(vm);
+        }
+
+        // POST: Tenants/EditMyProfile
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditMyProfile(TenantEditVM vm)
+        {
+            if (!User.IsInRole("Tenant")) return Forbid();
+
+            if (ModelState.IsValid)
+            {
+                var age = DateTime.Today.Year - vm.Dob.Year;
+                if (vm.Dob > DateTime.Today.AddYears(-age)) age--;
+
+                if (age < 21)
+                {
+                    ModelState.AddModelError("Dob", "Tenant must be at least 21 years old.");
+                    return View(vm);
+                }
+
+                var username = vm.Username.Trim().ToLower();
+                var email = vm.Email.Trim().ToLower();
+                var phone = vm.Phone.Trim();
+
+                bool duplicateFound = _context.Users.Any(u => u.Username.ToLower() == username && u.UserId != vm.UserId)
+                    || _context.Users.Any(u => u.Email.ToLower() == email && u.UserId != vm.UserId)
+                    || _context.Users.Any(u => u.Phone == phone && u.UserId != vm.UserId);
+
+                if (duplicateFound)
+                {
+                    ModelState.AddModelError(string.Empty, "Update failed. Please review your details and try again.");
+                    return View(vm);
+                }
+
+                var tenant = await _context.Tenants.FindAsync(vm.TenantId);
+                var user = await _context.Users.FindAsync(vm.UserId);
+                if (tenant == null || user == null) return NotFound();
+
+                user.Username = username;
+                user.FullName = vm.FullName;
+                user.Email = email;
+                user.Phone = phone;
+                user.Gender = vm.Gender;
+
+                if (!string.IsNullOrWhiteSpace(vm.Password))
+                    user.Password = vm.Password;
+
+                tenant.Dob = DateOnly.FromDateTime(vm.Dob);
+                tenant.NationalId = vm.NationalId;
+                tenant.Salary = vm.Salary;
+                tenant.MaritalStatus = vm.MaritalStatus;
+                tenant.EmploymentStatus = vm.EmploymentStatus;
+                // FinancialStability is not updated — manager only
+
+                await _context.SaveChangesAsync();
+                TempData["SuccessMessage"] = "Profile updated successfully.";
+                return RedirectToAction(nameof(MyProfile));
             }
 
             return View(vm);
@@ -325,6 +454,7 @@ namespace AdvancedProject.Controllers
             }
 
             await _context.SaveChangesAsync();
+            TempData["SuccessMessage"] = "Tenant was deleted successfully.";
             return RedirectToAction(nameof(Index));
         }
 

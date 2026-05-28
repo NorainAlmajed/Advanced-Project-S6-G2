@@ -1,133 +1,136 @@
-﻿@model AdvancedProject.Models.Unit
+@model AdvancedProjectAPI.Models.Unit
 
 @{
     ViewData["Title"] = "Unit Details";
 }
 
-<div class="unit-details-page">
+<div class="ux-page">
 
-    <div class="unit-details-hero shadow-soft">
-
+    <div class="ux-page-header">
         <div>
-            <p class="unit-details-eyebrow">
-                Unit Details
+            <p class="ux-eyebrow">Unit Management</p>
+            <h1 class="ux-title">Unit @Model.UnitNumber</h1>
+            <p class="ux-subtitle">
+                <i class="bi bi-building-fill" style="color:var(--accent);margin-right:0.3rem;"></i>
+                @(Model.Property?.Name ?? "—")
+                <span style="margin:0 0.4rem;color:var(--text-muted);">&middot;</span>
+                BD @Model.RentAmount.ToString("0.00") / month
             </p>
-
-            <h1 class="unit-details-title">
-                Unit @Model.UnitNumber
-            </h1>
-
-            <p class="unit-details-subtitle">
-                @Model.Property?.Name
-            </p>
-
+        </div>
+        <div class="d-flex gap-2 flex-wrap">
+            @if (User.IsInRole("PropertyManager"))
+            {
+                <a asp-action="Edit" asp-route-id="@Model.UnitId" class="ux-btn-outline">
+                    <i class="bi bi-pencil-fill"></i> Edit
+                </a>
+                <button type="button" class="ux-btn-danger" data-bs-toggle="modal" data-bs-target="#deleteUnitModal">
+                    <i class="bi bi-trash-fill"></i> Delete
+                </button>
+            }
             @if (Model.AvailabilityStatus == "Available")
             {
-                <span class="custom-pill unit-status-available mt-2">
-                    Available
-                </span>
+                @if (User.IsInRole("Tenant"))
+                {
+                    <a asp-controller="LeaseApplications"
+                       asp-action="Create"
+                       asp-route-unitId="@Model.UnitId"
+                       class="ux-btn-primary">
+                        <i class="bi bi-file-earmark-text"></i> Apply
+                    </a>
+                }
+                else if (User.IsInRole("PropertyManager"))
+                {
+                    <a asp-controller="Leases"
+                       asp-action="Create"
+                       asp-route-unitId="@Model.UnitId"
+                       class="ux-btn-primary">
+                        <i class="bi bi-file-earmark-plus"></i> Create Lease
+                    </a>
+                }
             }
-            else if (Model.AvailabilityStatus == "Occupied")
+            <a asp-action="Index" asp-route-id="@ViewBag.PropertyId" class="ux-btn-ghost">
+                <i class="bi bi-arrow-left"></i> Back
+            </a>
+        </div>
+    </div>
+
+    <div class="ux-details-main" style="display:flex;flex-direction:column;gap:1.25rem;">
+
+        <div class="ux-form-card">
+            <div class="ux-form-section-header">
+                <div class="ux-form-section-icon" style="background:rgba(0,91,113,0.1);color:#005B71;">
+                    <i class="bi bi-house-fill"></i>
+                </div>
+                <div>
+                    <h3 class="ux-form-section-title">Unit Overview</h3>
+                    <p class="ux-form-section-sub">General information about this unit.</p>
+                </div>
+            </div>
+            <div class="ux-details-grid">
+                <div class="ux-detail-item">
+                    <span class="ux-detail-label">Unit Number</span>
+                    <span class="ux-detail-value">@Model.UnitNumber</span>
+                </div>
+                <div class="ux-detail-item">
+                    <span class="ux-detail-label">Property</span>
+                    <span class="ux-detail-value">@(Model.Property?.Name ?? "—")</span>
+                </div>
+                <div class="ux-detail-item">
+                    <span class="ux-detail-label">Unit Type</span>
+                    <span class="ux-detail-value">@(Model.UnitType?.Name ?? "—")</span>
+                </div>
+                <div class="ux-detail-item">
+                    <span class="ux-detail-label">Monthly Rent</span>
+                    <span class="ux-detail-value">BD @Model.RentAmount.ToString("0.00")</span>
+                </div>
+                <div class="ux-detail-item">
+                    <span class="ux-detail-label">Size</span>
+                    <span class="ux-detail-value">@Model.SizeSqFt.ToString("0") SqFt</span>
+                </div>
+                <div class="ux-detail-item">
+                    <span class="ux-detail-label">Availability</span>
+                    <span class="ux-detail-value">
+                        @if (Model.AvailabilityStatus == "Available")
+                        {
+                            <span class="custom-pill unit-status-available">Available</span>
+                        }
+                        else if (Model.AvailabilityStatus == "Occupied")
+                        {
+                            <span class="custom-pill unit-status-occupied">Occupied</span>
+                        }
+                        else
+                        {
+                            <span class="custom-pill unit-status-default">@Model.AvailabilityStatus</span>
+                        }
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="ux-form-card">
+            <div class="ux-form-section-header">
+                <div class="ux-form-section-icon" style="background:rgba(30,142,110,0.1);color:#1E8E6E;">
+                    <i class="bi bi-stars"></i>
+                </div>
+                <div>
+                    <h3 class="ux-form-section-title">Amenities</h3>
+                    <p class="ux-form-section-sub">Features included with this unit.</p>
+                </div>
+            </div>
+            @if (Model.Amenities != null && Model.Amenities.Any())
             {
-                <span class="custom-pill unit-status-occupied mt-2">
-                    Occupied
-                </span>
+                <div class="d-flex flex-wrap gap-2 mt-3">
+                    @foreach (var amenity in Model.Amenities)
+                    {
+                        <span class="custom-pill badge-soft-manager">@amenity.Name</span>
+                    }
+                </div>
             }
             else
             {
-                <span class="custom-pill unit-status-default mt-2">
-                    @Model.AvailabilityStatus
-                </span>
+                <p class="ux-detail-value mt-3" style="color:var(--text-muted);">No amenities available for this unit.</p>
             }
-
         </div>
-
-        <div class="unit-details-actions">
-
-            <a asp-action="Edit"
-               asp-route-id="@Model.UnitId"
-               class="btn unit-details-edit-btn">
-                Edit Unit
-            </a>
-
-            @if (User.IsInRole("PropertyManager"))
-            {
-                <button type="button" class="btn btn-danger"
-                        data-bs-toggle="modal" data-bs-target="#deleteUnitModal">
-                    Delete Unit
-                </button>
-            }
-
-            <a asp-action="Index"
-               asp-route-id="@ViewBag.PropertyId"
-               class="btn unit-details-back-btn">
-                Back to Units
-            </a>
-
-        </div>
-
-    </div>
-
-    <div class="unit-details-grid mt-4">
-
-        <div class="unit-info-card">
-            <span class="info-label">Property</span>
-            <span class="info-value">
-                @Model.Property?.Name
-            </span>
-        </div>
-
-        <div class="unit-info-card">
-            <span class="info-label">Unit Type</span>
-            <span class="info-value">
-                @Model.UnitType?.Name
-            </span>
-        </div>
-
-        <div class="unit-info-card">
-            <span class="info-label">Monthly Rent</span>
-            <span class="info-value">
-                BD @Model.RentAmount.ToString("0")
-            </span>
-        </div>
-
-        <div class="unit-info-card">
-            <span class="info-label">Size</span>
-            <span class="info-value">
-                @Model.SizeSqFt.ToString("0") SqFt
-            </span>
-        </div>
-
-    </div>
-
-    <div class="details-section-card mt-4">
-
-        <div class="section-header">
-            <h3>Amenities</h3>
-            <p>
-                Features included with this unit.
-            </p>
-        </div>
-
-        @if (Model.Amenities != null && Model.Amenities.Any())
-        {
-            <div class="unit-amenities-display-grid">
-
-                @foreach (var amenity in Model.Amenities)
-                {
-                    <div class="unit-amenity-display-card">
-                        @amenity.Name
-                    </div>
-                }
-
-            </div>
-        }
-        else
-        {
-            <div class="unit-empty-box">
-                No amenities available for this unit.
-            </div>
-        }
 
     </div>
 
@@ -149,7 +152,7 @@
                     <button type="button" class="btn btn-light-custom" data-bs-dismiss="modal">Cancel</button>
                     <form asp-action="SoftDelete" asp-controller="Units" asp-route-id="@Model.UnitId" method="post">
                         @Html.AntiForgeryToken()
-                        <button type="submit" class="btn btn-danger lease-action-btn">Confirm Delete</button>
+                        <button type="submit" class="ux-btn-danger">Confirm Delete</button>
                     </form>
                 </div>
             </div>

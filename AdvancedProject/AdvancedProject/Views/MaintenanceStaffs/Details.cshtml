@@ -1,22 +1,16 @@
-﻿@model AdvancedProject.Models.MaintenanceStaff
+@model AdvancedProjectAPI.Models.MaintenanceStaff
 
 @{
     ViewData["Title"] = "Staff Details";
 
     string fullName = Model.User?.FullName ?? "Staff Member";
-    string username = Model.User?.Username ?? "-";
-    string email = Model.User?.Email ?? "-";
-    string phone = Model.User?.Phone ?? "-";
+    string username = Model.User?.Username ?? "—";
+    string email = Model.User?.Email ?? "—";
+    string phone = Model.User?.Phone ?? "—";
     string role = Model.User?.Role ?? "Staff";
     string availability = string.IsNullOrWhiteSpace(Model.AvailabilityStatus) ? "Unknown" : Model.AvailabilityStatus;
-    string createdAtText = Model.User != null ? Model.User.CreatedAt.ToString("dd MMM yyyy") : "Not available";
-
-    string initials = "";
-    if (!string.IsNullOrWhiteSpace(fullName))
-    {
-        var parts = fullName.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-        initials = string.Concat(parts.Take(2).Select(p => char.ToUpper(p[0])));
-    }
+    string createdAtText = Model.User != null ? Model.User.CreatedAt.ToString("dd MMM yyyy") : "—";
+    string genderText = Model.User?.Gender == "F" ? "Female" : "Male";
 
     string availabilityClass = availability.ToLower() switch
     {
@@ -24,139 +18,106 @@
         "busy" => "badge-soft-inactive",
         _ => "badge-soft-default"
     };
-
-    string genderClass = Model.User?.Gender == "F" ? "badge-gender-female" : "badge-gender-male";
-    string genderText = Model.User?.Gender == "F" ? "Female" : "Male";
 }
 
-<div class="details-page container py-4">
-    <div class="details-topbar d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
-        <div>
-            <p class="details-eyebrow mb-1">Maintenance Team</p>
-            <h1 class="details-title mb-0">Staff Details</h1>
-        </div>
+<div class="ux-page">
 
-        <div class="d-flex flex-wrap gap-2">
-            <a asp-action="Edit" asp-route-id="@Model.StaffId" class="btn btn-accent details-btn">
-                Edit Staff Info
-            </a>
-            <a asp-controller="Users" asp-action="Index" class="btn btn-light-custom details-btn">
-                Back to Users
-            </a>
+    <div class="ux-page-header">
+        <div>
+            <p class="ux-eyebrow">Maintenance Team</p>
+            <h1 class="ux-title">@fullName</h1>
+            <p class="ux-subtitle">
+                <i class="bi bi-at" style="color:var(--accent);"></i>@username
+                <span style="margin:0 0.4rem;color:var(--text-muted);">&middot;</span>
+                Maintenance Staff
+            </p>
+        </div>
+        <div class="d-flex gap-2 flex-wrap">
+            @if (User.IsInRole("PropertyManager"))
+            {
+                <a asp-action="Edit" asp-route-id="@Model.StaffId" class="ux-btn-outline">
+                    <i class="bi bi-pencil-fill"></i> Edit
+                </a>
+                <a asp-controller="Users" asp-action="Index" class="ux-btn-ghost">
+                    <i class="bi bi-arrow-left"></i> Back
+                </a>
+            }
+            else
+            {
+                <a asp-action="EditMyProfile" class="ux-btn-outline">
+                    <i class="bi bi-pencil-fill"></i> Edit
+                </a>
+            }
         </div>
     </div>
 
-    <div class="card details-main-card shadow-soft border-0">
-        <div class="card-body p-4 p-lg-5">
-            <div class="row g-4">
-                <div class="col-12">
-                    <div class="tenant-hero-card">
-                        <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center gap-4">
-                            <div class="profile-avatar tenant-avatar">
-                                @initials
-                            </div>
+    <div class="ux-details-main" style="display:flex;flex-direction:column;gap:1.25rem;">
 
-                            <div class="flex-grow-1">
-                                <h2 class="profile-name mb-2">@fullName</h2>
-
-                                <div class="d-flex flex-wrap gap-2 mb-3">
-                                    <span class="custom-pill badge-soft-staff">@role</span>
-                                    <span class="custom-pill @availabilityClass">@availability</span>
-                                    <span class="custom-pill @genderClass">@genderText</span>
-                                </div>
-
-                                <div class="hero-contact-grid">
-                                    <div class="hero-contact-item">
-                                        <span class="info-label">Username</span>
-                                        <span class="info-value">@username</span>
-                                    </div>
-
-                                    <div class="hero-contact-item">
-                                        <span class="info-label">Email Address</span>
-                                        <span class="info-value">@email</span>
-                                    </div>
-
-                                    <div class="hero-contact-item">
-                                        <span class="info-label">Phone Number</span>
-                                        <span class="info-value">@phone</span>
-                                    </div>
-
-                                    <div class="hero-contact-item">
-                                        <span class="info-label">Account Created</span>
-                                        <span class="info-value">@createdAtText</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="details-section-card mt-4">
-                        <div class="section-header">
-                            <h3>Staff Information</h3>
-                            <p>Maintenance staff profile and work details.</p>
-                        </div>
-
-                        <div class="info-grid">
-                            <div class="info-box">
-                                <span class="info-label">Role</span>
-                                <span class="info-value">@role</span>
-                            </div>
-
-                            <div class="info-box">
-                                <span class="info-label">Availability Status</span>
-                                <span class="info-value">@availability</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="details-section-card mt-4">
-                        <div class="section-header">
-                            <h3>Skills</h3>
-                            <p>Technical skills assigned to this staff member.</p>
-                        </div>
-
-                        @if (Model.Skills != null && Model.Skills.Any())
-                        {
-                            <div class="d-flex flex-wrap gap-2">
-                                @foreach (var skill in Model.Skills)
-                                {
-                                    <span class="custom-pill badge-soft-manager">@skill.Name</span>
-                                }
-                            </div>
-                        }
-                        else
-                        {
-                            <div class="info-box">
-                                <span class="info-value">No skills assigned.</span>
-                            </div>
-                        }
-                    </div>
-
-                    <div class="details-section-card mt-4">
-                        <div class="section-header">
-                            <h3>Contact Details</h3>
-                            <p>Quick reference for communication details.</p>
-                        </div>
-
-                        <div class="contact-mini-grid">
-                            <div class="contact-mini-card">
-                                <span class="info-label">Email</span>
-                                <span class="info-value">@email</span>
-                            </div>
-
-                            <div class="contact-mini-card">
-                                <span class="info-label">Phone</span>
-                                <span class="info-value">@phone</span>
-                            </div>
-
-                            <div class="contact-mini-card">
-                                <span class="info-label">Username</span>
-                                <span class="info-value">@username</span>
-                            </div>
-                        </div>
-                    </div>
+        <div class="ux-form-card">
+            <div class="ux-form-section-header">
+                <div class="ux-form-section-icon" style="background:rgba(0,91,113,0.1);color:#005B71;">
+                    <i class="bi bi-person-badge-fill"></i>
+                </div>
+                <div>
+                    <h3 class="ux-form-section-title">Staff Profile</h3>
+                    <p class="ux-form-section-sub">Personal and contact details for this staff member.</p>
+                </div>
+            </div>
+            <div class="ux-details-grid">
+                <div class="ux-detail-item">
+                    <span class="ux-detail-label">Full Name</span>
+                    <span class="ux-detail-value">@fullName</span>
+                </div>
+                <div class="ux-detail-item">
+                    <span class="ux-detail-label">Username</span>
+                    <span class="ux-detail-value">@username</span>
+                </div>
+                <div class="ux-detail-item">
+                    <span class="ux-detail-label">Email</span>
+                    <span class="ux-detail-value">@email</span>
+                </div>
+                <div class="ux-detail-item">
+                    <span class="ux-detail-label">Phone</span>
+                    <span class="ux-detail-value">@phone</span>
+                </div>
+                <div class="ux-detail-item">
+                    <span class="ux-detail-label">Gender</span>
+                    <span class="ux-detail-value">@genderText</span>
+                </div>
+                <div class="ux-detail-item">
+                    <span class="ux-detail-label">Availability</span>
+                    <span class="ux-detail-value">
+                        <span class="custom-pill @availabilityClass">@availability</span>
+                    </span>
                 </div>
             </div>
         </div>
+
+        <div class="ux-form-card">
+            <div class="ux-form-section-header">
+                <div class="ux-form-section-icon" style="background:rgba(30,142,110,0.1);color:#1E8E6E;">
+                    <i class="bi bi-tools"></i>
+                </div>
+                <div>
+                    <h3 class="ux-form-section-title">Skills</h3>
+                    <p class="ux-form-section-sub">Technical skills assigned to this staff member.</p>
+                </div>
+            </div>
+            @if (Model.Skills != null && Model.Skills.Any())
+            {
+                <div class="d-flex flex-wrap gap-2 mt-3">
+                    @foreach (var skill in Model.Skills)
+                    {
+                        <span class="custom-pill badge-soft-manager">@skill.Name</span>
+                    }
+                </div>
+            }
+            else
+            {
+                <p class="ux-detail-value mt-3" style="color:var(--text-muted);">No skills assigned.</p>
+            }
+        </div>
+
     </div>
+
 </div>

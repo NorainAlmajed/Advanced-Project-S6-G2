@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -6,8 +6,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using AdvancedProject.Data;
-using AdvancedProject.Models;
+using AdvancedProjectAPI.Data;
+using AdvancedProjectAPI.Models;
+using AdvancedProject.Hubs;
+using Microsoft.AspNetCore.SignalR;
 
 namespace AdvancedProject.Controllers
 {
@@ -15,10 +17,66 @@ namespace AdvancedProject.Controllers
     public class MaintenanceRequestsController : Controller
     {
         private readonly APContext _context;
+        private readonly IHubContext<NotificationHub> _notifHub;
+        private readonly IHubContext<MaintenanceBoardHub> _boardHub;
 
-        public MaintenanceRequestsController(APContext context)
+        public MaintenanceRequestsController(
+            APContext context,
+            IHubContext<NotificationHub> notifHub,
+            IHubContext<MaintenanceBoardHub> boardHub)
         {
             _context = context;
+            _notifHub = notifHub;
+            _boardHub = boardHub;
+        }
+
+        // Pushes a saved Notification to the recipient's browser via SignalR.
+        private async Task PushNotificationAsync(Notification notification)
+        {
+            var typeName = notification.NotificationTypeId switch
+            {
+                2 => "Maintenance",
+                3 => "Payment",
+                _ => "Lease"
+            };
+
+            await _notifHub.Clients
+                .Group($"user-{notification.UserId}")
+                .SendAsync("ReceiveNotification", new
+                {
+                    notificationId = notification.NotificationId,
+                    title          = notification.Title,
+                    message        = notification.Message,
+                    typeName,
+                    createdAt      = notification.CreatedAt.ToString("dd MMM yyyy · hh:mm tt")
+                });
+        }
+
+        // Reloads the request with all navigation properties and broadcasts the board event.
+        private async Task BroadcastBoardUpdateAsync(int requestId, string eventType)
+        {
+            var req = await _context.MaintenanceRequests
+                .Include(m => m.Skill)
+                .Include(m => m.User)
+                .Include(m => m.Unit).ThenInclude(u => u!.Property)
+                .Include(m => m.AssignedStaff).ThenInclude(s => s!.User)
+                .FirstOrDefaultAsync(m => m.RequestId == requestId);
+
+            if (req == null) return;
+
+            await _boardHub.Clients.Group("maintenance-board").SendAsync("BoardUpdated", new
+            {
+                eventType,
+                requestId    = req.RequestId,
+                status       = req.Status,
+                priority     = req.Priority,
+                skillName    = req.Skill?.Name ?? "—",
+                unitNumber   = req.Unit?.UnitNumber ?? "—",
+                propertyName = req.Unit?.Property?.Name ?? "—",
+                submittedBy  = req.User?.Username ?? "—",
+                assignedStaff = req.AssignedStaff?.User?.Username ?? "Unassigned",
+                requestDate  = req.RequestDate.ToString("dd MMM yyyy")
+            });
         }
 
         private async Task<MaintenanceStaff?> GetAvailableStaff(int skillId)
@@ -32,7 +90,7 @@ namespace AdvancedProject.Controllers
         }
 
         // GET: MaintenanceRequests
-        public async Task<IActionResult> Index(string searchTerm, string priorityFilter, string statusFilter, int? typeFilter, string sortOrder)
+        public async Task<IActionResult> Index(string searchTerm, string priorityFilter, string statusFilter, int? typeFilter, string sortOrder, int page = 1)
         {
             var query = _context.MaintenanceRequests
             .Include(m => m.AssignedStaff)
@@ -114,7 +172,28 @@ namespace AdvancedProject.Controllers
             };
 
 
-            var requests = await query.ToListAsync();
+            const int pageSize = 9;
+            int total = await query.CountAsync();
+            int totalPages = (int)Math.Ceiling(total / (double)pageSize);
+            page = Math.Max(1, Math.Min(page, Math.Max(1, totalPages)));
+
+            ViewBag.Pagination = new AdvancedProject.ViewModels.PaginationVM
+            {
+                CurrentPage = page,
+                TotalPages = totalPages,
+                Action = "Index",
+                Controller = "MaintenanceRequests",
+                RouteValues = new Dictionary<string, object?>
+                {
+                    ["searchTerm"] = searchTerm,
+                    ["priorityFilter"] = priorityFilter,
+                    ["statusFilter"] = statusFilter,
+                    ["typeFilter"] = typeFilter?.ToString(),
+                    ["sortOrder"] = sortOrder
+                }
+            };
+
+            var requests = await query.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
 
             return View(requests);
         }
@@ -146,6 +225,8 @@ namespace AdvancedProject.Controllers
         // GET: MaintenanceRequests/Create
         public async Task<IActionResult> Create()
         {
+            if (User.IsInRole("MaintenanceStaff")) return Forbid();
+
             var currentUserEmail = User.Identity!.Name;
             var currentUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == currentUserEmail);
 
@@ -214,6 +295,8 @@ namespace AdvancedProject.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("UnitId,SkillId,Priority,Notes")] MaintenanceRequest maintenanceRequest)
         {
+            if (User.IsInRole("MaintenanceStaff")) return Forbid();
+
             var currentUserEmail = User.Identity!.Name;
             var currentUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == currentUserEmail);
 
@@ -240,11 +323,58 @@ namespace AdvancedProject.Controllers
                 maintenanceRequest.AssignedStaffId = staff?.StaffId;
 
                 if (staff != null)
+                {
                     staff.AvailabilityStatus = "Busy";
+                    maintenanceRequest.AssignedTime = DateTime.Now;
+                }
 
                 _context.Add(maintenanceRequest);
                 await _context.SaveChangesAsync();
 
+                // Notify manager when a tenant submits
+                Notification? managerNotif = null;
+                if (!User.IsInRole("PropertyManager"))
+                {
+                    managerNotif = new Notification
+                    {
+                        UserId = 1,
+                        Title = "New Maintenance Request",
+                        Message = "A new maintenance request has been submitted.",
+                        NotificationTypeId = 2,
+                        CreatedAt = DateTime.Now
+                    };
+                    _context.Notifications.Add(managerNotif);
+                }
+
+                // Notify the assigned staff member
+                Notification? staffNotif = null;
+                if (staff != null)
+                {
+                    staffNotif = new Notification
+                    {
+                        UserId = staff.UserId,
+                        Title = "New Maintenance Request",
+                        Message = "You have been assigned a new maintenance request.",
+                        NotificationTypeId = 2,
+                        CreatedAt = DateTime.Now
+                    };
+                    _context.Notifications.Add(staffNotif);
+                }
+
+                await _context.SaveChangesAsync();
+
+                // Push notifications via SignalR (to manager and staff who have the app open in other tabs)
+                if (managerNotif != null) await PushNotificationAsync(managerNotif);
+                if (staffNotif != null)   await PushNotificationAsync(staffNotif);
+
+                // Broadcast the new request to the maintenance board
+                await BroadcastBoardUpdateAsync(maintenanceRequest.RequestId, "created");
+
+                // Carry a toast payload across the redirect so the submitting user sees real-time feedback
+                TempData["ToastTitle"]   = "Request Submitted";
+                TempData["ToastMessage"] = $"Your maintenance request #{maintenanceRequest.RequestId} has been submitted successfully.";
+                TempData["ToastType"]    = "Maintenance";
+                TempData["SuccessMessage"] = "Maintenance Request was created successfully.";
                 return RedirectToAction(nameof(Index));
             }
 
@@ -286,6 +416,8 @@ namespace AdvancedProject.Controllers
         // GET: MaintenanceRequests/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            if (User.IsInRole("MaintenanceStaff")) return Forbid();
+
             if (id == null)
                 return NotFound();
 
@@ -296,62 +428,75 @@ namespace AdvancedProject.Controllers
             if (maintenanceRequest == null)
                 return NotFound();
 
-            var tenant = await _context.Tenants
-                .FirstOrDefaultAsync(t => t.UserId == maintenanceRequest.UserId);
-
-            if (tenant == null)
+            // Manager sees all active units; tenant sees only their leased units
+            if (User.IsInRole("PropertyManager"))
             {
-                ViewData["UnitId"] = new SelectList(new List<object>(), "UnitId", "DisplayName");
-                return View(maintenanceRequest);
+                var allUnits = await _context.Units
+                    .Include(u => u.Property)
+                    .Where(u => u.IsActive)
+                    .Select(u => new
+                    {
+                        u.UnitId,
+                        DisplayName = u.UnitNumber + " (" + u.Property.Name + ")"
+                    })
+                    .ToListAsync();
+
+                ViewData["UnitId"] = new SelectList(allUnits, "UnitId", "DisplayName", maintenanceRequest.UnitId);
+            }
+            else
+            {
+                var tenant = await _context.Tenants
+                    .FirstOrDefaultAsync(t => t.UserId == maintenanceRequest.UserId);
+
+                if (tenant == null)
+                {
+                    ViewData["UnitId"] = new SelectList(new List<object>(), "UnitId", "DisplayName");
+                }
+                else
+                {
+                    var unitIds = await _context.Leases
+                        .Where(l => l.TenantId == tenant.TenantId && l.Status == "Active")
+                        .Select(l => l.UnitId)
+                        .Distinct()
+                        .ToListAsync();
+
+                    var units = await _context.Units
+                        .Include(u => u.Property)
+                        .Where(u => unitIds.Contains(u.UnitId))
+                        .Select(u => new
+                        {
+                            u.UnitId,
+                            DisplayName = u.UnitNumber + " (" + u.Property.Name + ")"
+                        })
+                        .ToListAsync();
+
+                    ViewData["UnitId"] = new SelectList(units, "UnitId", "DisplayName", maintenanceRequest.UnitId);
+                }
             }
 
-            int tenantId = tenant.TenantId;
+            ViewData["SkillId"] = new SelectList(
+                await _context.Skills.ToListAsync(),
+                "SkillId", "Name", maintenanceRequest.SkillId);
 
-            var unitIds = await _context.Leases
-                .Where(l => l.TenantId == tenantId && l.Status == "Active")
-                .Select(l => l.UnitId)
-                .Distinct()
+            // Materialize staff list before passing to SelectList to avoid lazy-execution issues
+            var staffList = await _context.MaintenanceStaffs
+                .Include(s => s.User)
+                .Select(s => new { s.StaffId, Username = s.User.Username })
                 .ToListAsync();
-
-            var units = await _context.Units
-                .Include(u => u.Property) // IMPORTANT FIX
-                .Where(u => unitIds.Contains(u.UnitId))
-                .Select(u => new
-                {
-                    u.UnitId,
-                    DisplayName = u.UnitNumber + " (" + u.Property.Name + ")"
-                })
-                .ToListAsync();
-
-            ViewData["UnitId"] = new SelectList(units, "UnitId", "DisplayName", maintenanceRequest.UnitId);
-
-            ViewData["SkillId"] = new SelectList(_context.Skills, "SkillId", "Name", maintenanceRequest.SkillId);
 
             ViewData["AssignedStaffId"] = new SelectList(
-                _context.MaintenanceStaffs
-                    .Include(s => s.User)
-                    .Select(s => new
-                    {
-                        s.StaffId,
-                        FullName = s.User.FullName
-                    }),
-                "StaffId",
-                "FullName",
-                maintenanceRequest.AssignedStaffId
-            );
+                staffList, "StaffId", "Username", maintenanceRequest.AssignedStaffId);
 
             return View(maintenanceRequest);
         }
-
-
-
-
 
         // POST: MaintenanceRequests/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, MaintenanceRequest form)
         {
+            if (User.IsInRole("MaintenanceStaff")) return Forbid();
+
             if (id != form.RequestId)
                 return NotFound();
 
@@ -375,34 +520,42 @@ namespace AdvancedProject.Controllers
                 request.UnitId = form.UnitId;
                 request.SkillId = form.SkillId;
                 request.Priority = form.Priority;
+
+                var oldStatus = request.Status;
                 request.Status = form.Status;
+                if (form.Status != oldStatus)
+                {
+                    switch (form.Status)
+                    {
+                        case "In Progress": request.InProgressTime = DateTime.Now; break;
+                        case "Resolved":    request.ResolvedTime   = DateTime.Now; break;
+                        case "Closed":      request.ClosedTime     = DateTime.Now; break;
+                        case "Completed":   request.CompletedDate  = DateTime.Now; break;
+                    }
+                }
+
                 request.Notes = form.Notes;
 
                 if (!managerChangedStaff)
                 {
-                    // Manager didn't change staff — free old staff first so the search can re-select them
                     if (oldStaff != null)
                     {
                         oldStaff.AvailabilityStatus = "Available";
                     }
 
-                    // Load all staff into memory — EF returns tracked entities so in-memory availability changes are visible
                     var allStaff = await _context.MaintenanceStaffs
                         .Include(s => s.Skills)
                         .ToListAsync();
 
-                    // First choice: available staff with matching skill
                     var newStaff = allStaff.FirstOrDefault(s =>
                         s.AvailabilityStatus == "Available" &&
                         s.Skills.Any(sk => sk.SkillId == request.SkillId));
 
-                    // Fallback 1: any available staff regardless of skill
                     if (newStaff == null)
                     {
                         newStaff = allStaff.FirstOrDefault(s => s.AvailabilityStatus == "Available");
                     }
 
-                    // Fallback 2: any staff at all, even if busy
                     if (newStaff == null)
                     {
                         newStaff = allStaff.FirstOrDefault();
@@ -413,11 +566,11 @@ namespace AdvancedProject.Controllers
                     if (newStaff != null)
                     {
                         newStaff.AvailabilityStatus = "Busy";
+                        request.AssignedTime = DateTime.Now;
                     }
                 }
                 else
                 {
-                    // Manager manually picked a staff — save as-is, manage availability
                     if (oldStaff != null)
                     {
                         oldStaff.AvailabilityStatus = "Available";
@@ -432,31 +585,64 @@ namespace AdvancedProject.Controllers
                         if (newStaff != null)
                         {
                             newStaff.AvailabilityStatus = "Busy";
+                            request.AssignedTime = DateTime.Now;
                         }
                     }
                 }
 
+                // Notify tenant
+                var tenantNotif = new Notification
+                {
+                    UserId = request.UserId,
+                    Title = "Maintenance Update",
+                    Message = $"Your maintenance request #{request.RequestId} has been edited.",
+                    NotificationTypeId = 2,
+                    CreatedAt = DateTime.Now
+                };
+                _context.Notifications.Add(tenantNotif);
+
+                // Notify assigned staff — "assigned" when manager changed who handles it
+                Notification? staffNotif = null;
+                if (request.AssignedStaffId != null)
+                {
+                    var assignedStaff = await _context.MaintenanceStaffs
+                        .FirstOrDefaultAsync(s => s.StaffId == request.AssignedStaffId);
+                    if (assignedStaff != null)
+                    {
+                        staffNotif = new Notification
+                        {
+                            UserId = assignedStaff.UserId,
+                            Title = managerChangedStaff ? "New Assignment" : "Request Updated",
+                            Message = managerChangedStaff
+                                ? $"You have been assigned to maintenance request #{request.RequestId}."
+                                : $"Maintenance request #{request.RequestId} you are handling has been updated.",
+                            NotificationTypeId = 2,
+                            CreatedAt = DateTime.Now
+                        };
+                        _context.Notifications.Add(staffNotif);
+                    }
+                }
+
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+
+                // Push notifications via SignalR
+                await PushNotificationAsync(tenantNotif);
+                if (staffNotif != null) await PushNotificationAsync(staffNotif);
+
+                // Broadcast board update
+                await BroadcastBoardUpdateAsync(request.RequestId, "updated");
+
+                TempData["ToastTitle"]   = "Request Updated";
+                TempData["ToastMessage"] = $"Maintenance request #{id} has been updated successfully.";
+                TempData["ToastType"]    = "Maintenance";
+                return RedirectToAction(nameof(Details), new { id = id });
             }
 
-            // 🔥 reload Unit dropdown
-            var tenant = await _context.Tenants
-                .FirstOrDefaultAsync(t => t.UserId == request.UserId);
-
-            if (tenant != null)
+            if (User.IsInRole("PropertyManager"))
             {
-                int tenantId = tenant.TenantId;
-
-                var unitIds = await _context.Leases
-                    .Where(l => l.TenantId == tenantId && l.Status == "Active")
-                    .Select(l => l.UnitId)
-                    .Distinct()
-                    .ToListAsync();
-
-                var units = await _context.Units
+                var allUnits = await _context.Units
                     .Include(u => u.Property)
-                    .Where(u => unitIds.Contains(u.UnitId))
+                    .Where(u => u.IsActive)
                     .Select(u => new
                     {
                         u.UnitId,
@@ -464,37 +650,48 @@ namespace AdvancedProject.Controllers
                     })
                     .ToListAsync();
 
-                ViewData["UnitId"] = new SelectList(units, "UnitId", "DisplayName", form.UnitId);
+                ViewData["UnitId"] = new SelectList(allUnits, "UnitId", "DisplayName", form.UnitId);
+            }
+            else
+            {
+                var tenant = await _context.Tenants
+                    .FirstOrDefaultAsync(t => t.UserId == request.UserId);
+
+                if (tenant != null)
+                {
+                    var unitIds = await _context.Leases
+                        .Where(l => l.TenantId == tenant.TenantId && l.Status == "Active")
+                        .Select(l => l.UnitId).Distinct().ToListAsync();
+
+                    var units = await _context.Units
+                        .Include(u => u.Property)
+                        .Where(u => unitIds.Contains(u.UnitId))
+                        .Select(u => new { u.UnitId, DisplayName = u.UnitNumber + " (" + u.Property.Name + ")" })
+                        .ToListAsync();
+
+                    ViewData["UnitId"] = new SelectList(units, "UnitId", "DisplayName", form.UnitId);
+                }
             }
 
-            ViewData["SkillId"] = new SelectList(_context.Skills, "SkillId", "Name", form.SkillId);
+            ViewData["SkillId"] = new SelectList(
+                await _context.Skills.ToListAsync(), "SkillId", "Name", form.SkillId);
+
+            var staffList2 = await _context.MaintenanceStaffs
+                .Include(s => s.User)
+                .Select(s => new { s.StaffId, Username = s.User.Username })
+                .ToListAsync();
 
             ViewData["AssignedStaffId"] = new SelectList(
-                _context.MaintenanceStaffs
-                    .Include(s => s.User)
-                    .Select(s => new
-                    {
-                        s.StaffId,
-                        FullName = s.User.FullName
-                    }),
-                "StaffId",
-                "FullName",
-                form.AssignedStaffId
-            );
+                staffList2, "StaffId", "Username", form.AssignedStaffId);
 
             return View(form);
         }
 
-
-
-
-
-        //New
-
-
-        // GET: MaintenanceRequests/Edit/5
+        // GET: MaintenanceRequests/EditTenant/5
         public async Task<IActionResult> EditTenant(int? id)
         {
+            if (User.IsInRole("MaintenanceStaff")) return Forbid();
+
             if (id == null)
                 return NotFound();
 
@@ -542,25 +739,23 @@ namespace AdvancedProject.Controllers
                     .Select(s => new
                     {
                         s.StaffId,
-                        FullName = s.User.FullName
+                        Username = s.User.Username
                     }),
                 "StaffId",
-                "FullName",
+                "Username",
                 maintenanceRequest.AssignedStaffId
             );
 
             return View(maintenanceRequest);
         }
 
-
-
-
-
         // POST: MaintenanceRequests/EditTenant/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditTenant(int id, MaintenanceRequest form)
         {
+            if (User.IsInRole("MaintenanceStaff")) return Forbid();
+
             if (id != form.RequestId)
                 return NotFound();
 
@@ -571,7 +766,6 @@ namespace AdvancedProject.Controllers
 
             if (ModelState.IsValid)
             {
-                // 1. Get old staff and immediately mark Available so the search below can re-select them
                 MaintenanceStaff? oldStaff = null;
                 if (request.AssignedStaffId != null)
                 {
@@ -583,48 +777,93 @@ namespace AdvancedProject.Controllers
                     oldStaff.AvailabilityStatus = "Available";
                 }
 
-                // 2. Update request fields
                 request.UnitId = form.UnitId;
                 request.SkillId = form.SkillId;
                 request.Priority = form.Priority;
+
+                var oldStatus = request.Status;
                 request.Status = form.Status;
+                if (form.Status != oldStatus)
+                {
+                    switch (form.Status)
+                    {
+                        case "In Progress": request.InProgressTime = DateTime.Now; break;
+                        case "Resolved":    request.ResolvedTime   = DateTime.Now; break;
+                        case "Closed":      request.ClosedTime     = DateTime.Now; break;
+                        case "Completed":   request.CompletedDate  = DateTime.Now; break;
+                    }
+                }
+
                 request.Notes = form.Notes;
 
-                // 3. Load all staff into memory — EF returns tracked entities so in-memory availability changes are visible
                 var allStaff = await _context.MaintenanceStaffs
                     .Include(s => s.Skills)
                     .ToListAsync();
 
-                // First choice: available staff with matching skill
                 var newStaff = allStaff.FirstOrDefault(s =>
                     s.AvailabilityStatus == "Available" &&
                     s.Skills.Any(sk => sk.SkillId == request.SkillId));
 
-                // Fallback 1: any available staff regardless of skill
                 if (newStaff == null)
                 {
                     newStaff = allStaff.FirstOrDefault(s => s.AvailabilityStatus == "Available");
                 }
 
-                // Fallback 2: any staff at all, even if busy
                 if (newStaff == null)
                 {
                     newStaff = allStaff.FirstOrDefault();
                 }
 
-                // 4. Assign new staff and mark Busy
                 request.AssignedStaffId = newStaff?.StaffId;
                 if (newStaff != null)
                 {
                     newStaff.AvailabilityStatus = "Busy";
+                    request.AssignedTime = DateTime.Now;
+                }
+
+                // Notify tenant
+                var tenantNotif = new Notification
+                {
+                    UserId = request.UserId,
+                    Title = "Maintenance Update",
+                    Message = $"Your maintenance request #{request.RequestId} has been edited.",
+                    NotificationTypeId = 2,
+                    CreatedAt = DateTime.Now
+                };
+                _context.Notifications.Add(tenantNotif);
+
+                // Notify assigned staff
+                Notification? staffNotif = null;
+                if (request.AssignedStaffId != null)
+                {
+                    var assignedStaff = await _context.MaintenanceStaffs
+                        .FirstOrDefaultAsync(s => s.StaffId == request.AssignedStaffId);
+                    if (assignedStaff != null)
+                    {
+                        staffNotif = new Notification
+                        {
+                            UserId = assignedStaff.UserId,
+                            Title = "Maintenance Request Edited",
+                            Message = $"Your maintenance request #{request.RequestId} has been edited.",
+                            NotificationTypeId = 2,
+                            CreatedAt = DateTime.Now
+                        };
+                        _context.Notifications.Add(staffNotif);
+                    }
                 }
 
                 await _context.SaveChangesAsync();
 
+                // Push notifications via SignalR
+                await PushNotificationAsync(tenantNotif);
+                if (staffNotif != null) await PushNotificationAsync(staffNotif);
+
+                // Broadcast board update
+                await BroadcastBoardUpdateAsync(request.RequestId, "updated");
+
                 return RedirectToAction(nameof(Index));
             }
 
-            // reload dropdowns (same as your code)
             var tenant = await _context.Tenants
                 .FirstOrDefaultAsync(t => t.UserId == request.UserId);
 
@@ -659,18 +898,15 @@ namespace AdvancedProject.Controllers
                     .Select(s => new
                     {
                         s.StaffId,
-                        FullName = s.User.FullName
+                        Username = s.User.Username
                     }),
                 "StaffId",
-                "FullName",
+                "Username",
                 form.AssignedStaffId
             );
 
             return View(form);
         }
-
-
-
 
         // GET: MaintenanceRequests/Delete/5
         public async Task<IActionResult> Delete(int? id)
@@ -708,6 +944,7 @@ namespace AdvancedProject.Controllers
             }
 
             await _context.SaveChangesAsync();
+            TempData["SuccessMessage"] = "Maintenance Request was deleted successfully.";
             return RedirectToAction(nameof(Index));
         }
 
@@ -720,7 +957,58 @@ namespace AdvancedProject.Controllers
 
             request.Status = "In Progress";
             request.InProgressTime = DateTime.Now;
+
+            var tenantNotif = new Notification
+            {
+                UserId = request.UserId,
+                Title = "Request In Progress",
+                Message = $"Your maintenance request #{request.RequestId} is now being worked on.",
+                NotificationTypeId = 2,
+                CreatedAt = DateTime.Now
+            };
+            _context.Notifications.Add(tenantNotif);
+
+            Notification? otherNotif = null;
+            if (User.IsInRole("PropertyManager") && request.AssignedStaffId != null)
+            {
+                var assignedStaff = await _context.MaintenanceStaffs
+                    .FirstOrDefaultAsync(s => s.StaffId == request.AssignedStaffId);
+                if (assignedStaff != null)
+                {
+                    otherNotif = new Notification
+                    {
+                        UserId = assignedStaff.UserId,
+                        Title = "Request Marked In Progress",
+                        Message = $"Maintenance request #{request.RequestId} has been marked as In Progress.",
+                        NotificationTypeId = 2,
+                        CreatedAt = DateTime.Now
+                    };
+                    _context.Notifications.Add(otherNotif);
+                }
+            }
+            else if (User.IsInRole("MaintenanceStaff"))
+            {
+                otherNotif = new Notification
+                {
+                    UserId = 1,
+                    Title = "Request In Progress",
+                    Message = $"Maintenance request #{request.RequestId} has been marked as In Progress by staff.",
+                    NotificationTypeId = 2,
+                    CreatedAt = DateTime.Now
+                };
+                _context.Notifications.Add(otherNotif);
+            }
+
             await _context.SaveChangesAsync();
+
+            await PushNotificationAsync(tenantNotif);
+            if (otherNotif != null) await PushNotificationAsync(otherNotif);
+            await BroadcastBoardUpdateAsync(id, "updated");
+
+            TempData["ToastTitle"]   = "Status Updated";
+            TempData["ToastMessage"] = $"Request #{id} is now In Progress.";
+            TempData["ToastType"]    = "Maintenance";
+            TempData["SuccessMessage"] = "Request was marked as In Progress successfully.";
             return RedirectToAction(nameof(Details), new { id });
         }
 
@@ -732,7 +1020,63 @@ namespace AdvancedProject.Controllers
             if (request == null) return NotFound();
 
             request.Status = "Cancelled";
-            await _context.SaveChangesAsync();
+
+            var tenantNotif = new Notification
+            {
+                UserId = request.UserId,
+                Title = "Request Cancelled",
+                Message = $"Your maintenance request #{request.RequestId} has been cancelled.",
+                NotificationTypeId = 2,
+                CreatedAt = DateTime.Now
+            };
+            _context.Notifications.Add(tenantNotif);
+
+            Notification? otherNotif = null;
+            if (request.AssignedStaffId != null)
+            {
+                var assignedStaff = await _context.MaintenanceStaffs
+                    .FirstOrDefaultAsync(s => s.StaffId == request.AssignedStaffId);
+                if (assignedStaff != null)
+                {
+                    otherNotif = new Notification
+                    {
+                        UserId = assignedStaff.UserId,
+                        Title = "Request Cancelled",
+                        Message = $"Maintenance request #{request.RequestId} has been cancelled.",
+                        NotificationTypeId = 2,
+                        CreatedAt = DateTime.Now
+                    };
+                    _context.Notifications.Add(otherNotif);
+                }
+            }
+
+            if (User.IsInRole("MaintenanceStaff"))
+            {
+                var managerNotif = new Notification
+                {
+                    UserId = 1,
+                    Title = "Request Cancelled",
+                    Message = $"Maintenance request #{request.RequestId} was cancelled by staff.",
+                    NotificationTypeId = 2,
+                    CreatedAt = DateTime.Now
+                };
+                _context.Notifications.Add(managerNotif);
+                await _context.SaveChangesAsync();
+                await PushNotificationAsync(managerNotif);
+            }
+            else
+            {
+                await _context.SaveChangesAsync();
+            }
+
+            await PushNotificationAsync(tenantNotif);
+            if (otherNotif != null) await PushNotificationAsync(otherNotif);
+            await BroadcastBoardUpdateAsync(id, "updated");
+
+            TempData["ToastTitle"]   = "Request Cancelled";
+            TempData["ToastMessage"] = $"Request #{id} has been cancelled.";
+            TempData["ToastType"]    = "Maintenance";
+            TempData["SuccessMessage"] = "Request was marked as Cancelled successfully.";
             return RedirectToAction(nameof(Details), new { id });
         }
 
@@ -745,7 +1089,58 @@ namespace AdvancedProject.Controllers
 
             request.Status = "Resolved";
             request.ResolvedTime = DateTime.Now;
+
+            var tenantNotif = new Notification
+            {
+                UserId = request.UserId,
+                Title = "Request Resolved",
+                Message = $"Your maintenance request #{request.RequestId} has been resolved.",
+                NotificationTypeId = 2,
+                CreatedAt = DateTime.Now
+            };
+            _context.Notifications.Add(tenantNotif);
+
+            Notification? otherNotif = null;
+            if (User.IsInRole("PropertyManager") && request.AssignedStaffId != null)
+            {
+                var assignedStaff = await _context.MaintenanceStaffs
+                    .FirstOrDefaultAsync(s => s.StaffId == request.AssignedStaffId);
+                if (assignedStaff != null)
+                {
+                    otherNotif = new Notification
+                    {
+                        UserId = assignedStaff.UserId,
+                        Title = "Request Resolved",
+                        Message = $"Maintenance request #{request.RequestId} has been marked as resolved.",
+                        NotificationTypeId = 2,
+                        CreatedAt = DateTime.Now
+                    };
+                    _context.Notifications.Add(otherNotif);
+                }
+            }
+            else if (User.IsInRole("MaintenanceStaff"))
+            {
+                otherNotif = new Notification
+                {
+                    UserId = 1,
+                    Title = "Request Resolved",
+                    Message = $"Maintenance request #{request.RequestId} has been resolved by staff.",
+                    NotificationTypeId = 2,
+                    CreatedAt = DateTime.Now
+                };
+                _context.Notifications.Add(otherNotif);
+            }
+
             await _context.SaveChangesAsync();
+
+            await PushNotificationAsync(tenantNotif);
+            if (otherNotif != null) await PushNotificationAsync(otherNotif);
+            await BroadcastBoardUpdateAsync(id, "updated");
+
+            TempData["ToastTitle"]   = "Request Resolved";
+            TempData["ToastMessage"] = $"Request #{id} has been marked as resolved.";
+            TempData["ToastType"]    = "Maintenance";
+            TempData["SuccessMessage"] = "Request was marked as Resolved successfully.";
             return RedirectToAction(nameof(Details), new { id });
         }
 
@@ -758,7 +1153,58 @@ namespace AdvancedProject.Controllers
 
             request.Status = "Closed";
             request.ClosedTime = DateTime.Now;
+
+            var tenantNotif = new Notification
+            {
+                UserId = request.UserId,
+                Title = "Request Closed",
+                Message = $"Your maintenance request #{request.RequestId} has been closed.",
+                NotificationTypeId = 2,
+                CreatedAt = DateTime.Now
+            };
+            _context.Notifications.Add(tenantNotif);
+
+            Notification? otherNotif = null;
+            if (User.IsInRole("PropertyManager") && request.AssignedStaffId != null)
+            {
+                var assignedStaff = await _context.MaintenanceStaffs
+                    .FirstOrDefaultAsync(s => s.StaffId == request.AssignedStaffId);
+                if (assignedStaff != null)
+                {
+                    otherNotif = new Notification
+                    {
+                        UserId = assignedStaff.UserId,
+                        Title = "Request Closed",
+                        Message = $"Maintenance request #{request.RequestId} has been closed.",
+                        NotificationTypeId = 2,
+                        CreatedAt = DateTime.Now
+                    };
+                    _context.Notifications.Add(otherNotif);
+                }
+            }
+            else if (User.IsInRole("MaintenanceStaff"))
+            {
+                otherNotif = new Notification
+                {
+                    UserId = 1,
+                    Title = "Request Closed",
+                    Message = $"Maintenance request #{request.RequestId} has been closed by staff.",
+                    NotificationTypeId = 2,
+                    CreatedAt = DateTime.Now
+                };
+                _context.Notifications.Add(otherNotif);
+            }
+
             await _context.SaveChangesAsync();
+
+            await PushNotificationAsync(tenantNotif);
+            if (otherNotif != null) await PushNotificationAsync(otherNotif);
+            await BroadcastBoardUpdateAsync(id, "updated");
+
+            TempData["ToastTitle"]   = "Request Closed";
+            TempData["ToastMessage"] = $"Request #{id} has been closed.";
+            TempData["ToastType"]    = "Maintenance";
+            TempData["SuccessMessage"] = "Request was marked as Closed successfully.";
             return RedirectToAction(nameof(Details), new { id });
         }
 

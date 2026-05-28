@@ -20,7 +20,14 @@ builder.Services.AddDbContext<APContext>(options =>
 builder.Services.AddControllers()
     .AddNewtonsoftJson(options =>
         options.SerializerSettings.ReferenceLoopHandling =
-            ReferenceLoopHandling.Ignore);
+            ReferenceLoopHandling.Ignore)
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler =
+            System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+        options.JsonSerializerOptions.DefaultIgnoreCondition =
+            System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull;
+    });
 
 // Identity
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>

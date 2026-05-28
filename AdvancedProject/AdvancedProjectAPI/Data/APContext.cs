@@ -41,7 +41,7 @@ public partial class APContext : IdentityDbContext<ApplicationUser>
 
     public virtual DbSet<Unit> Units { get; set; }
 
-    public virtual DbSet<User> Users { get; set; }
+    public new virtual DbSet<User> Users { get; set; }
 
     public DbSet<Duration> Durations { get; set; }
 
@@ -215,7 +215,7 @@ public partial class APContext : IdentityDbContext<ApplicationUser>
         );
 
         modelBuilder.Entity<Tenant>().HasData(
-         new Tenant { TenantId = 1, UserId = 2, Dob = new DateOnly(2005, 10, 18), NationalId = "041081254", Salary = 2000, MaritalStatus = "Single", EmploymentStatus = "Employed", FinancialStability = "Stable" },
+         new Tenant { TenantId = 1, UserId = 2, Dob = new DateOnly(2004, 10, 18), NationalId = "041081254", Salary = 2000, MaritalStatus = "Single", EmploymentStatus = "Employed", FinancialStability = "Stable" },
          new Tenant { TenantId = 2, UserId = 3, Dob = new DateOnly(1995, 3, 26), NationalId = "950306321", Salary = 1500, MaritalStatus = "Married", EmploymentStatus = "Self-Employed", FinancialStability = "Moderately Stable" },
          new Tenant { TenantId = 3, UserId = 4, Dob = new DateOnly(1977, 9, 9), NationalId = "770907721", Salary = 800, MaritalStatus = "Divorced", EmploymentStatus = "Unemployed", FinancialStability = "Unstable" },
          new Tenant { TenantId = 4, UserId = 5, Dob = new DateOnly(1989, 11, 25), NationalId = "891106213", Salary = 3200, MaritalStatus = "Married", EmploymentStatus = "Employed", FinancialStability = "Undetermined" },

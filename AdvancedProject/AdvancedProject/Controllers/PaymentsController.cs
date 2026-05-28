@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -6,8 +6,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using AdvancedProject.Data;
-using AdvancedProject.Models;
+using AdvancedProjectAPI.Data;
+using AdvancedProjectAPI.Models;
+using AdvancedProject.Hubs;
+using Microsoft.AspNetCore.SignalR;
 
 namespace AdvancedProject.Controllers
 {
@@ -15,6 +17,27 @@ namespace AdvancedProject.Controllers
     public class PaymentsController : Controller
     {
         private readonly APContext _context;
+        private readonly IHubContext<NotificationHub> _notifHub;
+
+        private async Task PushNotificationAsync(Notification notification)
+        {
+            var typeName = notification.NotificationTypeId switch
+            {
+                2 => "Maintenance",
+                3 => "Payment",
+                _ => "Lease"
+            };
+            await _notifHub.Clients
+                .Group($"user-{notification.UserId}")
+                .SendAsync("ReceiveNotification", new
+                {
+                    notificationId = notification.NotificationId,
+                    title          = notification.Title,
+                    message        = notification.Message,
+                    typeName,
+                    createdAt      = notification.CreatedAt.ToString("dd MMM yyyy · hh:mm tt")
+                });
+        }
 
         private void PopulateDropdowns()
         {
@@ -41,13 +64,14 @@ namespace AdvancedProject.Controllers
     }, payment?.Status);
         }
 
-        public PaymentsController(APContext context)
+        public PaymentsController(APContext context, IHubContext<NotificationHub> notifHub)
         {
             _context = context;
+            _notifHub = notifHub;
         }
 
         // GET: Payments
-        public async Task<IActionResult> Index(string searchTerm, string statusFilter, string dateFilter)
+        public async Task<IActionResult> Index(string searchTerm, string statusFilter, string dateFilter, int page = 1)
         {
             var paymentsQuery = _context.Payments
                 .Include(p => p.Lease)
@@ -89,24 +113,43 @@ namespace AdvancedProject.Controllers
             {
                 if (dateFilter == "Latest")
                 {
-                    paymentsQuery = paymentsQuery.OrderByDescending(p => p.StartDate);
+                    paymentsQuery = paymentsQuery.OrderByDescending(p => p.PaymentId);
                 }
                 else
                 {
-                    paymentsQuery = paymentsQuery.OrderBy(p => p.StartDate);
+                    paymentsQuery = paymentsQuery.OrderBy(p => p.PaymentId);
                 }
             }
             else
             {
-                paymentsQuery = paymentsQuery.OrderByDescending(p => p.StartDate); // default starts from 1
+                paymentsQuery = paymentsQuery.OrderByDescending(p => p.PaymentId);
             }
 
-            var payments = await paymentsQuery.ToListAsync();
+            const int pageSize = 10;
+            int total = await paymentsQuery.CountAsync();
+            int totalPages = (int)Math.Ceiling(total / (double)pageSize);
+            page = Math.Max(1, Math.Min(page, Math.Max(1, totalPages)));
+
+            var payments = await paymentsQuery.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
 
             ViewData["CurrentSearchTerm"] = searchTerm;
             ViewData["CurrentStatusFilter"] = statusFilter;
             ViewData["CurrentDateFilter"] = dateFilter;
-            ViewData["TotalPayments"] = payments.Count;
+            ViewData["TotalPayments"] = total;
+
+            ViewBag.Pagination = new AdvancedProject.ViewModels.PaginationVM
+            {
+                CurrentPage = page,
+                TotalPages = totalPages,
+                Action = "Index",
+                Controller = "Payments",
+                RouteValues = new Dictionary<string, object?>
+                {
+                    ["searchTerm"] = searchTerm,
+                    ["statusFilter"] = statusFilter,
+                    ["dateFilter"] = dateFilter
+                }
+            };
 
             return View(payments);
         }
@@ -120,12 +163,15 @@ namespace AdvancedProject.Controllers
             }
 
             var payment = await _context.Payments
-     .Include(p => p.Lease)
-         .ThenInclude(l => l.Unit)
-             .ThenInclude(u => u.Property)
-     .Include(p => p.PaymentFrequency)
-     .Include(p => p.PaymentMethod)
-     .FirstOrDefaultAsync(m => m.PaymentId == id);
+                .Include(p => p.Lease)
+                    .ThenInclude(l => l.Unit)
+                        .ThenInclude(u => u.Property)
+                .Include(p => p.Lease)
+                    .ThenInclude(l => l.Tenant)
+                        .ThenInclude(t => t.User)
+                .Include(p => p.PaymentFrequency)
+                .Include(p => p.PaymentMethod)
+                .FirstOrDefaultAsync(m => m.PaymentId == id);
             if (payment == null)
             {
                 return NotFound();
@@ -151,7 +197,10 @@ namespace AdvancedProject.Controllers
         {
             if (ModelState.IsValid)
             {
-                var lease = await _context.Leases.Include(l => l.Duration).FirstOrDefaultAsync(l => l.LeaseId == payment.LeaseId);
+                var lease = await _context.Leases
+                    .Include(l => l.Duration)
+                    .Include(l => l.Tenant)
+                    .FirstOrDefaultAsync(l => l.LeaseId == payment.LeaseId);
 
                 var frequency = await _context.PaymentFrequencies.FirstOrDefaultAsync(f => f.PaymentFrequencyId == payment.PaymentFrequencyId);
 
@@ -179,6 +228,24 @@ namespace AdvancedProject.Controllers
 
                 _context.Add(payment);
                 await _context.SaveChangesAsync();
+
+                var tenantNotif = new Notification
+                {
+                    UserId = lease.Tenant.UserId,
+                    Title = "New Payment Record",
+                    Message = $"A new payment record #{payment.PaymentId} has been added to your lease.",
+                    NotificationTypeId = 3,
+                    CreatedAt = DateTime.Now
+                };
+                _context.Notifications.Add(tenantNotif);
+                await _context.SaveChangesAsync();
+
+                await PushNotificationAsync(tenantNotif);
+
+                TempData["ToastTitle"]   = "Payment Created";
+                TempData["ToastMessage"] = $"Payment record #{payment.PaymentId} has been created successfully.";
+                TempData["ToastType"]    = "Payment";
+                TempData["SuccessMessage"] = "Payment was created successfully.";
                 return RedirectToAction(nameof(Index));
             }
 
@@ -212,8 +279,8 @@ namespace AdvancedProject.Controllers
                 return NotFound();
 
             var existing = await _context.Payments
-                .Include(p => p.Lease)
-                .ThenInclude(l => l.Duration)
+                .Include(p => p.Lease).ThenInclude(l => l.Duration)
+                .Include(p => p.Lease).ThenInclude(l => l.Tenant)
                 .FirstOrDefaultAsync(p => p.PaymentId == id);
 
             if (existing == null)
@@ -254,9 +321,25 @@ namespace AdvancedProject.Controllers
             existing.EndDate = payment.StartDate.AddDays(7);
             existing.Amount = existing.Lease.MonthlyRent * frequency.Frequency;
 
+            var tenantNotif = new Notification
+            {
+                UserId = existing.Lease.Tenant.UserId,
+                Title = "Payment Updated",
+                Message = $"Payment record #{existing.PaymentId} has been updated.",
+                NotificationTypeId = 3,
+                CreatedAt = DateTime.Now
+            };
+            _context.Notifications.Add(tenantNotif);
+
             await _context.SaveChangesAsync();
 
-            return RedirectToAction(nameof(Index));
+            await PushNotificationAsync(tenantNotif);
+
+            TempData["ToastTitle"]   = "Payment Updated";
+            TempData["ToastMessage"] = $"Payment record #{existing.PaymentId} has been updated successfully.";
+            TempData["ToastType"]    = "Payment";
+            TempData["SuccessMessage"] = "Payment was edited successfully.";
+            return RedirectToAction(nameof(Details), new { id = id });
         }
         // GET: Payments/Delete/5
         [Authorize(Roles = "PropertyManager")]
@@ -293,6 +376,7 @@ namespace AdvancedProject.Controllers
             }
 
             await _context.SaveChangesAsync();
+            TempData["SuccessMessage"] = "Payment was deleted successfully.";
             return RedirectToAction(nameof(Index));
         }
 

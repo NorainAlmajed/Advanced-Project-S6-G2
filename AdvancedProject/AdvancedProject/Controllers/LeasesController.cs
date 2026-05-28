@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -6,8 +6,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using AdvancedProject.Data;
-using AdvancedProject.Models;
+using AdvancedProjectAPI.Data;
+using AdvancedProjectAPI.Models;
 
 namespace AdvancedProject.Controllers
 {
@@ -62,7 +62,7 @@ namespace AdvancedProject.Controllers
         }
 
         // GET: Leases
-        public async Task<IActionResult> Index(string searchTerm, string statusFilter, string dateFilter)
+        public async Task<IActionResult> Index(string searchTerm, string statusFilter, string dateFilter, int page = 1)
         {
             await AutoTerminateExpiredLeasesAsync();
             var leasesQuery = _context.Leases
@@ -108,24 +108,43 @@ namespace AdvancedProject.Controllers
             {
                 if (dateFilter == "Latest")
                 {
-                    leasesQuery = leasesQuery.OrderByDescending(l => l.StartDate);
+                    leasesQuery = leasesQuery.OrderByDescending(l => l.CreatedAt);
                 }
                 else
                 {
-                    leasesQuery = leasesQuery.OrderBy(l => l.StartDate);
+                    leasesQuery = leasesQuery.OrderBy(l => l.CreatedAt);
                 }
             }
             else
             {
-                leasesQuery = leasesQuery.OrderByDescending(l => l.StartDate);
+                leasesQuery = leasesQuery.OrderByDescending(l => l.CreatedAt);
             }
 
-            var leases = await leasesQuery.ToListAsync();
+            const int pageSize = 10;
+            int total = await leasesQuery.CountAsync();
+            int totalPages = (int)Math.Ceiling(total / (double)pageSize);
+            page = Math.Max(1, Math.Min(page, Math.Max(1, totalPages)));
+
+            var leases = await leasesQuery.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
 
             ViewData["CurrentSearchTerm"] = searchTerm;
             ViewData["CurrentStatusFilter"] = statusFilter;
             ViewData["CurrentDateFilter"] = dateFilter;
-            ViewData["TotalLeases"] = leases.Count;
+            ViewData["TotalLeases"] = total;
+
+            ViewBag.Pagination = new AdvancedProject.ViewModels.PaginationVM
+            {
+                CurrentPage = page,
+                TotalPages = totalPages,
+                Action = "Index",
+                Controller = "Leases",
+                RouteValues = new Dictionary<string, object?>
+                {
+                    ["searchTerm"] = searchTerm,
+                    ["statusFilter"] = statusFilter,
+                    ["dateFilter"] = dateFilter
+                }
+            };
 
             return View(leases);
         }
@@ -261,6 +280,7 @@ namespace AdvancedProject.Controllers
             _context.Leases.Add(lease);
             await _context.SaveChangesAsync();
 
+            TempData["SuccessMessage"] = "Lease was created successfully.";
             return RedirectToAction(nameof(Index));
         }
 
@@ -374,7 +394,8 @@ namespace AdvancedProject.Controllers
 
             await _context.SaveChangesAsync();
 
-            return RedirectToAction(nameof(Index));
+            TempData["SuccessMessage"] = "Lease was edited successfully.";
+            return RedirectToAction(nameof(Details), new { id = id });
         }
 
         // GET: Leases/Delete/5
@@ -411,6 +432,7 @@ namespace AdvancedProject.Controllers
             }
 
             await _context.SaveChangesAsync();
+            TempData["SuccessMessage"] = "Lease was deleted successfully.";
             return RedirectToAction(nameof(Index));
         }
 
@@ -420,6 +442,7 @@ namespace AdvancedProject.Controllers
         {
             var lease = await _context.Leases
                 .Include(l => l.Unit)
+                .Include(l => l.Tenant)
                 .FirstOrDefaultAsync(l => l.LeaseId == id);
 
             if (lease == null) return NotFound();
@@ -430,7 +453,17 @@ namespace AdvancedProject.Controllers
             if (lease.Unit != null)
                 lease.Unit.AvailabilityStatus = "Available";
 
+            _context.Notifications.Add(new Notification
+            {
+                UserId = lease.Tenant.UserId,
+                Title = "Lease Update",
+                Message = $"Lease #{lease.LeaseId} has been terminated.",
+                NotificationTypeId = 1,
+                CreatedAt = DateTime.Now
+            });
+
             await _context.SaveChangesAsync();
+            TempData["SuccessMessage"] = "Lease was terminated successfully.";
             return RedirectToAction(nameof(Details), new { id });
         }
 
@@ -438,7 +471,9 @@ namespace AdvancedProject.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Renew(int id)
         {
-            var lease = await _context.Leases.FindAsync(id);
+            var lease = await _context.Leases
+                .Include(l => l.Tenant)
+                .FirstOrDefaultAsync(l => l.LeaseId == id);
             if (lease == null) return NotFound();
 
             lease.Status = "Renewed";
@@ -454,7 +489,18 @@ namespace AdvancedProject.Controllers
             };
 
             _context.LeaseApplications.Add(application);
+
+            _context.Notifications.Add(new Notification
+            {
+                UserId = lease.Tenant.UserId,
+                Title = "Lease Update",
+                Message = $"Lease #{lease.LeaseId} has been renewed.",
+                NotificationTypeId = 1,
+                CreatedAt = DateTime.Now
+            });
+
             await _context.SaveChangesAsync();
+            TempData["SuccessMessage"] = "Lease was renewed successfully.";
             return RedirectToAction(nameof(Details), new { id });
         }
 

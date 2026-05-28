@@ -1,11 +1,29 @@
 using Microsoft.EntityFrameworkCore;
-using AdvancedProject.Data;
-using AdvancedProject.Models;
+using AdvancedProjectAPI.Data;
+using AdvancedProjectAPI.Models;
 using Microsoft.AspNetCore.Identity;
+using AdvancedProject.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler =
+            System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+        options.JsonSerializerOptions.DefaultIgnoreCondition =
+            System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull;
+    })
+    .ConfigureApplicationPartManager(apm =>
+    {
+        // Prevent the API project's controllers from being loaded into the MVC app.
+        // The project reference is needed only for models and DbContext.
+        var apiParts = apm.ApplicationParts
+            .Where(ap => ap.Name == "AdvancedProjectAPI")
+            .ToList();
+        foreach (var part in apiParts)
+            apm.ApplicationParts.Remove(part);
+    });
 
 builder.Services.AddDbContext<APContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -31,6 +49,18 @@ builder.Services.ConfigureApplicationCookie(options =>
 });
 
 builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
+builder.Services.AddSignalR();
+
+builder.Services.AddHttpClient("MaintenanceApi", client =>
+{
+    var apiUrl = builder.Configuration["ApiBaseUrl"] ?? "https://localhost:7211";
+    client.BaseAddress = new Uri(apiUrl);
+    client.DefaultRequestHeaders.Add("Accept", "application/json");
+})
+.ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
+{
+    ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+});
 
 var app = builder.Build();
 //  this makes sure the roles and the manager always exist in the db
@@ -79,10 +109,35 @@ using (var scope = app.Services.CreateScope())
             if (result.Succeeded)
                 await userManager.AddToRoleAsync(identityUser, seed.Role);
         }
+        else if (existing.UserId == null)
+        {
+            existing.UserId = seed.UserId;
+            await userManager.UpdateAsync(existing);
+        }
     }
 
-    // Hash any plain-text passwords in the custom Users table (all users)
+    // Seed property images from wwwroot/images/seed/
     var dbContext = scope.ServiceProvider.GetRequiredService<APContext>();
+    var seedImageDir = Path.Combine(app.Environment.WebRootPath, "images", "seed");
+    var propertiesToSeed = await dbContext.Properties
+        .Where(p => p.ImageData == null)
+        .OrderBy(p => p.PropertyId)
+        .ToListAsync();
+
+    var seedFiles = new[] { "property1.jpg", "property2.jpg", "property3.jpg" };
+    for (int i = 0; i < propertiesToSeed.Count && i < seedFiles.Length; i++)
+    {
+        var filePath = Path.Combine(seedImageDir, seedFiles[i]);
+        if (File.Exists(filePath))
+        {
+            propertiesToSeed[i].ImageData = await File.ReadAllBytesAsync(filePath);
+            propertiesToSeed[i].ImageContentType = "image/jpeg";
+        }
+    }
+    await dbContext.SaveChangesAsync();
+
+    // Hash any plain-text passwords in the custom Users table (all users)
+    dbContext = scope.ServiceProvider.GetRequiredService<APContext>();
     var hasher = new PasswordHasher<User>();
     var allUsers = dbContext.Users.ToList();
     foreach (var user in allUsers)
@@ -111,4 +166,6 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
 app.MapRazorPages();
+app.MapHub<NotificationHub>("/hubs/notifications");
+app.MapHub<MaintenanceBoardHub>("/hubs/maintenance-board");
 app.Run();

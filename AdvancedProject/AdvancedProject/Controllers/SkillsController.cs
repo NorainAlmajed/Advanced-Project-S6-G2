@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -6,8 +6,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using AdvancedProject.Data;
-using AdvancedProject.Models;
+using AdvancedProjectAPI.Data;
+using AdvancedProjectAPI.Models;
 
 namespace AdvancedProject.Controllers
 {
@@ -62,6 +62,7 @@ namespace AdvancedProject.Controllers
             {
                 _context.Add(skill);
                 await _context.SaveChangesAsync();
+                TempData["SuccessMessage"] = "Skill was created successfully.";
                 return RedirectToAction(nameof(Index));
             }
             return View(skill);
@@ -113,7 +114,8 @@ namespace AdvancedProject.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                TempData["SuccessMessage"] = "Skill was edited successfully.";
+                return RedirectToAction(nameof(Details), new { id = skill.SkillId });
             }
             return View(skill);
         }
@@ -148,6 +150,7 @@ namespace AdvancedProject.Controllers
             }
 
             await _context.SaveChangesAsync();
+            TempData["SuccessMessage"] = "Skill was deleted successfully.";
             return RedirectToAction(nameof(Index));
         }
 

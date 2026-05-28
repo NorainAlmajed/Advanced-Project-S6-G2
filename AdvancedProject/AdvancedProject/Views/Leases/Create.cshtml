@@ -1,88 +1,127 @@
-﻿@model AdvancedProject.Models.Lease
+@model AdvancedProjectAPI.Models.Lease
 
 @{
     ViewData["Title"] = "Create Lease";
 }
 
-<div class="lease-form-page">
-    <div class="lease-form-wrapper">
-        <div class="lease-form-card shadow-soft">
-            <div class="lease-form-header">
-                <p class="lease-form-eyebrow mb-2">Lease</p>
-                <h1 class="lease-form-title mb-2">@ViewBag.PropertyName - Unit @ViewBag.UnitNumber</h1>
-                <p class="lease-form-subtitle mb-0">
-                    Select the tenant, start date, and lease duration to create the lease.
-                </p>
+<div class="ux-page">
+
+    <div class="ux-page-header">
+        <div>
+            <p class="ux-eyebrow">Lease Management</p>
+            <h1 class="ux-title">Create Lease</h1>
+            <p class="ux-subtitle">@ViewBag.PropertyName — Unit @ViewBag.UnitNumber</p>
+        </div>
+        <a asp-action="Index" class="ux-btn-ghost"><i class="bi bi-arrow-left"></i> Back</a>
+    </div>
+
+    <form asp-action="Create" asp-controller="Leases" method="post" class="ux-form-layout">
+        <input type="hidden" name="UnitId" value="@Model.UnitId" />
+        <div asp-validation-summary="ModelOnly" class="ux-form-error"></div>
+
+        <div class="ux-form-card">
+            <div class="ux-form-section-header">
+                <div class="ux-form-section-icon" style="background:rgba(0,91,113,0.1);color:#005B71;"><i class="bi bi-file-earmark-check-fill"></i></div>
+                <div><h3 class="ux-form-section-title">Lease Details</h3><p class="ux-form-section-sub">Select tenant, start date, and duration.</p></div>
             </div>
-
-            <form asp-action="Create" asp-controller="Leases" method="post" class="lease-form-body">
-                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
-
-                <input type="hidden" name="UnitId" value="@Model.UnitId" />
-
-                <div class="lease-form-group">
-                    <label asp-for="TenantId" class="lease-form-label">Tenant Username</label>
-
-                    <select asp-for="TenantId"
-                            id="tenantSelect"
-                            class="form-select lease-form-input searchable-select"
-                            asp-items="ViewBag.TenantName">
-                        <option value="">-- Select Username --</option>
+            <div class="ux-form-grid">
+                <div class="ux-field" style="grid-column:1/-1;">
+                    <label class="ux-label">Tenant</label>
+                    <div style="position:relative;">
+                        <input type="text" id="TenantId_display" class="ux-input" placeholder="Select tenant..." autocomplete="off" readonly style="cursor:pointer;" />
+                        <div id="TenantId_dropdown" style="display:none;position:absolute;top:calc(100% + 4px);left:0;right:0;background:#fff;border:1.5px solid #e2e8f0;border-radius:10px;box-shadow:0 6px 20px rgba(0,0,0,0.10);z-index:200;max-height:220px;overflow-y:auto;">
+                            <div style="padding:0.5rem 0.75rem;">
+                                <input type="text" id="TenantId_filter" class="ux-input" placeholder="Type to search..." autocomplete="off" style="font-size:0.85rem;padding:0.45rem 0.75rem;" />
+                            </div>
+                            <div id="TenantId_options"></div>
+                        </div>
+                    </div>
+                    <select asp-for="TenantId" asp-items="ViewBag.TenantName" style="display:none;">
+                        <option value="">-- Select Tenant --</option>
                     </select>
-
-                    <span asp-validation-for="TenantId" class="text-danger small"></span>
+                    <span asp-validation-for="TenantId" class="ux-field-error"></span>
                 </div>
-
-                <div class="lease-form-group">
-                    <label asp-for="StartDate" class="lease-form-label">Start Date</label>
-                    <input asp-for="StartDate" type="date" class="form-control lease-form-input"
+                <div class="ux-field">
+                    <label asp-for="StartDate" class="ux-label">Start Date</label>
+                    <input asp-for="StartDate" type="date" class="ux-input"
                            min="@DateTime.Today.AddDays(1).ToString("yyyy-MM-dd")" />
-                    <span asp-validation-for="StartDate" class="text-danger small"></span>
+                    <span asp-validation-for="StartDate" class="ux-field-error"></span>
                 </div>
-
-                <div class="lease-form-group">
-                    <label asp-for="DurationId" class="lease-form-label">Duration</label>
-                    <select asp-for="DurationId" class="form-select lease-form-input" asp-items="ViewBag.DurationId">
-                        ect lease-form-input" asp-items="ViewBag.DurationId">
+                <div class="ux-field">
+                    <label asp-for="DurationId" class="ux-label">Duration</label>
+                    <select asp-for="DurationId" class="ux-input" asp-items="ViewBag.DurationId">
                         <option value="">-- Select Duration --</option>
                     </select>
-                    <span asp-validation-for="DurationId" class="text-danger small"></span>
+                    <span asp-validation-for="DurationId" class="ux-field-error"></span>
                 </div>
-
-                <div class="lease-form-actions">
-                    <button type="submit" class="btn btn-primary lease-submit-btn">
-                        Create Lease
-                    </button>
-
-                    <a asp-action="Index" class="lease-back-link">
-                        Back to List
-                    </a>
-                </div>
-            </form>
+            </div>
         </div>
-    </div>
+
+        <div class="ux-form-actions">
+            <button type="submit" class="ux-btn-primary" style="padding:0.65rem 2rem;">
+                <i class="bi bi-file-earmark-plus"></i> Create Lease
+            </button>
+            <a asp-action="Index" class="ux-btn-ghost" style="padding:0.65rem 1.5rem;">Cancel</a>
+        </div>
+    </form>
+
 </div>
 
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
-
-    <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
-
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const tenantSelect = document.getElementById("tenantSelect");
+        document.addEventListener('DOMContentLoaded', function () {
+            makeSearchable('TenantId');
+        });
 
-            if (tenantSelect) {
-                new Choices(tenantSelect, {
-                    searchEnabled: true,
-                    itemSelectText: '',
-                    shouldSort: false,
-                    searchPlaceholderValue: 'Search username...',
-                    placeholder: true
+        function makeSearchable(selectId) {
+            var hiddenSelect = document.getElementById(selectId);
+            if (!hiddenSelect) return;
+            var allOptions = Array.from(hiddenSelect.options).filter(function (o) { return o.value !== ''; });
+            var displayInput = document.getElementById(selectId + '_display');
+            var dropdownDiv  = document.getElementById(selectId + '_dropdown');
+            var filterInput  = document.getElementById(selectId + '_filter');
+            var optionsList  = document.getElementById(selectId + '_options');
+
+            function renderOptions(query) {
+                optionsList.innerHTML = '';
+                var q = query.trim().toLowerCase();
+                var filtered = q ? allOptions.filter(function (o) { return o.text.toLowerCase().includes(q); }) : allOptions;
+                if (filtered.length === 0) {
+                    optionsList.innerHTML = '<div style="padding:0.6rem 1rem;color:#94a3b8;font-size:0.85rem;">No results found</div>';
+                    return;
+                }
+                filtered.forEach(function (o) {
+                    var item = document.createElement('div');
+                    item.textContent = o.text;
+                    item.style.cssText = 'padding:0.6rem 1rem;font-size:0.875rem;cursor:pointer;border-radius:6px;margin:0 4px;';
+                    item.addEventListener('mouseenter', function () { this.style.background = '#f1f5f9'; });
+                    item.addEventListener('mouseleave', function () { this.style.background = ''; });
+                    item.addEventListener('mousedown', function (e) {
+                        e.preventDefault();
+                        hiddenSelect.value = o.value;
+                        displayInput.value = o.text;
+                        dropdownDiv.style.display = 'none';
+                    });
+                    optionsList.appendChild(item);
                 });
             }
-        });
+
+            displayInput.addEventListener('click', function () {
+                renderOptions(filterInput.value);
+                dropdownDiv.style.display = 'block';
+                setTimeout(function () { filterInput.focus(); }, 50);
+            });
+            filterInput.addEventListener('input', function () { renderOptions(this.value); });
+            document.addEventListener('mousedown', function (e) {
+                if (!dropdownDiv.contains(e.target) && e.target !== displayInput) {
+                    dropdownDiv.style.display = 'none';
+                }
+            });
+            if (hiddenSelect.value) {
+                var match = allOptions.find(function (o) { return o.value === hiddenSelect.value; });
+                if (match) displayInput.value = match.text;
+            }
+        }
     </script>
 }

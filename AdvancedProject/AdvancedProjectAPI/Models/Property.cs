@@ -34,6 +34,12 @@ public partial class Property
 
     public bool IsActive { get; set; } = true;
 
+    // Property image stored as binary in DB
+    public byte[]? ImageData { get; set; }
+
+    [StringLength(100)]
+    public string? ImageContentType { get; set; }
+
     [InverseProperty("Property")]
     public virtual ICollection<Unit> Units { get; set; } = new List<Unit>();
 

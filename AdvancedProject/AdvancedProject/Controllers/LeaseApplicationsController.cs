@@ -1,14 +1,16 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using AdvancedProject.Data;
-using AdvancedProject.Models;
+using AdvancedProjectAPI.Data;
+using AdvancedProjectAPI.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using AdvancedProject.Hubs;
+using Microsoft.AspNetCore.SignalR;
 
 namespace AdvancedProject.Controllers
 {
@@ -16,14 +18,36 @@ namespace AdvancedProject.Controllers
     public class LeaseApplicationsController : Controller
     {
         private readonly APContext _context;
+        private readonly IHubContext<NotificationHub> _notifHub;
 
-        public LeaseApplicationsController(APContext context)
+        public LeaseApplicationsController(APContext context, IHubContext<NotificationHub> notifHub)
         {
             _context = context;
+            _notifHub = notifHub;
+        }
+
+        private async Task PushNotificationAsync(Notification notification)
+        {
+            var typeName = notification.NotificationTypeId switch
+            {
+                2 => "Maintenance",
+                3 => "Payment",
+                _ => "Lease"
+            };
+            await _notifHub.Clients
+                .Group($"user-{notification.UserId}")
+                .SendAsync("ReceiveNotification", new
+                {
+                    notificationId = notification.NotificationId,
+                    title          = notification.Title,
+                    message        = notification.Message,
+                    typeName,
+                    createdAt      = notification.CreatedAt.ToString("dd MMM yyyy · hh:mm tt")
+                });
         }
 
         // GET: LeaseApplications
-        public async Task<IActionResult> Index(string searchTerm, string statusFilter, string dateFilter)
+        public async Task<IActionResult> Index(string searchTerm, string statusFilter, string dateFilter, int page = 1)
         {
             var applicationsQuery = _context.LeaseApplications
      .Include(l => l.Tenant)
@@ -98,12 +122,31 @@ namespace AdvancedProject.Controllers
             if (overdue.Any())
                 await _context.SaveChangesAsync();
 
-            var applications = await applicationsQuery.ToListAsync();
+            const int pageSize = 10;
+            int total = await applicationsQuery.CountAsync();
+            int totalPages = (int)Math.Ceiling(total / (double)pageSize);
+            page = Math.Max(1, Math.Min(page, Math.Max(1, totalPages)));
+
+            var applications = await applicationsQuery.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
 
             ViewData["CurrentSearchTerm"] = searchTerm;
             ViewData["CurrentStatusFilter"] = statusFilter;
             ViewData["CurrentDateFilter"] = dateFilter;
-            ViewData["TotalApplications"] = applications.Count;
+            ViewData["TotalApplications"] = total;
+
+            ViewBag.Pagination = new AdvancedProject.ViewModels.PaginationVM
+            {
+                CurrentPage = page,
+                TotalPages = totalPages,
+                Action = "Index",
+                Controller = "LeaseApplications",
+                RouteValues = new Dictionary<string, object?>
+                {
+                    ["searchTerm"] = searchTerm,
+                    ["statusFilter"] = statusFilter,
+                    ["dateFilter"] = dateFilter
+                }
+            };
 
             return View(applications);
         }
@@ -156,6 +199,8 @@ namespace AdvancedProject.Controllers
             ViewData["DurationId"] = new SelectList(_context.Durations, "DurationId", "Months");
             ViewBag.UnitNumber = unit.UnitNumber;
             ViewBag.PropertyName = unit.Property.Name;
+            ViewBag.UnitId = unit.UnitId;
+            ViewBag.PropertyId = unit.Property.PropertyId;
 
             return View(model);
         }
@@ -193,6 +238,23 @@ namespace AdvancedProject.Controllers
             _context.Add(leaseApplication);
             await _context.SaveChangesAsync();
 
+            var managerNotif = new Notification
+            {
+                UserId = 1,
+                Title = "New Lease Application",
+                Message = $"A new lease application #{leaseApplication.ApplicationId} has been submitted.",
+                NotificationTypeId = 1,
+                CreatedAt = DateTime.Now
+            };
+            _context.Notifications.Add(managerNotif);
+            await _context.SaveChangesAsync();
+
+            await PushNotificationAsync(managerNotif);
+
+            TempData["ToastTitle"]   = "Application Submitted";
+            TempData["ToastMessage"] = $"Your lease application #{leaseApplication.ApplicationId} has been submitted successfully.";
+            TempData["ToastType"]    = "Lease";
+            TempData["SuccessMessage"] = "Lease Application was created successfully.";
             return RedirectToAction(nameof(Index));
         }
 
@@ -220,7 +282,7 @@ namespace AdvancedProject.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("ApplicationId,StartDate,DurationId")] LeaseApplication leaseApplication)
         {
-            Console.WriteLine("POST HIT 🔥");
+            Console.WriteLine("POST HIT ??");
 
             if (id != leaseApplication.ApplicationId)
             {
@@ -234,7 +296,7 @@ namespace AdvancedProject.Controllers
                 return NotFound();
             }
 
-            // 🔥 IMPORTANT: remove validation for fields not included in Bind
+            // ?? IMPORTANT: remove validation for fields not included in Bind
             ModelState.Remove("Tenant");
             ModelState.Remove("Unit");
             ModelState.Remove("Duration");
@@ -248,7 +310,7 @@ namespace AdvancedProject.Controllers
 
             if (!ModelState.IsValid)
             {
-                Console.WriteLine("ModelState NOT valid ❌");
+                Console.WriteLine("ModelState NOT valid ?");
 
                 var errors = ModelState.Values
                     .SelectMany(v => v.Errors)
@@ -264,15 +326,31 @@ namespace AdvancedProject.Controllers
                 return View(leaseApplication);
             }
 
-            Console.WriteLine("ModelState valid ✅");
+            Console.WriteLine("ModelState valid ?");
 
-            // ✅ update only allowed fields
+            // ? update only allowed fields
             existing.StartDate = leaseApplication.StartDate;
             existing.DurationId = leaseApplication.DurationId;
 
+            var editNotif = new Notification
+            {
+                UserId = 1,
+                Title = "Lease Application Edited",
+                Message = $"Lease application #{existing.ApplicationId} has been edited by the tenant.",
+                NotificationTypeId = 1,
+                CreatedAt = DateTime.Now
+            };
+            _context.Notifications.Add(editNotif);
+
             await _context.SaveChangesAsync();
 
-            return RedirectToAction(nameof(Index));
+            await PushNotificationAsync(editNotif);
+
+            TempData["ToastTitle"]   = "Application Updated";
+            TempData["ToastMessage"] = $"Your lease application #{existing.ApplicationId} has been updated successfully.";
+            TempData["ToastType"]    = "Lease";
+            TempData["SuccessMessage"] = "Lease Application was edited successfully.";
+            return RedirectToAction(nameof(Details), new { id = id });
         }
 
         // GET: LeaseApplications/Delete/5
@@ -310,6 +388,7 @@ namespace AdvancedProject.Controllers
             }
 
             await _context.SaveChangesAsync();
+            TempData["SuccessMessage"] = "Lease Application was deleted successfully.";
             return RedirectToAction(nameof(Index));
         }
 
@@ -324,6 +403,7 @@ namespace AdvancedProject.Controllers
             var application = await _context.LeaseApplications
                 .Include(a => a.Unit)
                 .Include(a => a.Duration)
+                .Include(a => a.Tenant)
                 .FirstOrDefaultAsync(a => a.ApplicationId == id);
 
             if (application == null)
@@ -355,8 +435,25 @@ namespace AdvancedProject.Controllers
             application.Unit.AvailabilityStatus = "Occupied";
 
             _context.Leases.Add(lease);
+
+            var approveNotif = new Notification
+            {
+                UserId = application.Tenant.UserId,
+                Title = "Application Approved",
+                Message = $"Your lease application #{application.ApplicationId} has been approved.",
+                NotificationTypeId = 1,
+                CreatedAt = DateTime.Now
+            };
+            _context.Notifications.Add(approveNotif);
+
             await _context.SaveChangesAsync();
 
+            await PushNotificationAsync(approveNotif);
+
+            TempData["ToastTitle"]   = "Application Approved";
+            TempData["ToastMessage"] = $"Lease application #{application.ApplicationId} has been approved and a lease has been created.";
+            TempData["ToastType"]    = "Lease";
+            TempData["SuccessMessage"] = "Application was approved successfully.";
             return RedirectToAction(nameof(Details), new { id });
         }
 
@@ -365,6 +462,7 @@ namespace AdvancedProject.Controllers
         public async Task<IActionResult> Reject(int id)
         {
             var application = await _context.LeaseApplications
+                .Include(a => a.Tenant)
                 .FirstOrDefaultAsync(a => a.ApplicationId == id);
 
             if (application == null)
@@ -381,8 +479,24 @@ namespace AdvancedProject.Controllers
             application.RejectTime = DateTime.Now;
             application.ApproveTime = null;
 
+            var rejectNotif = new Notification
+            {
+                UserId = application.Tenant.UserId,
+                Title = "Application Rejected",
+                Message = $"Your lease application #{application.ApplicationId} has been rejected.",
+                NotificationTypeId = 1,
+                CreatedAt = DateTime.Now
+            };
+            _context.Notifications.Add(rejectNotif);
+
             await _context.SaveChangesAsync();
 
+            await PushNotificationAsync(rejectNotif);
+
+            TempData["ToastTitle"]   = "Application Rejected";
+            TempData["ToastMessage"] = $"Lease application #{application.ApplicationId} has been rejected.";
+            TempData["ToastType"]    = "Lease";
+            TempData["SuccessMessage"] = "Application was rejected successfully.";
             return RedirectToAction(nameof(Details), new { id });
         }
 
@@ -391,6 +505,40 @@ namespace AdvancedProject.Controllers
 
 
 
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CancelApplication(int id)
+        {
+            var application = await _context.LeaseApplications.FindAsync(id);
+            if (application == null) return NotFound();
+
+            if (application.Status == "Pending")
+            {
+                application.Status = "Cancelled";
+
+                var cancelNotif = new Notification
+                {
+                    UserId = 1,
+                    Title = "Application Cancelled",
+                    Message = $"Lease application #{application.ApplicationId} has been cancelled by the tenant.",
+                    NotificationTypeId = 1,
+                    CreatedAt = DateTime.Now
+                };
+                _context.Notifications.Add(cancelNotif);
+
+                await _context.SaveChangesAsync();
+
+                await PushNotificationAsync(cancelNotif);
+
+                TempData["ToastTitle"]   = "Application Cancelled";
+                TempData["ToastMessage"] = $"Your lease application #{application.ApplicationId} has been cancelled.";
+                TempData["ToastType"]    = "Lease";
+                TempData["SuccessMessage"] = "Application was cancelled successfully.";
+            }
+
+            return RedirectToAction(nameof(Details), new { id });
+        }
 
         private bool LeaseApplicationExists(int id)
         {

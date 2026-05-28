@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -6,8 +6,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using AdvancedProject.Data;
-using AdvancedProject.Models;
+using AdvancedProjectAPI.Data;
+using AdvancedProjectAPI.Models;
+using AdvancedProject.ViewModels;
 
 namespace AdvancedProject.Controllers
 {
@@ -22,7 +23,7 @@ namespace AdvancedProject.Controllers
         }
 
         // GET: Users
-        public async Task<IActionResult> Index(string roleFilter, string searchTerm)
+        public async Task<IActionResult> Index(string roleFilter, string searchTerm, int page = 1)
         {
             var users = _context.Users.AsQueryable();
 
@@ -46,7 +47,25 @@ namespace AdvancedProject.Controllers
             ViewData["CurrentRoleFilter"] = roleFilter;
             ViewData["CurrentSearchTerm"] = searchTerm;
 
-            return View(await users.ToListAsync());
+            const int pageSize = 10;
+            int total = await users.CountAsync();
+            int totalPages = (int)Math.Ceiling(total / (double)pageSize);
+            page = Math.Max(1, Math.Min(page, Math.Max(1, totalPages)));
+
+            ViewBag.Pagination = new AdvancedProject.ViewModels.PaginationVM
+            {
+                CurrentPage = page,
+                TotalPages = totalPages,
+                Action = "Index",
+                Controller = "Users",
+                RouteValues = new Dictionary<string, object?>
+                {
+                    ["roleFilter"] = roleFilter,
+                    ["searchTerm"] = searchTerm
+                }
+            };
+
+            return View(await users.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync());
         }
 
         // GET: Users/Details/5
@@ -106,6 +125,7 @@ namespace AdvancedProject.Controllers
                 user.IsActive = true;
                 _context.Add(user);
                 await _context.SaveChangesAsync();
+                TempData["SuccessMessage"] = "User was created successfully.";
                 return RedirectToAction(nameof(Index));
             }
             return View(user);
@@ -139,43 +159,42 @@ namespace AdvancedProject.Controllers
         public async Task<IActionResult> Edit(UserEditVM vm)
         {
             var user = await _context.Users.FindAsync(vm.UserId);
-
             if (user == null)
                 return NotFound();
 
-            var username = vm.Username.Trim().ToLower();
-            var email = vm.Email.Trim().ToLower();
-            var phone = vm.Phone.Trim();
-
-            // UNIQUE CHECKS (ignore current user)
-            if (_context.Users.Any(u => u.Username.ToLower() == username && u.UserId != vm.UserId))
-                ModelState.AddModelError("Username", "Username already exists");
-
-            if (_context.Users.Any(u => u.Email.ToLower() == email && u.UserId != vm.UserId))
-                ModelState.AddModelError("Email", "Email already exists");
-
-            if (_context.Users.Any(u => u.Phone == phone && u.UserId != vm.UserId))
-                ModelState.AddModelError("Phone", "Phone already exists");
-
-            if (!ModelState.IsValid)
-                return View(vm);
-
-            // Update fields
-            user.Username = username;
-            user.FullName = vm.FullName;
-            user.Email = email;
-            user.Phone = phone;
-            user.Gender = vm.Gender;
-
-            // OPTIONAL password
-            if (!string.IsNullOrWhiteSpace(vm.Password))
+            if (ModelState.IsValid)
             {
-                user.Password = vm.Password;
+                var username = vm.Username.Trim().ToLower();
+                var email = vm.Email.Trim().ToLower();
+                var phone = vm.Phone.Trim();
+
+                bool duplicateFound =
+                    _context.Users.Any(u => u.Username.ToLower() == username && u.UserId != vm.UserId)
+                    || _context.Users.Any(u => u.Email.ToLower() == email && u.UserId != vm.UserId)
+                    || _context.Users.Any(u => u.Phone == phone && u.UserId != vm.UserId);
+
+                if (duplicateFound)
+                {
+                    ModelState.AddModelError(string.Empty, "Update failed. Please review your details and try again.");
+                    return View(vm);
+                }
+
+                user.Username = username;
+                user.FullName = vm.FullName;
+                user.Email = email;
+                user.Phone = phone;
+                user.Gender = vm.Gender;
+
+                if (!string.IsNullOrWhiteSpace(vm.Password))
+                    user.Password = vm.Password;
+
+                await _context.SaveChangesAsync();
+
+                TempData["SuccessMessage"] = "User was edited successfully.";
+                return RedirectToAction(nameof(Details), new { id = vm.UserId });
             }
 
-            await _context.SaveChangesAsync();
-
-            return RedirectToAction(nameof(Index));
+            return View(vm);
         }
 
 
@@ -211,6 +230,7 @@ namespace AdvancedProject.Controllers
             }
 
             await _context.SaveChangesAsync();
+            TempData["SuccessMessage"] = "User was deleted successfully.";
             return RedirectToAction(nameof(Index));
         }
 

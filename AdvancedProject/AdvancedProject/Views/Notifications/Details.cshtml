@@ -1,48 +1,71 @@
-﻿@model AdvancedProject.Models.Notification
+@model AdvancedProjectAPI.Models.Notification
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Notification Details";
 }
 
-<h1>Details</h1>
+<div class="ux-page">
 
-<div>
-    <h4>Notification</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Message)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Message)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CreatedAt)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CreatedAt)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Title)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Title)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.NotificationType)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.NotificationType.NotificationTypeId)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.User)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.User.UserId)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.NotificationId">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <div class="ux-page-header">
+        <div>
+            <p class="ux-eyebrow">Notifications</p>
+            <h1 class="ux-title">@(Model.Title ?? "Notification")</h1>
+            <p class="ux-subtitle">
+                <i class="bi bi-calendar-event-fill" style="color:var(--accent);margin-right:0.3rem;"></i>
+                @Model.CreatedAt.ToString("dd MMM yyyy")
+                @if (Model.NotificationType != null)
+                {
+                    <span style="margin:0 0.4rem;color:var(--text-muted);">&middot;</span>
+                    @Model.NotificationType.Name
+                }
+            </p>
+        </div>
+        <div class="d-flex gap-2 flex-wrap">
+            <a asp-action="Edit" asp-route-id="@Model.NotificationId" class="ux-btn-outline">
+                <i class="bi bi-pencil-fill"></i> Edit
+            </a>
+            <a asp-action="Index" class="ux-btn-ghost">
+                <i class="bi bi-arrow-left"></i> Back
+            </a>
+        </div>
+    </div>
+
+    <div class="ux-details-main" style="display:flex;flex-direction:column;gap:1.25rem;">
+
+        <div class="ux-form-card">
+            <div class="ux-form-section-header">
+                <div class="ux-form-section-icon" style="background:rgba(0,91,113,0.1);color:#005B71;">
+                    <i class="bi bi-bell-fill"></i>
+                </div>
+                <div>
+                    <h3 class="ux-form-section-title">Notification Details</h3>
+                    <p class="ux-form-section-sub">Full notification content and metadata.</p>
+                </div>
+            </div>
+            <div class="ux-details-grid">
+                <div class="ux-detail-item">
+                    <span class="ux-detail-label">Title</span>
+                    <span class="ux-detail-value">@Model.Title</span>
+                </div>
+                <div class="ux-detail-item">
+                    <span class="ux-detail-label">Type</span>
+                    <span class="ux-detail-value">@(Model.NotificationType?.Name ?? "—")</span>
+                </div>
+                <div class="ux-detail-item">
+                    <span class="ux-detail-label">Created At</span>
+                    <span class="ux-detail-value">@Model.CreatedAt.ToString("dd MMM yyyy")</span>
+                </div>
+                <div class="ux-detail-item">
+                    <span class="ux-detail-label">Recipient</span>
+                    <span class="ux-detail-value">@(Model.User?.FullName ?? Model.User?.Username ?? "—")</span>
+                </div>
+                <div class="ux-detail-item" style="grid-column:1/-1;">
+                    <span class="ux-detail-label">Message</span>
+                    <span class="ux-detail-value">@Model.Message</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
 </div>

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -6,8 +6,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using AdvancedProject.Data;
-using AdvancedProject.Models;
+using AdvancedProjectAPI.Data;
+using AdvancedProjectAPI.Models;
 
 namespace AdvancedProject.Controllers
 {
@@ -179,6 +179,24 @@ namespace AdvancedProject.Controllers
             }
 
             await _context.SaveChangesAsync();
+            TempData["SuccessMessage"] = "Notification was deleted successfully.";
+            return RedirectToAction(nameof(Index));
+        }
+
+        // POST: Notifications/ClearAll
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ClearAll()
+        {
+            var currentUserEmail = User.Identity!.Name;
+            var currentUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == currentUserEmail);
+            if (currentUser != null)
+            {
+                var notifs = _context.Notifications.Where(n => n.UserId == currentUser.UserId);
+                _context.Notifications.RemoveRange(notifs);
+                await _context.SaveChangesAsync();
+            }
+            TempData["SuccessMessage"] = "All notifications cleared.";
             return RedirectToAction(nameof(Index));
         }
 

@@ -1,171 +1,186 @@
-﻿@model IEnumerable<AdvancedProject.Models.MaintenanceRequest>
+@model IEnumerable<AdvancedProjectAPI.Models.MaintenanceRequest>
 @using Microsoft.AspNetCore.Mvc.Rendering
 
 @{
     ViewData["Title"] = "Maintenance Requests";
-    var totalRequests = Model?.Count() ?? 0;
+    var currentSearch   = ViewBag.SearchTerm as string ?? "";
+    var currentPriority = ViewBag.PriorityFilter as string ?? "";
+    var currentStatus   = ViewBag.StatusFilter as string ?? "";
+    int total      = Model?.Count() ?? 0;
+    int pending    = Model?.Count(m => m.Status == "Pending") ?? 0;
+    int inProgress = Model?.Count(m => m.Status == "In Progress") ?? 0;
+    int resolved   = Model?.Count(m => m.Status == "Resolved") ?? 0;
+    int closed     = Model?.Count(m => m.Status == "Closed" || m.Status == "Cancelled") ?? 0;
 }
 
-<div class="requests-page">
-    <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-start gap-3 mb-4">
+<div class="ux-page">
+
+    <div class="ux-page-header">
         <div>
-            <p class="details-eyebrow mb-2">MAINTENANCE BOARD</p>
-            <h1 class="details-title mb-2">Maintenance Requests</h1>
-            <p class="users-subtitle mb-0">Browse and manage submitted maintenance requests by type, priority, and status.</p>
+            <p class="ux-eyebrow">Maintenance Board</p>
+            <h1 class="ux-title">Maintenance Requests</h1>
+            <p class="ux-subtitle">Browse and manage submitted maintenance requests.</p>
         </div>
-
-        <a asp-action="Create" class="btn btn-light-custom users-create-btn">
-            + Create New Request
-        </a>
+        @if (!User.IsInRole("MaintenanceStaff"))
+        {
+            <a asp-action="Create" class="ux-btn-primary">
+                <i class="bi bi-plus-lg"></i> New Request
+            </a>
+        }
     </div>
 
-    <div class="card search-card users-search-card shadow-soft border-0 mb-4">
-        <div class="card-body p-4">
-            <form asp-action="Index" method="get">
-
-                <div class="row g-3 align-items-end">
-
-                    <!-- SEARCH -->
-                    <div class="col-lg-6">
-                        <label class="form-label fw-semibold">Search Requests</label>
-                        <input type="text"
-                               name="searchTerm"
-                               value="@ViewBag.SearchTerm"
-                               class="form-control users-search-input"
-                               placeholder="Search by request ID, type, or user phone number..." />
-                    </div>
-
-                    <!-- FILTERS -->
-                    <div class="col-lg-2">
-                        <label class="form-label fw-semibold">Priority</label>
-                        <select name="priorityFilter" class="form-select users-search-input">
-                            <option value="">All</option>
-                            <option value="High">High</option>
-                            <option value="Medium">Medium</option>
-                            <option value="Low">Low</option>
-                        </select>
-                    </div>
-
-                    <div class="col-lg-2">
-                        <label class="form-label fw-semibold">Status</label>
-                        <select name="statusFilter" class="form-select users-search-input">
-                            <option value="">All</option>
-                            <option value="Pending">Pending</option>
-                            <option value="In Progress">In Progress</option>
-                            <option value="Resolved">Resolved</option>
-                            <option value="Closed">Closed</option>
-                            <option value="Cancelled">Cancelled</option>
-                        </select>
-                    </div>
-
-                    <div class="col-lg-2">
-                        <label class="form-label fw-semibold">Sort</label>
-                        <select name="sortOrder" class="form-select users-search-input">
-                            <option value="">Latest</option>
-                            <option value="oldest">Oldest</option>
-                        </select>
-                    </div>
-
-                    <!-- SECOND ROW -->
-                    <div class="col-lg-4 d-grid">
-                        <button type="submit" class="btn users-search-btn">
-                            Search
-                        </button>
-                    </div>
-
-                    <div class="col-lg-4 d-grid">
-                        <a asp-action="Index" class="btn btn-outline-light users-reset-btn">
-                            Reset
-                        </a>
-                    </div>
-
-                    <div class="col-lg-4">
-                        <div class="request-total-box">
-                            <div class="request-total-label">TOTAL REQUESTS</div>
-                            <div class="request-total-value">@totalRequests</div>
-                        </div>
-                    </div>
-
-                </div>
-            </form>
+    <div class="ux-stats-row">
+        <div class="ux-stat-card">
+            <div class="ux-stat-icon" style="background:rgba(0,91,113,0.1);color:#005B71;">
+                <i class="bi bi-tools"></i>
+            </div>
+            <div>
+                <div class="ux-stat-value">@total</div>
+                <div class="ux-stat-label">Total Requests</div>
+            </div>
+        </div>
+        <div class="ux-stat-card">
+            <div class="ux-stat-icon" style="background:rgba(245,158,11,0.1);color:#d97706;">
+                <i class="bi bi-hourglass-split"></i>
+            </div>
+            <div>
+                <div class="ux-stat-value">@pending</div>
+                <div class="ux-stat-label">Pending</div>
+            </div>
+        </div>
+        <div class="ux-stat-card">
+            <div class="ux-stat-icon" style="background:rgba(59,130,246,0.1);color:#2563eb;">
+                <i class="bi bi-play-circle-fill"></i>
+            </div>
+            <div>
+                <div class="ux-stat-value">@inProgress</div>
+                <div class="ux-stat-label">In Progress</div>
+            </div>
+        </div>
+        <div class="ux-stat-card">
+            <div class="ux-stat-icon" style="background:rgba(30,142,110,0.1);color:#1E8E6E;">
+                <i class="bi bi-check-circle-fill"></i>
+            </div>
+            <div>
+                <div class="ux-stat-value">@resolved</div>
+                <div class="ux-stat-label">Resolved</div>
+            </div>
         </div>
     </div>
 
-   
+    <div class="ux-toolbar">
+        <form asp-action="Index" method="get" class="ux-search-form">
+            <div class="ux-search-wrap">
+                <i class="bi bi-search ux-search-icon"></i>
+                <input type="text" name="searchTerm" value="@currentSearch"
+                       class="ux-search-input" placeholder="Search by ID, type, or phone..." />
+            </div>
+            <select name="priorityFilter" class="ux-search-input" style="width:140px;padding:0.55rem 0.85rem;border:1.5px solid #e5e7eb;border-radius:8px;font-size:0.875rem;outline:none;">
+                <option value="">All Priorities</option>
+                <option value="High"   selected="@(currentPriority=="High")">High</option>
+                <option value="Medium" selected="@(currentPriority=="Medium")">Medium</option>
+                <option value="Low"    selected="@(currentPriority=="Low")">Low</option>
+            </select>
+            <select name="statusFilter" class="ux-search-input" style="width:150px;padding:0.55rem 0.85rem;border:1.5px solid #e5e7eb;border-radius:8px;font-size:0.875rem;outline:none;">
+                <option value="">All Statuses</option>
+                <option value="Pending"     selected="@(currentStatus=="Pending")">Pending</option>
+                <option value="In Progress" selected="@(currentStatus=="In Progress")">In Progress</option>
+                <option value="Resolved"    selected="@(currentStatus=="Resolved")">Resolved</option>
+                <option value="Closed"      selected="@(currentStatus=="Closed")">Closed</option>
+                <option value="Cancelled"   selected="@(currentStatus=="Cancelled")">Cancelled</option>
+            </select>
+            <button type="submit" class="ux-btn-primary">Search</button>
+            <a asp-action="Index" class="ux-btn-ghost">Reset</a>
+        </form>
+    </div>
 
     @if (Model != null && Model.Any())
     {
-        <div class="row g-4">
+        <div class="mreq-grid">
             @foreach (var item in Model)
             {
-                var priorityClass = item.Priority switch
+                string priorityBorderColor = item.Priority switch
                 {
-                    "High" => "request-pill-priority-high",
-                    "Medium" => "request-pill-priority-medium",
-                    "Low" => "request-pill-priority-low",
-                    _ => "badge-soft-default"
+                    "High"   => "#dc3545",
+                    "Medium" => "#f59e0b",
+                    "Low"    => "#1E8E6E",
+                    _        => "#e5e7eb"
+                };
+                string priorityColor = item.Priority switch
+                {
+                    "High"   => "#b42318",
+                    "Medium" => "#b45309",
+                    "Low"    => "#1E8E6E",
+                    _        => "#6b7280"
+                };
+                string priorityBg = item.Priority switch
+                {
+                    "High"   => "rgba(220,53,69,0.1)",
+                    "Medium" => "rgba(245,158,11,0.12)",
+                    "Low"    => "rgba(30,142,110,0.1)",
+                    _        => "rgba(107,114,128,0.1)"
+                };
+                string statusColor = item.Status switch
+                {
+                    "Pending"     => "#b45309",
+                    "In Progress" => "#2563eb",
+                    "Resolved"    => "#1E8E6E",
+                    "Closed"      => "#4b5563",
+                    "Cancelled"   => "#c2410c",
+                    _             => "#6b7280"
+                };
+                string statusBg = item.Status switch
+                {
+                    "Pending"     => "rgba(245,158,11,0.12)",
+                    "In Progress" => "rgba(59,130,246,0.1)",
+                    "Resolved"    => "rgba(30,142,110,0.1)",
+                    "Closed"      => "rgba(75,85,99,0.1)",
+                    "Cancelled"   => "rgba(234,88,12,0.1)",
+                    _             => "rgba(107,114,128,0.1)"
                 };
 
-                var priorityCardClass = item.Priority switch
-                {
-                    "High" => "request-card-priority-high",
-                    "Medium" => "request-card-priority-medium",
-                    "Low" => "request-card-priority-low",
-                    _ => ""
-                };
+                <div class="mreq-card" style="border-left-color:@priorityBorderColor;">
+                    <div class="mreq-card-top">
+                        <span class="mreq-id">#@item.RequestId</span>
+                        <span class="mreq-date">@item.RequestDate.ToString("dd MMM yyyy")</span>
+                    </div>
 
-                var statusClass = item.Status switch
-                {
-                    "Pending" => "request-pill-status-pending",
-                    "In Progress" => "request-pill-status-progress",
-                    "Resolved" => "request-pill-status-resolved",
-                    "Closed" => "request-pill-status-closed",
-                    "Cancelled" => "request-pill-status-cancelled",
-                    _ => "badge-soft-default"
-                };
+                    <div class="mreq-pills">
+                        <span class="ux-role-badge" style="background:@priorityBg;color:@priorityColor;">@item.Priority</span>
+                        <span class="ux-role-badge" style="background:@statusBg;color:@statusColor;">@item.Status</span>
+                    </div>
 
-                <div class="col-12 col-md-6 col-xl-4">
-                    <div class="card request-card @priorityCardClass h-100">
-                        <div class="card-body p-4 d-flex flex-column">
-                            <div class="d-flex justify-content-between align-items-center mb-1">
-                                <span class="request-id">#@item.RequestId</span>
-                                <span class="request-date-small">
-                                    @item.RequestDate.ToString("dd MMM yyyy")
+                    <div class="mreq-type-block">
+                        <span class="mreq-type-label">TYPE</span>
+                        <span class="mreq-type-value">@(item.Skill?.Name ?? "—")</span>
+                    </div>
+
+                    <div class="mreq-meta">
+                        <div class="mreq-meta-item">
+                            <span class="mreq-meta-label">Submitted By</span>
+                            <span class="mreq-meta-value">@(item.User?.Username ?? "—")</span>
+                        </div>
+                        <div class="mreq-meta-item">
+                            <span class="mreq-meta-label">Unit</span>
+                            <span class="mreq-meta-value">@(item.Unit?.UnitNumber ?? "—") <span style="color:var(--text-muted);font-weight:500;">@(item.Unit?.Property?.Name != null ? "· " + item.Unit.Property.Name : "")</span></span>
+                        </div>
+                        @if (!string.IsNullOrWhiteSpace(item.User?.Phone))
+                        {
+                            <div class="mreq-meta-item" style="grid-column:1/-1;">
+                                <span class="mreq-meta-label">Lookup Phone</span>
+                                <span class="mreq-meta-value" style="display:inline-flex;align-items:center;gap:0.4rem;">
+                                    <span style="background:rgba(0,91,113,0.08);color:#005B71;border-radius:6px;padding:0.15rem 0.55rem;font-size:0.82rem;font-weight:700;letter-spacing:0.02em;font-family:monospace;">
+                                        <i class="bi bi-telephone-fill" style="font-size:0.75rem;margin-right:0.25rem;"></i>@item.User.Phone
+                                    </span>
                                 </span>
                             </div>
+                        }
+                    </div>
 
-                            <div class="d-flex gap-2 mb-2">
-                                <span class="custom-pill @priorityClass">@item.Priority</span>
-                                <span class="custom-pill @statusClass">@item.Status</span>
-                            </div>
-
-                            <div class="mb-2">
-                                <p class="small-label mb-2">TYPE</p>
-                                <h3 class="request-title mb-0">@item.Skill?.Name</h3>
-                            </div>
-
-                            <div class="request-meta-list mb-2">
-                                <div class="request-meta-item">
-                                    <span class="request-meta-label">Phone Number</span>
-                                    <span class="request-meta-value">@item.User?.Phone</span>
-                                </div>
-
-                                <div class="request-meta-item">
-                                    <span class="request-meta-label">Unit</span>
-                                    <span class="request-meta-value">@item.Unit?.UnitNumber (@item.Unit?.Property?.Name)</span>
-                                </div>
-
-                               
-                            </div>
-
-                            <div class="mt-auto">
-                                <div class="d-grid">
-                                    <a asp-action="Details" asp-route-id="@item.RequestId" class="btn btn-primary request-action-btn">
-                                        View Details
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="mreq-card-footer">
+                        <a asp-action="Details" asp-route-id="@item.RequestId" class="ux-details-btn mreq-view-btn">
+                            View Details <i class="bi bi-arrow-right"></i>
+                        </a>
                     </div>
                 </div>
             }
@@ -173,11 +188,62 @@
     }
     else
     {
-        <div class="card shadow-soft border-0 empty-state-card">
-            <div class="card-body p-5 text-center">
-                <h4 class="mb-2">No maintenance requests found</h4>
-                <p class="text-muted mb-0">Try changing the search or filters.</p>
+        <div class="ux-table-card">
+            <div class="ux-empty">
+                <i class="bi bi-tools"></i>
+                <p>No maintenance requests found.</p>
             </div>
         </div>
     }
+
+    @await Html.PartialAsync("_Pagination", (AdvancedProject.ViewModels.PaginationVM)ViewBag.Pagination)
+
 </div>
+
+@section Scripts {
+<script>
+(function () {
+    var banner = document.createElement('div');
+    banner.id = 'board-live-banner';
+    banner.style.cssText =
+        'display:none;position:sticky;top:0;z-index:200;background:#4f46e5;color:#fff;' +
+        'padding:0.7rem 1.2rem;border-radius:10px;margin-bottom:1rem;' +
+        'align-items:center;gap:1rem;font-size:0.875rem;font-weight:600;flex-wrap:wrap;';
+    banner.innerHTML =
+        '<i class="bi bi-arrow-clockwise"></i>' +
+        '<span id="board-live-msg">The board has been updated.</span>' +
+        '<button onclick="location.reload()" ' +
+            'style="background:rgba(255,255,255,0.2);border:none;color:#fff;' +
+            'padding:0.3rem 0.85rem;border-radius:6px;cursor:pointer;font-weight:600;">' +
+            'Refresh' +
+        '</button>' +
+        '<button onclick="document.getElementById(\'board-live-banner\').style.display=\'none\'" ' +
+            'style="background:none;border:none;color:rgba(255,255,255,0.7);' +
+            'font-size:1rem;cursor:pointer;margin-left:auto;">' +
+            '<i class="bi bi-x-lg"></i>' +
+        '</button>';
+
+    var page = document.querySelector('.ux-page');
+    if (page) page.insertBefore(banner, page.firstChild);
+
+    var connection = new signalR.HubConnectionBuilder()
+        .withUrl('/hubs/maintenance-board')
+        .withAutomaticReconnect()
+        .build();
+
+    connection.on('BoardUpdated', function (data) {
+        var msg = document.getElementById('board-live-msg');
+        if (data.eventType === 'created') {
+            msg.textContent = 'A new maintenance request (#' + data.requestId + ') was submitted.';
+        } else {
+            msg.textContent = 'Request #' + data.requestId + ' was updated — status: ' + data.status + '.';
+        }
+        banner.style.display = 'flex';
+    });
+
+    connection.start().catch(function (err) {
+        console.error('MaintenanceBoardHub error:', err);
+    });
+})();
+</script>
+}

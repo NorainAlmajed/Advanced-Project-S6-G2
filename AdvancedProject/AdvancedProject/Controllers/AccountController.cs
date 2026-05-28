@@ -1,5 +1,6 @@
-﻿using AdvancedProject.Data;
-using AdvancedProject.Models;
+using AdvancedProjectAPI.Data;
+using AdvancedProjectAPI.Models;
+using AdvancedProject.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -48,20 +49,14 @@ namespace AdvancedProject.Controllers
                 var email = model.Email.Trim().ToLower();
                 var phone = model.Phone.Trim();
 
-                // Check duplicates in your existing User table
-                if (_context.Users.Any(u => u.Username.ToLower() == username))
+                // Check duplicates without revealing which field conflicts
+                bool duplicateFound = _context.Users.Any(u => u.Username.ToLower() == username)
+                    || _context.Users.Any(u => u.Email.ToLower() == email)
+                    || _context.Users.Any(u => u.Phone == phone);
+
+                if (duplicateFound)
                 {
-                    ModelState.AddModelError("Username", "Username already exists.");
-                    return View(model);
-                }
-                if (_context.Users.Any(u => u.Email.ToLower() == email))
-                {
-                    ModelState.AddModelError("Email", "Email already exists.");
-                    return View(model);
-                }
-                if (_context.Users.Any(u => u.Phone == phone))
-                {
-                    ModelState.AddModelError("Phone", "Phone already exists.");
+                    ModelState.AddModelError(string.Empty, "Registration failed. Please review your details and try again.");
                     return View(model);
                 }
 

@@ -1,123 +1,105 @@
-﻿@model IEnumerable<AdvancedProject.Models.User>
+@model IEnumerable<AdvancedProjectAPI.Models.User>
 
 @{
     ViewData["Title"] = "Tenants";
     string currentSearch = ViewData["CurrentSearchTerm"]?.ToString() ?? "";
+    int totalTenants = (int)(ViewData["TotalTenants"] ?? 0);
 }
 
-<div class="container py-4 users-page">
+<div class="ux-page">
 
-    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-start gap-3 mb-4">
+    <div class="ux-page-header">
         <div>
-            <p class="details-eyebrow mb-1">User Management</p>
-            <h1 class="details-title mb-2">Tenants</h1>
-            <p class="users-subtitle mb-0">Browse and manage tenants.</p>
+            <p class="ux-eyebrow">User Management</p>
+            <h1 class="ux-title">Tenants</h1>
+            <p class="ux-subtitle">Browse and manage registered tenants.</p>
         </div>
-
-        <a asp-controller="Tenants" asp-action="Create" class="btn btn-light-custom users-create-btn">
-            + Add New Tenant
+        <a asp-controller="Tenants" asp-action="Create" class="ux-btn-primary">
+            <i class="bi bi-person-plus-fill"></i> Add Tenant
         </a>
     </div>
 
-    <div class="d-flex flex-wrap gap-2 mb-4">
-        <a asp-controller="Users"
-           asp-action="Index"
-           class="btn btn-light-custom users-filter-btn">
-            All Users
-        </a>
-
-        <a asp-controller="Tenants"
-           asp-action="Index"
-           class="btn btn-primary users-filter-btn">
-            Tenants
-        </a>
-
-        <a asp-controller="MaintenanceStaffs"
-           asp-action="Index"
-           class="btn btn-light-custom users-filter-btn">
-            Maintenance Staff
-        </a>
-    </div>
-
-    <div class="card search-card shadow-soft border-0 mb-4 users-search-card">
-        <div class="card-body p-4">
-            <form asp-action="Index" method="get" class="row g-3 align-items-end">
-                <div class="col-lg-8">
-                    <label for="searchTerm" class="form-label fw-semibold">Search Tenants</label>
-                    <input type="text"
-                           id="searchTerm"
-                           name="searchTerm"
-                           value="@currentSearch"
-                           class="form-control form-control-lg users-search-input"
-                           placeholder="Search by username, full name, email, phone, or role..." />
-                </div>
-
-                <div class="col-lg-4 d-flex gap-2">
-                    <button type="submit" class="btn btn-primary users-search-btn flex-fill">
-                        Search
-                    </button>
-
-                    <a asp-action="Index"
-                       class="btn btn-outline-light users-reset-btn flex-fill">
-                        Reset
-                    </a>
-                </div>
-            </form>
+    <div class="ux-stats-row">
+        <div class="ux-stat-card">
+            <div class="ux-stat-icon" style="background: rgba(30,142,110,0.1); color: #1E8E6E;">
+                <i class="bi bi-person-fill"></i>
+            </div>
+            <div>
+                <div class="ux-stat-value">@totalTenants</div>
+                <div class="ux-stat-label">Total Tenants</div>
+            </div>
         </div>
     </div>
 
-    <div class="card shadow-soft border-0 users-table-card">
-        <div class="table-responsive">
-            <table class="table mb-0 users-table align-middle">
-                <thead>
-                    <tr>
-                        <th>Username</th>
-                        <th>Full Name</th>
-                        <th>Email</th>
-                        <th>Phone</th>
-                        <th>Role</th>
-                        <th class="text-end">Action</th>
-                    </tr>
-                </thead>
+    <div class="ux-toolbar">
+        <form asp-action="Index" method="get" class="ux-search-form">
+            <div class="ux-search-wrap">
+                <i class="bi bi-search ux-search-icon"></i>
+                <input type="text" name="searchTerm" value="@currentSearch"
+                       class="ux-search-input" placeholder="Search by name, email, phone..." />
+            </div>
+            <button type="submit" class="ux-btn-primary">Search</button>
+            <a asp-action="Index" class="ux-btn-ghost">Reset</a>
+        </form>
 
-                <tbody>
-                    @if (Model.Any())
-                    {
+        <div class="ux-filter-tabs">
+            <a asp-controller="Users" asp-action="Index" class="ux-filter-tab">All Users</a>
+            <a asp-controller="Tenants" asp-action="Index" class="ux-filter-tab active">Tenants</a>
+            <a asp-controller="MaintenanceStaffs" asp-action="Index" class="ux-filter-tab">Staff</a>
+        </div>
+    </div>
+
+    <div class="ux-table-card">
+        @if (Model.Any())
+        {
+            <div class="table-responsive">
+                <table class="ux-table">
+                    <thead>
+                        <tr>
+                            <th>Tenant</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Role</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
                         @foreach (var item in Model)
                         {
-                            <tr class="users-row">
-                                <td class="fw-semibold">@item.Username</td>
-                                <td>@item.FullName</td>
-                                <td>@item.Email</td>
-                                <td>@item.Phone</td>
+                            string initial = !string.IsNullOrEmpty(item.FullName) ? item.FullName[0].ToString().ToUpper() : "T";
+                            <tr>
                                 <td>
-                                    <span class="custom-pill badge-soft-tenant">
-                                        @item.Role
-                                    </span>
+                                    <div class="ux-user-cell">
+                                        <div class="ux-avatar" style="background:#1E8E6E;">@initial</div>
+                                        <div>
+                                            <div class="ux-user-name">@item.FullName</div>
+                                            <div class="ux-user-sub">@@@item.Username</div>
+                                        </div>
+                                    </div>
                                 </td>
-
-                                
-
-
+                                <td class="ux-cell-muted">@item.Email</td>
+                                <td class="ux-cell-muted">@item.Phone</td>
+                                <td><span class="ux-role-badge ux-role-tenant">Tenant</span></td>
                                 <td class="text-end">
-                                    <a asp-controller="Users" asp-action="Details" asp-route-id="@item.UserId" class="btn btn-primary btn-sm users-details-btn">
-                                        View Details
+                                    <a asp-controller="Users" asp-action="Details" asp-route-id="@item.UserId" class="ux-details-btn">
+                                        View <i class="bi bi-arrow-right"></i>
                                     </a>
                                 </td>
                             </tr>
                         }
-                    }
-                    else
-                    {
-                        <tr>
-                            <td colspan="6" class="text-center py-4 text-muted">
-                                No tenants found.
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <div class="ux-empty">
+                <i class="bi bi-person-x"></i>
+                <p>No tenants found.</p>
+            </div>
+        }
     </div>
+
+    @await Html.PartialAsync("_Pagination", (AdvancedProject.ViewModels.PaginationVM)ViewBag.Pagination)
 
 </div>

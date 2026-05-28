@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -6,12 +6,12 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using AdvancedProject.Data;
-using AdvancedProject.Models;
+using AdvancedProjectAPI.Data;
+using AdvancedProjectAPI.Models;
 
 namespace AdvancedProject.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "PropertyManager,Tenant")]
     public class UnitsController : Controller
     {
         private readonly APContext _context;
@@ -28,7 +28,8 @@ namespace AdvancedProject.Controllers
       string statusFilter,
       string typeFilter,
       string priceFilter,
-      int[] selectedAmenities)
+      int[] selectedAmenities,
+      int page = 1)
         {
             var query = _context.Units
             .Include(u => u.Property)
@@ -132,7 +133,29 @@ namespace AdvancedProject.Controllers
             ViewBag.CurrentPrice = priceFilter;
             ViewBag.PropertyId = id;
 
-            var units = await query.ToListAsync();
+            const int pageSize = 9;
+            int total = await query.CountAsync();
+            int totalPages = (int)Math.Ceiling(total / (double)pageSize);
+            page = Math.Max(1, Math.Min(page, Math.Max(1, totalPages)));
+
+            ViewBag.Pagination = new AdvancedProject.ViewModels.PaginationVM
+            {
+                CurrentPage = page,
+                TotalPages = totalPages,
+                Action = "Index",
+                Controller = "Units",
+                RouteValues = new Dictionary<string, object?>
+                {
+                    ["id"] = id?.ToString(),
+                    ["searchString"] = searchString,
+                    ["statusFilter"] = statusFilter,
+                    ["typeFilter"] = typeFilter,
+                    ["priceFilter"] = priceFilter,
+                    ["selectedAmenities"] = selectedAmenities
+                }
+            };
+
+            var units = await query.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
 
             return View(units);
         }
@@ -234,6 +257,7 @@ namespace AdvancedProject.Controllers
                 return View(unit);
             }
 
+            TempData["SuccessMessage"] = "Unit was created successfully.";
             return RedirectToAction(nameof(Index), new { id = unit.PropertyId });
         }
 
@@ -336,7 +360,8 @@ namespace AdvancedProject.Controllers
                 }
             }
 
-            return RedirectToAction(nameof(Index), new { id = existingUnit.PropertyId });
+            TempData["SuccessMessage"] = "Unit was edited successfully.";
+            return RedirectToAction(nameof(Details), new { id = existingUnit.UnitId });
         }
 
 
@@ -374,6 +399,7 @@ namespace AdvancedProject.Controllers
             }
 
             await _context.SaveChangesAsync();
+            TempData["SuccessMessage"] = "Unit was deleted successfully.";
             return RedirectToAction(nameof(Index));
         }
 
@@ -385,9 +411,10 @@ namespace AdvancedProject.Controllers
             var unit = await _context.Units.FindAsync(id);
             if (unit == null) return NotFound();
 
+            int propertyId = unit.PropertyId;
             unit.IsActive = false;
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Index), new { id = propertyId });
         }
 
         private bool UnitExists(int id)
