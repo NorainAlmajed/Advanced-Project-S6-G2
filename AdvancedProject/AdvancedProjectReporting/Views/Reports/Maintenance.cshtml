@@ -1,6 +1,18 @@
 @model AdvancedProjectReporting.Dtos.MaintenanceReportDto
 @{
     ViewData["Title"] = "Maintenance Report";
+    var skillLabels  = string.Join(",", Model?.ByType.Select(t => $"'{t.Type.Replace("'","\\'")}'" ) ?? new List<string>());
+    var skillCounts  = string.Join(",", Model?.ByType.Select(t => t.Count) ?? new List<int>());
+
+    var resolvedIds  = string.Join(",", Model?.ResolvedRequestDetails.Select(r => $"'#{r.RequestId}'") ?? new List<string>());
+    var resolvedHrs  = string.Join(",", Model?.ResolvedRequestDetails
+        .Select(r => r.HoursToResolve.ToString("F1", System.Globalization.CultureInfo.InvariantCulture)) ?? new List<string>());
+
+    var mTotal = Model?.TotalRequests ?? 0;
+    double pPct = mTotal > 0 ? Math.Round((double)(Model?.PendingRequests    ?? 0) / mTotal * 100, 1) : 0;
+    double iPct = mTotal > 0 ? Math.Round((double)(Model?.InProgressRequests ?? 0) / mTotal * 100, 1) : 0;
+    double rPct = mTotal > 0 ? Math.Round((double)(Model?.ResolvedRequests   ?? 0) / mTotal * 100, 1) : 0;
+    double cPct = mTotal > 0 ? Math.Round((double)(Model?.ClosedRequests     ?? 0) / mTotal * 100, 1) : 0;
 }
 
 <div class="d-flex justify-content-between align-items-start mb-4">
@@ -9,9 +21,14 @@
         <h2 class="page-title">Maintenance Report</h2>
         <p class="page-subtitle mt-1">Generated @DateTime.Now.ToString("dd MMM yyyy, HH:mm")</p>
     </div>
-    <a asp-action="Index" class="btn btn-sm mt-2" style="background:#E8F1F3;color:#005B71;border-radius:12px;font-weight:700;padding:0.6rem 1.1rem;">
-        &larr; Dashboard
-    </a>
+    <div class="d-flex gap-2 mt-2">
+        <button class="btn-export-pdf" onclick="exportToPDF('Maintenance Report',['tbl-status','tbl-avg-time','tbl-skilltype','tbl-resolved'],'Maintenance_Report.pdf',['Requests by Status','Average Resolution Time','Requests by Skill Type','Resolution Times per Request'])">
+            <i class="bi bi-file-earmark-pdf"></i> Export PDF
+        </button>
+        <a asp-action="Index" class="btn btn-sm" style="background:#E8F1F3;color:#005B71;border-radius:12px;font-weight:700;padding:0.55rem 1.1rem;">
+            <i class="bi bi-arrow-left me-1"></i>Dashboard
+        </a>
+    </div>
 </div>
 
 @if (Model == null)
@@ -30,7 +47,7 @@ else
             </div>
         </div>
         <div class="col-md-3">
-            <div class="card report-stat-card text-white h-100" style="background:linear-gradient(135deg,#b45309,#f59e0b);">
+            <div class="card report-stat-card text-white h-100" style="background:linear-gradient(135deg,#4D6268,#3a4e52);">
                 <div class="card-body p-4">
                     <div class="stat-value">@Model.PendingRequests</div>
                     <div class="stat-label">Pending</div>
@@ -55,21 +72,104 @@ else
         </div>
     </div>
 
-    <div class="row g-3">
+    @* Charts *@
+    <div class="row g-3 mb-4">
         <div class="col-md-4">
-            <div class="section-card h-100 d-flex flex-column justify-content-center align-items-center p-4 text-center">
-                <p class="page-eyebrow mb-2">Average Resolution Time</p>
-                <div style="font-size:3rem;font-weight:900;color:var(--primary);">
-                    @Model.AverageResolutionDays.ToString("F1")
+            <div class="chart-card h-100">
+                <div class="chart-card-title"><i class="bi bi-pie-chart"></i> Requests by Status</div>
+                <div class="chart-canvas-wrap" style="height:185px;max-height:185px;">
+                    <canvas id="chartMaintStatus"></canvas>
                 </div>
-                <div style="font-size:1.1rem;font-weight:600;color:var(--text-muted);">days</div>
             </div>
         </div>
         <div class="col-md-8">
+            <div class="chart-card h-100">
+                <div class="chart-card-title"><i class="bi bi-bar-chart-horizontal"></i> Requests by Skill Type</div>
+                <div class="chart-canvas-wrap" style="max-height:240px;">
+                    <canvas id="chartSkillType"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row g-3 mb-4">
+        <div class="col-md-4">
             <div class="section-card h-100">
-                <div class="section-card-header">Requests by Skill Type</div>
+                <div class="section-card-header"><i class="bi bi-list-check me-2"></i>Requests by Status</div>
                 <div class="report-table-card" style="border-radius:0 0 20px 20px;border:none;">
-                    <table class="table report-table mb-0">
+                    <table id="tbl-status" class="table report-table mb-0">
+                        <thead>
+                            <tr>
+                                <th>Status</th>
+                                <th class="text-center">Count</th>
+                                <th class="text-center">Share</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="custom-pill pill-warning">Pending</span></td>
+                                <td class="text-center fw-bold">@Model.PendingRequests</td>
+                                <td class="text-center">@pPct.ToString("F1")%</td>
+                            </tr>
+                            <tr>
+                                <td><span class="custom-pill pill-primary">In Progress</span></td>
+                                <td class="text-center fw-bold">@Model.InProgressRequests</td>
+                                <td class="text-center">@iPct.ToString("F1")%</td>
+                            </tr>
+                            <tr>
+                                <td><span class="custom-pill pill-success">Resolved</span></td>
+                                <td class="text-center fw-bold">@Model.ResolvedRequests</td>
+                                <td class="text-center">@rPct.ToString("F1")%</td>
+                            </tr>
+                            <tr>
+                                <td><span class="custom-pill pill-muted">Closed</span></td>
+                                <td class="text-center fw-bold">@Model.ClosedRequests</td>
+                                <td class="text-center">@cPct.ToString("F1")%</td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr style="border-top:2px solid rgba(13,27,42,0.12);">
+                                <td class="fw-bold" style="color:var(--text-muted);font-size:0.78rem;text-transform:uppercase;letter-spacing:0.04em;">Total</td>
+                                <td class="text-center fw-bold">@Model.TotalRequests</td>
+                                <td class="text-center fw-bold">100%</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="section-card h-100 d-flex flex-column justify-content-center align-items-center p-4 text-center">
+                <p class="page-eyebrow mb-3">Avg. Resolution Time</p>
+                <div style="font-size:3rem;font-weight:900;color:var(--primary);line-height:1;">
+                    @Model.AverageResolutionDays.ToString("F1")
+                </div>
+                <div style="font-size:1rem;font-weight:600;color:var(--text-muted);margin-bottom:1.25rem;">days</div>
+                <div style="width:100%;background:rgba(0,91,113,0.08);border-radius:16px;padding:0.9rem;">
+                    <div style="font-size:1.6rem;font-weight:900;color:var(--accent);line-height:1;">
+                        @Model.AverageResolutionHours.ToString("F1")
+                    </div>
+                    <div style="font-size:0.88rem;font-weight:600;color:var(--text-muted);">hours</div>
+                </div>
+            </div>
+            @* Hidden table — captured by PDF export only *@
+            <table id="tbl-avg-time" class="d-none">
+                <thead><tr><th>Metric</th><th>Value</th></tr></thead>
+                <tbody>
+                    <tr><td>Average Days</td><td>@Model.AverageResolutionDays.ToString("F1") days</td></tr>
+                    <tr><td>Average Hours</td><td>@Model.AverageResolutionHours.ToString("F1") hrs</td></tr>
+                    <tr><td>Resolved</td><td>@Model.ResolvedRequests of @Model.TotalRequests</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-5">
+            <div class="section-card h-100">
+                <div class="section-card-header d-flex justify-content-between align-items-center">
+                    <span><i class="bi bi-bar-chart me-2"></i>Requests by Skill Type</span>
+                </div>
+                <div class="report-table-card" style="border-radius:0;border:none;">
+                    <table id="tbl-skilltype" class="table report-table mb-0">
                         <thead>
                             <tr>
                                 <th>Skill Type</th>
@@ -90,4 +190,107 @@ else
             </div>
         </div>
     </div>
+
+    @if (Model.ResolvedRequestDetails.Any())
+    {
+        <div class="section-card">
+            <div class="section-card-header d-flex justify-content-between align-items-center">
+                <span><i class="bi bi-clock-history me-2"></i>Resolved Request Resolution Times</span>
+                <span class="page-info">@Model.ResolvedRequestDetails.Count resolved</span>
+            </div>
+            <div class="report-table-card" style="border-radius:0;border:none;">
+                <table id="tbl-resolved" class="table report-table mb-0">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Skill Type</th>
+                            <th>Submitted</th>
+                            <th>Resolved</th>
+                            <th class="text-center">Days</th>
+                            <th class="text-center">Extra Hours</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var r in Model.ResolvedRequestDetails)
+                        {
+                            var fullDays  = (int)Math.Floor(r.DaysToResolve);
+                            var extraHrs  = Math.Round(r.HoursToResolve - fullDays * 24.0, 1);
+                            <tr>
+                                <td class="fw-bold" style="color:var(--primary);">#@r.RequestId</td>
+                                <td>@r.SkillType</td>
+                                <td>@r.RequestDate.ToString("dd MMM yyyy")</td>
+                                <td>@r.ResolvedDate.ToString("dd MMM yyyy")</td>
+                                <td class="text-center">
+                                    <span class="custom-pill @(fullDays > 3 ? "pill-warning" : "pill-success")">
+                                        @fullDays d
+                                    </span>
+                                </td>
+                                <td class="text-center">
+                                    <span class="custom-pill pill-primary">
+                                        @extraHrs.ToString("F1") h
+                                    </span>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+}
+
+@section Scripts {
+<script>
+    Chart.defaults.font.family = "system-ui,-apple-system,sans-serif";
+    Chart.defaults.color = "#6B7280";
+
+    const PRIMARY = '#005B71', P_MID = '#0a7f8f', ACCENT = '#1E8E6E',
+          A_DARK  = '#16795e', MUTED  = '#4D6268', LIGHT = '#d4e7ec',
+          DANGER  = '#b42318', D_MID  = '#dc3545';
+
+    // 1. Doughnut — status breakdown
+    new Chart(document.getElementById('chartMaintStatus'), {
+        type: 'doughnut',
+        data: {
+            labels: ['Pending', 'In Progress', 'Resolved', 'Closed'],
+            datasets: [{
+                data: [@Model.PendingRequests, @Model.InProgressRequests, @Model.ResolvedRequests, @Model.ClosedRequests],
+                backgroundColor: [MUTED, PRIMARY, ACCENT, '#2d4a5a'],
+                borderWidth: 0,
+                hoverOffset: 8
+            }]
+        },
+        options: {
+            responsive: true, maintainAspectRatio: false, cutout: '65%',
+            plugins: { legend: { position: 'bottom', labels: { padding: 10, boxWidth: 10, font: { size: 11 } } } }
+        }
+    });
+
+    // 2. Horizontal bar — requests per skill type
+    new Chart(document.getElementById('chartSkillType'), {
+        type: 'bar',
+        data: {
+            labels: [@Html.Raw(skillLabels)],
+            datasets: [{
+                label: 'Requests',
+                data: [@Html.Raw(skillCounts)],
+                backgroundColor: PRIMARY,
+                borderRadius: 6,
+                borderSkipped: false
+            }]
+        },
+        options: {
+            responsive: true, maintainAspectRatio: true, indexAxis: 'y',
+            plugins: { legend: { display: false } },
+            scales: {
+                x: { beginAtZero: true, ticks: { stepSize: 1 }, grid: { color: 'rgba(0,0,0,0.05)' } },
+                y: { grid: { display: false } }
+            }
+        }
+    });
+
+
+    initPagination('tbl-skilltype', 8);
+    initPagination('tbl-resolved', 8);
+</script>
 }

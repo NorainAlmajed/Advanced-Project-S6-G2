@@ -5,81 +5,293 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Rentify Reports</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
-<body>
-    <header class="app-header">
-        <nav class="navbar navbar-expand-lg app-navbar">
-            <div class="container">
-                <a class="navbar-brand app-brand" asp-controller="Reports" asp-action="Index">
-                    Rentify <span style="color:var(--accent);font-weight:800;">Reports</span>
-                </a>
 
-                <button class="navbar-toggler app-navbar-toggler" type="button"
-                        data-bs-toggle="collapse" data-bs-target="#reportNavbar"
-                        aria-controls="reportNavbar" aria-expanded="false"
-                        aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
+@{
+    var managerName   = Context.Session.GetString("ManagerName") ?? "";
+    var managerInitial = managerName.Length > 0 ? managerName[0].ToString().ToUpper() : "M";
+    var currentTitle  = ViewData["Title"]?.ToString() ?? "";
 
-                <div class="collapse navbar-collapse" id="reportNavbar">
-                    <ul class="navbar-nav ms-auto align-items-lg-center nav-pill-group">
-                        <li class="nav-item">
-                            <a class="nav-link app-nav-link @(ViewData["Title"]?.ToString() == "Dashboard" ? "active" : "")"
-                               asp-controller="Reports" asp-action="Index">Dashboard</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link app-nav-link @(ViewData["Title"]?.ToString() == "Occupancy Report" ? "active" : "")"
-                               asp-controller="Reports" asp-action="Occupancy">Occupancy</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link app-nav-link @(ViewData["Title"]?.ToString() == "Maintenance Report" ? "active" : "")"
-                               asp-controller="Reports" asp-action="Maintenance">Maintenance</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link app-nav-link @(ViewData["Title"]?.ToString() == "Payment Report" ? "active" : "")"
-                               asp-controller="Reports" asp-action="Payments">Payments</a>
-                        </li>
+    bool isDashboard   = currentTitle == "Dashboard";
+    bool isOccupancy   = currentTitle == "Occupancy Report";
+    bool isMaintenance = currentTitle == "Maintenance Report";
+    bool isPayments    = currentTitle == "Payment Report";
+}
 
-                        @{
-                            var managerName = Context.Session.GetString("ManagerName");
-                        }
-                        @if (!string.IsNullOrEmpty(managerName))
-                        {
-                            <li class="nav-item d-flex align-items-center ps-2">
-                                <span style="font-weight:600;font-size:0.95rem;color:var(--text-muted);">@managerName</span>
-                            </li>
-                            <li class="nav-item">
-                                <form asp-controller="Login" asp-action="Logout" method="post" class="m-0">
-                                    <button type="submit" class="btn app-nav-link"
-                                            style="background:rgba(220,53,69,0.08);color:#b42318;border:none;font-weight:700;">
-                                        Sign Out
-                                    </button>
-                                </form>
-                            </li>
-                        }
-                    </ul>
-                </div>
-            </div>
+<body class="sidebar-layout">
+
+    <!-- Mobile toggle -->
+    <button class="sidebar-mobile-toggle" id="sidebarToggle">
+        <i class="bi bi-list"></i>
+    </button>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- ── SIDEBAR ── -->
+    <aside class="sidebar" id="mainSidebar">
+
+        <div class="sidebar-brand">
+            <a asp-controller="Reports" asp-action="Index">
+                <i class="bi bi-buildings-fill"></i>
+                <span>Rentify <span style="color:var(--accent);">Reports</span></span>
+            </a>
+        </div>
+
+        <nav class="sidebar-nav">
+            <ul>
+                <li>
+                    <a asp-controller="Reports" asp-action="Index"
+                       class="@(isDashboard ? "sidebar-active" : "")">
+                        <i class="bi bi-grid-1x2-fill"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a asp-controller="Reports" asp-action="Occupancy"
+                       class="@(isOccupancy ? "sidebar-active" : "")">
+                        <i class="bi bi-building-fill"></i>
+                        <span>Occupancy</span>
+                    </a>
+                </li>
+                <li>
+                    <a asp-controller="Reports" asp-action="Maintenance"
+                       class="@(isMaintenance ? "sidebar-active" : "")">
+                        <i class="bi bi-wrench-adjustable"></i>
+                        <span>Maintenance</span>
+                    </a>
+                </li>
+                <li>
+                    <a asp-controller="Reports" asp-action="Payments"
+                       class="@(isPayments ? "sidebar-active" : "")">
+                        <i class="bi bi-credit-card-fill"></i>
+                        <span>Payments</span>
+                    </a>
+                </li>
+            </ul>
         </nav>
-    </header>
 
-    <div class="container app-main-container">
-        <main role="main" class="pb-3">
+        @if (!string.IsNullOrEmpty(managerName))
+        {
+            <div class="sidebar-user-section">
+                <div class="sidebar-user-info">
+                    <div class="sidebar-user-avatar">@managerInitial</div>
+                    <div>
+                        <div class="sidebar-user-name">@managerName</div>
+                        <div class="sidebar-user-role">Property Manager</div>
+                    </div>
+                </div>
+                <form asp-controller="Login" asp-action="Logout" method="post" class="m-0">
+                    <button type="submit" class="sidebar-logout-btn">
+                        <i class="bi bi-box-arrow-left"></i>
+                        <span>Sign Out</span>
+                    </button>
+                </form>
+            </div>
+        }
+
+    </aside>
+
+    <!-- ── MAIN WRAPPER ── -->
+    <div class="sidebar-main-wrapper">
+
+        <!-- Top header bar -->
+        @if (!string.IsNullOrEmpty(managerName))
+        {
+            <header class="top-header">
+                <div class="top-header-user">
+                    <div class="sidebar-user-avatar">@managerInitial</div>
+                    <span class="top-header-name">@managerName</span>
+                </div>
+                <div class="top-header-actions">
+                    <span class="top-header-portal-label d-none d-md-inline">
+                        Property Manager Portal
+                    </span>
+                    <form asp-controller="Login" asp-action="Logout" method="post" class="top-header-logout-form">
+                        <button type="submit" class="top-header-logout-btn">
+                            <i class="bi bi-box-arrow-left"></i>
+                            <span>Sign Out</span>
+                        </button>
+                    </form>
+                </div>
+            </header>
+        }
+
+        <!-- Page content -->
+        <div class="sidebar-main-content">
             @RenderBody()
-        </main>
+        </div>
+
     </div>
 
+    <!-- ── FOOTER ── -->
     <footer class="app-footer">
-        <div class="container">
-            <span>&copy; 2026 - Rentify Reports</span>
-            <span class="footer-divider">•</span>
-            <span>Property Manager Portal</span>
-        </div>
+        <span>&copy; 2026 Rentify Reports</span>
+        <span class="footer-divider">•</span>
+        <span>Read-only reporting portal for Property Managers</span>
     </footer>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+
+    <script>
+        // Mobile sidebar toggle
+        const sidebarToggle  = document.getElementById('sidebarToggle');
+        const mainSidebar    = document.getElementById('mainSidebar');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+        if (sidebarToggle) {
+            sidebarToggle.addEventListener('click', () => {
+                mainSidebar.classList.toggle('open');
+                sidebarOverlay.classList.toggle('show');
+            });
+        }
+        if (sidebarOverlay) {
+            sidebarOverlay.addEventListener('click', () => {
+                mainSidebar.classList.remove('open');
+                sidebarOverlay.classList.remove('show');
+            });
+        }
+
+        // ── Shared PDF export — no charts, section titles before tables ──────
+        function exportToPDF(reportTitle, tableIds, fileName, sectionTitles) {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF('l', 'mm', 'a4');
+            const PAGE_W = 269;
+            const MARGIN = 14;
+
+            // Branding header
+            doc.setFontSize(18);
+            doc.setTextColor(0, 91, 113);
+            doc.text('Rentify Reports', MARGIN, 16);
+            doc.setFontSize(13);
+            doc.setTextColor(40, 40, 40);
+            doc.text(reportTitle, MARGIN, 24);
+            doc.setFontSize(9);
+            doc.setTextColor(120);
+            doc.text('Generated: ' + new Date().toLocaleString(), MARGIN, 31);
+            doc.setDrawColor(0, 91, 113);
+            doc.setLineWidth(0.5);
+            doc.line(MARGIN, 34, MARGIN + PAGE_W, 34);
+
+            let yPos = 40;
+
+            // Restore paginated rows
+            const restored = [];
+            tableIds.forEach(id => {
+                const tbl = document.getElementById(id);
+                if (!tbl) return;
+                tbl.querySelectorAll('tbody tr').forEach(row => {
+                    if (row.style.display === 'none') {
+                        row.style.display = '';
+                        restored.push(row);
+                    }
+                });
+            });
+
+            // Render each table with its section title
+            tableIds.forEach((id, idx) => {
+                const tbl = document.getElementById(id);
+                if (!tbl) return;
+
+                // Section title before table
+                const title = (sectionTitles && sectionTitles[idx]) ? sectionTitles[idx] : '';
+                if (title) {
+                    doc.setFontSize(11);
+                    doc.setTextColor(0, 91, 113);
+                    doc.setFont(undefined, 'bold');
+                    doc.text(title, MARGIN, yPos);
+                    doc.setFont(undefined, 'normal');
+                    yPos += 5;
+                }
+
+                doc.autoTable({
+                    html: '#' + id,
+                    startY: yPos,
+                    styles: { fontSize: 9, cellPadding: 3 },
+                    headStyles: { fillColor: [0, 91, 113], textColor: 255, fontStyle: 'bold' },
+                    alternateRowStyles: { fillColor: [212, 231, 236] },
+                    margin: { left: MARGIN, right: MARGIN }
+                });
+                yPos = doc.lastAutoTable.finalY + 12;
+            });
+
+            restored.forEach(row => row.style.display = 'none');
+            doc.save(fileName);
+        }
+
+        // ── Shared pagination ──────────────────────────────────────────────────
+        function initPagination(tableId, pageSize) {
+            pageSize = pageSize || 8;
+            const table = document.getElementById(tableId);
+            if (!table) return;
+            const tbody = table.querySelector('tbody');
+            const rows  = Array.from(tbody.querySelectorAll('tr'));
+            const total = rows.length;
+            if (total <= pageSize) return;
+
+            let current    = 1;
+            const pageCount = Math.ceil(total / pageSize);
+            const wrapper  = table.closest('.report-table-card') || table.parentElement;
+            const nav      = document.createElement('div');
+            nav.className  = 'report-pagination';
+            wrapper.after(nav);
+
+            function render() {
+                rows.forEach((r, i) => {
+                    r.style.display = (i >= (current - 1) * pageSize && i < current * pageSize) ? '' : 'none';
+                });
+                nav.innerHTML = '';
+
+                const info = document.createElement('span');
+                info.className = 'page-info';
+                const from = (current - 1) * pageSize + 1;
+                const to   = Math.min(current * pageSize, total);
+                info.textContent = from + '–' + to + ' of ' + total;
+                nav.appendChild(info);
+
+                const controls = document.createElement('div');
+                controls.className = 'page-controls';
+
+                const prev = document.createElement('button');
+                prev.className = 'page-btn' + (current === 1 ? ' disabled' : '');
+                prev.innerHTML = '<i class="bi bi-chevron-left"></i>';
+                prev.disabled  = current === 1;
+                prev.onclick   = () => { current--; render(); };
+                controls.appendChild(prev);
+
+                for (let p = 1; p <= pageCount; p++) {
+                    if (pageCount > 7 && Math.abs(p - current) > 2 && p !== 1 && p !== pageCount) {
+                        if (p === current - 3 || p === current + 3) {
+                            const dots = document.createElement('span');
+                            dots.className = 'page-dots';
+                            dots.textContent = '…';
+                            controls.appendChild(dots);
+                        }
+                        continue;
+                    }
+                    const btn = document.createElement('button');
+                    btn.className = 'page-btn' + (p === current ? ' active' : '');
+                    btn.textContent = p;
+                    btn.onclick = ((pg) => () => { current = pg; render(); })(p);
+                    controls.appendChild(btn);
+                }
+
+                const next = document.createElement('button');
+                next.className = 'page-btn' + (current === pageCount ? ' disabled' : '');
+                next.innerHTML = '<i class="bi bi-chevron-right"></i>';
+                next.disabled  = current === pageCount;
+                next.onclick   = () => { current++; render(); };
+                controls.appendChild(next);
+
+                nav.appendChild(controls);
+            }
+            render();
+        }
+    </script>
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

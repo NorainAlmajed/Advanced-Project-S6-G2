@@ -3,17 +3,39 @@
     ViewData["Title"] = "Dashboard";
     var totalUnits    = Model.Occupancy.Sum(p => p.TotalUnits);
     var occupiedUnits = Model.Occupancy.Sum(p => p.OccupiedUnits);
+    var vacantUnits   = Model.Occupancy.Sum(p => p.TotalUnits - p.OccupiedUnits);
     var overallRate   = totalUnits == 0 ? 0 : (double)occupiedUnits / totalUnits * 100;
+
+    // Serialize chart data
+    var buildingLabels  = string.Join(",", Model.Occupancy.Select(o => $"'{o.BuildingName.Replace("'","\\'")}'" ));
+    var buildingOcc     = string.Join(",", Model.Occupancy.Select(o => o.OccupiedUnits));
+    var buildingVac     = string.Join(",", Model.Occupancy.Select(o => o.TotalUnits - o.OccupiedUnits));
+
+    var skillLabels     = string.Join(",", Model.Maintenance?.ByType.Select(t => $"'{t.Type.Replace("'","\\'")}'" ) ?? new List<string>());
+    var skillCounts     = string.Join(",", Model.Maintenance?.ByType.Select(t => t.Count) ?? new List<int>());
+
+    var mPending        = Model.Maintenance?.PendingRequests ?? 0;
+    var mInProgress     = Model.Maintenance?.InProgressRequests ?? 0;
+    var mResolved       = Model.Maintenance?.ResolvedRequests ?? 0;
+
+    var pCollected         = (double)(Model.Payments?.TotalCollected ?? 0);
+    var pOutstanding       = (double)(Model.Payments?.TotalOutstanding ?? 0);
+    var pProfit            = (double)(Model.Payments?.OverduePayments.Sum(p => p.ProfitAmount) ?? 0);
+    var pAdjOutstanding    = pOutstanding + pProfit;
 }
 
 <div class="d-flex justify-content-between align-items-start mb-4">
     <div>
         <p class="page-eyebrow mb-1">Overview</p>
-        <h2 class="page-title">Property Manager Dashboard</h2>
+        <h2 class="page-title">Property Manager Overview</h2>
         <p class="page-subtitle mt-1">Generated @DateTime.Now.ToString("dd MMM yyyy, HH:mm")</p>
     </div>
+    <button class="btn-export-pdf" onclick="exportToPDF('Property Manager Overview',['tbl-occupancy','tbl-skilltype'],'Dashboard_Report.pdf',['Occupancy by Building','Maintenance Request Status'])">
+        <i class="bi bi-file-earmark-pdf"></i> Export PDF
+    </button>
 </div>
 
+@* KPI Cards *@
 <div class="row g-3 mb-4">
     <div class="col-md-3">
         <div class="card report-stat-card text-white h-100" style="background:linear-gradient(135deg,#005B71,#0a7f8f);">
@@ -23,19 +45,23 @@
                 <div class="stat-sub">@occupiedUnits / @totalUnits units occupied</div>
             </div>
             <div class="card-footer bg-transparent border-0 pb-3 pt-0 px-4">
-                <a asp-action="Occupancy" class="text-white small fw-semibold text-decoration-none">View full report &rarr;</a>
+                <a asp-action="Occupancy" class="text-white small fw-semibold text-decoration-none">
+                    View full report <i class="bi bi-arrow-right"></i>
+                </a>
             </div>
         </div>
     </div>
     <div class="col-md-3">
-        <div class="card report-stat-card text-white h-100" style="background:linear-gradient(135deg,#b45309,#f59e0b);">
+        <div class="card report-stat-card text-white h-100" style="background:linear-gradient(135deg,#4D6268,#3a4e52);">
             <div class="card-body p-4">
-                <div class="stat-value">@(Model.Maintenance?.PendingRequests ?? 0)</div>
+                <div class="stat-value">@mPending</div>
                 <div class="stat-label">Pending Maintenance</div>
                 <div class="stat-sub">of @(Model.Maintenance?.TotalRequests ?? 0) total requests</div>
             </div>
             <div class="card-footer bg-transparent border-0 pb-3 pt-0 px-4">
-                <a asp-action="Maintenance" class="text-white small fw-semibold text-decoration-none">View full report &rarr;</a>
+                <a asp-action="Maintenance" class="text-white small fw-semibold text-decoration-none">
+                    View full report <i class="bi bi-arrow-right"></i>
+                </a>
             </div>
         </div>
     </div>
@@ -47,7 +73,9 @@
                 <div class="stat-sub">BD @(Model.Payments?.TotalOutstanding.ToString("N0") ?? "0") outstanding</div>
             </div>
             <div class="card-footer bg-transparent border-0 pb-3 pt-0 px-4">
-                <a asp-action="Payments" class="text-white small fw-semibold text-decoration-none">View full report &rarr;</a>
+                <a asp-action="Payments" class="text-white small fw-semibold text-decoration-none">
+                    View full report <i class="bi bi-arrow-right"></i>
+                </a>
             </div>
         </div>
     </div>
@@ -59,35 +87,69 @@
                 <div class="stat-sub">require immediate attention</div>
             </div>
             <div class="card-footer bg-transparent border-0 pb-3 pt-0 px-4">
-                <a asp-action="Payments" class="text-white small fw-semibold text-decoration-none">View full report &rarr;</a>
+                <a asp-action="Payments" class="text-white small fw-semibold text-decoration-none">
+                    View full report <i class="bi bi-arrow-right"></i>
+                </a>
             </div>
         </div>
     </div>
 </div>
 
+@* Charts Row *@
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="chart-card h-100">
+            <div class="chart-card-title"><i class="bi bi-building"></i> Unit Occupancy</div>
+            <div class="chart-canvas-wrap" style="max-height:220px;">
+                <canvas id="chartOccupancy"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="chart-card h-100">
+            <div class="chart-card-title"><i class="bi bi-tools"></i> Maintenance Status</div>
+            <div class="chart-canvas-wrap" style="max-height:220px;">
+                <canvas id="chartMaintStatus"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="chart-card h-100">
+            <div class="chart-card-title"><i class="bi bi-credit-card"></i> Payment Summary</div>
+            <div class="chart-canvas-wrap" style="max-height:220px;">
+                <canvas id="chartPayments"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* Summary Tables *@
 <div class="row g-3">
     <div class="col-md-6">
         <div class="section-card h-100">
-            <div class="section-card-header">Occupancy by Building</div>
-            <div class="report-table-card" style="border-radius:0 0 20px 20px;border:none;">
-                <table class="table report-table mb-0">
+            <div class="section-card-header"><i class="bi bi-building me-2"></i>Occupancy by Building</div>
+            <div class="report-table-card" style="border-radius:0;border:none;">
+                <table id="tbl-occupancy" class="table report-table mb-0">
                     <thead>
                         <tr>
                             <th>Building</th>
-                            <th class="text-center">Occupied</th>
-                            <th class="text-center">Total</th>
-                            <th class="text-center">Rate</th>
+                            <th class="text-center">Occupancy Rate</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach (var row in Model.Occupancy)
                         {
                             <tr>
-                                <td>@row.BuildingName</td>
-                                <td class="text-center">@row.OccupiedUnits</td>
-                                <td class="text-center">@row.TotalUnits</td>
+                                <td class="fw-semibold">@row.BuildingName</td>
                                 <td class="text-center">
-                                    <span class="custom-pill pill-success">@row.OccupancyRate.ToString("F1")%</span>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <div class="progress flex-grow-1" style="height:14px;border-radius:999px;">
+                                            <div class="progress-bar bg-success"
+                                                 style="width:@row.OccupancyRate.ToString("F0", System.Globalization.CultureInfo.InvariantCulture)%">
+                                            </div>
+                                        </div>
+                                        <span style="min-width:42px;font-weight:700;font-size:0.88rem;">@row.OccupancyRate.ToString("F1")%</span>
+                                    </div>
                                 </td>
                             </tr>
                         }
@@ -98,21 +160,43 @@
     </div>
     <div class="col-md-6">
         <div class="section-card h-100">
-            <div class="section-card-header">Maintenance by Skill Type</div>
-            <div class="report-table-card" style="border-radius:0 0 20px 20px;border:none;">
-                <table class="table report-table mb-0">
+            <div class="section-card-header"><i class="bi bi-clipboard-data me-2"></i>Maintenance Request Status</div>
+            <div class="report-table-card" style="border-radius:0;border:none;">
+                @{
+                    var mTotal = Model.Maintenance?.TotalRequests ?? 0;
+                    var statuses = new[]
+                    {
+                        new { Label = "Pending",     Count = Model.Maintenance?.PendingRequests    ?? 0, PillClass = "pill-warning" },
+                        new { Label = "In Progress", Count = Model.Maintenance?.InProgressRequests ?? 0, PillClass = "pill-primary" },
+                        new { Label = "Resolved",    Count = Model.Maintenance?.ResolvedRequests   ?? 0, PillClass = "pill-success" },
+                        new { Label = "Closed",      Count = Model.Maintenance?.ClosedRequests     ?? 0, PillClass = "pill-muted"   },
+                    };
+                }
+                <table id="tbl-skilltype" class="table report-table mb-0">
                     <thead>
                         <tr>
-                            <th>Skill Type</th>
-                            <th class="text-center">Requests</th>
+                            <th>Status</th>
+                            <th class="text-center">Count</th>
+                            <th>Share</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var t in Model.Maintenance?.ByType ?? new())
+                        @foreach (var s in statuses)
                         {
+                            var pct = mTotal > 0 ? (double)s.Count / mTotal * 100 : 0;
                             <tr>
-                                <td>@t.Type</td>
-                                <td class="text-center">@t.Count</td>
+                                <td><span class="custom-pill @s.PillClass">@s.Label</span></td>
+                                <td class="text-center fw-bold">@s.Count</td>
+                                <td style="min-width:130px;">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <div class="progress flex-grow-1" style="height:12px;border-radius:999px;">
+                                            <div class="progress-bar @(s.PillClass == "pill-success" ? "bg-success" : s.PillClass == "pill-warning" ? "bg-warning" : "bg-primary")"
+                                                 style="width:@pct.ToString("F0", System.Globalization.CultureInfo.InvariantCulture)%">
+                                            </div>
+                                        </div>
+                                        <span style="min-width:36px;font-size:0.82rem;font-weight:600;">@pct.ToString("F0")%</span>
+                                    </div>
+                                </td>
                             </tr>
                         }
                     </tbody>
@@ -121,3 +205,108 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+<script>
+    // ── Shared chart defaults ──
+    Chart.defaults.font.family = "system-ui, -apple-system, sans-serif";
+    Chart.defaults.color = "#6B7280";
+
+    // MVC colour palette
+    const PRIMARY  = '#005B71';
+    const P_DARK   = '#003f52';
+    const P_MID    = '#0a7f8f';
+    const ACCENT   = '#1E8E6E';
+    const A_DARK   = '#16795e';
+    const MUTED    = '#4D6268';
+    const LIGHT    = '#d4e7ec';
+    const DANGER   = '#b42318';
+    const D_LIGHT  = 'rgba(180,35,24,0.15)';
+
+    // 1. Occupancy doughnut — teal palette
+    new Chart(document.getElementById('chartOccupancy'), {
+        type: 'doughnut',
+        data: {
+            labels: ['Occupied', 'Not Occupied'],
+            datasets: [{
+                data: [@occupiedUnits, @vacantUnits],
+                backgroundColor: [ACCENT, LIGHT],
+                borderWidth: 0,
+                hoverOffset: 6
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            cutout: '68%',
+            plugins: {
+                legend: { position: 'bottom', labels: { padding: 16, boxWidth: 12 } },
+                tooltip: {
+                    callbacks: {
+                        label: ctx => ` ${ctx.label}: ${ctx.parsed} units`
+                    }
+                }
+            }
+        }
+    });
+
+    // 2. Maintenance status — polar area, teal palette
+    new Chart(document.getElementById('chartMaintStatus'), {
+        type: 'polarArea',
+        data: {
+            labels: ['Pending', 'In Progress', 'Resolved', 'Closed'],
+            datasets: [{
+                data: [@mPending, @mInProgress, @mResolved, @(Model.Maintenance?.ClosedRequests ?? 0)],
+                backgroundColor: [
+                    'rgba(77,98,104,0.65)',   // MUTED — pending
+                    'rgba(0,91,113,0.65)',     // PRIMARY — in progress
+                    'rgba(30,142,110,0.65)',  // ACCENT — resolved
+                    'rgba(45,74,90,0.65)'     // dark teal — closed
+                ],
+                borderColor: [MUTED, PRIMARY, ACCENT, '#2d4a5a'],
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+                legend: { position: 'bottom', labels: { padding: 10, boxWidth: 10, font: { size: 11 } } }
+            },
+            scales: {
+                r: { beginAtZero: true, ticks: { stepSize: 1, backdropColor: 'transparent', font: { size: 9 } } }
+            }
+        }
+    });
+
+    // 3. Payments doughnut — uses profit-adjusted outstanding
+    new Chart(document.getElementById('chartPayments'), {
+        type: 'doughnut',
+        data: {
+            labels: ['Collected', 'Outstanding (incl. Profit)'],
+            datasets: [{
+                data: [@pCollected.ToString("F3", System.Globalization.CultureInfo.InvariantCulture), @pAdjOutstanding.ToString("F3", System.Globalization.CultureInfo.InvariantCulture)],
+                backgroundColor: [ACCENT, MUTED],
+                borderWidth: 0,
+                hoverOffset: 6
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            cutout: '68%',
+            plugins: {
+                legend: { position: 'bottom', labels: { padding: 16, boxWidth: 12 } },
+                tooltip: {
+                    callbacks: {
+                        label: ctx => ` ${ctx.label}: BD ${ctx.parsed.toFixed(2)}`
+                    }
+                }
+            }
+        }
+    });
+
+    initPagination('tbl-occupancy', 8);
+    initPagination('tbl-skilltype', 8);
+</script>
+}

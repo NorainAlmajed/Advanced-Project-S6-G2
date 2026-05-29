@@ -25,16 +25,23 @@ public class ReportsController : Controller
         var auth = RequireAuth();
         if (auth != null) return auth;
 
-        var occupancy   = await _api.GetOccupancyReportAsync();
-        var maintenance = await _api.GetMaintenanceReportAsync();
-        var payments    = await _api.GetPaymentReportAsync();
-
-        return View(new DashboardViewModel
+        try
         {
-            Occupancy   = occupancy,
-            Maintenance = maintenance,
-            Payments    = payments
-        });
+            var occupancy   = await _api.GetOccupancyReportAsync();
+            var maintenance = await _api.GetMaintenanceReportAsync();
+            var payments    = await _api.GetPaymentReportAsync();
+
+            return View(new DashboardViewModel
+            {
+                Occupancy   = occupancy,
+                Maintenance = maintenance,
+                Payments    = payments
+            });
+        }
+        catch (ApiUnavailableException)
+        {
+            return View("ApiError");
+        }
     }
 
     public async Task<IActionResult> Occupancy()
@@ -42,7 +49,14 @@ public class ReportsController : Controller
         var auth = RequireAuth();
         if (auth != null) return auth;
 
-        return View(await _api.GetOccupancyReportAsync());
+        try
+        {
+            return View(await _api.GetOccupancyReportAsync());
+        }
+        catch (ApiUnavailableException)
+        {
+            return View("ApiError");
+        }
     }
 
     public async Task<IActionResult> Maintenance()
@@ -50,7 +64,14 @@ public class ReportsController : Controller
         var auth = RequireAuth();
         if (auth != null) return auth;
 
-        return View(await _api.GetMaintenanceReportAsync());
+        try
+        {
+            return View(await _api.GetMaintenanceReportAsync());
+        }
+        catch (ApiUnavailableException)
+        {
+            return View("ApiError");
+        }
     }
 
     public async Task<IActionResult> Payments()
@@ -58,6 +79,13 @@ public class ReportsController : Controller
         var auth = RequireAuth();
         if (auth != null) return auth;
 
-        return View(await _api.GetPaymentReportAsync());
+        try
+        {
+            return View(await _api.GetPaymentReportAsync());
+        }
+        catch (ApiUnavailableException)
+        {
+            return View("ApiError");
+        }
     }
 }

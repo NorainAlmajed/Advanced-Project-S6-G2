@@ -1,6 +1,15 @@
 @model List<AdvancedProjectReporting.Dtos.OccupancyReportDto>
 @{
     ViewData["Title"] = "Occupancy Report";
+    var totalUnits    = Model.Sum(p => p.TotalUnits);
+    var occupiedUnits = Model.Sum(p => p.OccupiedUnits);
+    var nonOccupied   = Model.Sum(p => p.TotalUnits - p.OccupiedUnits);
+    var overallRate   = totalUnits == 0 ? 0 : (double)occupiedUnits / totalUnits * 100;
+
+    var buildingLabels  = string.Join(",", Model.Select(o => $"'{o.BuildingName.Replace("'", "\\'")}'"));
+    var buildingOcc     = string.Join(",", Model.Select(o => o.OccupiedUnits));
+    var buildingNonOcc  = string.Join(",", Model.Select(o => o.TotalUnits - o.OccupiedUnits));
+    var buildingRates   = string.Join(",", Model.Select(o => o.OccupancyRate.ToString("F1", System.Globalization.CultureInfo.InvariantCulture)));
 }
 
 <div class="d-flex justify-content-between align-items-start mb-4">
@@ -9,9 +18,14 @@
         <h2 class="page-title">Occupancy Report</h2>
         <p class="page-subtitle mt-1">Generated @DateTime.Now.ToString("dd MMM yyyy, HH:mm")</p>
     </div>
-    <a asp-action="Index" class="btn btn-sm mt-2" style="background:#E8F1F3;color:#005B71;border-radius:12px;font-weight:700;padding:0.6rem 1.1rem;">
-        &larr; Dashboard
-    </a>
+    <div class="d-flex gap-2 mt-2">
+        <button class="btn-export-pdf" onclick="exportToPDF('Occupancy Report',['tbl-occupancy'],'Occupancy_Report.pdf',['Occupancy By Building'])">
+            <i class="bi bi-file-earmark-pdf"></i> Export PDF
+        </button>
+        <a asp-action="Index" class="btn btn-sm" style="background:#E8F1F3;color:#005B71;border-radius:12px;font-weight:700;padding:0.55rem 1.1rem;">
+            <i class="bi bi-arrow-left me-1"></i>Dashboard
+        </a>
+    </div>
 </div>
 
 @if (!Model.Any())
@@ -24,7 +38,7 @@ else
         <div class="col-md-4">
             <div class="card report-stat-card text-white h-100" style="background:linear-gradient(135deg,#005B71,#0a7f8f);">
                 <div class="card-body p-4">
-                    <div class="stat-value">@Model.Sum(p => p.TotalUnits)</div>
+                    <div class="stat-value">@totalUnits</div>
                     <div class="stat-label">Total Units</div>
                 </div>
             </div>
@@ -32,31 +46,57 @@ else
         <div class="col-md-4">
             <div class="card report-stat-card text-white h-100" style="background:linear-gradient(135deg,#1E8E6E,#16795e);">
                 <div class="card-body p-4">
-                    <div class="stat-value">@Model.Sum(p => p.OccupiedUnits)</div>
+                    <div class="stat-value">@occupiedUnits</div>
                     <div class="stat-label">Occupied</div>
+                    <div class="stat-sub">@overallRate.ToString("F1")% occupancy rate</div>
                 </div>
             </div>
         </div>
         <div class="col-md-4">
-            <div class="card report-stat-card text-white h-100" style="background:linear-gradient(135deg,#b45309,#f59e0b);">
+            <div class="card report-stat-card text-white h-100" style="background:linear-gradient(135deg,#4D6268,#3a4e52);">
                 <div class="card-body p-4">
-                    <div class="stat-value">@Model.Sum(p => p.VacantUnits)</div>
-                    <div class="stat-label">Vacant</div>
+                    <div class="stat-value">@nonOccupied</div>
+                    <div class="stat-label">Not Occupied</div>
+                    <div class="stat-sub">Available / Vacant</div>
                 </div>
             </div>
         </div>
     </div>
 
+    @* Charts *@
+    <div class="row g-3 mb-4">
+        <div class="col-md-6">
+            <div class="chart-card h-100">
+                <div class="chart-card-title"><i class="bi bi-graph-up"></i> Occupancy Rate (%) per Building</div>
+                <div class="chart-canvas-wrap" style="height:280px;max-height:280px;">
+                    <canvas id="chartOccRates"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="chart-card h-100">
+                <div class="chart-card-title"><i class="bi bi-bar-chart-horizontal"></i> Units per Building (Occupied vs Not Occupied)</div>
+                <div class="chart-canvas-wrap" style="height:280px;max-height:280px;">
+                    <canvas id="chartBuildingBars"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @* Table *@
     <div class="section-card">
-        <div class="section-card-header">Breakdown by Building</div>
-        <div class="report-table-card" style="border-radius:0 0 20px 20px;border:none;">
-            <table class="table report-table mb-0">
+        <div class="section-card-header d-flex justify-content-between align-items-center">
+            <span><i class="bi bi-building me-2"></i>Occupancy By Building</span>
+            <span class="page-info">@Model.Count buildings</span>
+        </div>
+        <div class="report-table-card" style="border-radius:0;border:none;">
+            <table id="tbl-occupancy" class="table report-table mb-0">
                 <thead>
                     <tr>
                         <th>Building</th>
                         <th class="text-center">Total Units</th>
                         <th class="text-center">Occupied</th>
-                        <th class="text-center">Vacant</th>
+                        <th class="text-center">Not Occupied</th>
                         <th>Occupancy Rate</th>
                     </tr>
                 </thead>
@@ -64,15 +104,15 @@ else
                     @foreach (var row in Model)
                     {
                         <tr>
-                            <td class="fw-700">@row.BuildingName</td>
+                            <td class="fw-bold">@row.BuildingName</td>
                             <td class="text-center">@row.TotalUnits</td>
                             <td class="text-center">@row.OccupiedUnits</td>
-                            <td class="text-center">@row.VacantUnits</td>
+                            <td class="text-center">@(row.TotalUnits - row.OccupiedUnits)</td>
                             <td style="min-width:180px;">
                                 <div class="d-flex align-items-center gap-2">
                                     <div class="progress flex-grow-1" style="height:18px;">
                                         <div class="progress-bar bg-success"
-                                             style="width:@row.OccupancyRate.ToString("F0")%">
+                                             style="width:@row.OccupancyRate.ToString("F0", System.Globalization.CultureInfo.InvariantCulture)%">
                                             @row.OccupancyRate.ToString("F1")%
                                         </div>
                                     </div>
@@ -84,4 +124,64 @@ else
             </table>
         </div>
     </div>
+}
+
+@section Scripts {
+<script>
+    Chart.defaults.font.family = "system-ui,-apple-system,sans-serif";
+    Chart.defaults.color = "#6B7280";
+
+    const PRIMARY = '#005B71', P_MID = '#0a7f8f', ACCENT = '#1E8E6E',
+          A_DARK  = '#16795e', MUTED  = '#4D6268', LIGHT = '#d4e7ec';
+
+    // 1. Grouped bar — occupied vs not occupied per building
+    new Chart(document.getElementById('chartBuildingBars'), {
+        type: 'bar',
+        data: {
+            labels: [@Html.Raw(buildingLabels)],
+            datasets: [
+                { label: 'Occupied',     data: [@Html.Raw(buildingOcc)],    backgroundColor: ACCENT,   borderRadius: 6, borderSkipped: false },
+                { label: 'Not Occupied', data: [@Html.Raw(buildingNonOcc)], backgroundColor: LIGHT,    borderRadius: 6, borderSkipped: false }
+            ]
+        },
+        options: {
+            responsive: true, maintainAspectRatio: false, indexAxis: 'y',
+            plugins: { legend: { position: 'bottom', labels: { padding: 16, boxWidth: 12 } } },
+            scales: {
+                x: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.05)' } },
+                y: { grid: { display: false } }
+            }
+        }
+    });
+
+    // 2. Line — occupancy rate per building
+    new Chart(document.getElementById('chartOccRates'), {
+        type: 'line',
+        data: {
+            labels: [@Html.Raw(buildingLabels)],
+            datasets: [{
+                label: 'Occupancy Rate (%)',
+                data: [@Html.Raw(buildingRates)],
+                borderColor: PRIMARY,
+                backgroundColor: 'rgba(0,91,113,0.10)',
+                borderWidth: 3,
+                pointBackgroundColor: PRIMARY,
+                pointRadius: 6,
+                pointHoverRadius: 8,
+                tension: 0.35,
+                fill: true
+            }]
+        },
+        options: {
+            responsive: true, maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+                y: { beginAtZero: true, max: 100, ticks: { callback: v => v + '%' }, grid: { color: 'rgba(0,0,0,0.05)' } },
+                x: { grid: { display: false } }
+            }
+        }
+    });
+
+    initPagination('tbl-occupancy', 8);
+</script>
 }

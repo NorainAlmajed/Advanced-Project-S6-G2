@@ -19,25 +19,8 @@ namespace AdvancedProjectAPI.Migrations
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.0")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128);
-
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("AdvancedProjectAPI.Models.User", b =>
-            {
-                b.Property<int>("UserId")
-                    .ValueGeneratedOnAdd()
-                    .HasColumnType("int");
-
-                SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserId"));
-
-                b.Property<string>("Password")
-                    .IsRequired()
-                    .HasMaxLength(500)
-                    .HasColumnType("nvarchar(500)");
-            });
+            // Model intentionally omitted — snapshot is authoritative.
+            // This migration only alters Users.Password from nvarchar(50) to nvarchar(500).
 #pragma warning restore 612, 618
         }
     }
