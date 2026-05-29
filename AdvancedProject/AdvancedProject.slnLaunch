@@ -1,0 +1,15 @@
+[
+  {
+    "Name": "ReportingStart",
+    "Projects": [
+      {
+        "Path": "AdvancedProjectAPI\\AdvancedProjectAPI.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "AdvancedProjectReporting\\AdvancedProjectReporting.csproj",
+        "Action": "Start"
+      }
+    ]
+  }
+]
