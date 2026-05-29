@@ -1,3 +1,4 @@
+using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using AdvancedProjectReporting.Dtos;
@@ -21,6 +22,16 @@ public class ApiClient
         if (!string.IsNullOrEmpty(token))
             _http.DefaultRequestHeaders.Authorization =
                 new AuthenticationHeaderValue("Bearer", token);
+    }
+
+    // Shared helper — checks status code before deserializing
+    private static async Task<T?> ReadAsync<T>(HttpResponseMessage response)
+    {
+        if (response.StatusCode == HttpStatusCode.Unauthorized)
+            throw new SessionExpiredException();
+
+        response.EnsureSuccessStatusCode();
+        return await response.Content.ReadFromJsonAsync<T>();
     }
 
     // Returns null on bad credentials; throws ApiUnavailableException if API is down
@@ -48,14 +59,12 @@ public class ApiClient
         SetAuthHeader();
         try
         {
-            var result = await _http.GetFromJsonAsync<List<OccupancyReportDto>>(
-                "api/reports/occupancy");
+            var response = await _http.GetAsync("api/reports/occupancy");
+            var result   = await ReadAsync<List<OccupancyReportDto>>(response);
             return result ?? new List<OccupancyReportDto>();
         }
-        catch (HttpRequestException ex)
-        {
-            throw new ApiUnavailableException(ex);
-        }
+        catch (SessionExpiredException) { throw; }
+        catch (HttpRequestException ex)  { throw new ApiUnavailableException(ex); }
     }
 
     public async Task<MaintenanceReportDto?> GetMaintenanceReportAsync()
@@ -63,13 +72,11 @@ public class ApiClient
         SetAuthHeader();
         try
         {
-            return await _http.GetFromJsonAsync<MaintenanceReportDto>(
-                "api/reports/maintenance");
+            var response = await _http.GetAsync("api/reports/maintenance");
+            return await ReadAsync<MaintenanceReportDto>(response);
         }
-        catch (HttpRequestException ex)
-        {
-            throw new ApiUnavailableException(ex);
-        }
+        catch (SessionExpiredException) { throw; }
+        catch (HttpRequestException ex)  { throw new ApiUnavailableException(ex); }
     }
 
     public async Task<PaymentReportDto?> GetPaymentReportAsync()
@@ -77,14 +84,18 @@ public class ApiClient
         SetAuthHeader();
         try
         {
-            return await _http.GetFromJsonAsync<PaymentReportDto>(
-                "api/reports/payments");
+            var response = await _http.GetAsync("api/reports/payments");
+            return await ReadAsync<PaymentReportDto>(response);
         }
-        catch (HttpRequestException ex)
-        {
-            throw new ApiUnavailableException(ex);
-        }
+        catch (SessionExpiredException) { throw; }
+        catch (HttpRequestException ex)  { throw new ApiUnavailableException(ex); }
     }
+}
+
+public class SessionExpiredException : Exception
+{
+    public SessionExpiredException()
+        : base("Your session has expired. Please sign in again.") { }
 }
 
 public class ApiUnavailableException : Exception

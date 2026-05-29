@@ -270,6 +270,13 @@
                 <p class="login-subtitle">Enter your credentials to access the reports.</p>
             </div>
 
+            @if (TempData["SessionExpired"] != null)
+            {
+                <div class="login-error" style="background:#fff8e1;border-color:#ffe082;color:#7c5700;">
+                    <i class="bi bi-clock-history me-2"></i>@TempData["SessionExpired"]
+                </div>
+            }
+
             @if (!ViewData.ModelState.IsValid)
             {
                 <div class="login-error">
