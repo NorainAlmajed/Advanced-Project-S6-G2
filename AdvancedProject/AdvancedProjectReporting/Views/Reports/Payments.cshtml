@@ -1,6 +1,16 @@
 @model AdvancedProjectReporting.Dtos.PaymentReportDto
 @{
     ViewData["Title"] = "Payment Report";
+    var pCollected   = (double)(Model?.TotalCollected ?? 0);
+    var pOutstanding = (double)(Model?.TotalOutstanding ?? 0);
+
+    var overdueLabels   = string.Join(",", Model?.OverduePayments.Select(p => $"'{p.UnitNumber.Replace("'","\\'")}'" ) ?? new List<string>());
+    var overdueOriginal = string.Join(",", Model?.OverduePayments
+        .Select(p => p.AmountDue.ToString("F3", System.Globalization.CultureInfo.InvariantCulture)) ?? new List<string>());
+    // Pre-compute profit values directly in Razor — avoids inline JS array arithmetic
+    var overdueProfit   = string.Join(",", Model?.OverduePayments
+        .Select(p => p.ProfitAmount.ToString("F3", System.Globalization.CultureInfo.InvariantCulture)) ?? new List<string>());
+    var pProfit = (double)(Model?.OverduePayments.Sum(p => p.ProfitAmount) ?? 0);
 }
 
 <div class="d-flex justify-content-between align-items-start mb-4">
@@ -9,9 +19,14 @@
         <h2 class="page-title">Payment Report</h2>
         <p class="page-subtitle mt-1">Generated @DateTime.Now.ToString("dd MMM yyyy, HH:mm")</p>
     </div>
-    <a asp-action="Index" class="btn btn-sm mt-2" style="background:#E8F1F3;color:#005B71;border-radius:12px;font-weight:700;padding:0.6rem 1.1rem;">
-        &larr; Dashboard
-    </a>
+    <div class="d-flex gap-2 mt-2">
+        <button class="btn-export-pdf" onclick="exportToPDF('Payment Report',['tbl-overdue'],'Payment_Report.pdf',['Overdue Payment Details (Islamic Profit Rate 3% p.a.)'])">
+            <i class="bi bi-file-earmark-pdf"></i> Export PDF
+        </button>
+        <a asp-action="Index" class="btn btn-sm" style="background:#E8F1F3;color:#005B71;border-radius:12px;font-weight:700;padding:0.55rem 1.1rem;">
+            <i class="bi bi-arrow-left me-1"></i>Dashboard
+        </a>
+    </div>
 </div>
 
 @if (Model == null)
@@ -30,7 +45,7 @@ else
             </div>
         </div>
         <div class="col-md-4">
-            <div class="card report-stat-card text-white h-100" style="background:linear-gradient(135deg,#b45309,#f59e0b);">
+            <div class="card report-stat-card text-white h-100" style="background:linear-gradient(135deg,#4D6268,#3a4e52);">
                 <div class="card-body p-4">
                     <div class="stat-value">BD @Model.TotalOutstanding.ToString("N2")</div>
                     <div class="stat-label">Total Outstanding</div>
@@ -47,31 +62,98 @@ else
         </div>
     </div>
 
+    @* Charts *@
+    <div class="row g-3 mb-4">
+        <div class="col-md-4">
+            <div class="chart-card h-100">
+                <div class="chart-card-title"><i class="bi bi-pie-chart"></i> Payment Split</div>
+                <div class="chart-canvas-wrap" style="height:185px;max-height:185px;">
+                    <canvas id="chartPaySplit"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            @if (Model.OverduePayments.Any())
+            {
+                <div class="chart-card h-100">
+                    <div class="chart-card-title"><i class="bi bi-exclamation-triangle-fill"></i> Overdue Amounts by Unit (BD)</div>
+                    <div class="chart-canvas-wrap" style="max-height:240px;">
+                        <canvas id="chartOverdue"></canvas>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="chart-card h-100 d-flex flex-column justify-content-center align-items-center text-center p-4">
+                    <i class="bi bi-check-circle-fill fs-1 mb-3" style="color:var(--accent);"></i>
+                    <div style="font-size:1.1rem;font-weight:700;color:var(--text-main);">No Overdue Payments</div>
+                    <div class="page-subtitle mt-1">All payments are up to date.</div>
+                </div>
+            }
+        </div>
+    </div>
+
     @if (Model.OverduePayments.Any())
     {
+        var profitPct = (Model.IslamicProfitRate * 100).ToString("F0");
         <div class="section-card">
-            <div class="section-card-header" style="color:#b42318;">
-                Overdue Payment Details
+            <div class="section-card-header d-flex justify-content-between align-items-center flex-wrap gap-2">
+                <span style="color:#b42318;"><i class="bi bi-exclamation-triangle-fill me-2"></i>Overdue Payment Details</span>
+                <span class="d-flex align-items-center gap-2">
+                    <span style="background:rgba(30,142,110,0.12);color:#1E8E6E;border-radius:999px;
+                                 padding:0.3rem 0.85rem;font-size:0.8rem;font-weight:700;">
+                        <i class="bi bi-moon-stars-fill me-1"></i>Islamic Profit Rate: @profitPct% p.a. (Ta'widh — AAOIFI)
+                    </span>
+                    <span class="page-info">@Model.OverduePayments.Count overdue</span>
+                </span>
             </div>
-            <div class="report-table-card" style="border-radius:0 0 20px 20px;border:none;">
-                <table class="table report-table mb-0">
+            <div class="report-table-card" style="border-radius:0;border:none;overflow-x:auto;">
+                <table id="tbl-overdue" class="table report-table mb-0" style="min-width:700px;">
                     <thead>
                         <tr>
                             <th>Tenant</th>
                             <th>Unit</th>
-                            <th class="text-end">Amount Due (BD)</th>
                             <th class="text-center">Due Date</th>
+                            <th class="text-center">Days Overdue</th>
+                            <th class="text-end">Original (BD)</th>
+                            <th class="text-end">Profit @profitPct% (BD)</th>
+                            <th class="text-end" style="color:#fff;background:#b42318;border-radius:0;">Total Due (BD)</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach (var p in Model.OverduePayments)
                         {
+                             var initial = p.TenantName.Length > 0 ? p.TenantName[0].ToString().ToUpper() : "T";
+                            
                             <tr>
-                                <td>@p.TenantName</td>
-                                <td>@p.UnitNumber</td>
-                                <td class="text-end fw-bold">@p.AmountDue.ToString("N2")</td>
+                                <td>
+                                    <div class="ux-user-cell">
+                                        <div class="ux-avatar">@initial</div>
+                                        <div>
+                                            <div class="ux-user-name">@p.TenantName</div>
+                                            <div class="ux-user-sub">(@p.PropertyName)</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="ux-user-name">@p.UnitNumber</div>
+                                </td>
                                 <td class="text-center">
-                                    <span class="custom-pill pill-danger">@p.DueDate.ToString("dd MMM yyyy")</span>
+                                    <span class="custom-pill pill-danger" style="font-size:0.8rem;">
+                                        <i class="bi bi-calendar-x me-1"></i>@p.DueDate.ToString("dd MMM yyyy")
+                                    </span>
+                                </td>
+                                <td class="text-center">
+                                    <span class="custom-pill @(p.DaysOverdue > 30 ? "pill-danger" : "pill-warning")" style="font-size:0.85rem;">
+                                        @p.DaysOverdue d
+                                    </span>
+                                </td>
+                                <td class="text-end" style="font-size:0.95rem;">@p.AmountDue.ToString("N3")</td>
+                                <td class="text-end" style="color:#b45309;font-weight:700;font-size:0.95rem;">
+                                    +@p.ProfitAmount.ToString("N3")
+                                </td>
+                                <td class="text-end fw-bold" style="color:#b42318;font-size:1rem;background:rgba(220,53,69,0.06);">
+                                    @p.TotalAmountDue.ToString("N3")
                                 </td>
                             </tr>
                         }
@@ -82,8 +164,86 @@ else
     }
     else
     {
-        <div class="alert rounded-4 fw-semibold" style="background:rgba(30,142,110,0.12);color:#1E8E6E;border:none;">
-            No overdue payments.
+        <div class="alert rounded-4 fw-semibold d-flex align-items-center gap-2"
+             style="background:rgba(30,142,110,0.10);color:#1E8E6E;border:none;">
+            <i class="bi bi-check-circle-fill fs-5"></i> No overdue payments.
         </div>
     }
+}
+
+@section Scripts {
+<script>
+    Chart.defaults.font.family = "system-ui,-apple-system,sans-serif";
+    Chart.defaults.color = "#6B7280";
+
+    const PRIMARY = '#005B71', P_MID = '#0a7f8f', ACCENT = '#1E8E6E',
+          A_DARK  = '#16795e', MUTED  = '#4D6268', LIGHT = '#d4e7ec',
+          DANGER  = '#b42318', D_MID  = '#dc3545';
+
+    // profit-adjusted outstanding = base outstanding + sum of Islamic profit on overdue
+    const pAdjustedOutstanding = @pOutstanding.ToString("F3", System.Globalization.CultureInfo.InvariantCulture) + @pProfit.ToString("F3", System.Globalization.CultureInfo.InvariantCulture);
+
+    // 1. Doughnut — collected vs profit-adjusted outstanding
+    new Chart(document.getElementById('chartPaySplit'), {
+        type: 'doughnut',
+        data: {
+            labels: ['Collected', 'Outstanding (incl. Profit)'],
+            datasets: [{
+                data: [@pCollected.ToString("F3", System.Globalization.CultureInfo.InvariantCulture), pAdjustedOutstanding],
+                backgroundColor: [ACCENT, MUTED],
+                borderWidth: 0,
+                hoverOffset: 8
+            }]
+        },
+        options: {
+            responsive: true, maintainAspectRatio: false, cutout: '68%',
+            plugins: {
+                legend: { position: 'bottom', labels: { padding: 10, boxWidth: 10, font: { size: 11 } } },
+                tooltip: { callbacks: { label: ctx => ` ${ctx.label}: BD ${ctx.parsed.toFixed(3)}` } }
+            }
+        }
+    });
+
+    // 2. Bar — total due per unit (original + Islamic profit), only if canvas exists
+    const odCanvas = document.getElementById('chartOverdue');
+    if (odCanvas) {
+        new Chart(odCanvas, {
+            type: 'bar',
+            data: {
+                labels: [@Html.Raw(overdueLabels)],
+                datasets: [
+                    {
+                        label: 'Original Amount (BD)',
+                        data: [@Html.Raw(overdueOriginal)],
+                        backgroundColor: PRIMARY,
+                        borderRadius: { topLeft: 0, topRight: 0, bottomLeft: 6, bottomRight: 6 },
+                        borderSkipped: false,
+                        stack: 'overdue'
+                    },
+                    {
+                        label: 'Profit 3% (BD)',
+                        data: [@Html.Raw(overdueProfit)],
+                        backgroundColor: DANGER,
+                        borderRadius: { topLeft: 6, topRight: 6, bottomLeft: 0, bottomRight: 0 },
+                        borderSkipped: false,
+                        stack: 'overdue'
+                    }
+                ]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: true,
+                plugins: {
+                    legend: { position: 'bottom', labels: { padding: 14, boxWidth: 12 } },
+                    tooltip: { callbacks: { label: ctx => ` ${ctx.dataset.label}: BD ${ctx.parsed.y.toFixed(3)}` } }
+                },
+                scales: {
+                    y: { beginAtZero: true, stacked: true, ticks: { callback: v => 'BD ' + v }, grid: { color: 'rgba(0,0,0,0.05)' } },
+                    x: { stacked: true, grid: { display: false } }
+                }
+            }
+        });
+    }
+
+    initPagination('tbl-overdue', 8);
+</script>
 }

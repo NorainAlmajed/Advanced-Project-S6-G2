@@ -28,27 +28,35 @@ public class LoginController : Controller
         if (!ModelState.IsValid)
             return View(model);
 
-        var response = await _api.LoginAsync(model.Email, model.Password);
-
-        if (response == null)
+        try
         {
-            ModelState.AddModelError(string.Empty, "Invalid email or password.");
-            return View(model);
-        }
+            var response = await _api.LoginAsync(model.Email, model.Password);
 
-        // Verify the user is a Property Manager
-        if (!response.Roles.Contains("PropertyManager"))
+            if (response == null)
+            {
+                ModelState.AddModelError(string.Empty, "Invalid email or password.");
+                return View(model);
+            }
+
+            if (!response.Roles.Contains("PropertyManager"))
+            {
+                ModelState.AddModelError(string.Empty,
+                    "Access denied. This portal is restricted to Property Managers.");
+                return View(model);
+            }
+
+            HttpContext.Session.SetString("JwtToken",     response.Token);
+            HttpContext.Session.SetString("ManagerName",  response.FullName);
+            HttpContext.Session.SetString("ManagerEmail", response.Email);
+
+            return RedirectToAction("Index", "Reports");
+        }
+        catch (ApiUnavailableException)
         {
             ModelState.AddModelError(string.Empty,
-                "Access denied. This portal is restricted to Property Managers.");
+                "Cannot reach the API server. Please make sure the API project is running and try again.");
             return View(model);
         }
-
-        HttpContext.Session.SetString("JwtToken",    response.Token);
-        HttpContext.Session.SetString("ManagerName", response.FullName);
-        HttpContext.Session.SetString("ManagerEmail", response.Email);
-
-        return RedirectToAction("Index", "Reports");
     }
 
     [HttpPost]

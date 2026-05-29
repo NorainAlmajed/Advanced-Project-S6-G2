@@ -20,21 +20,35 @@ public class ReportsController : Controller
         return null;
     }
 
+    // When the JWT expires the API returns 401 — clear the session and
+    // send the user back to login with an informative message.
+    private IActionResult HandleExpiredSession()
+    {
+        HttpContext.Session.Clear();
+        TempData["SessionExpired"] = "Your session has expired. Please sign in again.";
+        return RedirectToAction("Index", "Login");
+    }
+
     public async Task<IActionResult> Index()
     {
         var auth = RequireAuth();
         if (auth != null) return auth;
 
-        var occupancy   = await _api.GetOccupancyReportAsync();
-        var maintenance = await _api.GetMaintenanceReportAsync();
-        var payments    = await _api.GetPaymentReportAsync();
-
-        return View(new DashboardViewModel
+        try
         {
-            Occupancy   = occupancy,
-            Maintenance = maintenance,
-            Payments    = payments
-        });
+            var occupancy   = await _api.GetOccupancyReportAsync();
+            var maintenance = await _api.GetMaintenanceReportAsync();
+            var payments    = await _api.GetPaymentReportAsync();
+
+            return View(new DashboardViewModel
+            {
+                Occupancy   = occupancy,
+                Maintenance = maintenance,
+                Payments    = payments
+            });
+        }
+        catch (SessionExpiredException)    { return HandleExpiredSession(); }
+        catch (ApiUnavailableException)    { return View("ApiError"); }
     }
 
     public async Task<IActionResult> Occupancy()
@@ -42,7 +56,12 @@ public class ReportsController : Controller
         var auth = RequireAuth();
         if (auth != null) return auth;
 
-        return View(await _api.GetOccupancyReportAsync());
+        try
+        {
+            return View(await _api.GetOccupancyReportAsync());
+        }
+        catch (SessionExpiredException) { return HandleExpiredSession(); }
+        catch (ApiUnavailableException) { return View("ApiError"); }
     }
 
     public async Task<IActionResult> Maintenance()
@@ -50,7 +69,12 @@ public class ReportsController : Controller
         var auth = RequireAuth();
         if (auth != null) return auth;
 
-        return View(await _api.GetMaintenanceReportAsync());
+        try
+        {
+            return View(await _api.GetMaintenanceReportAsync());
+        }
+        catch (SessionExpiredException) { return HandleExpiredSession(); }
+        catch (ApiUnavailableException) { return View("ApiError"); }
     }
 
     public async Task<IActionResult> Payments()
@@ -58,6 +82,11 @@ public class ReportsController : Controller
         var auth = RequireAuth();
         if (auth != null) return auth;
 
-        return View(await _api.GetPaymentReportAsync());
+        try
+        {
+            return View(await _api.GetPaymentReportAsync());
+        }
+        catch (SessionExpiredException) { return HandleExpiredSession(); }
+        catch (ApiUnavailableException) { return View("ApiError"); }
     }
 }
