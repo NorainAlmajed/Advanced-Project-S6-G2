@@ -28,11 +28,11 @@
         </div>
         <div class="ux-stat-card">
             <div class="ux-stat-icon" style="background:rgba(245,158,11,0.1);color:#d97706;"><i class="bi bi-hourglass-split"></i></div>
-            <div><div class="ux-stat-value">@pending</div><div class="ux-stat-label">Pending</div></div>
+            <div><div class="ux-stat-value" id="stat-pending">@pending</div><div class="ux-stat-label">Pending</div></div>
         </div>
         <div class="ux-stat-card">
             <div class="ux-stat-icon" style="background:rgba(30,142,110,0.1);color:#1E8E6E;"><i class="bi bi-check-circle-fill"></i></div>
-            <div><div class="ux-stat-value">@approved</div><div class="ux-stat-label">Approved</div></div>
+            <div><div class="ux-stat-value" id="stat-approved">@approved</div><div class="ux-stat-label">Approved</div></div>
         </div>
         <div class="ux-stat-card">
             <div class="ux-stat-icon" style="background:rgba(220,53,69,0.1);color:#b42318;"><i class="bi bi-x-circle-fill"></i></div>
@@ -101,7 +101,7 @@
                                     <div class="ux-user-sub">@item.Unit?.Property?.Name</div>
                                 </td>
                                 <td class="ux-cell-muted">@item.ApplicationDate.ToString("dd MMM yyyy")</td>
-                                <td><span class="ux-role-badge" style="background:@statusBg;color:@statusColor;">@item.Status</span></td>
+                                <td><span class="ux-role-badge" id="app-status-@item.ApplicationId" style="background:@statusBg;color:@statusColor;">@item.Status</span></td>
                                 <td class="text-end">
                                     <a asp-action="Details" asp-route-id="@item.ApplicationId" class="ux-details-btn">
                                         View <i class="bi bi-arrow-right"></i>
@@ -125,3 +125,52 @@
     @await Html.PartialAsync("_Pagination", (AdvancedProject.ViewModels.PaginationVM)ViewBag.Pagination)
 
 </div>
+
+@section Scripts {
+<script>
+(function () {
+    var connection = new signalR.HubConnectionBuilder()
+        .withUrl('/hubs/notifications')
+        .withAutomaticReconnect()
+        .build();
+
+    // New application submitted by tenant → manager sees new row
+    connection.on('ApplicationSubmitted', function () { location.reload(); });
+
+    // Application status changed (approve/reject/cancel) → update badge in-place
+    connection.on('LeaseCreated', function (data) {
+        updateAppBadge(data.applicationId, 'Approved');
+    });
+
+    connection.on('ApplicationStatusChanged', function (data) {
+        if (data.status === 'Rejected')   updateAppBadge(data.applicationId, 'Rejected');
+        if (data.status === 'Cancelled')  updateAppBadge(data.applicationId, 'Cancelled');
+    });
+
+    function updateAppBadge(applicationId, status) {
+        var badge = document.getElementById('app-status-' + applicationId);
+        if (!badge) return;
+
+        var colorMap = {
+            'Approved':  { bg: 'rgba(30,142,110,0.1)',  color: '#1E8E6E' },
+            'Rejected':  { bg: 'rgba(220,53,69,0.1)',   color: '#b42318' },
+            'Cancelled': { bg: 'rgba(107,114,128,0.1)', color: '#4b5563' }
+        };
+        var c = colorMap[status];
+        if (c) { badge.style.background = c.bg; badge.style.color = c.color; }
+        badge.textContent = status;
+
+        var pendingEl  = document.getElementById('stat-pending');
+        var approvedEl = document.getElementById('stat-approved');
+        if (status === 'Approved' && pendingEl && approvedEl) {
+            pendingEl.textContent  = Math.max(0, parseInt(pendingEl.textContent) - 1);
+            approvedEl.textContent = parseInt(approvedEl.textContent) + 1;
+        }
+    }
+
+    connection.start().catch(function (err) {
+        console.error('NotificationHub error:', err);
+    });
+})();
+</script>
+}

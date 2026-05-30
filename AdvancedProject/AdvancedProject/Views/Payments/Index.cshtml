@@ -34,15 +34,15 @@
         </div>
         <div class="ux-stat-card">
             <div class="ux-stat-icon" style="background:rgba(30,142,110,0.1);color:#1E8E6E;"><i class="bi bi-check-circle-fill"></i></div>
-            <div><div class="ux-stat-value">@paid</div><div class="ux-stat-label">Paid</div></div>
+            <div><div class="ux-stat-value" id="stat-paid">@paid</div><div class="ux-stat-label">Paid</div></div>
         </div>
         <div class="ux-stat-card">
             <div class="ux-stat-icon" style="background:rgba(245,158,11,0.1);color:#d97706;"><i class="bi bi-hourglass-split"></i></div>
-            <div><div class="ux-stat-value">@pending</div><div class="ux-stat-label">Pending</div></div>
+            <div><div class="ux-stat-value" id="stat-pending">@pending</div><div class="ux-stat-label">Pending</div></div>
         </div>
         <div class="ux-stat-card">
             <div class="ux-stat-icon" style="background:rgba(220,53,69,0.1);color:#b42318;"><i class="bi bi-exclamation-circle-fill"></i></div>
-            <div><div class="ux-stat-value">@late</div><div class="ux-stat-label">Late</div></div>
+            <div><div class="ux-stat-value" id="stat-late">@late</div><div class="ux-stat-label">Late</div></div>
         </div>
     </div>
 
@@ -96,7 +96,7 @@
                                 <td class="ux-cell-muted">@item.StartDate.ToString("dd MMM yyyy")</td>
                                 <td class="ux-cell-muted">@item.EndDate.ToString("dd MMM yyyy")</td>
                                 <td class="ux-user-name">BD @item.Amount.ToString("0.00")</td>
-                                <td><span class="ux-role-badge" style="background:@statusBg;color:@statusColor;">@item.Status</span></td>
+                                <td><span class="ux-role-badge" id="pay-status-@item.PaymentId" style="background:@statusBg;color:@statusColor;">@item.Status</span></td>
                                 <td class="text-end">
                                     <a asp-action="Details" asp-route-id="@item.PaymentId" class="ux-details-btn">
                                         View <i class="bi bi-arrow-right"></i>
@@ -120,3 +120,44 @@
     @await Html.PartialAsync("_Pagination", (AdvancedProject.ViewModels.PaginationVM)ViewBag.Pagination)
 
 </div>
+
+@section Scripts {
+<script>
+(function () {
+    var connection = new signalR.HubConnectionBuilder()
+        .withUrl('/hubs/notifications')
+        .withAutomaticReconnect()
+        .build();
+
+    // New payment created → reload to add the new row
+    connection.on('PaymentAdded', function () { location.reload(); });
+
+    // Payment status changed → update badge and stats in-place
+    connection.on('PaymentStatusChanged', function (data) {
+        var badge = document.getElementById('pay-status-' + data.paymentId);
+        if (!badge) return;
+
+        var oldStatus = badge.textContent.trim();
+        var colorMap = {
+            'Paid':    { bg: 'rgba(30,142,110,0.1)',  color: '#1E8E6E' },
+            'Pending': { bg: 'rgba(245,158,11,0.1)',  color: '#d97706' },
+            'Late':    { bg: 'rgba(220,53,69,0.1)',   color: '#b42318' }
+        };
+        var c = colorMap[data.status];
+        if (c) { badge.style.background = c.bg; badge.style.color = c.color; }
+        badge.textContent = data.status;
+
+        // Update stat counters
+        var statMap = { 'Paid': 'stat-paid', 'Pending': 'stat-pending', 'Late': 'stat-late' };
+        var oldEl = document.getElementById(statMap[oldStatus]);
+        var newEl = document.getElementById(statMap[data.status]);
+        if (oldEl) oldEl.textContent = Math.max(0, parseInt(oldEl.textContent) - 1);
+        if (newEl) newEl.textContent = parseInt(newEl.textContent) + 1;
+    });
+
+    connection.start().catch(function (err) {
+        console.error('NotificationHub error:', err);
+    });
+})();
+</script>
+}

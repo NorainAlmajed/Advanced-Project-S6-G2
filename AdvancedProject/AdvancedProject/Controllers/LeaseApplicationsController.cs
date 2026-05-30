@@ -251,6 +251,11 @@ namespace AdvancedProject.Controllers
 
             await PushNotificationAsync(managerNotif);
 
+            // Tell manager's Applications page to reload so the new row appears
+            await _notifHub.Clients
+                .Group($"user-{managerNotif.UserId}")
+                .SendAsync("ApplicationSubmitted", new { applicationId = leaseApplication.ApplicationId });
+
             TempData["ToastTitle"]   = "Application Submitted";
             TempData["ToastMessage"] = $"Your lease application #{leaseApplication.ApplicationId} has been submitted successfully.";
             TempData["ToastType"]    = "Lease";
@@ -345,6 +350,10 @@ namespace AdvancedProject.Controllers
             await _context.SaveChangesAsync();
 
             await PushNotificationAsync(editNotif);
+
+            await _notifHub.Clients
+                .Group($"user-{editNotif.UserId}")
+                .SendAsync("ApplicationSubmitted", new { applicationId = existing.ApplicationId });
 
             TempData["ToastTitle"]   = "Application Updated";
             TempData["ToastMessage"] = $"Your lease application #{existing.ApplicationId} has been updated successfully.";
@@ -450,6 +459,19 @@ namespace AdvancedProject.Controllers
 
             await PushNotificationAsync(approveNotif);
 
+            // Update tenant's application status badge live + reload Leases page
+            await _notifHub.Clients
+                .Group($"user-{application.Tenant.UserId}")
+                .SendAsync("LeaseCreated", new
+                {
+                    leaseId       = lease.LeaseId,
+                    applicationId = application.ApplicationId
+                });
+
+            // Update Units page for all users — unit is now Occupied
+            await _notifHub.Clients.All
+                .SendAsync("UnitAvailabilityChanged", new { unitId = application.UnitId, status = "Occupied" });
+
             TempData["ToastTitle"]   = "Application Approved";
             TempData["ToastMessage"] = $"Lease application #{application.ApplicationId} has been approved and a lease has been created.";
             TempData["ToastType"]    = "Lease";
@@ -493,6 +515,11 @@ namespace AdvancedProject.Controllers
 
             await PushNotificationAsync(rejectNotif);
 
+            // Update tenant's application badge live
+            await _notifHub.Clients
+                .Group($"user-{application.Tenant.UserId}")
+                .SendAsync("ApplicationStatusChanged", new { applicationId = application.ApplicationId, status = "Rejected" });
+
             TempData["ToastTitle"]   = "Application Rejected";
             TempData["ToastMessage"] = $"Lease application #{application.ApplicationId} has been rejected.";
             TempData["ToastType"]    = "Lease";
@@ -530,6 +557,11 @@ namespace AdvancedProject.Controllers
                 await _context.SaveChangesAsync();
 
                 await PushNotificationAsync(cancelNotif);
+
+                // Update manager's application badge live
+                await _notifHub.Clients
+                    .Group($"user-{cancelNotif.UserId}")
+                    .SendAsync("ApplicationStatusChanged", new { applicationId = application.ApplicationId, status = "Cancelled" });
 
                 TempData["ToastTitle"]   = "Application Cancelled";
                 TempData["ToastMessage"] = $"Your lease application #{application.ApplicationId} has been cancelled.";
