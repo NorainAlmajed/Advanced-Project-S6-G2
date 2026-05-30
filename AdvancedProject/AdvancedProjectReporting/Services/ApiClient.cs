@@ -64,7 +64,7 @@ public class ApiClient
             return result ?? new List<OccupancyReportDto>();
         }
         catch (SessionExpiredException) { throw; }
-        catch (HttpRequestException ex)  { throw new ApiUnavailableException(ex); }
+        catch (Exception ex) when (ex is not SessionExpiredException) { throw new ApiUnavailableException(ex); }
     }
 
     public async Task<MaintenanceReportDto?> GetMaintenanceReportAsync()
@@ -76,7 +76,7 @@ public class ApiClient
             return await ReadAsync<MaintenanceReportDto>(response);
         }
         catch (SessionExpiredException) { throw; }
-        catch (HttpRequestException ex)  { throw new ApiUnavailableException(ex); }
+        catch (Exception ex) when (ex is not SessionExpiredException) { throw new ApiUnavailableException(ex); }
     }
 
     public async Task<PaymentReportDto?> GetPaymentReportAsync()
@@ -88,7 +88,7 @@ public class ApiClient
             return await ReadAsync<PaymentReportDto>(response);
         }
         catch (SessionExpiredException) { throw; }
-        catch (HttpRequestException ex)  { throw new ApiUnavailableException(ex); }
+        catch (Exception ex) when (ex is not SessionExpiredException) { throw new ApiUnavailableException(ex); }
     }
 }
 
