@@ -14,5 +14,6 @@
     <WebStackScaffolding_DbContextTypeFullName>AdvancedProject.Data.APContext</WebStackScaffolding_DbContextTypeFullName>
     <WebStackScaffolding_IsAsyncSelected>False</WebStackScaffolding_IsAsyncSelected>
     <WebStackScaffolding_IsViewGenerationSelected>True</WebStackScaffolding_IsViewGenerationSelected>
+    <NameOfLastUsedPublishProfile>C:\Users\fatima\OneDrive\Desktop\Documents\GitHub\Advanced-Project-S6-G2\AdvancedProject\AdvancedProject\Properties\PublishProfiles\mvc-advanced-s6g2 - Web Deploy.pubxml</NameOfLastUsedPublishProfile>
   </PropertyGroup>
 </Project>
