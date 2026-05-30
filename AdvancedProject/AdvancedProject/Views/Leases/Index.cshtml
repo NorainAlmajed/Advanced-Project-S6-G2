@@ -28,15 +28,15 @@
         </div>
         <div class="ux-stat-card">
             <div class="ux-stat-icon" style="background:rgba(30,142,110,0.1);color:#1E8E6E;"><i class="bi bi-check-circle-fill"></i></div>
-            <div><div class="ux-stat-value">@active</div><div class="ux-stat-label">Active</div></div>
+            <div><div class="ux-stat-value" id="stat-active">@active</div><div class="ux-stat-label">Active</div></div>
         </div>
         <div class="ux-stat-card">
             <div class="ux-stat-icon" style="background:rgba(220,53,69,0.1);color:#b42318;"><i class="bi bi-x-circle-fill"></i></div>
-            <div><div class="ux-stat-value">@terminated</div><div class="ux-stat-label">Terminated</div></div>
+            <div><div class="ux-stat-value" id="stat-terminated">@terminated</div><div class="ux-stat-label">Terminated</div></div>
         </div>
         <div class="ux-stat-card">
             <div class="ux-stat-icon" style="background:rgba(59,130,246,0.1);color:#1d4ed8;"><i class="bi bi-arrow-repeat"></i></div>
-            <div><div class="ux-stat-value">@renewed</div><div class="ux-stat-label">Renewed</div></div>
+            <div><div class="ux-stat-value" id="stat-renewed">@renewed</div><div class="ux-stat-label">Renewed</div></div>
         </div>
     </div>
 
@@ -86,7 +86,7 @@
                             string statusColor = item.Status == "Active" ? "#1E8E6E" : item.Status == "Renewed" ? "#1d4ed8" : "#b42318";
                             string statusBg    = item.Status == "Active" ? "rgba(30,142,110,0.1)" : item.Status == "Renewed" ? "rgba(59,130,246,0.1)" : "rgba(220,53,69,0.1)";
                             string initial = item.Tenant?.User?.FullName?.Length > 0 ? item.Tenant.User.FullName[0].ToString().ToUpper() : "T";
-                            <tr>
+                            <tr data-lease-id="@item.LeaseId">
                                 <td class="ux-cell-muted fw-semibold">#@item.LeaseId</td>
                                 <td>
                                     <div class="ux-user-cell">
@@ -101,7 +101,7 @@
                                 <td class="ux-cell-muted">@item.StartDate.ToString("dd MMM yyyy")</td>
                                 <td class="ux-cell-muted">@item.EndDate.ToString("dd MMM yyyy")</td>
                                 <td class="ux-user-name">BD @item.MonthlyRent.ToString("0.00")</td>
-                                <td><span class="ux-role-badge" style="background:@statusBg;color:@statusColor;">@item.Status</span></td>
+                                <td><span class="ux-role-badge" id="lease-status-@item.LeaseId" style="background:@statusBg;color:@statusColor;">@item.Status</span></td>
                                 <td class="text-end">
                                     <a asp-action="Details" asp-route-id="@item.LeaseId" class="ux-details-btn">
                                         View <i class="bi bi-arrow-right"></i>
@@ -125,3 +125,42 @@
     @await Html.PartialAsync("_Pagination", (AdvancedProject.ViewModels.PaginationVM)ViewBag.Pagination)
 
 </div>
+
+@section Scripts {
+<script>
+(function () {
+    var connection = new signalR.HubConnectionBuilder()
+        .withUrl('/hubs/notifications')
+        .withAutomaticReconnect()
+        .build();
+
+    connection.on('LeaseCreated', function () { location.reload(); });
+
+    connection.on('LeaseStatusUpdated', function (data) {
+        var badge = document.getElementById('lease-status-' + data.leaseId);
+        if (!badge) return;
+
+        var oldStatus = badge.textContent.trim();
+        var colorMap = {
+            'Terminated': { bg: 'rgba(220,53,69,0.1)',  color: '#b42318' },
+            'Renewed':    { bg: 'rgba(59,130,246,0.1)', color: '#1d4ed8' }
+        };
+        var c = colorMap[data.status];
+        if (!c) return;
+        badge.style.background = c.bg;
+        badge.style.color      = c.color;
+        badge.textContent      = data.status;
+
+        var statMap = { 'Active': 'stat-active', 'Terminated': 'stat-terminated', 'Renewed': 'stat-renewed' };
+        var oldEl = document.getElementById(statMap[oldStatus]);
+        var newEl = document.getElementById(statMap[data.status]);
+        if (oldEl) oldEl.textContent = Math.max(0, parseInt(oldEl.textContent) - 1);
+        if (newEl) newEl.textContent = parseInt(newEl.textContent) + 1;
+    });
+
+    connection.start().catch(function (err) {
+        console.error('LeaseHub error:', err);
+    });
+})();
+</script>
+}

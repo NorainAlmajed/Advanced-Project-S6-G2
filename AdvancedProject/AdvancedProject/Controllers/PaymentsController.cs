@@ -242,6 +242,11 @@ namespace AdvancedProject.Controllers
 
                 await PushNotificationAsync(tenantNotif);
 
+                // Tell the tenant's Payments page to reload so the new payment row appears immediately
+                await _notifHub.Clients
+                    .Group($"user-{lease.Tenant.UserId}")
+                    .SendAsync("PaymentAdded", new { paymentId = payment.PaymentId });
+
                 TempData["ToastTitle"]   = "Payment Created";
                 TempData["ToastMessage"] = $"Payment record #{payment.PaymentId} has been created successfully.";
                 TempData["ToastType"]    = "Payment";
@@ -334,6 +339,15 @@ namespace AdvancedProject.Controllers
             await _context.SaveChangesAsync();
 
             await PushNotificationAsync(tenantNotif);
+
+            // Update tenant's Payments page live
+            await _notifHub.Clients
+                .Group($"user-{tenantNotif.UserId}")
+                .SendAsync("PaymentStatusChanged", new
+                {
+                    paymentId = existing.PaymentId,
+                    status    = existing.Status
+                });
 
             TempData["ToastTitle"]   = "Payment Updated";
             TempData["ToastMessage"] = $"Payment record #{existing.PaymentId} has been updated successfully.";

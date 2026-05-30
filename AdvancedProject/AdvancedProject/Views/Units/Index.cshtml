@@ -42,7 +42,7 @@
                 <i class="bi bi-check-circle-fill"></i>
             </div>
             <div>
-                <div class="ux-stat-value">@available</div>
+                <div class="ux-stat-value" id="stat-available">@available</div>
                 <div class="ux-stat-label">Available</div>
             </div>
         </div>
@@ -51,7 +51,7 @@
                 <i class="bi bi-person-fill-lock"></i>
             </div>
             <div>
-                <div class="ux-stat-value">@occupied</div>
+                <div class="ux-stat-value" id="stat-occupied">@occupied</div>
                 <div class="ux-stat-label">Occupied</div>
             </div>
         </div>
@@ -146,7 +146,7 @@
                     _           => "#e5e7eb"
                 };
 
-                <div class="unit-card-new" style="border-left-color:@borderColor;">
+                <div class="unit-card-new" id="unit-card-@item.UnitId" style="border-left-color:@borderColor;">
 
                     <div class="unit-card-top">
                         <div style="display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;">
@@ -156,7 +156,7 @@
                                 <span class="unit-type-pill">@item.UnitType.Name</span>
                             }
                         </div>
-                        <span class="ux-role-badge" style="background:@statusBg;color:@statusColor;flex-shrink:0;">
+                        <span class="ux-role-badge" id="unit-status-@item.UnitId" style="background:@statusBg;color:@statusColor;flex-shrink:0;">
                             @item.AvailabilityStatus
                         </span>
                     </div>
@@ -237,3 +237,46 @@
     @await Html.PartialAsync("_Pagination", (AdvancedProject.ViewModels.PaginationVM)ViewBag.Pagination)
 
 </div>
+
+@section Scripts {
+<script>
+(function () {
+    var connection = new signalR.HubConnectionBuilder()
+        .withUrl('/hubs/notifications')
+        .withAutomaticReconnect()
+        .build();
+
+    connection.on('UnitAvailabilityChanged', function (data) {
+        var badge = document.getElementById('unit-status-' + data.unitId);
+        var card  = document.getElementById('unit-card-'   + data.unitId);
+        if (!badge || !card) return;
+
+        var isAvailable = data.status === 'Available';
+        var color  = isAvailable ? '#1E8E6E'              : '#dc3545';
+        var bg     = isAvailable ? 'rgba(30,142,110,0.1)' : 'rgba(220,53,69,0.1)';
+        var border = isAvailable ? '#1E8E6E'              : '#dc3545';
+
+        badge.style.background = bg;
+        badge.style.color      = color;
+        badge.textContent      = data.status;
+        card.style.borderLeftColor = border;
+
+        var availEl  = document.getElementById('stat-available');
+        var occupiedEl = document.getElementById('stat-occupied');
+        if (availEl && occupiedEl) {
+            if (isAvailable) {
+                availEl.textContent   = parseInt(availEl.textContent)   + 1;
+                occupiedEl.textContent = Math.max(0, parseInt(occupiedEl.textContent) - 1);
+            } else {
+                occupiedEl.textContent = parseInt(occupiedEl.textContent) + 1;
+                availEl.textContent   = Math.max(0, parseInt(availEl.textContent)   - 1);
+            }
+        }
+    });
+
+    connection.start().catch(function (err) {
+        console.error('NotificationHub error:', err);
+    });
+})();
+</script>
+}

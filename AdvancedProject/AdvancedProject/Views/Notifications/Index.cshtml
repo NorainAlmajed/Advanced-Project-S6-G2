@@ -36,9 +36,12 @@
            class="ux-filter-tab @(selectedType == "Lease" ? "active" : "")">Lease</a>
     </div>
 
+    @* Hidden token always available so JS can build delete forms for live cards *@
+    <span id="notif-csrf" style="display:none;">@Html.AntiForgeryToken()</span>
+
     @if (!Model.Any())
     {
-        <div class="ux-table-card">
+        <div id="notif-empty" class="ux-table-card">
             <div class="ux-empty">
                 <i class="bi bi-bell-slash"></i>
                 <p>No notifications found.</p>
@@ -47,7 +50,7 @@
     }
     else
     {
-        <div class="notification-list">
+        <div id="notif-list" class="notification-list">
             @foreach (var item in Model)
             {
                 var typeName = item.NotificationType?.Name ?? "General";
@@ -90,3 +93,64 @@
     }
 
 </div>
+
+@section Scripts {
+<script>
+(function () {
+    var selectedType = '@selectedType';
+
+    var connection = new signalR.HubConnectionBuilder()
+        .withUrl('/hubs/notifications')
+        .withAutomaticReconnect()
+        .build();
+
+    connection.on('ReceiveNotification', function (data) {
+        // Respect the active filter tab
+        if (selectedType !== 'All' && selectedType !== data.typeName) return;
+
+        var cardClass  = { Maintenance: 'notification-card maintenance', Payment: 'notification-card payment', Lease: 'notification-card lease' }[data.typeName] || 'notification-card';
+        var badgeClass = { Maintenance: 'type-badge maintenance-badge', Payment: 'type-badge payment-badge', Lease: 'type-badge lease-badge' }[data.typeName] || 'type-badge';
+
+        var token     = document.querySelector('#notif-csrf input[name="__RequestVerificationToken"]')?.value ?? '';
+        var deleteUrl = '/Notifications/Delete/' + data.notificationId;
+
+        var card = document.createElement('div');
+        card.className = cardClass;
+        card.innerHTML =
+            '<div class="notification-accent"></div>' +
+            '<div class="notification-content">' +
+                '<div class="notification-top">' +
+                    '<div class="notification-meta">' +
+                        '<span class="' + badgeClass + '">' + data.typeName + '</span>' +
+                        '<span class="notification-time">' + data.createdAt + '</span>' +
+                    '</div>' +
+                    '<form action="' + deleteUrl + '" method="post" class="delete-form m-0">' +
+                        '<input type="hidden" name="__RequestVerificationToken" value="' + token + '" />' +
+                        '<button type="submit" class="delete-btn" title="Delete"><i class="bi bi-trash-fill"></i></button>' +
+                    '</form>' +
+                '</div>' +
+                '<h5 class="notification-title">' + data.title + '</h5>' +
+                '<p class="notification-message mb-0">' + data.message + '</p>' +
+            '</div>';
+
+        // Hide empty state
+        var emptyEl = document.getElementById('notif-empty');
+        if (emptyEl) emptyEl.style.display = 'none';
+
+        // Prepend to list (create it if page was empty)
+        var list = document.getElementById('notif-list');
+        if (!list) {
+            list = document.createElement('div');
+            list.id = 'notif-list';
+            list.className = 'notification-list';
+            document.querySelector('.notifications-page').appendChild(list);
+        }
+        list.insertBefore(card, list.firstChild);
+    });
+
+    connection.start().catch(function (err) {
+        console.error('NotificationHub error:', err);
+    });
+})();
+</script>
+}

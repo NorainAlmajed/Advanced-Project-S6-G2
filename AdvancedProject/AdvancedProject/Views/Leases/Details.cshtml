@@ -21,6 +21,7 @@
             </p>
         </div>
         <div class="d-flex gap-2 flex-wrap">
+            <span id="lease-action-btns">
             @if (Model.Status == "Active")
             {
                 <button type="button" class="ux-btn-danger" data-bs-toggle="modal" data-bs-target="#terminateModal">
@@ -33,6 +34,7 @@
                     </button>
                 }
             }
+            </span>
             <a asp-action="Index" class="ux-btn-ghost">
                 <i class="bi bi-arrow-left"></i> Back
             </a>
@@ -57,19 +59,19 @@
                     <span class="ux-detail-value">
                         @if (Model.Status == "Active")
                         {
-                            <span class="custom-pill lease-status-active">Active</span>
+                            <span id="lease-status-pill" class="custom-pill lease-status-active">Active</span>
                         }
                         else if (Model.Status == "Terminated")
                         {
-                            <span class="custom-pill lease-status-terminated">Terminated</span>
+                            <span id="lease-status-pill" class="custom-pill lease-status-terminated">Terminated</span>
                         }
                         else if (Model.Status == "Renewed")
                         {
-                            <span class="custom-pill lease-status-renewed">Renewed</span>
+                            <span id="lease-status-pill" class="custom-pill lease-status-renewed">Renewed</span>
                         }
                         else
                         {
-                            <span class="custom-pill badge-soft-default">@Model.Status</span>
+                            <span id="lease-status-pill" class="custom-pill badge-soft-default">@Model.Status</span>
                         }
                     </span>
                 </div>
@@ -132,6 +134,37 @@
     </div>
 
 </div>
+
+@section Scripts {
+<script>
+(function () {
+    var leaseId = @Model.LeaseId;
+    var connection = new signalR.HubConnectionBuilder()
+        .withUrl('/hubs/notifications')
+        .withAutomaticReconnect()
+        .build();
+
+    connection.on('LeaseStatusUpdated', function (data) {
+        if (data.leaseId !== leaseId) return;
+
+        // Update status pill
+        var statusEl = document.getElementById('lease-status-pill');
+        if (statusEl) {
+            statusEl.className = 'custom-pill lease-status-terminated';
+            statusEl.textContent = 'Terminated';
+        }
+
+        // Hide the Terminate / Renew buttons
+        var actionBtns = document.getElementById('lease-action-btns');
+        if (actionBtns) actionBtns.style.display = 'none';
+    });
+
+    connection.start().catch(function (err) {
+        console.error('LeaseHub error:', err);
+    });
+})();
+</script>
+}
 
 @if (Model.Status == "Active")
 {

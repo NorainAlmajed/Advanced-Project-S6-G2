@@ -426,18 +426,19 @@
     @await RenderSectionAsync("Scripts", required: false)
 
     <script>
-        // Inject back button on all inner (ux-page) pages
+        // Inject back button only on inner pages that don't already have one
         (function () {
             var page = document.querySelector('.ux-page');
             if (!page) return;
             var header = page.querySelector('.ux-page-header');
             if (!header) return;
+            if (header.querySelector('.ux-btn-ghost')) return; // page already has a back button
             var btn = document.createElement('button');
-            btn.className = 'ux-back-btn';
+            btn.className = 'ux-btn-ghost';
             btn.type = 'button';
-            btn.innerHTML = '<i class="bi bi-arrow-left-short" style="font-size:1rem;"></i> Back';
+            btn.innerHTML = '<i class="bi bi-arrow-left"></i> Back';
             btn.addEventListener('click', function () { history.back(); });
-            header.insertAdjacentElement('beforebegin', btn);
+            header.appendChild(btn);
         })();
     </script>
 

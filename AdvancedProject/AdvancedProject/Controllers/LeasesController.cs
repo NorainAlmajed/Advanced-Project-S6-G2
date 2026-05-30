@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AdvancedProjectAPI.Data;
 using AdvancedProjectAPI.Models;
+using AdvancedProject.Hubs;
+using Microsoft.AspNetCore.SignalR;
 
 namespace AdvancedProject.Controllers
 {
@@ -15,10 +17,12 @@ namespace AdvancedProject.Controllers
     public class LeasesController : Controller
     {
         private readonly APContext _context;
+        private readonly IHubContext<NotificationHub> _notifHub;
 
-        public LeasesController(APContext context)
+        public LeasesController(APContext context, IHubContext<NotificationHub> notifHub)
         {
             _context = context;
+            _notifHub = notifHub;
         }
 
         // Auto-terminates any Active leases whose EndDate has passed and sets unit back to Available
@@ -453,17 +457,45 @@ namespace AdvancedProject.Controllers
             if (lease.Unit != null)
                 lease.Unit.AvailabilityStatus = "Available";
 
-            _context.Notifications.Add(new Notification
+            var tenantNotif = new Notification
             {
                 UserId = lease.Tenant.UserId,
-                Title = "Lease Update",
-                Message = $"Lease #{lease.LeaseId} has been terminated.",
+                Title = "Lease Terminated",
+                Message = $"Your lease #{lease.LeaseId} has been terminated.",
                 NotificationTypeId = 1,
                 CreatedAt = DateTime.Now
-            });
+            };
+            _context.Notifications.Add(tenantNotif);
 
             await _context.SaveChangesAsync();
-            TempData["SuccessMessage"] = "Lease was terminated successfully.";
+
+            await _notifHub.Clients
+                .Group($"user-{tenantNotif.UserId}")
+                .SendAsync("ReceiveNotification", new
+                {
+                    notificationId = tenantNotif.NotificationId,
+                    title          = tenantNotif.Title,
+                    message        = tenantNotif.Message,
+                    typeName       = "Lease",
+                    createdAt      = tenantNotif.CreatedAt.ToString("dd MMM yyyy · hh:mm tt")
+                });
+
+            // Push live status update so tenant's page reflects the change without refresh
+            await _notifHub.Clients
+                .Group($"user-{tenantNotif.UserId}")
+                .SendAsync("LeaseStatusUpdated", new
+                {
+                    leaseId = lease.LeaseId,
+                    status  = "Terminated"
+                });
+
+            // Update Units page for all users — unit is now Available
+            await _notifHub.Clients.All
+                .SendAsync("UnitAvailabilityChanged", new { unitId = lease.Unit!.UnitId, status = "Available" });
+
+            TempData["ToastTitle"]   = "Lease Terminated";
+            TempData["ToastMessage"] = $"Lease #{lease.LeaseId} has been terminated successfully.";
+            TempData["ToastType"]    = "Lease";
             return RedirectToAction(nameof(Details), new { id });
         }
 
@@ -490,17 +522,43 @@ namespace AdvancedProject.Controllers
 
             _context.LeaseApplications.Add(application);
 
-            _context.Notifications.Add(new Notification
+            var tenantNotif = new Notification
             {
                 UserId = lease.Tenant.UserId,
-                Title = "Lease Update",
-                Message = $"Lease #{lease.LeaseId} has been renewed.",
+                Title = "Lease Renewed",
+                Message = $"Lease #{lease.LeaseId} has been renewed. A new application is pending review.",
                 NotificationTypeId = 1,
                 CreatedAt = DateTime.Now
-            });
+            };
+            _context.Notifications.Add(tenantNotif);
 
             await _context.SaveChangesAsync();
-            TempData["SuccessMessage"] = "Lease was renewed successfully.";
+
+            // Push notification to tenant
+            await _notifHub.Clients
+                .Group($"user-{tenantNotif.UserId}")
+                .SendAsync("ReceiveNotification", new
+                {
+                    notificationId = tenantNotif.NotificationId,
+                    title          = tenantNotif.Title,
+                    message        = tenantNotif.Message,
+                    typeName       = "Lease",
+                    createdAt      = tenantNotif.CreatedAt.ToString("dd MMM yyyy · hh:mm tt")
+                });
+
+            // Update tenant's Leases page badge live
+            await _notifHub.Clients
+                .Group($"user-{tenantNotif.UserId}")
+                .SendAsync("LeaseStatusUpdated", new { leaseId = lease.LeaseId, status = "Renewed" });
+
+            // Notify manager's Applications page — new pending renewal application created
+            await _notifHub.Clients
+                .Group("user-1")
+                .SendAsync("ApplicationSubmitted", new { applicationId = application.ApplicationId });
+
+            TempData["ToastTitle"]   = "Lease Renewed";
+            TempData["ToastMessage"] = $"Lease #{lease.LeaseId} has been renewed and a new application has been queued.";
+            TempData["ToastType"]    = "Lease";
             return RedirectToAction(nameof(Details), new { id });
         }
 

@@ -339,7 +339,7 @@ namespace AdvancedProject.Controllers
                     {
                         UserId = 1,
                         Title = "New Maintenance Request",
-                        Message = "A new maintenance request has been submitted.",
+                        Message = "A new maintenance request has been received.",
                         NotificationTypeId = 2,
                         CreatedAt = DateTime.Now
                     };
@@ -1001,7 +1001,8 @@ namespace AdvancedProject.Controllers
 
             await _context.SaveChangesAsync();
 
-            await PushNotificationAsync(tenantNotif);
+            if (otherNotif == null || otherNotif.UserId != tenantNotif.UserId)
+                await PushNotificationAsync(tenantNotif);
             if (otherNotif != null) await PushNotificationAsync(otherNotif);
             await BroadcastBoardUpdateAsync(id, "updated");
 
@@ -1069,7 +1070,8 @@ namespace AdvancedProject.Controllers
                 await _context.SaveChangesAsync();
             }
 
-            await PushNotificationAsync(tenantNotif);
+            if (!User.IsInRole("MaintenanceStaff") || tenantNotif.UserId != 1)
+                await PushNotificationAsync(tenantNotif);
             if (otherNotif != null) await PushNotificationAsync(otherNotif);
             await BroadcastBoardUpdateAsync(id, "updated");
 
@@ -1133,7 +1135,8 @@ namespace AdvancedProject.Controllers
 
             await _context.SaveChangesAsync();
 
-            await PushNotificationAsync(tenantNotif);
+            if (otherNotif == null || otherNotif.UserId != tenantNotif.UserId)
+                await PushNotificationAsync(tenantNotif);
             if (otherNotif != null) await PushNotificationAsync(otherNotif);
             await BroadcastBoardUpdateAsync(id, "updated");
 
@@ -1197,7 +1200,8 @@ namespace AdvancedProject.Controllers
 
             await _context.SaveChangesAsync();
 
-            await PushNotificationAsync(tenantNotif);
+            if (otherNotif == null || otherNotif.UserId != tenantNotif.UserId)
+                await PushNotificationAsync(tenantNotif);
             if (otherNotif != null) await PushNotificationAsync(otherNotif);
             await BroadcastBoardUpdateAsync(id, "updated");
 
