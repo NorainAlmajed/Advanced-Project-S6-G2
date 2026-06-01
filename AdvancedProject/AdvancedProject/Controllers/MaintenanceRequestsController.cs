@@ -19,15 +19,18 @@ namespace AdvancedProject.Controllers
         private readonly APContext _context;
         private readonly IHubContext<NotificationHub> _notifHub;
         private readonly IHubContext<MaintenanceBoardHub> _boardHub;
+        private readonly IHubContext<PublicStatusHub> _publicHub;
 
         public MaintenanceRequestsController(
             APContext context,
             IHubContext<NotificationHub> notifHub,
-            IHubContext<MaintenanceBoardHub> boardHub)
+            IHubContext<MaintenanceBoardHub> boardHub,
+            IHubContext<PublicStatusHub> publicHub)
         {
             _context = context;
             _notifHub = notifHub;
             _boardHub = boardHub;
+            _publicHub = publicHub;
         }
 
         // Pushes a saved Notification to the recipient's browser via SignalR.
@@ -76,6 +79,13 @@ namespace AdvancedProject.Controllers
                 submittedBy  = req.User?.Username ?? "—",
                 assignedStaff = req.AssignedStaff?.User?.Username ?? "Unassigned",
                 requestDate  = req.RequestDate.ToString("dd MMM yyyy")
+            });
+
+            await _publicHub.Clients.Group($"request-{req.RequestId}").SendAsync("StatusUpdated", new
+            {
+                requestId     = req.RequestId,
+                status        = req.Status,
+                assignedStaff = req.AssignedStaff?.User?.Username ?? ""
             });
         }
 

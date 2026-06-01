@@ -707,4 +707,117 @@
 
 @section Scripts {
     @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+
+    @if (Model?.Result != null)
+    {
+        <script>
+        (function () {
+            var requestId = @Model.Result.RequestId;
+            var steps = ['Pending', 'Assigned', 'In Progress', 'Resolved', 'Closed'];
+            var statusStyles = {
+                'Pending':     { color: '#b45309', bg: 'rgba(245,158,11,0.2)',    icon: 'bi-hourglass-split' },
+                'Assigned':    { color: '#2563eb', bg: 'rgba(59,130,246,0.2)',    icon: 'bi-person-check-fill' },
+                'In Progress': { color: '#7c3aed', bg: 'rgba(124,58,237,0.2)',    icon: 'bi-tools' },
+                'Resolved':    { color: '#1E8E6E', bg: 'rgba(30,142,110,0.2)',    icon: 'bi-check-circle-fill' },
+                'Closed':      { color: '#4b5563', bg: 'rgba(75,85,99,0.2)',      icon: 'bi-check2-all' },
+                'Cancelled':   { color: '#dc3545', bg: 'rgba(220,53,69,0.2)',     icon: 'bi-x-circle-fill' }
+            };
+
+            function updateStatus(status, assignedStaff) {
+                var sc = statusStyles[status] || { color: '#6b7280', bg: 'rgba(107,114,128,0.2)', icon: 'bi-circle' };
+
+                var badge = document.querySelector('.pub-status-badge');
+                if (badge) {
+                    badge.style.background = sc.bg;
+                    badge.style.color = sc.color;
+                    badge.innerHTML = '<i class="bi ' + sc.icon + '"></i> ' + status;
+                }
+
+                var body = document.querySelector('.pub-result-body');
+                var timeline = body ? body.querySelector('.pub-timeline') : null;
+                var cancelledDiv = body ? body.querySelector('.pub-cancelled-notice') : null;
+                var isCancelled = status === 'Cancelled';
+
+                if (isCancelled) {
+                    if (timeline) timeline.style.display = 'none';
+                    if (!cancelledDiv) {
+                        var notice = document.createElement('div');
+                        notice.className = 'pub-cancelled-notice';
+                        notice.style.cssText = 'text-align:center;padding:0.75rem 0 1.25rem;';
+                        notice.innerHTML = '<span style="background:rgba(220,53,69,0.1);color:#dc3545;padding:0.4rem 1.2rem;border-radius:40px;font-size:0.82rem;font-weight:700;"><i class="bi bi-x-circle-fill me-1"></i> This request has been cancelled</span>';
+                        if (body) body.insertBefore(notice, body.firstChild);
+                    }
+                } else {
+                    if (cancelledDiv) cancelledDiv.remove();
+                    if (timeline) {
+                        timeline.style.display = '';
+                        var activeIdx = steps.indexOf(status);
+                        var dots = timeline.querySelectorAll('.pub-tl-dot');
+                        var labels = timeline.querySelectorAll('.pub-tl-label');
+
+                        dots.forEach(function (dot, i) {
+                            dot.className = 'pub-tl-dot';
+                            if (i < activeIdx) {
+                                dot.classList.add('done');
+                                dot.innerHTML = '<i class="bi bi-check-lg"></i>';
+                            } else if (i === activeIdx) {
+                                dot.classList.add('active');
+                                if (status === 'Closed' || status === 'Resolved') {
+                                    dot.innerHTML = '<i class="bi bi-check-lg"></i>';
+                                } else {
+                                    dot.innerHTML = '<i class="bi bi-circle-fill" style="font-size:0.5rem;"></i>';
+                                }
+                            } else {
+                                dot.innerHTML = '<span style="font-size:0.7rem;font-weight:700;">' + (i + 1) + '</span>';
+                            }
+                        });
+
+                        labels.forEach(function (label, i) {
+                            label.className = 'pub-tl-label';
+                            if (i < activeIdx) label.classList.add('done');
+                            else if (i === activeIdx) label.classList.add('active');
+                        });
+                    }
+                }
+
+                var grid = document.querySelector('.pub-detail-grid');
+                if (grid && assignedStaff !== undefined) {
+                    var staffItem = null;
+                    grid.querySelectorAll('.pub-detail-item').forEach(function (item) {
+                        var lbl = item.querySelector('.pub-detail-label');
+                        if (lbl && lbl.textContent.indexOf('Assigned Staff') !== -1) staffItem = item;
+                    });
+
+                    if (assignedStaff) {
+                        if (staffItem) {
+                            staffItem.querySelector('.pub-detail-value').textContent = assignedStaff;
+                        } else {
+                            var newItem = document.createElement('div');
+                            newItem.className = 'pub-detail-item';
+                            newItem.style.gridColumn = '1/-1';
+                            newItem.innerHTML = '<div class="pub-detail-label"><i class="bi bi-person-badge me-1"></i>Assigned Staff</div><div class="pub-detail-value">' + assignedStaff + '</div>';
+                            grid.appendChild(newItem);
+                        }
+                    } else if (staffItem) {
+                        staffItem.remove();
+                    }
+                }
+            }
+
+            var connection = new signalR.HubConnectionBuilder()
+                .withUrl('/hubs/public-status')
+                .withAutomaticReconnect()
+                .build();
+
+            connection.on('StatusUpdated', function (data) {
+                if (data.requestId !== requestId) return;
+                updateStatus(data.status, data.assignedStaff);
+            });
+
+            connection.start()
+                .then(function () { return connection.invoke('JoinRequestGroup', requestId); })
+                .catch(function (err) { console.error('PublicStatusHub error:', err); });
+        })();
+        </script>
+    }
 }

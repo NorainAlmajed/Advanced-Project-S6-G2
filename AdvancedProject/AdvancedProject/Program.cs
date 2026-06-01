@@ -168,4 +168,5 @@ app.MapControllerRoute(
 app.MapRazorPages();
 app.MapHub<NotificationHub>("/hubs/notifications");
 app.MapHub<MaintenanceBoardHub>("/hubs/maintenance-board");
+app.MapHub<PublicStatusHub>("/hubs/public-status");
 app.Run();
