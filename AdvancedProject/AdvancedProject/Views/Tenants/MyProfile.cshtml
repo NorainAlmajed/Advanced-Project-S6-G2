@@ -25,7 +25,7 @@
 <div class="ux-page">
 
     <div class="ux-page-header">
-        <div>
+        <div style="flex:1;">
             <p class="ux-eyebrow">My Account</p>
             <h1 class="ux-title">@fullName</h1>
             <p class="ux-subtitle">
@@ -34,9 +34,11 @@
                 Tenant
             </p>
         </div>
-        <a asp-action="EditMyProfile" class="ux-btn-outline">
-            <i class="bi bi-pencil-fill"></i> Edit
-        </a>
+        <div class="d-flex gap-2 flex-wrap">
+            <a asp-action="EditMyProfile" class="ux-btn-outline">
+                <i class="bi bi-pencil-fill"></i> Edit
+            </a>
+        </div>
     </div>
 
     @if (TempData["SuccessMessage"] != null)
