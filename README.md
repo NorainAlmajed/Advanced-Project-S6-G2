@@ -140,7 +140,7 @@ Rentify is a full-stack property leasing and maintenance management platform bui
 
 ## 👩‍💻 Individual Contributions
 
-### Fatima Alaiwi
+### [Fatima Alaiwi](https://github.com/Fatima-Alaiwi) 
 - Authentication and Authorization (ASP.NET Core Identity — roles, login, registration)
 - Password encryption
 - SignalR — real-time notifications for payments, leases, and maintenance across all roles
@@ -149,7 +149,7 @@ Rentify is a full-stack property leasing and maintenance management platform bui
 - Azure deployment — MVC app, Web API, and Reporting app
 ---
 
-### Raghad Aleskafi
+### [Raghad Aleskafi](https://github.com/RaghadAlesakfi)
 - Project scaffolding and initial database setup (migrations, schema generation)
 - UI design and layout — card views, search bars, navigation, forms, and page enhancements across the app
 - Property and Unit entity improvements (address fields, amenities, status display)
@@ -158,7 +158,7 @@ Rentify is a full-stack property leasing and maintenance management platform bui
 
 ---
 
-### Norain Almajed *(Team Leader)*
+### [Norain Almajed](https://github.com/NorainAlmajed) *(Team Leader)*
 - JWT authentication setup and configuration (token generation, validation, expiry)
 - Reporting application — separate secured portal for managers
 - Interactive JavaScript charts (occupancy line/bar, maintenance donut, payment split)
@@ -167,7 +167,7 @@ Rentify is a full-stack property leasing and maintenance management platform bui
 - Project documentation and cover sheet
 ---
 
-### Zahraa Hubail
+### [Zahraa Hubail](https://github.com/zahraa-hubail)
 - Database creation and seed data
 - RESTful Web API — all controllers and endpoint implementations
 - Refactored MVC to call the API for all backend operations
