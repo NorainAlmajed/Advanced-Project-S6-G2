@@ -100,11 +100,6 @@ Rentify is a full-stack property leasing and maintenance management platform bui
 - Property listing images — uploaded and stored per property for a richer browsing experience
 - Islamic overdue interest calculation — Bahraini TA'WIDH standard (3% per annum)
 - Content pagination — 10 users per page on the Users management page
-- Privacy Policy page
-- Password hashing and encryption via ASP.NET Core Identity
-- Soft deletes — properties, units, and users are deactivated, not removed, preserving historical records
-- Lookup tables for all enumerations (governorates, unit types, amenities, skills, durations, payment frequencies, methods, notification types)
-- LeaseApplications kept separate from active Leases for a full audit trail of rejected and withdrawn applications
 
 ---
 
