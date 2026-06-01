@@ -160,6 +160,7 @@ Rentify is a full-stack property leasing and maintenance management platform bui
 
 ### [Norain Almajed](https://github.com/NorainAlmajed) *(Team Leader)*
 - JWT authentication setup and configuration (token generation, validation, expiry)
+- DTOs (Data Transfer Objects) for the API
 - Reporting application — separate secured portal for managers
 - Interactive JavaScript charts (occupancy line/bar, maintenance donut, payment split)
 - PDF export for all reports — Dashboard, Occupancy, Maintenance, and Payment — with timestamps
