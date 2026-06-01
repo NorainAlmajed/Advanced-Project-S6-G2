@@ -8,11 +8,11 @@
 
     <div class="ux-page-header">
         <div>
+            <a asp-action="Index" class="ux-btn-ghost" style="margin-bottom:0.5rem;display:inline-flex;align-items:center;gap:0.3rem;"><i class="bi bi-arrow-left"></i> Back</a>
             <p class="ux-eyebrow">Maintenance</p>
             <h1 class="ux-title">Edit Request #@Model.RequestId</h1>
             <p class="ux-subtitle">Update request details, priority, assigned staff, and description.</p>
         </div>
-        <a asp-action="Index" class="ux-btn-ghost"><i class="bi bi-arrow-left"></i> Back</a>
     </div>
 
     <form asp-action="Edit" method="post" class="ux-form-layout">

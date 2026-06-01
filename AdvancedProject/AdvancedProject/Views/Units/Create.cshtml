@@ -8,11 +8,11 @@
 
     <div class="ux-page-header">
         <div>
+            <a asp-action="Index" asp-route-id="@Model.PropertyId" class="ux-btn-ghost" style="margin-bottom:0.5rem;display:inline-flex;align-items:center;gap:0.3rem;"><i class="bi bi-arrow-left"></i> Back</a>
             <p class="ux-eyebrow">Property Management</p>
             <h1 class="ux-title">Create Unit</h1>
             <p class="ux-subtitle">Add a new unit with rent details and amenities.</p>
         </div>
-        <a asp-action="Index" asp-route-id="@Model.PropertyId" class="ux-btn-ghost"><i class="bi bi-arrow-left"></i> Back</a>
     </div>
 
     <form asp-action="Create" method="post" class="ux-form-layout">

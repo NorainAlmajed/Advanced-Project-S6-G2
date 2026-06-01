@@ -8,7 +8,7 @@
 <div class="ux-page">
 
     <div class="ux-page-header">
-        <div>
+        <div style="flex:1;">
             @if (User.IsInRole("Tenant"))
             {
                 <p class="ux-eyebrow">Available Properties</p>
@@ -22,12 +22,14 @@
                 <p class="ux-subtitle">Browse and manage all available properties.</p>
             }
         </div>
-        @if (User.IsInRole("PropertyManager"))
-        {
-            <a asp-action="Create" class="ux-btn-primary">
-                <i class="bi bi-plus-lg"></i> Add Property
-            </a>
-        }
+        <div class="d-flex gap-2 flex-wrap align-items-start">
+            @if (User.IsInRole("PropertyManager"))
+            {
+                <a asp-action="Create" class="ux-btn-primary">
+                    <i class="bi bi-plus-lg"></i> Add Property
+                </a>
+            }
+        </div>
     </div>
 
     <div class="ux-stats-row">
