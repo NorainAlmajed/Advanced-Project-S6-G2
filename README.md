@@ -140,7 +140,7 @@ Rentify is a full-stack property leasing and maintenance management platform bui
 
 ## 👩‍💻 Individual Contributions
 
-### 🔐 Fatima Alaiwi
+### Fatima Alaiwi
 - Authentication and Authorization (ASP.NET Core Identity — roles, login, registration)
 - Password encryption
 - SignalR — real-time notifications for payments, leases, and maintenance across all roles
@@ -149,27 +149,16 @@ Rentify is a full-stack property leasing and maintenance management platform bui
 - Azure deployment — MVC app, Web API, and Reporting app
 ---
 
-### 🎨 Raghad Aleskafi
-- Project scaffolding and initial database setup (initial migrations, schema generation)
-- Property Create form — added Building, Road, and Block address fields
-- Unit Create and Edit form bug fixes
-- Card-style layout for Property and Units listing pages
-- Unit amenities feature (multi-select amenities per unit)
-- Property page and Users page search bars
-- Users page access-control UI cleanup (removed edit/delete from table)
-- Navigation bar bug fixes and routing corrections
-- Maintenance Request initial model and CRUD wiring
-- Lease Application Index page fix
-- Notifications UI (alert layout and styling across all roles)
-- Searchable dropdowns on the Create Lease form
-- Unit status display fix on the Units Index page
-- Governorate field and filter on the Property page
-- Unit Edit form amenities checkboxes
-- Maintenance Request form, Maintenance Staff form, Profile page, and Home page UI enhancements
+### Raghad Aleskafi
+- Project scaffolding and initial database setup (migrations, schema generation)
+- UI design and layout — card views, search bars, navigation, forms, and page enhancements across the app
+- Property and Unit entity improvements (address fields, amenities, status display)
+- Notifications UI
+- Governorate field and filter
 
 ---
 
-### 📊 Norain Almajed *(Team Leader)*
+### Norain Almajed *(Team Leader)*
 - JWT authentication setup and configuration (token generation, validation, expiry)
 - Reporting application — separate secured portal for managers
 - Interactive JavaScript charts (occupancy line/bar, maintenance donut, payment split)
@@ -178,20 +167,13 @@ Rentify is a full-stack property leasing and maintenance management platform bui
 - Project documentation and cover sheet
 ---
 
-### 🗄️ Zahraa Hubail
+### Zahraa Hubail
 - Database creation and seed data
-- Form validations across the application
-- Notification logic (triggers and message generation)
 - RESTful Web API — all controllers and endpoint implementations
 - Refactored MVC to call the API for all backend operations
-- Lease renewal and termination logic
-- Success message feedback throughout the app
-- Maintenance staff assignment logic
-- Create and Edit forms for Manager, Tenant, and Staff
-- Create, Edit, and Delete forms for Units and Properties
-- Create, Edit, and Cancel forms for Lease Applications and Leases
-- Create and Edit forms for Payments and Maintenance Requests, including request status transitions
-
+- Full CRUD forms for all entities (Properties, Units, Leases, Applications, Payments, Maintenance Requests, Users)
+- Business logic — lease renewal, termination, maintenance staff assignment, notifications, form validations, and success messages
+---
 ---
 
 ## 🗃️ Repository
